@@ -1,0 +1,77 @@
+aboutRehike: "О Rehike"
+brandName: "Rehike"
+versionHeader: "Версия %s"
+nightly: "Nightly"
+nightlyInfoTooltip: >
+  Этот релиз является новейшим и может содержать нестандартные ошибки.
+
+subheaderNightlyInfo: "Текущая информация о ветке"
+nonGitNotice: "В этом выпуске Rehike отсутствует информация о Git."
+nonGitExtended: >
+  Это может произойти, если вы загрузили репозиторий непосредственно с GitHub, например 
+  например, с помощью функции "Загрузить ZIP". Некоторые сведения о версии могут быть утеряны или 
+  недоступна.
+syncGithubButton: "Синхронизация с GitHub"
+failedNotice: "Не удалось получить информацию о версии."
+remoteFailedNotice: "Не удалось получить информацию об удаленной версии."
+remoteFailedExtended: "Информация о версии ограничена."
+noDotVersionNotice: "Файл .version отсутствует или поврежден."
+noNewVersions: "Новые версии отсутствуют."
+oneNewVersion: "Доступна 1 новая версия."
+varNewVersions: "Доступны %s новых(е) версий(и)."
+unknownNewVersions: "Эта версия критически устарела."
+
+updatesAvailable: "Обновления доступны"
+upToDate: "Вы находитесь в курсе событий в удаленной ветке."
+
+headingVersionInfo: "О Rehike"
+viewOnGithub: "Посмотреть на GitHub"
+
+extraInfo: "Информация о времени выполнения"
+operatingSystem: "Операционная система"
+phpVersion: "Версия PHP"
+browserVersion: "Версия браузера"
+
+githubLinkButton: "Rehike на GitHub"
+creditsButton: "Признательности"
+runtimeInfoMoreInfoButton: "Доп. информация"
+gitManagerPullButton: "Вытащить"
+gitManagerUnpushedChanges: >
+  Вы распаковали локальные изменения, так что на самом деле это более старая версия.
+
+# -- Сообщения менеджера Git --
+
+gitManagerDialogDismissButton: "Отклонить"
+gitManagerDialogRetryButton: "Повторить попытку"
+
+gitManagerDialogFailedPullTitle: "Не удалось извлечь"
+gitManagerDialogFailedPullMessage: >
+  Не удалось извлечь изменения из удаленного источника. Журнал ошибок Git:
+
+# -- Переводы для раздела титров --
+
+creditsTitle: "Credits"
+creditsDevelopersTitle: "Разработчики Rehike"
+
+# Major contributor names.
+# Feel free to add transliterations of names in parentheses if you wish
+# to do so.
+creditsAubrey: "Aubrey Pankow"
+creditsIsabella: "Isabella Lulamoon"
+
+creditsThirdPartyHeader: >
+  Rehike использует следующее стороннее программное обеспечение, материалы,
+  или сервисы:
+
+# Credits to Prototaxis for documenting the WEB v2 shelves technique
+# we use for the homepage.
+# The template placeholder "%s" is replaced with an anchor link to his
+# GitHub profile, but it's not featured here in order to avoid embedding
+# HTML content.
+creditsPrototaxisTemplate: >
+  %s за документирование эксплойтов API InnerTube, которые мы используем для восстановления
+  классического дизайна домашней страницы по полочкам.
+
+creditsThirdPartyFooter: >
+  Использование этих сторонних сервисов регулируется соответствующими лицензиями.
+  По возможности их применение не является обязательным.

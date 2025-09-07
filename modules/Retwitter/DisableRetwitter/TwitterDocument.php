@@ -1,0 +1,107 @@
+<?php
+// This file is licensed under the Mozilla Public License 2.0 by The Rehike Maintainers.
+namespace Retwitter\DisableRetwitter;
+
+use Rehike\Async\Promise;
+use Rehike\Exception\FileSystem\FsFileDoesNotExistException;
+use Rehike\Exception\FileSystem\FsFileReadFailureException;
+use Rehike\SimpleFunnel;
+use Rehike\FileSystem;
+use Rehike\i18n\i18n;
+use function Rehike\Async\async;
+
+use Rehike\Network\ResponseHeaders;
+
+/**
+ * Responsible for requesting and modifying the Polymer document to inject the
+ * custom script.
+ * 
+ * @author Taniko Yamamoto <kirasicecreamm@gmail.com>
+ * @author The Rehike Maintainers
+ */
+class TwitterDocument
+{
+    public function __construct(
+        public string $response,
+        public ResponseHeaders $headers,
+        public int $status
+    ) {}
+
+    /**
+     * Retrieves the Polymer document from the server.
+     */
+    public static function getPolymerDocument(): Promise/*<self>*/
+    {
+        return async(function () {
+            $polymerResult = yield SimpleFunnel::funnelCurrentPage();
+            $resultText = $polymerResult->getText();
+            $document = $resultText;
+
+            /*
+             * nikonote: This should be done at some point in the future, but it
+             * doesn't matter that much.
+             */
+            // if (0 === strpos($polymerResult->headers->contentType, "text/html"))
+            // {
+            //     try
+            //     {
+            //         $script = FileSystem::getFileContents("modules/Retwitter/DisableRetwitter/polymer_script.js");
+            //         $nonce = self::findScriptNonce($resultText);
+
+            //         $firstScriptIndex = strpos($resultText, "<script");
+
+            //         $document = substr($resultText, 0, $firstScriptIndex) .
+            //             "<script nonce=\"$nonce\">" .
+            //                 str_replace(
+            //                     "PREPROCESSOR_DISABLE_POLYMER_CONFIG",
+            //                     self::getDisablePolymerJsConfig(),
+            //                     $script
+            //                 ) .
+            //             "</script>" .
+            //             substr($resultText, $firstScriptIndex);
+            //     }
+            //     catch (FsFileDoesNotExistException $e)
+            //     {
+            //         // Swallow exception, should just not modify document.
+            //     }
+            //     catch (FsFileReadFailureException $e)
+            //     {
+            //         // Swallow exception, should just not modify document.
+            //     }
+            // }
+
+            return new self(
+                response: $document, 
+                headers: $polymerResult->headers,
+                status: $polymerResult->status
+            );
+        });
+    }
+
+    /**
+     * Finds the script nonce for use in the custom script tag.
+     * 
+     * I'm not actually sure if this was required, but I decided to do it just
+     * in case.
+     */
+    private static function findScriptNonce(string $text): ?string
+    {
+        $nonceIndex = preg_match("/nonce=\"([A-Za-z0-9-_]+)\"/", $text, $matches);
+        $nonce = $matches[1];
+
+        return $nonce ?? null;
+    }
+
+    /**
+     * Gets the JS config in JSON format (a JS object).
+     */
+    private static function getDisablePolymerJsConfig(): string
+    {
+        $i18n = i18n::getNamespace("rehike/disable_rehike");
+        $strings = $i18n->getAllTemplates();
+
+        return json_encode((object)[
+            "strings" => $strings
+        ]);
+    }
+}

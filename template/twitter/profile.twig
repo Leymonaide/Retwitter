@@ -1,0 +1,253 @@
+{% extends "core/core.twig" %}
+
+{% block body_class %}
+{% if not app.page.error %}
+enhanced-mini-profile
+ProfilePage
+ProfilePage--withWarning
+no-nav-banners
+{% endif %}
+{% endblock %}
+
+{% block page_class %}
+{% if app.page.error %}
+wrapper
+wrapper-profile
+{% endif %}
+{% endblock %}
+
+{% set threeCol = true %}
+
+{% block header %}
+{% if app.page.canopy %}
+{% set canopy = app.page.canopy %}
+{% import "core/macros.twig" as core %}
+<div class="ProfileCanopy ProfileCanopy--withNav ProfileCanopy--large js-variableHeightTopBar">
+    <div class="ProfileCanopy-inner">
+        <div class="ProfileCanopy-header u-bgUserColor">
+            <div class="ProfileCanopy-headerBg">
+                <img alt="" src="{{ canopy.banner }}">
+            </div>
+            <div class="AppContainer">
+                <div class="ProfileCanopy-avatar">
+                    <div class="ProfileAvatar">
+                        <a class="ProfileAvatar-container u-block js-tooltip profile-picture"
+                           href="{{ canopy.avatar.url }}"
+                           data-resolved-url-large="{{ canopy.avatar.url }}"
+                           data-url="{{ canopy.avatar.url }}"
+                           target="_blank"
+                           rel="noopener"
+                           title="{{ canopy.avatar.tooltip }}"
+                           >
+                            <img src="{{ canopy.avatar.url }}" alt="{{ canopy.avatar.tooltip }}" class="ProfileAvatar-image">
+                        </a>
+                    </div>
+                </div>
+                <div class="ProfileCanopy-headerPromptAnchor"></div>
+            </div>
+        </div>
+        <div class="ProfileCanopy-navBar u-boxShadow">
+            <div class="AppContainer">
+                <div class="Grid Grid--withGutter">
+                    <div class="Grid-cell u-size1of3 u-lg-size1of4">
+                        <div class="ProfileCanopy-card" role="presentation">
+                            <div class="ProfileCardMini">
+                                <a class="ProfileCardMini-avatar profile-picture js-tooltip"
+                                   href="{{ canopy.card.avatar }}"
+                                   data-resolved-url-large="{{ canopy.card.avatar }}"
+                                   data-url="{{ canopy.card.avatar }}"
+                                   target="_blank"
+                                   rel="noopener"
+                                   title="{{ core.simple_text(canopy.card.name) }}">
+                                    <img src="{{ canopy.card.avatar }}" alt="{{ core.simple_text(canopy.card.name) }}" class="ProfileCardMini-avatarImage"></img>
+                                </a>
+                                <div class="ProfileCardMini-details">
+                                    <div class="ProfileNameTruncated account-group">
+                                        <div class="u-textTruncate u-inlineBlock ProfileNameTruncated-withBadges ProfileNameTruncated-withBadges--1">
+                                            <a href="/{{ canopy.card.screenName }}" class="fullname ProfileNameTruncated-link u-textInheritColor js-nav">
+                                                {{ core.text(canopy.card.name) }}
+                                            </a>
+                                        </div>
+                                        {% if canopy.card.verified %}
+                                        <span class="UserBadges">
+                                            <span class="Icon Icon--verified">
+                                                <span class="u-hiddenVisually">{{ app.msgs.verifiedAccount }}</span>
+                                            </span>
+                                        </span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="ProfileCardMini-screenname">
+                                        <a href="/{{ canopy.card.screenName }}" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">
+                                            <span class="username u-dir" dir="ltr">
+                                                @<b class="u-linkComplex-target">{{ canopy.card.screenName }}</b>
+                                            </span>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="Grid-cell u-size2of3 u-lg-size3of4">
+                        <div class="ProfileCanopy-nav">
+                            <div class="ProfileNav" role="navigation" data-user-id="{{ canopy.id }}">
+                                <ul class="ProfileNav-list">
+                                    {% for stat in canopy.stats %}
+                                    <li class="ProfileNav-item ProfileNav-item--{{ stat.id }} {{ stat.active ? "is-active" }}">
+                                        <a {% if not stat.active %}href="{{ stat.url }}" {% endif %}class="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav"
+                                            title="{{ stat.tooltip }}">
+                                            <span class="ProfileNav-label" aria-hidden="true">{{ stat.label }}</span>
+                                            <span class="u-hiddenVisually">{{ stat.active ? stat.activeLabel : stat.label }}</span>
+                                            <span class="ProfileNav-value" data-count="{{ stat.count }}" data-is-compact="false">
+                                                {{ stat.value }}
+                                            </span>
+                                        </a>
+                                    </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block content %}
+    {% if app.page.error %}
+        <div class="module component">
+            <div class="flex-module error-page clearfix">
+                <h1>{{ app.page.error.title }}</h1>
+                <p>{{ app.page.error.message }}</p>
+            </div>
+        </div>
+    {% else %}
+        {% embed "common/three_col_page.twig" %}
+            {% block col_one_content %}
+                {% import "core/macros.twig" as core %}
+                {% set info = app.page.info %}
+                <div class="Grid Grid--withGutter">
+                    <div class="Grid-cell">
+                        <div class="ProfileSidebar ProfileSidebar--withLeftAlignment">
+                            <div class="ProfileHeaderCard">
+                                {% apply spaceless %}
+                                <h1 class="ProfileHeaderCard-name">
+                                    <a href="/{{ info.screenName }}" class="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{{ core.text(info.name) }}</a>
+                                    {% if info.verified %}
+                                    <span class="ProfileHeaderCard-badges">
+                                        <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.msgs.verifiedAccount }}">
+                                            <span class="Icon Icon--verified">
+                                                <span class="u-hiddenVisually">{{ app.msgs.verifiedAccount }}</span>
+                                            </span>
+                                        </a>
+                                    </span>
+                                    {% endif %}
+                                </h1>
+                                {% endapply %}
+                                <h2 class="ProfileHeaderCard-screenname u-inlineBlock u-dir" dir="ltr">
+                                    <a href="/{{ info.screenName }}" class="ProfileHeaderCard-screennameLink u-linkComplex js-nav">
+                                        <span class="username u-dir" dir="ltr">
+                                            @<b class="u-linkComplex-target">{{ info.screenName }}</b>
+                                        </span>
+                                    </a>
+                                </h2>
+                                <p class="ProfileHeaderCard-bio u-dir" dir="ltr">{{ core.text(info.bio) }}</p>
+                                <div class="ProfileHeaderCard-location {{ not info.location ? "u-hidden" }}">
+                                    <span class="Icon Icon--geo Icon--medium" aria-hidden="true" role="presentation"></span>
+                                    <span class="ProfileHeaderCard-locationText u-dir" dir="ltr">
+                                        {{ core.text(info.location) }}
+                                    </span>
+                                </div>
+                                <div class="ProfileHeaderCard-url {{ not info.url ? "u-hidden" }}">
+                                    <span class="Icon Icon--url Icon--medium" aria-hidden="true" role="presentation"></span>
+                                    <span class="ProfileHeaderCard-urlText u-dir" dir="ltr">
+                                        {{ core.text(info.url) }}
+                                    </span>
+                                </div>
+                                <div class="ProfileHeaderCard-joinDate">
+                                    <span class="Icon Icon--calendar Icon--medium" aria-hidden="true" role="presentation"></span>
+                                    <span class="ProfileHeaderCard-joinDateText u-dir" dir="ltr">
+                                        <span class="js-tooltip" title="{{ info.joinDate.title }}">
+                                            {{ info.joinDate.text }}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="ProfileHeaderCard-birthdate {{ not info.birthDate ? "u-hidden" }}">
+                                    <span class="Icon Icon--balloon Icon--medium" aria-hidden="true" role="presentation"></span>
+                                    <span class="ProfileHeaderCard-birthdateText u-dir" dir="ltr">
+                                        <span class="js-tooltip" title="Public">
+                                            {{ info.birthDate }}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+
+            {% block col_two_content %}
+            {% set heading = app.page.content.heading %}
+            <div class="ProfileHeading">
+                <div class="ProfileHeading-spacer"></div>
+                <div class="ProfileHeading-content">
+                    <h2 id="content-main-heading" class="ProfileHeading-title {{ heading.tabs|length > 0 ? "u-hiddenVisually" }}">
+                        {{ heading.title }}
+                    </h2>
+                    <ul class="ProfileHeading-toggle">
+                        {% for tab in heading.tabs %}
+                        <li class="ProfileHeading-toggleItem {{ tab.active ? "is-active" : "u-textUserColor" }}" data-element-term="{{ tab.tab }}_toggle">
+                            {% if tab.active %}
+                            <span aria-hidden="true">{{ tab.label }}</span>
+                            <span class="u-hiddenVisually">{{ tab.activeLabel }}</span>
+                            {% else %}
+                            <a href="{{ tab.url }}" class="ProfileHeading-toggleLink {{ tab.openSignup ? "js-openSignupDialog js-nonNavigable" }}" data-nav="{{ tab.tab }}_toggle">
+                                {{ tab.label }}
+                            </a>
+                            {% endif %}
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endblock %}
+
+            {% block col_three_content %}
+            {% from "common/edge_button.twig" import render as edge_button %}
+            {% from "common/pageframe/footer.twig" import render as footer %}
+            {% set sidebar = app.page.sidebar %}
+            <div class="Grid Grid--withGutter">
+                <div class="Grid-cell">
+                    <div class="ProfileSidebar ProfileSidebar--withRightAlignment">
+                        <div class="MoveableModule">
+                            <div class="SidebarCommonModules">
+                                {% if sidebar.signupPromo %}
+                                <div class="SignupCallOut module js-signup-call-out">
+                                    <div class="SignupCallOut-header">
+                                        <h3 class="SignupCallOut-title u-textBreak">
+                                            {{ sidebar.signupPromo.header }}
+                                        </h3>
+                                    </div>
+                                    <div class="SignupCallOut-subheader">
+                                        {{ sidebar.signupPromo.message }}
+                                    </div>
+                                    <div class="signup SignupForm">
+                                        {{ edge_button(sidebar.signupPromo.button) }}
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {{ footer({
+                                    slim: true,
+                                    blankBackground: true
+                                }) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
+{% endblock %}

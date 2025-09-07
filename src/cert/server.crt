@@ -1,0 +1,110 @@
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 3 (0x3)
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, ST=AZ, L=Arizona, O=Network Neighborhood, CN=CA for x.com to twitter.com redirect by Network Neighborhood/emailAddress=kawapure+nninquires@gmail.com
+        Validity
+            Not Before: Jul 19 06:50:21 2024 GMT
+            Not After : Jul 17 06:50:21 2034 GMT
+        Subject: C=US, ST=AZ, L=Arizona, O=Network Neighborhood, CN=x.com to twitter.com redirect by Network Neighborhood
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+                Modulus:
+                    00:d5:64:cd:46:0d:2c:ff:1b:5d:bc:7b:25:ea:e6:
+                    8d:6c:24:0b:7c:65:2b:9d:95:45:2d:de:6a:89:82:
+                    b9:eb:8f:0b:1f:de:10:84:d8:af:b5:77:d3:23:35:
+                    0e:51:cd:52:18:bc:59:d3:f6:08:0c:54:46:95:99:
+                    45:e3:d8:15:2d:9c:98:6d:fc:43:6d:d6:ac:ce:92:
+                    61:3f:d7:2a:69:5e:a3:20:98:c6:41:93:a5:5c:f8:
+                    ec:08:2f:ef:6c:0d:9e:2f:e5:ea:d4:c8:bc:2b:21:
+                    3b:1f:7f:29:91:58:1f:a8:c6:79:b6:a9:ad:cd:f7:
+                    48:b6:35:59:a8:15:9d:ba:3b:f2:0f:78:e0:a8:02:
+                    4e:8b:91:2e:1a:4f:1c:05:cf:29:0f:32:b9:fe:f9:
+                    ee:15:ec:bc:4e:2e:84:40:cf:77:a5:1e:ab:aa:0e:
+                    1a:88:57:ee:07:47:85:63:ab:98:21:fe:b0:94:56:
+                    0e:a1:72:29:94:02:1e:c8:58:f2:4d:eb:a0:e4:84:
+                    1e:f8:38:0b:bf:05:60:9e:30:9d:d2:23:a2:c9:1e:
+                    26:36:b8:c8:67:90:a7:6e:6b:6b:2c:27:70:0f:aa:
+                    ab:15:f5:cc:7d:a2:13:6b:83:a4:d1:55:48:b3:64:
+                    f7:eb:38:94:46:6b:d2:8c:e2:ab:26:be:e6:98:d6:
+                    7d:fd
+                Exponent: 65537 (0x10001)
+        X509v3 extensions:
+            X509v3 Key Usage: 
+                Digital Signature, Key Encipherment
+            X509v3 Subject Key Identifier: 
+                DB:F2:5C:D1:FF:E0:64:74:C7:1A:59:A2:A3:54:F2:68:72:D0:C0:CD
+            X509v3 Authority Key Identifier: 
+                keyid:DE:E0:58:DD:8B:BE:87:42:EC:2F:D2:38:27:FC:12:71:00:B1:D2:D7
+
+            X509v3 Basic Constraints: 
+                CA:FALSE
+            X509v3 Subject Alternative Name: 
+                DNS:twitter.com, DNS:api.twitter.com, DNS:*.twitter.com, IP Address:127.0.0.8, IP Address:127.0.0.1, IP Address:0:0:0:0:0:0:0:1
+            Netscape Comment: 
+                OpenSSL Generated Certificate
+    Signature Algorithm: sha256WithRSAEncryption
+         81:01:32:7e:91:8f:f5:a4:a0:6a:d2:c3:ec:98:bc:ca:73:ce:
+         74:8f:21:77:c8:dc:e0:1e:bf:5d:33:67:50:12:1a:4e:64:0c:
+         3d:f9:bc:ce:8c:35:7e:bf:12:8b:29:47:88:de:2a:81:a0:fa:
+         ee:82:36:d4:23:59:29:16:1c:18:53:54:6f:04:f8:89:82:ea:
+         51:46:89:51:92:d4:9d:57:62:e8:56:b5:69:0a:77:64:36:2f:
+         a5:41:c4:e6:6b:6d:87:c3:dd:5a:3d:ba:cc:d3:66:6a:d3:c9:
+         f4:bd:86:81:96:29:e6:a2:2b:e6:4c:73:ad:2b:70:7b:5c:ed:
+         d9:59:8e:06:b1:44:c6:2c:11:48:b9:2b:2b:bc:af:a6:c7:c5:
+         2a:34:c3:15:b8:f4:8a:92:8d:a5:3a:2f:5d:e1:1c:ff:a3:64:
+         cc:8e:cf:e6:e7:c4:e0:25:69:92:35:f5:55:a0:22:78:58:75:
+         10:8e:11:49:a7:c9:49:69:cf:70:43:e7:26:93:00:e7:84:8c:
+         bf:c5:fd:75:e5:07:cc:b0:9d:31:60:aa:35:a1:06:fc:e7:58:
+         4f:80:c2:d3:b2:12:86:29:2a:6b:1b:16:7c:f0:5d:e9:57:e2:
+         69:81:80:a6:c4:2c:90:51:39:2c:68:99:e1:50:44:9a:c8:f5:
+         3b:bb:f3:17:76:5d:a0:b6:fb:14:c9:68:0e:1d:36:86:76:67:
+         f1:af:08:8c:00:7b:d1:42:e1:b7:2f:f7:0b:12:bb:a6:99:a5:
+         62:d7:08:d7:8b:e5:8f:6e:80:bc:e4:e2:cf:5a:de:ce:cb:9f:
+         cd:cd:d8:94:51:56:11:aa:83:f7:36:51:18:24:c7:0d:63:95:
+         e2:a9:f7:33:c4:2e:6a:0b:b0:cd:36:bd:ed:97:b1:36:d6:15:
+         c8:d1:83:fb:d9:88:ea:12:05:ad:ec:f0:c2:71:fa:ce:14:1e:
+         19:ee:05:2d:53:ee:68:e5:bc:c7:a5:47:dc:26:fb:c7:0c:57:
+         3b:cd:cf:48:e3:f1:37:db:6b:f2:02:46:4c:8a:54:44:40:b4:
+         36:0b:d9:16:d7:28:30:f1:ac:ea:64:59:3f:a3:44:67:f3:ad:
+         6f:63:ec:10:40:88:8c:5c:70:53:30:d2:22:3a:93:1c:64:cc:
+         ac:ed:92:a0:88:05:1d:fc:29:87:96:6c:7c:49:13:f9:46:aa:
+         0f:1d:f9:68:cc:6c:12:d9:73:42:0f:fa:17:c2:30:c1:9a:6a:
+         93:54:11:12:f1:f0:13:3a:14:96:f8:e6:99:50:e2:6b:d1:e9:
+         08:cd:df:5c:f0:3a:d0:8d:2c:63:17:a0:f7:07:c9:45:0a:22:
+         60:68:89:d1:20:6d:63:e7
+-----BEGIN CERTIFICATE-----
+MIIFqDCCA5CgAwIBAgIBAzANBgkqhkiG9w0BAQsFADCBwDELMAkGA1UEBhMCVVMx
+CzAJBgNVBAgMAkFaMRAwDgYDVQQHDAdBcml6b25hMR0wGwYDVQQKDBROZXR3b3Jr
+IE5laWdoYm9yaG9vZDFFMEMGA1UEAww8Q0EgZm9yIHguY29tIHRvIHR3aXR0ZXIu
+Y29tIHJlZGlyZWN0IGJ5IE5ldHdvcmsgTmVpZ2hib3Job29kMSwwKgYJKoZIhvcN
+AQkBFh1rYXdhcHVyZStubmlucXVpcmVzQGdtYWlsLmNvbTAeFw0yNDA3MTkwNjUw
+MjFaFw0zNDA3MTcwNjUwMjFaMIGLMQswCQYDVQQGEwJVUzELMAkGA1UECAwCQVox
+EDAOBgNVBAcMB0FyaXpvbmExHTAbBgNVBAoMFE5ldHdvcmsgTmVpZ2hib3Job29k
+MT4wPAYDVQQDDDV4LmNvbSB0byB0d2l0dGVyLmNvbSByZWRpcmVjdCBieSBOZXR3
+b3JrIE5laWdoYm9yaG9vZDCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEB
+ANVkzUYNLP8bXbx7JermjWwkC3xlK52VRS3eaomCueuPCx/eEITYr7V30yM1DlHN
+Uhi8WdP2CAxURpWZRePYFS2cmG38Q23WrM6SYT/XKmleoyCYxkGTpVz47Agv72wN
+ni/l6tTIvCshOx9/KZFYH6jGebaprc33SLY1WagVnbo78g944KgCTouRLhpPHAXP
+KQ8yuf757hXsvE4uhEDPd6Ueq6oOGohX7gdHhWOrmCH+sJRWDqFyKZQCHshY8k3r
+oOSEHvg4C78FYJ4wndIjoskeJja4yGeQp25raywncA+qqxX1zH2iE2uDpNFVSLNk
+9+s4lEZr0oziqya+5pjWff0CAwEAAaOB3zCB3DALBgNVHQ8EBAMCBaAwHQYDVR0O
+BBYEFNvyXNH/4GR0xxpZoqNU8mhy0MDNMB8GA1UdIwQYMBaAFN7gWN2LvodC7C/S
+OCf8EnEAsdLXMAkGA1UdEwQCMAAwVAYDVR0RBE0wS4ILdHdpdHRlci5jb22CD2Fw
+aS50d2l0dGVyLmNvbYINKi50d2l0dGVyLmNvbYcEfwAACIcEfwAAAYcQAAAAAAAA
+AAAAAAAAAAAAATAsBglghkgBhvhCAQ0EHxYdT3BlblNTTCBHZW5lcmF0ZWQgQ2Vy
+dGlmaWNhdGUwDQYJKoZIhvcNAQELBQADggIBAIEBMn6Rj/WkoGrSw+yYvMpzznSP
+IXfI3OAev10zZ1ASGk5kDD35vM6MNX6/EospR4jeKoGg+u6CNtQjWSkWHBhTVG8E
++ImC6lFGiVGS1J1XYuhWtWkKd2Q2L6VBxOZrbYfD3Vo9uszTZmrTyfS9hoGWKeai
+K+ZMc60rcHtc7dlZjgaxRMYsEUi5Kyu8r6bHxSo0wxW49IqSjaU6L13hHP+jZMyO
+z+bnxOAlaZI19VWgInhYdRCOEUmnyUlpz3BD5yaTAOeEjL/F/XXlB8ywnTFgqjWh
+BvznWE+AwtOyEoYpKmsbFnzwXelX4mmBgKbELJBROSxomeFQRJrI9Tu78xd2XaC2
++xTJaA4dNoZ2Z/GvCIwAe9FC4bcv9wsSu6aZpWLXCNeL5Y9ugLzk4s9a3s7Ln83N
+2JRRVhGqg/c2URgkxw1jleKp9zPELmoLsM02ve2XsTbWFcjRg/vZiOoSBa3s8MJx
++s4UHhnuBS1T7mjlvMelR9wm+8cMVzvNz0jj8Tfba/ICRkyKVERAtDYL2RbXKDDx
+rOpkWT+jRGfzrW9j7BBAiIxccFMw0iI6kxxkzKztkqCIBR38KYeWbHxJE/lGqg8d
++WjMbBLZc0IP+hfCMMGaapNUERLx8BM6FJb45plQ4mvR6QjN31zwOtCNLGMXoPcH
+yUUKImBoidEgbWPn
+-----END CERTIFICATE-----

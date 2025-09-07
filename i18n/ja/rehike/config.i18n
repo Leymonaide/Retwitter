@@ -1,0 +1,160 @@
+title: "Rehike の設定"
+saveChanges: "変更を保存"
+saveChangesSuccess: "設定の更新に成功しました！"
+saveChangesFailure: "設定の更新に失敗しました。"
+
+tabs:
+  appearance: "外観"
+  experiments: "実験"
+  advanced: "高度"
+
+props:
+  appearance:
+    playerChoice:
+      title: "動画プレーヤーのバージョンを選択:"
+      values:
+        CURRENT: "最新プレーヤー" # No specific date; true latest player.
+        PLAYER_2022: "2022 - 角が丸くない、古いプレビュー"
+        PLAYER_2020: "2020 - 小さいUI"
+        PLAYER_2014: "2014 - 黒いUI、古いバッファリング動作"
+    classicPlayerForcePersistentControls:
+      title: "常にコントロールを表示"
+      subtitle: >
+        最新のHitchhiker公式CSSバージョン用に設計されているため、カスタムCSSで問題が
+        発生する可能性があります。
+    classicPlayerTheme:
+      title: "プレーヤーのテーマ:"
+      values:
+        DARK: "ダークモード" # The default theme used since about 2012, but was introduced in 2011
+        LIGHT: "ライトモード"
+    classicPlayerColor:
+      title: "動画プレーヤーにプログレスバーの色:"
+      values:
+        RED: "赤"
+        WHITE: "白" # For whatever reason this is a thing
+    branding:
+      title: "YouTube のブランディング"
+      values:
+        BRANDING_2015: "2015: 古いロゴ、濃い赤"
+        BRANDING_2017_RINGO: "2017: 新しいロゴ、明るい赤"
+        BRANDING_2024_RINGO2: "2024: 新しいロゴ、ピンクがかった赤とグラデーション"
+    modernLogo:
+      title: "現行のYouTubeロゴを使用"
+      subtitle: >
+        2017年以降使用されています。これを有効にすると、2017年以前に
+        作成されたカスタムテーマが一部壊れることがあります。
+    uploadButtonType:
+      title: "アップロードボタンの種類:"
+      values:
+        BUTTON: "ボタン（2013年-2016年）"
+        ICON: "マテリアルアイコン（2016年-2018年）"
+        MENU: "作成メニュー（2018年以降）"
+    largeSearchResults:
+      title: "検索ページでサムネイルを大きく表示"
+      subtitle: >
+        2017年以前に作成されたカスタムテーマが壊れることがあります。
+    swapSearchViewsAndDate:
+      title: "検索ページでビュー数と日付を入れ替える"
+      subtitle: >
+        検索ページのビデオのレンダラーで、日付の前にビュー数を表示します。
+    showOldUploadedOnText:
+      title: "2012年以前の動画に「アップロード日」の表示を使用"
+      subtitle: > 
+        2017年6月以前、YouTubeは2005年から2011年までの動画に「アップロード日」、
+        それ以降の動画には「公開日」と表示していました。
+    useLegacyRoboto:
+      title: "レガシーRobotoフォントを使用"
+      subtitle: >
+        2017年以前に使用されていました。
+    showVersionInFooter:
+      title: "フッターにRehikeバージョンを表示"
+      subtitle: >
+        フッターの最後にRehikeについての便利なリンクを表示します。
+    useRyd:
+      title: "動画で低評価の数を表示"
+      subtitle: >
+        Return YouTube DislikeのAPIの統計情報を表示します。
+    usernamePrepends:
+      title: "動画リンクの著者名の前に「作者:」を表示"
+      subtitle: >
+        2016年以前に使用されました。
+    noViewsText:
+      title: "ウォッチページの視聴回数から「回視聴」テキストを削除"
+      subtitle: >
+        2016年以前、ラベルなしでカウントのみが表示されていました。
+    movingThumbnails:
+      title: "動画上でホバーしたときにアニメーションプレビューを表示"
+      subtitle: >
+        2018年以降使用されています。
+    cssFixes:
+      title: "YouTubeのCSS修正"
+      subtitle: >
+        HitchhikerのCSSの元のバグや不一致を修正します。
+        一部の userstyle との互換性が壊れる場合があります。
+    watchSidebarDates:
+      title: "ウォッチページのおすすめにアップロード日付を表示"
+      subtitle: >
+        Polymerとは異なり、Hitchhikerはデフォルトでこれを表示しませんでした。
+    watchSidebarVerification:
+      title: "ウォッチページのおすすめに認証バッジを表示"
+      subtitle: >
+        Polymerとは異なり、Hitchhikerはデフォルトでこれを表示しませんでした。
+    oldBestOfYouTubeIcons:
+      title: "「Best of YouTube」ガイドセクションの古い赤いアイコン"
+      subtitle: >
+        今日使用されている黒いアイコンではなく、古い赤いトピックチャンネルアイコンを
+        表示します。
+    smallPlayer:
+      title: "カスタムの小型動画プレーヤー スタイルを使用"
+      subtitle: >
+        2019年のようなコンパクトな動画プレーヤーボタンスタイルを使用し、
+        ウィンドウサイズが小さい場合に快適かもしれません。
+    enableAdblock:
+      title: "組み込みの広告ブロッカーを有効にする"
+      subtitle: >
+        動画プレーヤー内の広告に対する安定した広告ブロッカーを提供します。
+    showNewInfoOnChannelAboutPage:
+      title: "チャンネルの「概要」ページで新しい詳細を表示"
+      subtitle: >
+        概要ページでチャンネルの代名詞と動画数を表示します。
+
+  
+  experiments:
+    useSignInV2:
+      title: "サインインV2を使用"
+      subtitle: >
+        サインインの新しいリライトの実験的な新しいバージョンを使用します。
+        このオプションはV2の開発期間中に利用可能であり、その後デフォルトとなり、
+        旧バージョンは削除されます。
+    disableSignInOnHome:
+      title: "認証済みのホームリクエストを無効にする"
+      subtitle: >
+        ホームページをサインアウト状態にします。
+        これは、視聴履歴を無効にしている場合にYouTubeがホームページへのアクセスを
+        ブロックする回避策です（2023/08/18）。
+  
+  advanced:
+    enableDebugger:
+      title: "デバッガーを有効化"
+      subtitle: >
+        デベロッパー向けに便利なツールを提供します。
+        開発者またはバグの報告時に詳細情報が必要な場合にのみ有効にしてください。
+    clearSigninCache:
+      title: "サインインキャッシュ"
+      subtitle: >
+        RehikeはYouTubeへのリクエストを過多にしないためにサインイン情報をキャッシュします。
+      button: "サインインキャッシュのクリア"
+    clearPlayerCache:
+      title: "プレイヤーキャッシュ"
+      subtitle: >
+        RehikeはYouTubeへのリクエストを過多にしないためにプレイヤーに関する情報をキャッシュします。
+      button: "プレイヤーキャッシュのクリア"
+    factoryReset:
+      title: "Rehike のリセット"
+      subtitle: >
+        設定、キャッシュ、およびリモートリポジトリにない変更を含む、Rehike を
+        デフォルトにリセットします。
+      button: "Rehike のリセット"
+    updateRehike:
+      title: "Rehike の更新"
+      button: "更新"

@@ -1,0 +1,38 @@
+{# 
+    Implements the base HTML insertion for the Rehike debugger.
+    
+    @author Taniko Yamamoto <kirasicecreamm@gmail.com>
+    @author The Rehike Maintainers
+#}
+{% if not yt.spf %}
+{% set rebug = rehikeDebugger %}
+<div id="rebug-main" class="{{ rebug.condensed ? "rebug-condensed" }}">
+    <script>
+        var _rebugcfg = _rebugcfg || {};
+        _rebugcfg.globalWalker = _rebugcfg.globalWalker || {};
+        _rebugcfg.globalWalker.data = _rebugcfg.globalWalker.data || {};
+        _rebugcfg.globalWalker.attr = _rebugcfg.globalWalker.attr || {};
+    </script>
+    <script>
+        _rebugcfg.CONDENSED = {{ rebug.condensed ? "true" : "false" }};
+        _rebugcfg.HISTORY_RAW_UPDATE_TAB_IDS = {{ rebug.getJsHistoryTabIds()|json_encode|raw }};
+    </script>
+    <link rel="stylesheet" href="{{ rehike.resource.resolveVersioned("rehike/css/www-rebug.css") }}">
+    {%- if rebug.openButton -%}
+        {% include "rehike/debugger/open_button.twig" %}
+    {%- endif -%}
+    {% import "rehike/debugger/lightbox_main.twig" as main %}
+    <div id="rebug-lightbox-container">
+        <div id="rebug-lightbox">
+            {{ main.dialog(rebug.dialog) }}
+        </div>
+    </div>
+    <script type="text/javascript" src="{{ rehike.resource.resolveVersioned("rehike/js/www-rebug.js") }}"></script>
+    {# Global walker config #}
+    {% set globalAttr = rebug.jsAttrs %}
+    <script async="true">
+        _rebugcfg.globalWalker.data["yt"] = {{ rebug.jsonEncode(yt)|raw }};
+        _rebugcfg.globalWalker.attr["yt"] = {{ globalAttr|json_encode|raw }};
+    </script>
+</div>
+{% endif %}

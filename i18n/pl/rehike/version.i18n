@@ -1,0 +1,77 @@
+aboutRehike: "Informacje o Rehike"
+brandName: "Rehike"
+versionHeader: "Wersja %s"
+nightly: "Nightly"
+nightlyInfoTooltip: >
+  Ta wersja jest najnowsza i może zawierać nieregularne błędy.
+
+subheaderNightlyInfo: "Aktualne informacje o gałęzi"
+nonGitNotice: "W tym wydaniu Rehike brakuje informacji Git."
+nonGitExtended: >
+  Może się to zdarzyć, jeśli repozytorium zostało pobrane bezpośrednio z GitHub, 
+  na przykład z funkcji "Download ZIP". Niektóre informacje o wersji mogą zostać utracone lub 
+  niedostępne.
+syncGithubButton: "Synchronizacja z GitHub"
+failedNotice: "Nie udało się uzyskać informacji o wersji."
+remoteFailedNotice: "Nie udało się uzyskać informacji o zdalnej wersji."
+remoteFailedExtended: "Informacje o wersji są ograniczone."
+noDotVersionNotice: "Brak pliku .version lub jest on uszkodzony."
+noNewVersions: "Brak dostępnych nowych wersji."
+oneNewVersion: "Dostępna jest 1 nowa wersja."
+varNewVersions: "Dostępnych jest %s nowych wersji."
+unknownNewVersions: "Ta wersja jest krytycznie nieaktualna."
+
+updatesAvailable: "Dostępne aktualizacje"
+upToDate: "Jesteś na bieżąco ze zdalną gałęzią."
+
+headingVersionInfo: "Informacje o Rehike"
+viewOnGithub: "Zobacz na GitHub"
+
+extraInfo: "Informacje o środowisku"
+operatingSystem: "System operacyjny"
+phpVersion: "Wersja PHP"
+browserVersion: "Wersja przeglądarki"
+
+githubLinkButton: "Rehike na GitHub"
+creditsButton: "Uznania"
+runtimeInfoMoreInfoButton: "Więcej informacji"
+gitManagerPullButton: "Pociągnij"
+gitManagerUnpushedChanges: >
+  Zmiany lokalne nie zostały pociągnięte, więc jest to starsza wersja.
+
+# -- Git manager messages --
+
+gitManagerDialogDismissButton: "Odrzuć"
+gitManagerDialogRetryButton: "Ponów próbę"
+
+gitManagerDialogFailedPullTitle: "Nie udało się pociągnąć"
+gitManagerDialogFailedPullMessage: >
+  Nie udało się pociągnąć zmian ze zdalnego źródła. Dziennik błędów Git:
+
+# -- Translations for the credits section --
+
+creditsTitle: "Uznania"
+creditsDevelopersTitle: "Deweloperzy Rehike"
+
+# Major contributor names.
+# Feel free to add transliterations of names in parentheses if you wish
+# to do so.
+creditsAubrey: "Aubrey Pankow"
+creditsIsabella: "Isabella Lulamoon"
+
+creditsThirdPartyHeader: >
+  Rehike korzysta z następującego oprogramowania stron trzecich, wkładów,
+  lub usług:
+
+# Credits to Prototaxis for documenting the WEB v2 shelves technique
+# we use for the homepage.
+# The template placeholder "%s" is replaced with an anchor link to his
+# GitHub profile, but it's not featured here in order to avoid embedding
+# HTML content.
+creditsPrototaxisTemplate: >
+  Dziękujemy %s za udokumentowanie exploitów API InnerTube, których używamy do przywrócenia
+  klasycznego wyglądu strony głównej z "półkami".
+
+creditsThirdPartyFooter: >
+  Korzystanie z tych usług stron trzecich podlega odpowiednim licencjom.
+  Tam, gdzie to możliwe, ich stosowanie będzie opcjonalne.

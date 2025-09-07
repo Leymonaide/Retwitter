@@ -1,0 +1,13 @@
+# Rehike security lightbox messages
+
+securityWarning: "Предупреждение о безопасности"
+learnMoreButton: "Узнать больше"
+dismissButton: "Отклонить"
+moreOptionsButton: "Доп. настройки"
+doNotShowAgainButton: "Не показывать это снова"
+languageRespectiveWikiLink: "https://github.com/Rehike/Rehike/wiki/Running-Apache-as-user-on-Windows"
+
+runningAsSystemMessage: >
+  Rehike работает от имени NT AUTHORITY\SYSTEM. Это может создать 
+  уязвимость, поэтому рекомендуется перенастроить веб-сервер 
+  чтобы он работал под собственной учетной записью пользователя.

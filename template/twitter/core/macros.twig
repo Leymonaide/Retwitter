@@ -1,0 +1,53 @@
+{% macro css(name, class) %}
+{%- set url = "https://abs.twimg.com/a/" -%}
+{%- set url = url ~ app.cssRev ~ "/css/t1/" -%}
+{%- if app.nightMode -%}
+{%- set url = url ~ "nightmode_" -%}
+{%- endif -%}
+{%- set url = url ~ "twitter_" ~ name ~ ".bundle.css" -%}
+<link rel="stylesheet" href="{{ url }}" {{ class ? ('class="' ~ class ~ 'CSSBundles"')|raw }}>
+{% endmacro %}
+
+{% macro preload_js(name) %}
+<link rel="preload" href="https://abs.twimg.com/k/{{ app.lang }}/{{ retwitter.resource.getJsName(name, app.lang) }}.js" as="script">
+{% endmacro %}
+
+{% macro async_js(name) %}
+<script src="https://abs.twimg.com/k/{{ app.lang }}/{{ retwitter.resource.getJsName(name, app.lang) }}.js" async=""></script>
+{% endmacro %}
+
+{% macro text(text) %}
+{% apply spaceless %}
+{% if text.simpleText %}
+    {{ text.simpleText }}
+{% elseif text.runs %}
+    {% for run in text.runs %}
+        {% if run.emoji %}
+        <img class="Emoji Emoji--forText" src="{{ run.emoji.url }}" draggable="false" alt="{{ run.emoji.alt }}" title="{{ run.emoji.label }}" aria-label="Emoji: {{ run.emoji.label }}">
+        {% else %}
+        {% if run.url %}
+        <a href="{{ run.url }}">
+        {% endif %}
+            {{ run.text }}
+        {% if run.url %}
+        </a>
+        {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endapply %}
+{% endmacro %}
+
+{% macro simple_text(text) %}
+{% if text.simpleText %}
+    {{ text.simpleText }}
+{% elseif text.runs %}
+    {% for run in text.runs %}
+        {% if run.emoji %}
+            {{ run.emoji.alt }}
+        {% else %}
+            {{ run.text }}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endmacro %}

@@ -1,0 +1,5 @@
+props:
+  appearance:
+    classicPlayerColor:
+      # "color" -> "colour"
+      title: "Player progress bar colour:"

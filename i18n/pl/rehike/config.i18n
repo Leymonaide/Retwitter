@@ -1,0 +1,169 @@
+title: "Konfiguracja Rehike"
+saveChanges: "Zapisz zmiany"
+saveChangesSuccess: "Konfiguracja została pomyślnie zaktualizowana!"
+saveChangesFailure: "Nie udało się zaktualizować konfiguracji!"
+
+tabs:
+  appearance: "Wygląd"
+  experiments: "Eksperymenty"
+  advanced: "Zaawansowane"
+
+props:
+  appearance:
+    playerChoice:
+      title: "Wybierz wersję odtwarzacza filmów:"
+      values:
+        CURRENT: "Najnowszy odtwarzacz" # No specific date; true latest player.
+        PLAYER_2022: "2022 - Kwadratowe krawędzie, stary storyboard"
+        PLAYER_2020: "2020 - Mniejszy interfejs"
+        PLAYER_2015_NEW: "2015 - Nowoczesny interfejs, stare ikony"
+        PLAYER_2015: "2015 - Klasyczny interfejs, więcej funkcji i nowy ekran końcowy"
+        PLAYER_2014: "2014 - Klasyczny interfejs, stare buforowanie"
+    classicPlayerForcePersistentControls:
+      title: "Zawsze wyświetlaj elementy sterujące"
+      subtitle: >
+        Może powodować problemy z niestandardowym CSS, ponieważ jest przeznaczony dla najnowszej
+        oficjalnej wersji CSS Hitchhikera.
+    classicPlayerTheme:
+      title: "Motyw odtwarzacza:"
+      values:
+        DARK: "Ciemny motyw" # The default theme used since about 2012, but was introduced in 2011
+        LIGHT: "Jasny motyw"
+    classicPlayerColor:
+      title: "Kolor paska postępu:"
+      values:
+        RED: "Czerwony"
+        WHITE: "Biały" # For whatever reason this is a thing
+    branding:
+      title: "Branding YouTube"
+      values:
+        BRANDING_2015: "2015: Stare logo, ciemne czerwienie"
+        BRANDING_2017_RINGO: "2017: Nowe logo, jaskrawe czerwienie"
+        BRANDING_2024_RINGO2: "2024: Nowe logo, różowawe czerwienie z gradientami"
+    uploadButtonType:
+      title: "Typ przycisku przesłania:"
+      values:
+        BUTTON: "Przycisk (2013-2016)"
+        ICON: "Ikona Material (2016-2018)"
+        MENU: "Menu tworzenia (2018+)"
+    largeSearchResults:
+      title: "Większe miniaturki na stronie wyszukiwania"
+      subtitle: >
+        Może zepsuć niektóre niestandardowe motywy wykonane przed 2017 rokiem.
+    swapSearchViewsAndDate:
+      title: "Zamiana wyświetlenia i daty na stronie wyszukiwania"
+      subtitle: >
+        Wyświetl liczbę wyświetleń przed datą w rendererach wideo na stronie
+        wyszukiwania.
+    showOldUploadedOnText:
+      title: "Użyj oznaczenia \"Przesłany\" dla filmów sprzed 2012 roku"
+      subtitle: > 
+        Przed czerwcem 2017 YouTube wyświetlał tekst "Przesłany" dla filmów
+        z lat 2005-2011, podczas gdy dla nowszych używał oznaczenia "Opublikowany".
+    useLegacyRoboto:
+      title: "Użyj starszej czcionki Roboto"
+      subtitle: >
+        Używana przed 2017 rokiem.
+    showVersionInFooter:
+      title: "Pokaż wersję Rehike w stopce"
+      subtitle: >
+        Wyświetl wygodny link do strony o Rehike na końcu stopki.
+    useRyd:
+      title: "Pokaż łapki w dół w filmach"
+      subtitle: >
+        Statystyki z API Return YouTube Dislike.
+    usernamePrepends:
+      title: "Pokaż \"autor:\" przed nazwiskiem autora w linkach do filmów"
+      subtitle: >
+        Używane przed 2016 r.
+    noViewsText:
+      title: "Usuń tekst \"wyświetleń\" z licznika wyświetleń na stronie oglądania"
+      subtitle: >
+        Przed 2016 r. wyświetlany był tylko sam licznik, bez żadnej etykiety.
+    movingThumbnails:
+      title: "Pokaż animowany podgląd po najechaniu na film"
+      subtitle: >
+        Używane od 2018 r.
+    cssFixes:
+      title: "Poprawki CSS YouTube"
+      subtitle: >
+        Naprawia błędy lub niespójności z oryginalnym CSS Hitchhikera. Może
+        naruszyć kompatybilność z niektórymi userstyle'ami.
+    watchSidebarDates:
+      title: "Pokaż datę przesłania na stronie oglądania w proponowanych"
+      subtitle: >
+        W przeciwieństwie do Polymera, Hitchhiker nie pokazywał ich domyślnie.
+    watchSidebarVerification:
+      title: "Pokaż odznakę weryfikacji na stronie oglądania w proponowanych"
+      subtitle: >
+        W przeciwieństwie do Polymera, Hitchhiker nie pokazywał ich domyślnie.
+    oldBestOfYouTubeIcons:
+      title: "Stare czerwone ikony w sekcji \"Najlepsze w YouTube\""
+      subtitle: >
+        Pokaż stare czerwone ikony kanałów tematycznych, a nie czarne używane
+        obecnie.
+    smallPlayer:
+      title: "Użyj niestandardowego stylu mniejszego odtwarzacza."
+      subtitle: >
+        Używa kompaktowego stylu przycisków odtwarzacza, takiego jak w 2019, który może być bardziej
+        wygodniejszy w przypadku mniejszych okien.
+    enableAdblock:
+      title: "Włącz wbudowaną blokadę reklam"
+      subtitle: >
+        Zapewnia stabilne blokowanie reklam w odtwarzaczu wideo.
+    showNewInfoOnChannelAboutPage:
+      title: "Pokaż nowo dodane fragmenty informacji na stronie kanału \"Informacje\""
+      subtitle: >
+        Wyświetla zaimki kanału i liczbę filmów na stronie informacji o kanale.
+  
+  experiments:
+    displayPlayerChoice:
+      title: "Włącz korzystanie ze starszych odtwarzaczy"
+      subtitle: >
+        Włącza opcję zmiany wersji odtwarzacza YouTube na stronie
+        wyglądu.
+    useSignInV2:
+      title: "Użyj logowania V2"
+      subtitle: >
+        Użyj eksperymentalnego nowego przepisywania logowania. Ta opcja 
+        powinna być dostępna na czas rozwoju V2, po czym stanie się domyślna, 
+        a starsza zostanie usunięta.
+    disableSignInOnHome:
+      title: "Wyłącz uwierzytelnione żądania strony głównej"
+      subtitle: >
+        Sprawia, że strona główna jest wylogowana. Jest to obejście blokowania
+        dostępu do strony głównej przez YouTube, jeśli historia oglądania jest
+        wyłączona (18.08.2023).
+    encryptedStreams:
+      title: "Użyj szyfrowanych strumieni wideo"
+      subtitle: >
+        Do not use.
+  
+  advanced:
+    enableDebugger:
+      title: "Włącz debugger"
+      subtitle: >
+        Debugger dostarcza użyteczne narzędzia dla deweloperów. Włącz go tylko
+        jeśli jesteś deweloperem lub zgłaszasz błąd i potrzebujesz więcej 
+        informacji.
+    clearSigninCache:
+      title: "Cache logowania"
+      subtitle: >
+        Rehike buforuje dane logowania, aby nie wykonywać zbyt wielu zapytań
+        do YouTube.
+      button: "Wyczyść cache logowania"
+    clearPlayerCache:
+      title: "Cache odtwarzacza"
+      subtitle: >
+        Rehike buforuje informacje o odtwarzaczu, aby nie wykonywać zbyt wielu
+        zapytań do YouTube.
+      button: "Wyczyść cache odtwarzania"
+    factoryReset:
+      title: "Zresetuj Rehike"
+      subtitle: >
+        Zresetuj Rehike do ustawień domyślnych, włączając w to ustawienia,
+        cache i wszelkie zmiany, które nie znajdują się w zdalnym repozytorium.
+      button: "Zresetuj Rehike"
+    updateRehike:
+      title: "Zaktualizuj Rehike"
+      button: "Zaktualizuj"

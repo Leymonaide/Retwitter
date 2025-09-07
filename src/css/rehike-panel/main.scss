@@ -1,0 +1,61 @@
+.rehike-version-mini-logo {
+    background: url(/rehike/static/version/logo_small_grey.png);
+    width: 89px;
+    height: 30px;
+}
+
+.rehike-creator-header-right {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-version {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 0, 0, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-version.selected,
+#creator-sidebar a:hover .studio-icon.creator-sidebar-rehike-version.selected {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 24, 0, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-appearance {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 0, 24, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-appearance.selected,
+#creator-sidebar a:hover .studio-icon.creator-sidebar-rehike-appearance.selected {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 24, 24, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-experiments {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 0, 48, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-experiments.selected,
+#creator-sidebar a:hover .studio-icon.creator-sidebar-rehike-experiments.selected {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 24, 48, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-advanced {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 0, 72, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-advanced.selected,
+#creator-sidebar a:hover .studio-icon.creator-sidebar-rehike-advanced.selected {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 24, 72, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-nepeta {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 0, 120, 24, 24);
+}
+
+#creator-sidebar .studio-icon.creator-sidebar-rehike-nepeta.selected,
+#creator-sidebar a:hover .studio-icon.creator-sidebar-rehike-nepeta.selected {
+    @include rehike.sprite("/rehike/static/rehike/www-sidebar.png", 24, 120, 24, 24);
+}
+
+#creator-sidebar .rehike-creator-footer-button {
+    margin-top: 15px;
+    padding: 0 16px 6px;
+}

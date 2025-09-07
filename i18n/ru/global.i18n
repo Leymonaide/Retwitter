@@ -1,0 +1,72 @@
+# Global strings
+# These include both common things and most JS messages.
+# These are exported to the templates at `yt.msg`.
+
+# Common aria (accessibility) labels
+loadingIconLabel: "Значок загрузки"
+actionMenuLabel: "Меню действий."
+
+# Spinner (loading) text:
+loading: "Загрузка..."
+working: "Работаем..."
+
+# Generic close button text
+close: "Закрыть"
+
+showMore: "Ещё"
+showLess: "Свернуть"
+
+# General "Загрузить ещё" text
+loadMore: "Загрузить ещё"
+
+# Duration accessibility strings (shown on watch)
+durationA11y: " - Продолжительность: %s."
+
+# TODO-i18n: make this use printf formatting so it can be more
+# versatile.
+usernamePrepend: "от "
+verified: "Подтверждено"
+
+# Video thumbnail watch later button strings:
+addToWatchLater: "Смотреть позже"
+addedToWatchLater: "Добавлен"
+addToWatchLaterError: "Ошибка"
+addToWatchQueue: "Очередь на просмотр"
+addToWatchQueueAdded: "Добавлено"
+addToWatchQueueError: "Ошибка"
+addToTvQueue: "Очередь"
+watchLaterSignIn: "Сначала %s войдите в аккаунт%s"
+
+# Add to dialog strings:
+addToHeader: "Добавить в"
+addToLoading: "Загрузка плейлистов..."
+
+# Shelfsliders (horizontal shelves):
+shelfsliderNext: "Следущий"
+shelfsliderPrev: "Предыдущий"
+
+# Interactive transcripts:
+transcriptTitle: "Текст видео"
+transcriptFail: "Не удалось загрузить текст видео."
+
+# Video player ad (?) JS messages
+adsInstreamFirstPlay: "A video ad is playing."
+adsInstreamSkippable: "Video ad can be skipped."
+adsOverlayImpression: "Ad displayed."
+
+# Searchbox labels
+sboxSuggestionDismissedLabel: "Предложение удалено"
+sboxSuggestionDismissLabel: "Убрать"
+
+# Misc:
+videoCountNone: "Нет видео"
+videoCountPlural: "%s видео"
+videoCountSingular: "1 видео"
+commentPostFail: "Не удалось опубликовать комментарий."
+viewFullPlaylist: "Смотреть весь плейлист"
+mdxAutoplayOff: "Автовозпроизведение выключено" 
+mdxAutoplayOn: "Автовозпроизведение включено"
+sorryAboutThat: "Сожалеем об этом."
+browseUnsavedChanges: >
+  Некоторые изменения, внесенные в настройки канала, не были сохранены
+  и будут потеряны при переходе с этой страницы..

@@ -1,0 +1,242 @@
+# Classic video player messages. Since these were baked into the binary,
+# and we use one modified binary, the messages are loaded dynamically.
+#
+# Rather than translating these by hand, which is an admittedly tedious process,
+# you can use Wayback Machine CDX search to find an archive of the player with
+# your specific language code, then copy them here. The classic player binary is
+# called "html5player", followed by the language code. Although the source data
+# will be a JavaScript object, you can convert it to a translation file simply
+# by running it through beautifier.io and then removing all commas after quotes.
+#
+# The player version that we use is from November 2014, and uses a VFL set, so
+# the URL goes: s.ytimg.com/yts/jsbin/html5player-LANGUAGE-vflID/html5player.js
+#
+# The strings are a little scattered (I think this is because they come from
+# multiple different modules which were concatenated together), so there are a
+# few different sources from which you'll have to take.
+#
+# From what I can tell, there are five main sources of string registration:
+#    - Main strings (the massive one)
+#    - Fresca (live) module
+#    - Subtitles (captions) module
+#    - 3D module
+#    - YTP (paid content) module
+#
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# If you don't know how to do that, then you can simply leave it unmodified when
+# submitting a translation, and a Rehike maintainer will add them for you.
+#
+# We are happy to do this work for you!
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#
+# There are only a few unique strings here that will require manual translation.
+# The convention that will be used for this file will use camelCase names for
+# custom messages, and CONSTANT_CASE names for official player messages that you
+# can get from the JS.
+
+# BEGIN UNIQUE STRINGS
+
+# Decryption unavailable messages:
+decryptionUnavailable: >
+    Erro do Rehike: Falha ao encontrar o algoritmo de desencriptação.
+decryptionUnavailableFooter: >
+    Por favor, comunique este erro aos desenvolvedores do Rehike. Entretanto, pode utilizar o %s.
+decryptionUnavailableLink: "Player atual"
+
+# Looping wasn't supported in this player revision, so we had to add a custom
+# implementation. As such, a custom string is also required.
+playerClassicLoop: "Loop"
+
+# END UNIQUE STRINGS
+
+# Binary main strings:
+YTP_ADVERTISEMENT: "Anúncio"
+YTP_AUDIO_TRACK_TITLE: "Faixa de áudio"
+YTP_AUTO: "Automático"
+YTP_AUTO_WITH_QUALITY_2: "Automático ($VIDEO_QUALITY)"
+YTP_CHANGE_QUALITY_WITH_QUALITY_2: "Mudar qualidade ($VIDEO_QUALITY)"
+YTP_COPY_DEBUG_INFO: "Copiar informações de depuração"
+YTP_COPY_VIDEO_URL: "Copy URL do vídeo"
+YTP_COPY_VIDEO_URL_AT_TIME: "Copiar URL do vídeo no momento atual"
+YTP_DRAWER_HEADER_TEXT: "Neste vídeo"
+YTP_DRAWER_POLL_SUBMIT: "Enviar"
+YTP_GET_DEBUG_INFO: "Obter informações de depuração"
+YTP_GET_VIDEO_URL: "Obter URL do vídeo"
+YTP_GET_VIDEO_URL_AT_TIME: "Obter URL do vídeo no momento atual"
+YTP_GET_EMBED: "Obter código de incorporação"
+YTP_DECREASE_PLAYBACK_SPEED: "Diminuir velocidade de reprodução"
+YTP_DEFAULT_VIEW: "Visualização padrão"
+YTP_EMBED_COPY: "Copiar código de incorporação"
+YTP_ERROR_GENERIC: "Ocorreu um erro, por favor tente mais tarde."
+YTP_ERROR_GENERIC_WITH_LINK_2: "Ocorreu um erro, por favor tente mais tarde. $BEGIN_LINKSaiba mais$END_LINK"
+YTP_EXIT_FULLSCREEN: "Sair da tela cheia"
+YTP_FEATURED: "Em destaque"
+YTP_FULLSCREEN: "Tela cheia"
+YTP_INCREASE_PLAYBACK_SPEED: "Aumentar velocidade de reprodução"
+YTP_KEYBOARD_SHORTCUTS: "Atalhos do teclado"
+YTP_LIVE_NOW: "AO VIVO"
+YTP_MIX: "Mix"
+YTP_MORE: "Mais"
+YTP_MDX_TITLE: "Reproduzir em"
+YTP_MDX_TOOLTIP: "Reproduzir na TV"
+YTP_MDX_MY_COMPUTER: "Este computador"
+YTP_MUTE: "Silenciar"
+YTP_NEXT: "Próximo"
+YTP_NEXT_VIDEO_IN: "Próximo vídeo em $TIME_LEFT"
+YTP_NORMAL_SPEED: "Normal"
+YTP_ON: "Lig."
+YTP_OFF: "Desl."
+YTP_OPTIONS: "Opções"
+YTP_PLAY_ALL: "Reproduzir tudo"
+YTP_PLAY_PAUSE: "Alternar reproduzir/pausar"
+YTP_PREVIOUS: "Anterior"
+YTP_PLAYLIST: "Playlist"
+YTP_PLAYLIST_UP_NEXT: "Próximo vídeo"
+YTP_QUALITY_TITLE: "Qualidade"
+YTP_REPLAY: "Repetir"
+YTP_REPORT_ISSUE: "Relatar problema de reprodução"
+YTP_SEEK_BACK: "Retroceder 10 segundos"
+YTP_SEEK_FORWARD: "Avançar 10 segundos"
+YTP_SEEK_PERCENT: "Ir para 0%-90%."
+YTP_SETTINGS: "Configurações"
+YTP_SHARE: "compartilhar"
+YTP_SHARE_WITH_PLAYLIST: "Compartilhar com playlist"
+YTP_SHOW_VIDEO_INFO: "Estatísticas para nerds"
+YTP_SPEED_TITLE: "Velocidade"
+YTP_ST_COLLAPSE: "Recolher"
+YTP_ST_EXPAND: "Expandir"
+YTP_SUBTITLES: "Legendas/CC"
+YTP_THREED_SHORT: "3D"
+YTP_THEATER_MODE: "Modo teatro"
+YTP_TOGGLE_FULLSCREEN: "Alternar tela cheia."
+YTP_TOGGLE_MUTE: "Alternar mudo"
+YTP_UNMUTE: "Dessilenciar"
+YTP_URL_NAVIGATE: "Assistir no YouTube.com"
+YTP_WATCH_ALL: "Assistir o vídeo inteiro"
+YTP_WATCH_LATER: "Assistir mais tarde"
+YTP_WATCH_LATER_AS_2: "Assistir mais tarde como $USER_NAME"
+YTP_WEBGL_3D_ANAGLYPH: "Anaglifo"
+YTP_WEBGL_3D_2D: "2D"
+YTP_SUBSCRIBE_AS: "Inscrever-se como $USER_NAME"
+YTP_LIKE_AS: "Curtir como $USER_NAME"
+YTP_DISLIKE_AS: "Descurtir como $USER_NAME"
+YTP_WATCH_NEXT: "Assistir próximo"
+YTP_PLAY: "Reproduzir"
+YTP_WATERMARK: "Marca d'água"
+YTP_ERROR_STREAMING_UNAVAILABLE: "A reprodução de vídeo não está disponível agora porque este vídeo foi baixado para visualização offline."
+YTP_ERROR_LICENSE: "Desculpe, houve um erro ao licenciar este vídeo."
+YTP_ERROR_VIDEO_NOT_FOUND: "Este vídeo não pode ser encontrado."
+YTP_ERROR_ALREADY_PINNED_ON_A_DEVICE: "Este vídeo já foi baixado no número máximo de dispositivos permitidos pelo detentor dos direitos autorais. Antes de reproduzir o vídeo aqui, ele precisa ser desfixado em outro dispositivo."
+YTP_ERROR_CANNOT_ACTIVATE_RENTAL: "Ocorreu um erro ao ativar seu aluguel. Por favor, recarregue esta página ou tente mais tarde."
+YTP_ERROR_PURCHASE_NOT_FOUND: "Este vídeo requer pagamento."
+YTP_ERROR_PURCHASE_REFUNDED: "A compra deste vídeo foi reembolsada."
+YTP_ERROR_STOPPED_BY_ANOTHER_PLAYBACK: "Sua conta está reproduzindo este vídeo em outro local. Por favor, recarregue esta página para continuar assistindo."
+YTP_ERROR_TOO_MANY_STREAMS_PER_USER: "A reprodução foi interrompida porque muitos vídeos pertencentes à mesma conta estão sendo reproduzidos."
+YTP_ERROR_TOO_MANY_STREAMS_PER_ENTITLEMENT: "A reprodução foi interrompida porque este vídeo foi reproduzido em muitos dispositivos."
+YTP_ERROR_STREAMING_DEVICES_QUOTA_PER_24H_EXCEEDED: "Muitos dispositivos/endereços IP foram usados durante o período de 24 horas."
+YTP_ERROR_UNUSUAL_ACTIVITY: "Devido a uma atividade incomum na conta, este vídeo não está disponível no momento."
+YTP_ERROR_NOT_SIGNED_IN: "Por favor, faça login para continuar assistindo."
+YTP_CLOSE: "Fechar"
+YTP_ANNOTATIONS: "Anotações"
+YTP_DONE: "Concluído"
+YTP_SHARE_THIS_PLAYLIST: "Compartilhar esta playlist"
+YTP_UPLOADED_BY_2: "por $AUTHOR"
+YTP_SEEK_SLIDER: "Buscar slider"
+YTP_PAUSE: "Pausar"
+YTP_AUTOPLAY: "Reprodução automática"
+YTP_AUTOPLAY_COUNTDOWN_2: "Próximo vídeo em $SECONDS_LEFT"
+YTP_CANCEL: "Cancelar"
+YTP_ON_GOOGLE_PLUS: "No Google+"
+YTP_STILL_THERE: "Você ainda está ai? Se sim, por favor clique no botão abaixo para continuar assistindo a playlist."
+YTP_DISMISS: "OK"
+YTP_RESET: "Repetir"
+YTP_STOP: "Parar reprodução ao vivo"
+YTP_LIKE: "Gostei"
+YTP_DISLIKE: "Não gostei"
+YTP_MORE_INFO: "Mais informações"
+YTP_SCREENREADER_VOLUME_SETTING: "volume"
+YTP_SCREENREADER_VOLUME_MUTED: "silenciado"
+YTP_SCREENREADER_VOLUME_MUTE: "silenciar"
+YTP_SCREENREADER_VOLUME_UNMUTE: "dessilenciar"
+YTP_SCREENREADER_CONTROL_TOGGLE: "mudar"
+YTP_SAMPLE_SUBTITLES: "As legendas vão ficar assim"
+YTP_HTML5_CONTEXT_MENU_LINK: "Sobre o player HTML5"
+YTP_HTML5_NO_AVAILABLE_FORMATS_FALLBACK: "Este formato de vídeo não é suportado."
+YTP_HTML5_NO_AVAILABLE_FORMATS_FALLBACK_WITH_LINK: "Seu navegador atualmente não reconhece nenhum dos formatos de vídeo disponíveis. $BEGIN_LINKClique aqui para visitar nossas perguntas frequentes sobre vídeo HTML5.$END_LINK"
+YTP_HTML5_NO_AVAILABLE_FORMATS_FALLBACK_FLASH: "O Adobe Flash Player é necessário para reprodução de vídeo. $BEGIN_LINKObtenha o Flash Player mais recente$END_LINK."
+YTP_ERROR_CAST_SESSION_DEVICE_MISMATCHED: "O dispositivo na sessão de transmissão não corresponde ao solicitado."
+YTP_ERROR_CAST_SESSION_VIDEO_MISMATCHED: "O vídeo na sessão de transmissão não corresponde ao solicitado."
+YTP_ERROR_CAST_TOKEN_EXPIRED: "A sessão de transmissão expirou. Por favor, recarregue."
+YTP_ERROR_CAST_TOKEN_FAILED: "Sessão de transmissão não disponível. Por favor, recarregue ou tente mais tarde."
+YTP_ERROR_CAST_TOKEN_MALFORMED: "Sessão de transmissão inválida. Por favor, recarregue ou tente mais tarde."
+YTP_ERROR_GEO_FAILURE: "Este vídeo não está disponível no seu país."
+YTP_ERROR_INVALID_DRM_MESSAGE: "A mensagem específica do sistema DRM é inválida."
+YTP_ERROR_RENTAL_EXPIRED: "O aluguel deste vídeo expirou."
+YTP_ERROR_RETRYABLE_ERROR: "Houve um erro temporário no servidor. Por favor, tente mais tarde."
+YTP_ERROR_SERVER_ERROR: "Houve um erro interno no servidor. Por favor, tente mais tarde."
+YTP_ERROR_STREAMING_NOT_ALLOWED: "Reprodução não é permitida porque este vídeo está fixado em outro dispositivo."
+YTP_ERROR_UNSUPPORTED_DEVICE: "Reprodução não é suportada neste dispositivo."
+YTP_ERROR_VIDEO_FORBIDDEN: "Acesso a este vídeo é proibido."
+YTP_MDX_STATUS_CONNECTED: "Reproduzindo em"
+YTP_MDX_STATUS_CONNECTING: "Conectando-se a"
+YTP_MDX_STATUS_ERROR: "Erro em"
+YTP_MDX_PLAYER_ERROR: "Este vídeo não está disponível para reprodução remota."
+YTP_MDX_PLAYER_RECONNECT_TIME: "Por favor, verifique sua conexão com a Internet. Tentando novamente em $FORMATTED_TIME..."
+YTP_MDX_PLAYER_RECONNECT_BUTTON: "Reconectar"
+YTP_DEVICE_FALLBACK: "Desculpe, este vídeo não está disponível neste dispositivo."
+YTP_AD_INTERRUPT_MESSAGE: "Seu vídeo vai começar depois deste anúncio."
+YTP_VISIT_ADVERTISERS_SITE: "Visitar site do anunciante"
+YTP_PROGRESS_LABEL: "$PLAY_PROGRESS de $DURATION segundos"
+
+# Binary Fresca (Live) strings:
+YTP_FRESCA_STARTING_SOON_MESSAGE: "Começando em breve..."
+YTP_FRESCA_EVENT_OVER_MESSAGE: "Este evento ao vivo terminou."
+YTP_FRESCA_COMPLETE_MESSAGE: "Obrigado por assistir!"
+YTP_FRESCA_STAND_BY_MESSAGE: "Por favor, aguarde."
+YTP_FRESCA_TECHNICAL_DIFFICULTIES_MESSAGE: "Estamos tendo dificuldades técnicas."
+
+# Binary Subtitles (captions) strings:
+YTP_TRANSLATE_MENU_ITEM: "Traduzir legendas"
+YTP_CONTRIBUTE_MENU_ITEM: "Adicionar legendas/CC"
+YTP_TRANSLATE_DIALOG_TITLE: "Traduzir..."
+YTP_ASR_SETTINGS_LABEL: "Legendas automáticas"
+YTP_LANGUAGE_OFF: "Desl."
+YTP_FONT_FAMILY: "Estilo da fonte"
+YTP_FONT_SIZE: "Tamanho da fonte"
+YTP_FONT_COLOR: "Cor da fonte"
+YTP_FONT_OPACITY: "Opacidade da fonte"
+YTP_BACKGROUND_COLOR: "Cor do fundo"
+YTP_BACKGROUND_OPACITY: "Opacidade do fundo"
+YTP_WINDOW_COLOR: "Cor da janela"
+YTP_WINDOW_OPACITY: "Opacidade da janela"
+YTP_COLOR_WHITE: "Branco"
+YTP_COLOR_YELLOW: "Amarelo"
+YTP_COLOR_GREEN: "Verde"
+YTP_COLOR_CYAN: "Ciano"
+YTP_COLOR_BLUE: "Azul"
+YTP_COLOR_MAGENTA: "Magenta"
+YTP_COLOR_RED: "Veremelho"
+YTP_COLOR_BLACK: "Preto"
+YTP_FONT_FAMILY_MONO_SERIF: "Serifada monoespaçada"
+YTP_FONT_FAMILY_PROP_SERIF: "Serifada proporcional"
+YTP_FONT_FAMILY_MONO_SANS: "Sem serifa monoespaçada"
+YTP_FONT_FAMILY_PROP_SANS: "Sem serifa proporcional"
+YTP_FONT_FAMILY_CASUAL: "Casual"
+YTP_FONT_FAMILY_CURSIVE: "Cursiva"
+YTP_FONT_FAMILY_SMALL_CAPS: "Versalete"
+YTP_CHAR_EDGE_STYLE: "Estilo de borda do caractere"
+YTP_EDGE_STYLE_NONE: "Nenhuma"
+YTP_EDGE_STYLE_RAISED: "Aumentada"
+YTP_EDGE_STYLE_DEPRESSED: "Reduzida"
+YTP_EDGE_STYLE_OUTLINE: "Circunscrito"
+YTP_EDGE_STYLE_DROP_SHADOW: "Sombra projetada"
+YTP_CLICK_FOR_SETTINGS: "Clique em $GEAR_ICON para configurações"
+
+# Binary 3D strings:
+YTP_THREED_HTML5_WARNING_DIALOG_TITLE: "Nenhum hardware 3D HTML5 detectado"
+YTP_THREED_HTML5_WARNING_DIALOG_MESSAGE: "Obtenha $BEGIN_LINKajuda para configurar o 3D HTML5$END_LINK, ou mude os modos de visualização 3D."
+YTP_THREED_HTML5_WARNING_DIALOG_CHANGE_MODE: "Mudar modo de visualização 3D"
+
+# Binary YPC (paid content) strings:
+YTP_YPC_START_RENTAL_HEADER: "Você gostaria de iniciar o aluguel?"
+YTP_YPC_START_RENTAL_BUTTON: "Iniciar período de aluguel"

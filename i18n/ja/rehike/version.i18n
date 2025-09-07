@@ -1,0 +1,76 @@
+aboutRehike: "Rehike について"
+brandName: "Rehike"
+versionHeader: "バージョン %s"
+nightly: "Nightly"
+nightlyInfoTooltip: >
+  このリリースは最新のものであり、不規則なバグが含まれている可能性があります。
+
+subheaderNightlyInfo: "現在のブランチ情報"
+nonGitNotice: "この Rehike リリースには Git 情報がありません。"
+nonGitExtended: >
+  これは、GitHub から直接リポジトリをダウンロードした場合（たとえば、「ZIP ダウンロード」
+  機能から）に発生することがあります。一部のバージョン情報は失われたり利用できなかったり
+  する可能性があります。
+syncGithubButton: "GitHub と同期"
+failedNotice: "バージョン情報の取得に失敗しました。"
+remoteFailedNotice: "リモートバージョン情報の取得に失敗しました。"
+remoteFailedExtended: "バージョン情報が制限されています。"
+noDotVersionNotice: ".version ファイルが欠落または壊れています。"
+noNewVersions: "新しいバージョンはありません。"
+oneNewVersion: "1 個の新しいバージョンが利用可能です。"
+varNewVersions: "%s 個の新しいバージョンが利用可能です。"
+unknownNewVersions: "このバージョンは非常に古いものです。"
+
+updatesAvailable: "更新が利用可能です"
+upToDate: "リモートブランチと同期済みです。"
+
+headingVersionInfo: "Rehike について"
+viewOnGithub: "GitHub で見る"
+
+extraInfo: "ランタイム情報"
+operatingSystem: "OS"
+phpVersion: "PHP バージョン"
+browserVersion: "ブラウザ バージョン"
+
+githubLinkButton: "RehikeのGitHub"
+creditsButton: "クレジット"
+runtimeInfoMoreInfoButton: "詳細情報"
+gitManagerPullButton: "プル"
+gitManagerUnpushedChanges: >
+  プッシュされていないローカルな変更があるため、これは実際には古いです。
+
+# -- Git manager messages --
+
+gitManagerDialogDismissButton: "閉じる"
+gitManagerDialogRetryButton: "再試行"
+
+gitManagerDialogFailedPullTitle: "プルに失敗しました"
+gitManagerDialogFailedPullMessage: >
+  リモートブランチからの変更のプルに失敗しました。Gitのエラーログ:
+
+# -- Translations for the credits section --
+
+creditsTitle: "クレジット"
+creditsDevelopersTitle: "Rehike の開発者"
+
+# Major contributor names.
+# Feel free to add transliterations of names in parentheses if you wish
+# to do so.
+creditsAubrey: "Aubrey Pankow（オーブリー・パンコー）"
+creditsIsabella: "Isabella Lulamoon（イザベラ・ルラムーン）"
+
+creditsThirdPartyHeader: >
+  Rehikeは以下のサードパーティのソフトウェア、貢献、サービスを利用しています：
+
+# Credits to Prototaxis for documenting the WEB v2 shelves technique
+# we use for the homepage.
+# The template placeholder "%s" is replaced with an anchor link to his
+# GitHub profile, but it's not featured here in order to avoid embedding
+# HTML content.
+creditsPrototaxisTemplate: >
+  %s さんは、クラシックで「棚のような」ホームページのデザインを復元するために使用する
+  InnerTube API のエクスプロイトを文書化しているありがとうございました。
+
+creditsThirdPartyFooter: >
+  これらのサードパーティサービスの使用は、それぞれのライセンスに従います。
+  可能な限り、その適用は任意となります。

@@ -1,0 +1,23 @@
+# Strings related to the soft-disable feature:
+
+# Shows in configuration settings:
+disableRehike: "Выключить Rehike"
+rhSettingsEnableRehike: "Включить Rehike"
+
+# Shows in the account menu in Polymer:
+enableRehike: "Вернуться в Rehike"
+
+# Disabled message:
+currentlyDisabledMessage: >
+   В настоящее время у вас отключен Rehike. Функциональность может быть ограничена.
+
+# Dialog box strings:
+disableRehikeInfoHeader: "Вы уверены?"
+disableRehikeInfoDescription: >
+    Это отключит Rehike, пока вы не включите его снова. Включить Rehike можно
+    в меню аккаунта в новом интерфейсе YouTube или с помощью параметра URL:
+    ?enable_rehike=1
+
+# Dialog buttons:
+disableRehikeInfoCancel: "Отмена"
+disableRehikeInfoDisable: "Отключить"
