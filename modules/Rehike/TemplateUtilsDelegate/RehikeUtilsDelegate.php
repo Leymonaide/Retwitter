@@ -26,7 +26,6 @@ class RehikeUtilsDelegate extends RehikeUtilsDelegateBase
     public ResourceUtils $resource;
     public ParsingUtils $parsing;
     public RehikeUtilsI18nDelegate $i18n;
-    public SignIn $signin;
 
     public function __construct()
     {
@@ -39,6 +38,5 @@ class RehikeUtilsDelegate extends RehikeUtilsDelegateBase
         $this->resource = new ResourceUtils();
         $this->parsing = new ParsingUtils();
         $this->i18n = new RehikeUtilsI18nDelegate();
-        $this->signin = new SignIn();
     }
 }

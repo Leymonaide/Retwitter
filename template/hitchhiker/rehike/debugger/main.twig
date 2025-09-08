@@ -19,14 +19,15 @@
     </script>
     <link rel="stylesheet" href="{{ rehike.resource.resolveVersioned("rehike/css/www-rebug.css") }}">
     {%- if rebug.openButton -%}
-        {% include "rehike/debugger/open_button.twig" %}
+        {% include "@rehike/rehike/debugger/open_button.twig" %}
     {%- endif -%}
-    {% import "rehike/debugger/lightbox_main.twig" as main %}
+    {% import "@rehike/rehike/debugger/lightbox_main.twig" as main %}
     <div id="rebug-lightbox-container">
         <div id="rebug-lightbox">
             {{ main.dialog(rebug.dialog) }}
         </div>
     </div>
+    <script type="text/javascript" src="{{ rehike.resource.resolveVersioned("rehike/js/www-rehike-core.js") }}"></script>
     <script type="text/javascript" src="{{ rehike.resource.resolveVersioned("rehike/js/www-rebug.js") }}"></script>
     {# Global walker config #}
     {% set globalAttr = rebug.jsAttrs %}

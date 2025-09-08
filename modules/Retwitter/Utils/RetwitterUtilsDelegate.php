@@ -21,10 +21,10 @@ namespace Retwitter\Utils;
 
 class RetwitterUtilsDelegate
 {
-    public ResourceUtils $resourceUtils;
+    public ResourceUtils $resource;
 
     public function __construct()
     {
-        $this->resourceUtils = new ResourceUtils();
+        $this->resource = new ResourceUtils();
     }
 }

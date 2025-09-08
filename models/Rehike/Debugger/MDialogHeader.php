@@ -61,11 +61,6 @@ class MDialogHeader
             ];
         }
 
-        if (!$condensed)
-        {
-            $this->historyButton = new MHistoryButton();
-        }
-
         if ($closeButton)
         {
             $this->closeButton = new MDialogHeaderCloseButton();

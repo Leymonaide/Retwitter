@@ -185,7 +185,7 @@ final class Bootloader
     private static function runSetupTasks(): void
     {
         Tasks::setupTemplateManager();
-        Tasks::setupI18n(); // nikonote: NOT WORKING
+        Tasks::setupI18n();
         Tasks::setupControllerV2();
     }
 }

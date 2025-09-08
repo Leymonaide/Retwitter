@@ -41,7 +41,7 @@ final class AppContext
     /**
      * The current language ID of the application.
      */
-    public string $lang = "en-US";
+    public string $lang = "en";
 
     /**
      * CSS revision number.

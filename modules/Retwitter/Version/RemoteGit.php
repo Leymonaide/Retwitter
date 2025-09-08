@@ -1,5 +1,6 @@
 <?php
-namespace Rehike\Version;
+// This file is licensed under the Mozilla Public License 2.0 by The Rehike Maintainers.
+namespace Retwitter\Version;
 
 use const Rehike\Constants\GH_ENABLED;
 use const Rehike\Constants\GH_REPO;

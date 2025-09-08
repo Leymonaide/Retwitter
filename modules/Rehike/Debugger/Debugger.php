@@ -204,7 +204,7 @@ class Debugger
         foreach ($context->getTabs() as $tab) if ($tab->content->enableJsHistory)
         {
             $html = TemplateManager::render(
-                ["tab" => $tab], "rehike/debugger/spf/tab_content"
+                ["tab" => $tab], "@rehike/rehike/debugger/spf/tab_content"
             );
 
             $response->updatedTabs += [
@@ -216,7 +216,7 @@ class Debugger
         }
 
         $response->openButton = TemplateManager::render(
-            [], "rehike/debugger/open_button"
+            [], "@rehike/rehike/debugger/open_button"
         );
 
         if (!self::$condensed)

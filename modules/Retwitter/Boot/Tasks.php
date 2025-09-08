@@ -94,6 +94,14 @@ final class Tasks
 
         $utils = new RetwitterUtilsDelegate();
         TemplateManager::addGlobal("retwitter", $utils);
+
+        // Rebug needs a YT variable proxy, so give it the Rehike\YtApp instance:
+        $ytApp = YtApp::getInstance();
+        TemplateManager::addGlobal("yt", $ytApp);
+
+        // Rebug also needs the Rehike variable for resolving resources:
+        $rehikeUtils = new RehikeUtilsDelegate();
+        TemplateManager::addGlobal("rehike", $rehikeUtils);
     }
 
     public static function setupI18n(): void

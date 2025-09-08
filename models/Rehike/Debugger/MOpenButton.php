@@ -2,8 +2,9 @@
 namespace Rehike\Model\Rehike\Debugger;
 
 use \Rehike\i18n\i18n;
-use \Rehike\Version\VersionController;
 use \Rehike\Model\Common\MButton;
+
+use \Retwitter\Version\VersionController;
 
 /**
  * Implements the Rehike debugger popup open button.

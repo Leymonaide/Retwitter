@@ -13,6 +13,7 @@ Router::redirect([
 
 Router::get([
     "/test" => TestController::class,
+    "/rehike/static/*" => rehike\StaticRouter::class,
 ]);
 
 Router::post([

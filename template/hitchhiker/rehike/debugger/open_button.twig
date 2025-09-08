@@ -1,11 +1,11 @@
 {# 
-    Implements the Rehike debugger popup.
-    
-    @author Taniko Yamamoto <kirasicecreamm@gmail.com>
-    @author The Rehike Maintainers
+    Implements the Rehike debugger popup button.
 #}
 
-{% from "common/uix/button.twig" import render as button %}
+{% with { rebugbtn: rehikeDebugger.openButton } %}
 <div id="rebug-open-button-container">
-    {{ button(rehikeDebugger.openButton, null, "rebug-open-button") }}
+    <button id="rebug-open-button" class="rebug-open-button {{ rebugbtn.class|join(' ') }}">
+        <span>{{ rebugbtn.text }}</span>
+    </button>
 </div>
+{% endwith %}

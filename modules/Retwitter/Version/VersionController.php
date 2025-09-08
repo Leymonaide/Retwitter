@@ -1,5 +1,6 @@
 <?php
-namespace Rehike\Version;
+// This file is licensed under the Mozilla Public License 2.0 by The Rehike Maintainers.
+namespace Retwitter\Version;
 
 use DateTime, DateTimeZone;
 
@@ -39,13 +40,8 @@ class VersionController
             DotGit::getInfo(self::$versionInfo);
             self::$versionInfo->supportsDotGit = true;
         }
-        
-        if ($dv = DotVersion::canUse())
-        {
-            DotVersion::getInfo(self::$versionInfo);
-        }
 
-        if ($dg || $dv)
+        if ($dg)
         {
             self::$versionInfo->buildNumber = BuildNumber::getBuildNumber();
             $hasRun = true;
@@ -60,7 +56,7 @@ class VersionController
      */
     public static function getVersion(): string
     {
-        $semanticVersion = \Rehike\Constants\VERSION;
+        $semanticVersion = \Retwitter\Constants\VERSION;
         
         $dateTime = new DateTime(timezone: new DateTimeZone("GMT"));
         $dateAvailable = false;

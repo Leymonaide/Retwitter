@@ -10,7 +10,7 @@
 
         {% block dialog_content %}
             {# Shhhh... I don't know why it doesn't work otherwise. #}
-            {% import "rehike/version/credits.twig" as credits %}
+            {% import "@rehike/rehike/version/credits.twig" as credits %}
             <div class="rehike-credits-content">
                 {{ credits.credits_content() }}
             </div>

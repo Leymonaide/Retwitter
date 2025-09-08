@@ -1,5 +1,5 @@
 <?php
-namespace Rehike\Controller\rehike;
+namespace Retwitter\Controller\rehike;
 
 use Rehike\ControllerV2\BaseController;
 use Rehike\ControllerV2\IGetController;
