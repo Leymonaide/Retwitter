@@ -21,6 +21,8 @@ use const DNS_CNAME;
 use const DNS_A    as DNS_IPV4;
 use const DNS_AAAA as DNS_IPV6;
 
+// TODO: PR changes to Rehike.
+
 /**
  * Utilities for DNS overriding.
  * 
@@ -60,7 +62,9 @@ class Nameserver
         // URI.
         $hostname = self::getHostName($uri);
 
-        return self::lookup($hostname, $port);
+        $result = self::lookup($hostname, $port);
+        NameserverCache::write($result);
+        return $result;
     }
 
     /**
@@ -74,6 +78,7 @@ class Nameserver
     ): NameserverInfo
     {
         $strategies = [
+            "lookupCache",
             "lookupBlueLibraries",
             "lookupNative",
             "lookupViaShell"
@@ -96,6 +101,25 @@ class Nameserver
         // If we got here, all strategies have failed, so throw another
         // exception.
         throw new DnsLookupException($uri, $lookupServer);
+    }
+
+    /**
+     * Looks up the IP address of this server in the cache.
+     */
+    public static function lookupCache(
+            string $uri,
+            int $port,
+            string $lookupServer
+    ): NameserverInfo
+    {
+        $cachedInfo = NameserverCache::get("$uri:$port");
+
+        if (null === $cachedInfo)
+        {
+            throw new DnsLookupException($uri, $lookupServer);
+        }
+
+        return $cachedInfo;
     }
     
     /**

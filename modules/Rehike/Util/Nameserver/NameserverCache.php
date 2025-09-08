@@ -1,0 +1,106 @@
+<?php
+namespace Rehike\Util\Nameserver;
+
+use Rehike\FileSystem;
+use Rehike\Logging\DebugLogger;
+
+/**
+ * Provides utilities for caching nameserver lookups.
+ * 
+ * @author Pumpkin <pumpkinpielemon@gmail.com>
+ */
+class NameserverCache
+{
+    /**
+     * The path to the file used to store the cache.
+     * 
+     * @var string
+     */
+    public const CACHE_FILE = "cache/nameserver_cache.json";
+
+    /**
+     * The amount of time for which a cache entry is valid.
+     * 
+     * @var int
+     */
+    public const VALID_TIME = 18000; // 5 hours
+
+    /**
+     * Attempt to get nameserver information from the cache.
+     * 
+     * @return ?NameserverInfo Null if failed or the cache file doesn't exist.
+     */
+    public static function get(string $domain): ?NameserverInfo
+    {
+        if (!FileSystem::fileExists(self::CACHE_FILE))
+        {
+            return null;
+        }
+
+        $jsonStr = FileSystem::getFileContents(self::CACHE_FILE);
+
+        if (!is_string($jsonStr))
+        {
+            DebugLogger::print("Failed to read nameserver cache file.");
+            return null;
+        }
+
+        $data = json_decode($jsonStr);
+
+        if (!is_object($data))
+        {
+            DebugLogger::print("Nameserver cache file contains invalid data. The file will be removed.");
+            unlink(self::CACHE_FILE);
+            return null;
+        }
+
+        $entry = $data->{$domain};
+
+        if (isset($entry)
+            && isset($entry->domain)
+            && isset($entry->expire)
+            && $entry->domain == $domain
+            && $entry->expire < time() + self::VALID_TIME
+        )
+        {
+            return new NameserverInfo($domain, $entry->ip);
+        }
+
+        return null;
+    }
+
+    /**
+     * Write new nameserver information to the cache.
+     * 
+     * @return bool True on success, false on failure.
+     */
+    public static function write(NameserverInfo $info): bool
+    {
+        $data = (object)[];
+
+        if (FileSystem::fileExists(self::CACHE_FILE))
+        {
+            $jsonStr = FileSystem::getFileContents(self::CACHE_FILE);
+
+            if ($jsonStr)
+            {
+                $data = json_decode($jsonStr);
+
+                if (!is_object($data))
+                {
+                    DebugLogger::print("Failed to parse nameserver cache file.");
+                }
+            }
+        }
+
+        $serializedInfo = (object)[];
+        $serializedInfo->domain = $info->domain;
+        $serializedInfo->ip = $info->ipAddress;
+        $serializedInfo->expire = time() + self::VALID_TIME;
+
+        $data->{$info->domain} = $serializedInfo;
+
+        FileSystem::writeFile(self::CACHE_FILE, json_encode($data));
+        return FileSystem::fileExists(self::CACHE_FILE);
+    }
+}
