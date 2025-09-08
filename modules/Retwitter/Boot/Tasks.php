@@ -108,10 +108,6 @@ final class Tasks
     {
         // i18n v2
         i18nBoot::boot();
-
-        // Also expose common messages to the global variable.
-        YtApp::getInstance()->msgs = 
-            (array)i18n::getAllTemplates("global");
     }
 
     public static function setupControllerV2(): void

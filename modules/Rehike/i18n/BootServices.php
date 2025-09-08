@@ -2,7 +2,6 @@
 namespace Rehike\i18n;
 
 use Rehike\ConfigManager\Config;
-use Rehike\i18n\Internal\Core as I18nCore;
 use Rehike\i18n\Internal\RehikeTranslationRouter;
 use Rehike\YtApp;
 use Rehike\Validation\ValidHostLanguages;
@@ -18,6 +17,7 @@ class BootServices
     /**
      * Perform setup duties.
      */
+    #[\RetwitterKeepValue("Removed Rehike YouTube-specific code.")]
     public static function boot(): void
     {
         \Rehike\Profiler::start("i18nboot");
@@ -25,17 +25,6 @@ class BootServices
 
         i18n::getConfigApi()
             ->setRootDirectory($_SERVER["DOCUMENT_ROOT"] . "/i18n");
-            
-        if (isset($_COOKIE["hl"]))
-        {
-            $validator = new ValidHostLanguages();
-            $targetHl = I18nCore::validateHlGl($_COOKIE["hl"]);
-            
-            if ($validator->validateString($targetHl))
-            {
-                $langId = $targetHl;
-            }
-        }
 
         if ($langId == null || !i18n::isValidLanguageId($langId))
         {
@@ -55,8 +44,6 @@ class BootServices
             self::initializeCoffeeTranslation($langId);
         }
 
-        YtApp::getInstance()->gl = I18nCore::getInnertubeGeolocation();
-        YtApp::getInstance()->hl = I18nCore::getInnertubeLanguageId();
         \Rehike\Profiler::end("i18nboot");
     }
     
