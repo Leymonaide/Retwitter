@@ -20,6 +20,7 @@
 namespace Retwitter\Page\Profile;
 
 use Rehike\ControllerV2\IGetControllerAsync;
+use Retwitter\Network;
 use Retwitter\Page\Base\RetwitterPageController;
 
 use Rehike\Async\Promise;
@@ -36,6 +37,56 @@ class ProfileController
 
             $context = new ProfilePageContext();
             $this->setPageContext($context);
+
+            // Request page:
+            $username = $this->getRequest()->path[0];
+            if ("@" == substr($username, 0, 1))
+            {
+                $username = substr($username, 1);
+            }
+
+            $rawUser = yield Network::graphqlRequest(
+                action: "96tVxbPqMZDoYB5pmzezKA/UserByScreenName",
+                variables: [
+                    "screen_name" => $username,
+                    "withSafetyModeUserFields" => true,
+                    "withSuperFollowsUserFields",
+                ],
+                features: [
+                    "responsive_web_twitter_blue_verified_badge_is_enabled" => true,
+                    "verified_phone_label_enabled" => false,
+                    "responsive_web_graphql_timeline_navigation_enabled" => true,
+                    "longform_notetweets_consumption_enabled" => true,
+                    "tweetypie_unmention_optimization_enabled" => true,
+                    "vibe_api_enabled" => true,
+                    "responsive_web_edit_tweet_api_enabled" => true,
+                    "graphql_is_translatable_rweb_tweet_is_translatable_enabled" => true,
+                    "view_counts_everywhere_api_enabled" => true,
+                    "standardized_nudges_misinfo" => true,
+                    "tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled" => false,
+                    "interactive_text_enabled" => true,
+                    "responsive_web_text_conversations_enabled" => false,
+                    "responsive_web_enhance_cards_enabled" => false,
+                    // Must be set below:
+                    "payments_enabled" => false,
+                    "profile_label_improvements_pcf_label_in_post_enabled" => false,
+                    "subscriptions_verification_info_is_identity_verified_enabled" => false,
+                    "rweb_tipjar_consumption_enabled" => false,
+                    "responsive_web_twitter_article_notes_tab_enabled" => false,
+                    "subscriptions_feature_can_gift_premium" => false,
+                    "creator_subscriptions_tweet_preview_api_enabled" => false,
+                    "responsive_web_graphql_skip_user_profile_image_extensions_enabled" => false,
+                    "highlights_tweets_tab_ui_enabled" => false,
+                    "hidden_profile_subscriptions_enabled" => false,
+                    "subscriptions_verification_info_verified_since_enabled" => false,
+                ],
+            );
+
+            $user = $rawUser->getJson();
+
+            echo json_encode($user) . "\n\n";
+
+            $context->insertUserData($user);
 
             $this->renderPage();
         });

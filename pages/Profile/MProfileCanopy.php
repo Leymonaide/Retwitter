@@ -19,37 +19,14 @@
 
 namespace Retwitter\Page\Profile;
 
-use Rehike\i18n\i18n;
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\Context\BasePageContext;
-
-/**
- * Twitter profile model.
- */
-class ProfilePageContext extends BasePageContext
+class MProfileCanopy
 {
-    /**
-     * List of valid tweet tab subpage values.
-     * 
-     * @var string[]
-     */
-    public const VALID_TWEET_TABS = [
-        "",
-        "with_replies",
-        "media",
-    ];
+    public ?string $banner = null;
+    public MProfileAvatar $avatar;
+    public array $stats = [];
 
-    public ?MProfileCanopy $canopy = null;
-    
-    private NamespaceBoundLanguageApi $i18n;
-    
-    public function __construct()
+    public function __construct(object $data)
     {
-        $this->i18n = i18n::getNamespace("profile");
-    }
-
-    public function insertUserData(object $data): void
-    {
-        $this->canopy = new MProfileCanopy($data->data->user->result);
+        $this->avatar = new MProfileAvatar($data);
     }
 }

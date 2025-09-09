@@ -17,39 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Utils;
 
-use Rehike\i18n\i18n;
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\Context\BasePageContext;
-
-/**
- * Twitter profile model.
- */
-class ProfilePageContext extends BasePageContext
+class ImageUtils
 {
-    /**
-     * List of valid tweet tab subpage values.
-     * 
-     * @var string[]
-     */
-    public const VALID_TWEET_TABS = [
-        "",
-        "with_replies",
-        "media",
-    ];
-
-    public ?MProfileCanopy $canopy = null;
-    
-    private NamespaceBoundLanguageApi $i18n;
-    
-    public function __construct()
+    public const IMAGE_SIZE_REGEX = "/(?<=.)[a-zA-Z0-9]+(?=.(?:jpg|png))/";
+ 
+    public static function resize(string $orig, string $size): string
     {
-        $this->i18n = i18n::getNamespace("profile");
-    }
-
-    public function insertUserData(object $data): void
-    {
-        $this->canopy = new MProfileCanopy($data->data->user->result);
+        return preg_replace(self::IMAGE_SIZE_REGEX, $size, $orig);
     }
 }

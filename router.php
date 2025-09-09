@@ -13,6 +13,7 @@ Router::redirect([
 Router::get([
     "/test" => TestController::class,
     "/profile_test" => Profile\ProfileController::class,
+    "/@audymori" => Profile\ProfileController::class,
     "/rehike/static/*" => rehike\StaticRouter::class,
 ]);
 
