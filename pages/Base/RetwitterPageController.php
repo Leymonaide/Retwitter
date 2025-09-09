@@ -17,13 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Controller\Base;
+namespace Retwitter\Page\Base;
 
 use Rehike\ControllerV2\IController;
 
 use Rehike\ControllerV2\BaseController;
 
 use Rehike\Debugger\Debugger;
+use Retwitter\Context\AppContext;
 use Retwitter\Context\BasePageContext;
 use Retwitter\TemplateManager;
 
@@ -50,6 +51,7 @@ class RetwitterPageController extends BaseController
     public function setPageContext(BasePageContext $context): void
     {
         $this->pageContext = $context;
+        AppContext::getInstance()->page = $this->pageContext;
     }
     
     public function getTemplate(): string

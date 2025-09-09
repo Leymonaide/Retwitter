@@ -17,25 +17,27 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Context;
+namespace Retwitter\Page;
 
-abstract class BasePageContext
+use Rehike\ControllerV2\{
+    IGetControllerAsync,
+};
+
+use Rehike\ControllerV2\BaseController;
+use Rehike\Network;
+use Rehike\Async\Promise;
+use Retwitter\Page\Base\RetwitterPageController;
+use function Rehike\Async\async;
+
+class TestController extends RetwitterPageController implements IGetControllerAsync
 {
-    /**
-     * The title of the current page.
-     * 
-     * @var string
-     */
-    private string $title = "Twitter";
-
-    public function getTitle(): string
+    public function getAsync(): Promise
     {
-        return $this->title;
-    }
+        return async(function()
+        {
+            $this->setTemplate("test");
 
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        return $this;
+            $this->renderPage();
+        });
     }
 }

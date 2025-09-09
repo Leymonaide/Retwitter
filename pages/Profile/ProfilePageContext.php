@@ -17,25 +17,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Context;
+namespace Retwitter\Page\Profile;
 
-abstract class BasePageContext
+use Rehike\i18n\i18n;
+use Retwitter\Context\BasePageContext;
+
+/**
+ * Twitter profile model.
+ */
+class ProfilePageContext extends BasePageContext
 {
     /**
-     * The title of the current page.
+     * List of valid tweet tab subpage values.
      * 
-     * @var string
+     * @var string[]
      */
-    private string $title = "Twitter";
+    public const VALID_TWEET_TABS = [
+        "",
+        "with_replies",
+        "media",
+    ];
 
-    public function getTitle(): string
+    public function __construct()
     {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        return $this;
+        $i18n = i18n::getNamespace("profile");
     }
 }

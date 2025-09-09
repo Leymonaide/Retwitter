@@ -1,8 +1,7 @@
 <?php
-namespace Retwitter\Controller;
+namespace Retwitter\Page;
 
 use Rehike\ControllerV2\Router;
-use Retwitter\Controller\TestController;
 
 // Funnel = pages that the Retwitter server should not touch:
 Router::funnel([
@@ -13,6 +12,7 @@ Router::redirect([
 
 Router::get([
     "/test" => TestController::class,
+    "/profile_test" => Profile\ProfileController::class,
     "/rehike/static/*" => rehike\StaticRouter::class,
 ]);
 

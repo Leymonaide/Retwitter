@@ -36,7 +36,7 @@ final class AppContext
     /**
      * The context of the current page.
      */
-    public BasePageContext $pageContext;
+    public BasePageContext $page;
 
     /**
      * The current language ID of the application.
