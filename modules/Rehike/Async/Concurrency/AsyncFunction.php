@@ -120,13 +120,18 @@ class AsyncFunction
                 $result = $this->generator->getReturn();
                 $this->ownPromise->resolve($result);
             }
-            catch (Throwable)
+            catch (Throwable $e)
             {
                 // If the promise threw an exception that was caught before
                 // getting to us (the network library can do this internally), then
                 // it will no have return value and will throw an exception. We
                 // just have to ignore it.
-                $this->ownPromise->resolve(null);
+                //
+                // TODO: This was resolve(null) in Rehike, but that does not seem
+                // to work at all. In future, open PR to Rehike discussing this
+                // bug. Judging from the above comment, my solution does not
+                // properly fix the issue.
+                $this->ownPromise->reject($e);
             }
             
             return;
