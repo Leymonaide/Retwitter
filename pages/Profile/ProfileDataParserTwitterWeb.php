@@ -1,0 +1,69 @@
+<?php
+/* 
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 lemon-pumpkin-pie.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Retwitter\Page\Profile;
+
+use DateTime;
+use Retwitter\ApiSource;
+use Retwitter\Utils\ParsingUtils;
+
+class ProfileDataParserTwitterWeb implements IProfileDataParser
+{
+    private object $data;
+
+    public function __construct(object $data)
+    {
+        $this->data = $data;
+    }
+
+    private function getApiResult(): ?object
+    {
+        return $this->data?->data?->user?->result;
+    }
+
+    public function getSourceApi(): ApiSource
+    {
+        return ApiSource::TwitterWeb;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->getApiResult()?->core?->screen_name;
+    }
+
+    public function getHandle(): ?string
+    {
+        return ParsingUtils::getUsernameAsHandle($this->getUsername());
+    }
+
+    public function getDisplayName(): ?string
+    {
+        return $this->getApiResult()?->core?->name;
+    }
+
+    public function getCreationTime(): ?DateTime
+    {
+        return new DateTime($this->getApiResult()?->core?->created_at);
+    }
+
+    public function getAvatarUrl(): ?string
+    {
+        return $this->getApiResult()?->avatar?->image_url;
+    }
+}

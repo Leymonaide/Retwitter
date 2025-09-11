@@ -26,9 +26,9 @@ class MProfileAvatar
     public string $url;
     public string $tooltip;
 
-    public function __construct(object $data)
+    public function __construct(IProfileDataParser $parser)
     {
-        $this->url = ImageUtils::resize($data->avatar->image_url, "400x400");
-        $this->tooltip = $data->core->name;
+        $this->url = ImageUtils::resize($parser->getAvatarUrl() ?? "", "400x400");
+        $this->tooltip = $parser->getDisplayName() ?? "";
     }
 }

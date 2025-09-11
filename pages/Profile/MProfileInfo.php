@@ -19,16 +19,27 @@
 
 namespace Retwitter\Page\Profile;
 
-class MProfileCanopy
+use Retwitter\Utils\ImageUtils;
+
+class MProfileInfo
 {
-    public ?string $banner = null;
-    public MProfileAvatar $avatar;
-    public MProfileCanopyCard $card;
-    public array $stats = [];
+    public object $name;
+    public string $screenName;
+
+    // TODO: All of these should be rich text objects ($name too)
+    // public object $bio;
+    // public object $location;
+    // public object $url;
+    // public object $joinDate;
+    // public string $birthDate;
 
     public function __construct(IProfileDataParser $parser)
     {
-        $this->avatar = new MProfileAvatar($parser);
-        $this->card = new MProfileCanopyCard($parser);
+        $this->screenName = $parser->getUsername();
+        $displayName = $parser->getDisplayName() ?? $this->screenName;
+
+        $this->name = (object)[
+            "simpleText" => $displayName,
+        ];
     }
 }

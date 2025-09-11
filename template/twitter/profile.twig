@@ -72,19 +72,19 @@ wrapper-profile
                         <div class="ProfileCanopy-card" role="presentation">
                             <div class="ProfileCardMini">
                                 <a class="ProfileCardMini-avatar profile-picture js-tooltip"
-                                   href="{{ canopy.card.avatar }}"
-                                   data-resolved-url-large="{{ canopy.card.avatar }}"
-                                   data-url="{{ canopy.card.avatar }}"
+                                   href="{{ canopy.card.avatarUrl }}"
+                                   data-resolved-url-large="{{ canopy.card.avatarUrl }}"
+                                   data-url="{{ canopy.card.avatarUrl }}"
                                    target="_blank"
                                    rel="noopener"
                                    title="{{ core.simple_text(canopy.card.name) }}">
-                                    <img src="{{ canopy.card.avatar }}" alt="{{ core.simple_text(canopy.card.name) }}" class="ProfileCardMini-avatarImage"></img>
+                                    <img src="{{ canopy.card.avatarUrl }}" alt="{{ core.simple_text(canopy.card.displayName) }}" class="ProfileCardMini-avatarImage"></img>
                                 </a>
                                 <div class="ProfileCardMini-details">
                                     <div class="ProfileNameTruncated account-group">
                                         <div class="u-textTruncate u-inlineBlock ProfileNameTruncated-withBadges ProfileNameTruncated-withBadges--1">
                                             <a href="/{{ canopy.card.screenName }}" class="fullname ProfileNameTruncated-link u-textInheritColor js-nav">
-                                                {{ core.text(canopy.card.name) }}
+                                                {{ core.text(canopy.card.displayName) }}
                                             </a>
                                         </div>
                                         {% if canopy.card.verified %}

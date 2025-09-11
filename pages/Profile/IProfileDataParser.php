@@ -19,16 +19,17 @@
 
 namespace Retwitter\Page\Profile;
 
-class MProfileCanopy
-{
-    public ?string $banner = null;
-    public MProfileAvatar $avatar;
-    public MProfileCanopyCard $card;
-    public array $stats = [];
+use DateTime;
+use Retwitter\IApiSourceProvider;
 
-    public function __construct(IProfileDataParser $parser)
-    {
-        $this->avatar = new MProfileAvatar($parser);
-        $this->card = new MProfileCanopyCard($parser);
-    }
+/**
+ * API-agnostic interface for API data.
+ */
+interface IProfileDataParser extends IApiSourceProvider
+{
+    public function getUsername(): ?string;
+    public function getHandle(): ?string;
+    public function getDisplayName(): ?string;
+    public function getAvatarUrl(): ?string;
+    public function getCreationTime(): ?DateTime;
 }

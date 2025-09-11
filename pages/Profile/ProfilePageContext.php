@@ -22,6 +22,7 @@ namespace Retwitter\Page\Profile;
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Context\BasePageContext;
+use Retwitter\Utils\ParsingUtils;
 
 /**
  * Twitter profile model.
@@ -40,6 +41,7 @@ class ProfilePageContext extends BasePageContext
     ];
 
     public ?MProfileCanopy $canopy = null;
+    public ?MProfileInfo $info = null;
     
     private NamespaceBoundLanguageApi $i18n;
     
@@ -48,8 +50,26 @@ class ProfilePageContext extends BasePageContext
         $this->i18n = i18n::getNamespace("profile");
     }
 
-    public function insertUserData(object $data): void
+    public function insertUserData(IProfileDataParser $parser): void
     {
-        $this->canopy = new MProfileCanopy($data->data->user->result);
+        $this->canopy = new MProfileCanopy($parser);
+        $this->info = new MProfileInfo($parser);
+
+        $this->setUpTitle($parser);
+    }
+
+    private function setUpTitle(IProfileDataParser $parser): void
+    {
+        $screenName = $parser->getUsername();
+        $displayName = $parser->getDisplayName() ?? $screenName;
+
+        if (null === $screenName)
+        {
+            return;
+        }
+
+        $title = $this->i18n->format("page_title", $displayName, $screenName);
+
+        $this->setTitle($title);
     }
 }

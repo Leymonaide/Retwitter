@@ -17,18 +17,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Profile;
+namespace Retwitter;
 
-class MProfileCanopy
+interface IApiSourceProvider
 {
-    public ?string $banner = null;
-    public MProfileAvatar $avatar;
-    public MProfileCanopyCard $card;
-    public array $stats = [];
-
-    public function __construct(IProfileDataParser $parser)
-    {
-        $this->avatar = new MProfileAvatar($parser);
-        $this->card = new MProfileCanopyCard($parser);
-    }
+    /**
+     * Gets the source API of this data object.
+     */
+    public function getSourceApi(): ApiSource;
 }

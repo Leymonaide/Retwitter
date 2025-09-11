@@ -24,6 +24,7 @@ use Retwitter\Network;
 use Retwitter\Page\Base\RetwitterPageController;
 
 use Rehike\Async\Promise;
+use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
 class ProfileController
@@ -40,12 +41,9 @@ class ProfileController
 
             // Request page:
             $username = $this->getRequest()->path[0];
-            if ("@" == substr($username, 0, 1))
-            {
-                $username = substr($username, 1);
-            }
+            $username = ParsingUtils::getUsernameAsTextOnly($username);
 
-            $rawUser = yield Network::graphqlRequest(
+            $userResponse = yield Network::graphqlRequest(
                 action: "96tVxbPqMZDoYB5pmzezKA/UserByScreenName",
                 variables: [
                     "screen_name" => $username,
@@ -82,11 +80,8 @@ class ProfileController
                 ],
             );
 
-            $user = $rawUser->getJson();
-
-            echo json_encode($user) . "\n\n";
-
-            $context->insertUserData($user);
+            $dataParser = new ProfileDataParserTwitterWeb($userResponse->getJson());
+            $context->insertUserData($dataParser);
 
             $this->renderPage();
         });

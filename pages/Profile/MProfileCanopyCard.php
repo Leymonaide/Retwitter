@@ -19,16 +19,20 @@
 
 namespace Retwitter\Page\Profile;
 
-class MProfileCanopy
+class MProfileCanopyCard
 {
-    public ?string $banner = null;
-    public MProfileAvatar $avatar;
-    public MProfileCanopyCard $card;
-    public array $stats = [];
+    public string $avatarUrl;
+    public object $displayName; // TODO: Twemoji support suggests a custom object.
+    public string $screenName;
+    public bool $verified;
 
     public function __construct(IProfileDataParser $parser)
     {
-        $this->avatar = new MProfileAvatar($parser);
-        $this->card = new MProfileCanopyCard($parser);
+        $this->avatarUrl = $parser->getAvatarUrl() ?? "";
+        $this->screenName = $parser->getUsername() ?? "";
+        $this->displayName = (object)[
+            "simpleText" => $parser->getDisplayName() ?? $this->screenName
+        ];
+        $this->verified = false; // TODO.
     }
 }
