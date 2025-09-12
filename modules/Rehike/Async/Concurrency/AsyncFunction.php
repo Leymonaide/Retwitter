@@ -127,10 +127,18 @@ class AsyncFunction
                 // it will no have return value and will throw an exception. We
                 // just have to ignore it.
                 //
-                // TODO: This was resolve(null) in Rehike, but that does not seem
-                // to work at all. In future, open PR to Rehike discussing this
-                // bug. Judging from the above comment, my solution does not
-                // properly fix the issue.
+                // TODO: Reconcile differences later as this change was submitted
+                // to Rehike.
+                if ($e instanceof Exception
+                    && $e->getMessage() == "Cannot get return value of a generator that hasn't returned"
+                )
+                {
+                    $this->ownPromise->resolve(null);
+                    return;
+                }
+
+                // Regular exceptions still need to be passed to the async
+                // function for handling.
                 $this->ownPromise->reject($e);
             }
             
