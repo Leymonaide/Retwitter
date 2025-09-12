@@ -38,7 +38,7 @@ class TwitterDocument
             $document = $resultText;
 
             /*
-             * nikonote: This should be done at some point in the future, but it
+             * TODO: This should be done at some point in the future, but it
              * doesn't matter that much.
              */
             // if (0 === strpos($polymerResult->headers->contentType, "text/html"))

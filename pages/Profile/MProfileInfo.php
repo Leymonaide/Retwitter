@@ -19,19 +19,19 @@
 
 namespace Retwitter\Page\Profile;
 
+use Rehike\FormattedString;
 use Retwitter\Utils\ImageUtils;
 
 class MProfileInfo
 {
-    public object $name;
+    public FormattedString $name;
     public string $screenName;
 
-    // TODO: All of these should be rich text objects ($name too)
-    // public object $bio;
-    // public object $location;
-    // public object $url;
-    // public object $joinDate;
-    // public string $birthDate;
+    public FormattedString $bio;
+    public FormattedString $location;
+    public FormattedString $url;
+    public FormattedString $joinDate;
+    public string $birthDate;
 
     public function __construct(IProfileDataParser $parser)
     {

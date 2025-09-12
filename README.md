@@ -28,6 +28,10 @@ Thanks to [aubymori](//github.com/aubymori) and her long-since-abandoned project
 
 Thanks to [Isabella Lulamoon](//github.com/kawapure) and [her "Make twitter.com Work Again" project](//github.com/kawapure/Make-twitter-com-Work-Again), from which I took [SSL certificate generation scripts](/src/cert/). This process is a pain to figure out and I didn't want to figure it out again, so she also saved me a lot of time and effort.
 
+Retwitter makes use of the following additional software or services:
+
+- [Aaron Parecki's Emoji Detector Library](//packagist.org/packages/p3k/emoji-detector)
+
 The original Rehike project makes use of the following software or services, which continue to be used in Retwitter:
 
 - [Composer](//getcomposer.org)
