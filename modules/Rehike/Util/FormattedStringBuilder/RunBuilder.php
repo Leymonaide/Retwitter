@@ -36,6 +36,14 @@ class RunBuilder extends stdClass
         {
             $out->navigationEndpoint = $this->navigationEndpoint;
         }
+
+        // TODO(pumpkin): I'm pretty sure the whole reason this class extends
+        // stdClass is for custom properties, but they're not considered in
+        // Rehike in any case.
+        foreach (get_object_vars($this) as $key => $value)
+        {
+            $out->{$key} = $value;
+        }
         
         return (object)$out;
     }

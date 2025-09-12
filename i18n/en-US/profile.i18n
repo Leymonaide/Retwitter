@@ -16,3 +16,4 @@
 
 # Title of profile page:
 page_title: "%s (@%s) | Twitter"
+bio_join_date: "Joined %s"

@@ -28,6 +28,7 @@ class MProfileCanopy
 
     public function __construct(IProfileDataParser $parser)
     {
+        $this->banner = $parser->getBannerUrl();
         $this->avatar = new MProfileAvatar($parser);
         $this->card = new MProfileCanopyCard($parser);
     }

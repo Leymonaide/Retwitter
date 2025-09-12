@@ -57,6 +57,11 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         return $this->getApiResult()?->core?->name;
     }
 
+    public function getBannerUrl(): ?string
+    {
+        return $this->getApiResult()?->legacy?->profile_banner_url;
+    }
+
     public function getCreationTime(): ?DateTime
     {
         return new DateTime($this->getApiResult()?->core?->created_at);
@@ -65,5 +70,15 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
     public function getAvatarUrl(): ?string
     {
         return $this->getApiResult()?->avatar?->image_url;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->getApiResult()?->legacy?->description;
+    }
+
+    public function getLocation(): ?string
+    {
+        return $this->getApiResult()?->location?->location;
     }
 }

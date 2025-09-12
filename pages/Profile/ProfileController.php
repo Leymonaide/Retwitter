@@ -80,6 +80,8 @@ class ProfileController
                 ],
             );
 
+            \Rehike\Logging\DebugLogger::print("%s", json_encode($userResponse));
+
             $dataParser = new ProfileDataParserTwitterWeb($userResponse->getJson());
             $context->insertUserData($dataParser);
 

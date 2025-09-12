@@ -19,6 +19,9 @@
 
 namespace Retwitter\Utils;
 
+use Rehike\FormattedString;
+use Rehike\Util\FormattedStringBuilder;
+
 class ParsingUtils
 {
     /**
@@ -57,5 +60,60 @@ class ParsingUtils
         }
 
         return $username;
+    }
+
+    /**
+     * Formats a string containing emojis into a formatted string containing
+     * links to those emojis' Twemoji variants.
+     */
+    public static function formatEmojis(string $sourceStr): FormattedString
+    {
+        $builder = new FormattedStringBuilder();
+
+        $emojis = \Emoji\detect_emoji($sourceStr);
+        if (0 == count($emojis))
+        {
+            $builder->createAndAddRun($sourceStr);
+            return $builder->build();
+        }
+
+        $start = 0;
+        foreach ($emojis as $emoji)
+        {
+            $beforeText = substr(
+                $sourceStr,
+                $start,
+                $emoji["byte_offset"] - $start
+            );
+
+            if (!empty($beforeText))
+            {
+                $builder->createAndAddRun($beforeText);
+            }
+
+            // Twemoji URLS omit U+FE0F.
+            $code = preg_replace(
+                "/(^|-)fe0f($|-)/", "", 
+                strtolower($emoji["hex_str"])
+            );
+            
+            $runBuilder = $builder->createRunBuilder();
+            $runBuilder->emoji = (object)[
+                "url" => "https://twemoji.maxcdn.com/v/latest/72x72/$code.png",
+                "label" => $emoji["short_name"],
+                "alt" => $emoji["emoji"],
+            ];
+            $builder->addRunFromBuilder($runBuilder);
+
+            $start = $emoji["byte_offset"] + strlen($emoji["emoji"]);
+        }
+
+        $lastText = substr($sourceStr, $start, null);
+        if (!empty($lastText))
+        {
+            $builder->createAndAddRun($lastText);
+        }
+
+        return $builder->build();
     }
 }

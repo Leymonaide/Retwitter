@@ -20,17 +20,18 @@
 namespace Retwitter\Page\Profile;
 
 use Rehike\FormattedString;
+use Rehike\i18n\i18n;
 use Retwitter\Utils\ImageUtils;
+use Retwitter\Utils\ParsingUtils;
 
 class MProfileInfo
 {
     public FormattedString $name;
     public string $screenName;
-
-    public FormattedString $bio;
-    public FormattedString $location;
-    public FormattedString $url;
-    public FormattedString $joinDate;
+    public ?FormattedString $bio = null;
+    public ?FormattedString $location = null;
+    public ?FormattedString $url = null;
+    public ?object $joinDate = null;
     public string $birthDate;
 
     public function __construct(IProfileDataParser $parser)
@@ -38,8 +39,25 @@ class MProfileInfo
         $this->screenName = $parser->getUsername();
         $displayName = $parser->getDisplayName() ?? $this->screenName;
 
-        $this->name = (object)[
-            "simpleText" => $displayName,
-        ];
+        $this->name = ParsingUtils::formatEmojis($displayName);
+
+        // TODO: This should use a different function that formats a string with
+        // emojis as well as links, but that function doesn't exist yet.
+        $this->bio = ParsingUtils::formatEmojis($parser->getDescription() ?? "");
+
+        $this->location = ParsingUtils::formatEmojis($parser->getLocation() ?? "");
+
+        $joinDate = $parser->getCreationTime();
+        if (null !== $joinDate)
+        {
+            $i18n = i18n::getNamespace("profile");
+            $formattedJoinDate = $joinDate->format("F Y");
+            $formattedJoinDate = $i18n->format("bio_join_date", $formattedJoinDate);
+
+            $this->joinDate = (object)[
+                "text" => $formattedJoinDate,
+                "title" => $joinDate->format("g:i A - j M Y"),
+            ];
+        }
     }
 }
