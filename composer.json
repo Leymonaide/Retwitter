@@ -3,6 +3,7 @@
         "twig/twig": "~3.3",
         "google/protobuf": "^3.21.11",
         "bluelibraries/dns": "^1.1",
-        "p3k/emoji-detector": "^1.0"
+        "p3k/emoji-detector": "^1.0",
+        "stillat/numeral.php": "^2.0"
     }
 }

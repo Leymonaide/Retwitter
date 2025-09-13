@@ -31,6 +31,7 @@ Thanks to [Isabella Lulamoon](//github.com/kawapure) and [her "Make twitter.com 
 Retwitter makes use of the following additional software or services:
 
 - [Aaron Parecki's Emoji Detector Library](//packagist.org/packages/p3k/emoji-detector)
+- [Johnathon Koster's Numberal.php Library](//github.com/Stillat/numeral.php)
 
 The original Rehike project makes use of the following software or services, which continue to be used in Retwitter:
 

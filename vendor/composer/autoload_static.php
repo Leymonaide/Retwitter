@@ -30,6 +30,7 @@ class ComposerStaticInit14befcaebdd16793d803391aa69e5f63
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Stillat\\Numeral\\' => 16,
         ),
         'G' => 
         array (
@@ -62,6 +63,10 @@ class ComposerStaticInit14befcaebdd16793d803391aa69e5f63
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Stillat\\Numeral\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/stillat/numeral.php/src',
         ),
         'Google\\Protobuf\\' => 
         array (

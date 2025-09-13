@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "106a97d34f1324b7ce258029eb7b480b",
+    "content-hash": "6986575246703d0f475402325436b5b1",
     "packages": [
         {
             "name": "bluelibraries/dns",
@@ -149,6 +149,48 @@
                 "source": "https://github.com/aaronpk/emoji-detector-php/tree/1.0.0"
             },
             "time": "2022-08-30T22:08:18+00:00"
+        },
+        {
+            "name": "stillat/numeral.php",
+            "version": "v2.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Stillat/numeral.php.git",
+                "reference": "f6be779c6a839d0206963bac776b97b0001c6e7b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Stillat/numeral.php/zipball/f6be779c6a839d0206963bac776b97b0001c6e7b",
+                "reference": "f6be779c6a839d0206963bac776b97b0001c6e7b",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Stillat\\Numeral\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Johnathon Koster",
+                    "email": "john@stillat.com"
+                }
+            ],
+            "description": "A PHP port of adamwdraper/Numeral-js",
+            "support": {
+                "source": "https://github.com/Stillat/numeral.php/tree/v2.0.2"
+            },
+            "time": "2022-08-27T17:28:10+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
