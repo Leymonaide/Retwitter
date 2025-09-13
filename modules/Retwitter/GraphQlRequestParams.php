@@ -17,25 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Context;
+namespace Retwitter;
 
-abstract class BasePageContext
+class GraphQlRequestParams
 {
-    /**
-     * The title of the current page.
-     * 
-     * @var string
-     */
-    private string $title = "Twitter";
-
-    public function getTitle(): string
+    public function __construct(
+        public string $action,
+        public array $variables,
+        public array $features
+    )
     {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        return $this;
     }
 }

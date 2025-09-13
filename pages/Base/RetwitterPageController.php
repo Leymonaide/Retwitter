@@ -25,7 +25,6 @@ use Rehike\ControllerV2\BaseController;
 
 use Rehike\Debugger\Debugger;
 use Retwitter\Context\AppContext;
-use Retwitter\Context\BasePageContext;
 use Retwitter\TemplateManager;
 
 class RetwitterPageController extends BaseController

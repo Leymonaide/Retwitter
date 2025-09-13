@@ -17,17 +17,26 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter;
+namespace Retwitter\Page\Base;
 
-enum ApiSource
+use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+
+class MHeaderNav
 {
     /**
-     * This data comes from the internal API of the Twitter web service.
+     * @var MHeaderNavItem[]
      */
-    case TwitterWeb;
+    public array $items = [];
 
-    /**
-     * This data comes from a Nitter instance.
-     */
-    case Nitter;
+    public function __construct(NamespaceBoundLanguageApi $strings)
+    {
+        $this->items[] = new MHeaderNavItem(
+            strings: $strings,
+            id: "home",
+            icon: "bird",
+            label: $strings->get("tab_home"),
+            url: "/",
+            activeIcon: false,
+        );
+    }
 }

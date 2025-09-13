@@ -17,17 +17,20 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter;
+namespace Retwitter\Page\Base;
 
-enum ApiSource
+use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+
+class MHeaderSearchbox
 {
-    /**
-     * This data comes from the internal API of the Twitter web service.
-     */
-    case TwitterWeb;
+    public string $placeholder;
+    public string $a11yLabel;
+    public string $btnLabel;
 
-    /**
-     * This data comes from a Nitter instance.
-     */
-    case Nitter;
+    public function __construct(NamespaceBoundLanguageApi $strings)
+    {
+        $this->placeholder = $strings->get("search_placeholder");
+        $this->a11yLabel = $strings->get("search_a11y_label");
+        $this->btnLabel = $strings->get("search_placeholder");
+    }
 }

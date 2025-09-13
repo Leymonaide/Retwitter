@@ -19,6 +19,8 @@
 
 namespace Retwitter\Context;
 
+use Retwitter\Page\Base\BasePageContext;
+
 final class AppContext
 {
     private static AppContext $instance;

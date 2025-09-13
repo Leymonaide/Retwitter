@@ -46,6 +46,22 @@ class Network
         array $features
     ): Promise/*<IResponse>*/
     {
+        return self::graphqlRequestParam(new GraphQlRequestParams(
+            action: $action,
+            variables: $variables,
+            features: $features,
+        ));
+    }
+
+    /**
+     * @return Promise<IResponse>
+     */
+    public static function graphqlRequestParam(GraphQlRequestParams $params): Promise/*<IResponse>*/
+    {
+        $action = $params->action;
+        $variables = $params->variables;
+        $features = $params->features;
+
         return async(function () use ($action, $variables, $features) {
             $svariables = urlencode(json_encode($variables));
             $sfeatures = urlencode(json_encode($features));

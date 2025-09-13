@@ -118,6 +118,11 @@ final class Bootloader
      */
     private static function boot(): void
     {
+        if (!extension_loaded("intl"))
+        {
+            throw new \Exception("The \"intl\" PHP extension must be loaded.");
+        }
+
         self::runInitTasks();
 
         self::runSetupTasks();

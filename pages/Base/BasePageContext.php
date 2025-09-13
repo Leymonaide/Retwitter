@@ -17,17 +17,37 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter;
+namespace Retwitter\Page\Base;
 
-enum ApiSource
+abstract class BasePageContext
 {
     /**
-     * This data comes from the internal API of the Twitter web service.
+     * The title of the current page.
+     * 
+     * @var string
      */
-    case TwitterWeb;
+    private string $title = "Twitter";
 
-    /**
-     * This data comes from a Nitter instance.
-     */
-    case Nitter;
+    public MTopbar $topbar;
+
+    public function __construct()
+    {
+        $this->topbar = new MTopbar();
+    }
+
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+        return $this;
+    }
+
+    public function getTopbar(): MTopbar
+    {
+        return $this->topbar;
+    }
 }

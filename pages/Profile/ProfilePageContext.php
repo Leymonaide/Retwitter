@@ -21,7 +21,7 @@ namespace Retwitter\Page\Profile;
 
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\Context\BasePageContext;
+use Retwitter\Page\Base\BasePageContext;
 use Retwitter\Utils\ParsingUtils;
 
 /**
@@ -47,6 +47,7 @@ class ProfilePageContext extends BasePageContext
     
     public function __construct()
     {
+        parent::__construct();
         $this->i18n = i18n::getNamespace("profile");
     }
 

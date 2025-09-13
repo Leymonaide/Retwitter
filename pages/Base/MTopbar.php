@@ -17,17 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter;
+namespace Retwitter\Page\Base;
 
-enum ApiSource
+use Rehike\i18n\i18n;
+use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+
+class MTopbar
 {
-    /**
-     * This data comes from the internal API of the Twitter web service.
-     */
-    case TwitterWeb;
+    public NamespaceBoundLanguageApi $strings;
 
-    /**
-     * This data comes from a Nitter instance.
-     */
-    case Nitter;
+    public MHeaderNav $nav;
+    public MHeaderSearchbox $searchbox;
+    public ?MHeaderSigninLink $signinLink = null;
+
+    public function __construct()
+    {
+        $this->strings = i18n::getNamespace("topbar");
+        $this->nav = new MHeaderNav($this->strings);
+        $this->searchbox = new MHeaderSearchbox($this->strings);
+        $this->signinLink = new MHeaderSigninLink($this->strings);
+    }
 }

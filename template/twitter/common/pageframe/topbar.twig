@@ -16,11 +16,12 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
 {% from "common/edge_button.twig" import render as edge_button %}
+{% with { topbar: app.page.getTopbar() } %}
 <div class="global-nav global-nav--newLoggedOut" data-section-term="top_nav">
     <div class="global-nav-inner">
         <div class="container">
             <ul class="nav js-global-actions" role="navigation" id="global-actions">
-                {% for item in app.topbar.nav.items %}
+                {% for item in topbar.nav.items %}
                 <li id="global-nav-{{ item.id }}" class="{{ item.id }}" data-global-action="{{ item.id }}">
                     <a href="{{ item.url }}" class="js-nav js-tooltip js-dynamic-tooltip" data-placement="bottom" data-component-context="{{ item.id }}_nav" data-nav="{{ item.id }}">
                         <span class="Icon Icon--{{ item.icon }} Icon--large"></span>
@@ -36,7 +37,7 @@
             </ul>
             <div class="pull-right nav-extras">
                 <div role="search">
-                    {% set searchbox = app.topbar.searchbox %}
+                    {% set searchbox = topbar.searchbox %}
                     <form action="/search" id="global-nav-search" class="t1-form form-search js-search-form">
                         <label for="search-query" class="visuallyhidden">
                             {{ searchbox.a11yLabel }}
@@ -51,7 +52,7 @@
                 </div>
                 <ul id="session" class="nav secondary-nav session-dropdown">
                     <li class="dropdown js-session">
-                        {% set link = app.topbar.signinLink %}
+                        {% set link = topbar.signinLink %}
                         <a href="{{ link.url }}" id="signin-link" class="dropdown-toggle js-dropdown-toggle dropdown-signin">
                             <small>{{ link.question }}</small>
                             <span class="emphasize">{{ link.action }}</span>
@@ -97,3 +98,4 @@
         </div>
     </div>
 </div>
+{% endwith %}

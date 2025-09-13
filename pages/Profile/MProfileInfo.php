@@ -43,9 +43,15 @@ class MProfileInfo
 
         // TODO: This should use a different function that formats a string with
         // emojis as well as links, but that function doesn't exist yet.
-        $this->bio = ParsingUtils::formatEmojis($parser->getDescription() ?? "");
+        if ($bio = $parser->getDescription())
+        {
+            $this->bio = ParsingUtils::formatEmojis( $bio);
+        }
 
-        $this->location = ParsingUtils::formatEmojis($parser->getLocation() ?? "");
+        if ($location = $parser->getLocation())
+        {
+            $this->location = ParsingUtils::formatEmojis($location);
+        }
 
         $joinDate = $parser->getCreationTime();
         if (null !== $joinDate)
