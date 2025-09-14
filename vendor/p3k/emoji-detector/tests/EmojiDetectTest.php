@@ -13,7 +13,7 @@ class EmojiDetectTest extends \PHPUnit\Framework\TestCase {
     $this->assertSame(0, $emoji[0]['byte_offset']);
   }
 
-  public function testDetectEvenSimplerEmoji() {
+  public function testQualifiedEmoji() {
     $string = '❤️';
     $emoji = detect_emoji($string);
     $this->assertCount(1, $emoji);
@@ -21,7 +21,9 @@ class EmojiDetectTest extends \PHPUnit\Framework\TestCase {
     $this->assertSame('heart', $emoji[0]['short_name']);
     $this->assertSame('2764-FE0F', $emoji[0]['hex_str']);
     $this->assertSame(0, $emoji[0]['byte_offset']);
+  }
 
+  public function testDetectUnqualifiedEmoji() {
     $string = '☂';
     $emoji = detect_emoji($string);
     $this->assertCount(1, $emoji);
@@ -30,6 +32,133 @@ class EmojiDetectTest extends \PHPUnit\Framework\TestCase {
     $this->assertSame('2602', $emoji[0]['hex_str']);
     $this->assertSame(0, $emoji[0]['byte_offset']);
     $this->assertSame('☂', is_single_emoji($string)['emoji']);
+  }
+
+  public function testMixedUnqualifiedEmoji() {
+    $string = '❤️❤❤️❤';
+    $emojis = detect_emoji($string);
+    $this->assertCount(4, $emojis);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('❤️', $emoji['emoji']);
+    $this->assertSame('heart', $emoji['short_name']);
+    $this->assertSame('2764-FE0F', $emoji['hex_str']);
+    $this->assertSame(0, $emoji['byte_offset']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('❤', $emoji['emoji']);
+    $this->assertSame('heart', $emoji['short_name']);
+    $this->assertSame('2764', $emoji['hex_str']);
+    $this->assertSame(6, $emoji['byte_offset']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('❤️', $emoji['emoji']);
+    $this->assertSame('heart', $emoji['short_name']);
+    $this->assertSame('2764-FE0F', $emoji['hex_str']);
+    $this->assertSame(9, $emoji['byte_offset']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('❤', $emoji['emoji']);
+    $this->assertSame('heart', $emoji['short_name']);
+    $this->assertSame('2764', $emoji['hex_str']);
+    $this->assertSame(15, $emoji['byte_offset']);
+  }
+
+  public function testUnqualifiedSkinToneEmoji() {
+    $string = '🤦🏻‍♀️🤦🏽‍♀';
+    $emojis = detect_emoji($string);
+    $this->assertCount(2, $emojis);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤦🏻‍♀️', $emoji['emoji']);
+    $this->assertSame('woman-facepalming', $emoji['short_name']);
+    $this->assertSame('skin-tone-2', $emoji['skin_tone']);
+    $this->assertSame('1F926-1F3FB-200D-2640-FE0F', $emoji['hex_str']);
+    $this->assertSame(0, $emoji['byte_offset']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤦🏽‍♀', $emoji['emoji']);
+    $this->assertSame('woman-facepalming', $emoji['short_name']);
+    $this->assertSame('skin-tone-4', $emoji['skin_tone']);
+    $this->assertSame('1F926-1F3FD-200D-2640', $emoji['hex_str']);
+    $this->assertSame(17, $emoji['byte_offset']);
+  }
+
+  public function testBigMessyMixOfEmoji() {
+    $string = "🇩🇪🏳‍🌈🏳️a🤝🤝🏾🤝b🤝🤝🏾e😮‍💨f👀🤝🏾🏳‍🌈😶‍🌫️☝️☝🇩🇪";
+    $emojis = detect_emoji($string);
+    $this->assertCount(16, $emojis);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🇩🇪', $emoji['emoji']);
+    $this->assertSame('flag-de', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🏳‍🌈', $emoji['emoji']);
+    $this->assertSame('rainbow-flag', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🏳️', $emoji['emoji']);
+    $this->assertSame('waving_white_flag', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤝', $emoji['emoji']);
+    $this->assertSame('handshake', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤝🏾', $emoji['emoji']);
+    $this->assertSame('handshake', $emoji['short_name']);
+    $this->assertSame(2, $emoji['num_points']);
+    $this->assertSame('skin-tone-5', $emoji['skin_tone']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤝', $emoji['emoji']);
+    $this->assertSame('handshake', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤝', $emoji['emoji']);
+    $this->assertSame('handshake', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤝🏾', $emoji['emoji']);
+    $this->assertSame('handshake', $emoji['short_name']);
+    $this->assertSame(2, $emoji['num_points']);
+    $this->assertSame('skin-tone-5', $emoji['skin_tone']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('😮‍💨', $emoji['emoji']);
+    $this->assertSame('face_exhaling', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('👀', $emoji['emoji']);
+    $this->assertSame('eyes', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🤝🏾', $emoji['emoji']);
+    $this->assertSame('handshake', $emoji['short_name']);
+    $this->assertSame(2, $emoji['num_points']);
+    $this->assertSame('skin-tone-5', $emoji['skin_tone']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🏳‍🌈', $emoji['emoji']);
+    $this->assertSame('rainbow-flag', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('😶‍🌫️', $emoji['emoji']);
+    $this->assertSame('face_in_clouds', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('☝️', $emoji['emoji']);
+    $this->assertSame('point_up', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('☝', $emoji['emoji']);
+    $this->assertSame('point_up', $emoji['short_name']);
+
+    $emoji = array_shift($emojis);
+    $this->assertSame('🇩🇪', $emoji['emoji']);
+    $this->assertSame('flag-de', $emoji['short_name']);
+
   }
 
   public function testDetectEmojiWithZWJ() {
@@ -78,12 +207,42 @@ class EmojiDetectTest extends \PHPUnit\Framework\TestCase {
     $this->assertSame(1, $emoji[1]['grapheme_offset']);
   }
 
-  public function testDetectFlagEmoji() {
-    $string = '🇩🇪';
+  public function testDetectCountryFlagEmoji() {
+    $string = 'de🇩🇪aq🇦🇶jp🇯🇵❤️';
     $emoji = detect_emoji($string);
-    $this->assertCount(1, $emoji);
+    $this->assertCount(4, $emoji);
+    $this->assertSame(2, $emoji[0]['byte_offset']);
     $this->assertSame('flag-de', $emoji[0]['short_name']);
+    $this->assertSame('flag-aq', $emoji[1]['short_name']);
+    $this->assertSame('flag-jp', $emoji[2]['short_name']);
+  }
+
+  public function testDetectSubdivisionFlagEmoji() {
+    $string = '🏴󠁧󠁢󠁥󠁮󠁧󠁿🏴󠁧󠁢󠁳󠁣󠁴󠁿🏴󠁧󠁢󠁷󠁬󠁳󠁿';
+    $emoji = detect_emoji($string);
+    $this->assertCount(3, $emoji);
+    $this->assertSame('flag-england', $emoji[0]['short_name']);
+    $this->assertSame('flag-scotland', $emoji[1]['short_name']);
+    $this->assertSame('flag-wales', $emoji[2]['short_name']);
     $this->assertSame(0, $emoji[0]['byte_offset']);
+  }
+
+  public function testDetectOtherFlagEmoji() {
+    $string = '🏁🚩🏳️🏳️‍🌈🏳️‍⚧️🏴‍☠️';
+    $emojis = detect_emoji($string);
+    $this->assertCount(6, $emojis);
+    $emoji = array_shift($emojis);
+    $this->assertSame('checkered_flag', $emoji['short_name']);
+    $emoji = array_shift($emojis);
+    $this->assertSame('triangular_flag_on_post', $emoji['short_name']);
+    $emoji = array_shift($emojis);
+    $this->assertSame('waving_white_flag', $emoji['short_name']);
+    $emoji = array_shift($emojis);
+    $this->assertSame('rainbow-flag', $emoji['short_name']);
+    $emoji = array_shift($emojis);
+    $this->assertSame('transgender_flag', $emoji['short_name']);
+    $emoji = array_shift($emojis);
+    $this->assertSame('pirate_flag', $emoji['short_name']);
   }
 
   public function testDetectSymbolWithModifier() {
@@ -211,40 +370,6 @@ class EmojiDetectTest extends \PHPUnit\Framework\TestCase {
       $string = $start.$emojis[0]['short_name'].$end;
     }
     $this->assertSame('I like taco and burrito', $string);
-  }
-
-  public function testEmoji13_0() {
-    # Spot check a few emoji from Emoji 13.0
-    # https://emojipedia.org/emoji-13.0/
-    $string = '🫁 🤌🏽 🤵🏾‍♀️';
-    $emojis = detect_emoji($string);
-    $this->assertCount(3, $emojis);
-    $this->assertSame('lungs', $emojis[0]['short_name']);
-    $this->assertSame('pinched_fingers', $emojis[1]['short_name']);
-    $this->assertSame('skin-tone-4', $emojis[1]['skin_tone']);
-    $this->assertSame('woman_in_tuxedo', $emojis[2]['short_name']);
-    $this->assertSame('skin-tone-5', $emojis[2]['skin_tone']);
-  }
-
-  public function testEmoji13_1() {
-    # Spot check a few emoji from Emoji 13.1
-    # https://emojipedia.org/emoji-13.1/
-    $string = '❤️‍🔥 👩🏿‍❤️‍💋‍👨🏽 ❤️‍🩹';
-    $emojis = detect_emoji($string);
-    $this->assertCount(3, $emojis);
-    $this->assertSame('heart_on_fire', $emojis[0]['short_name']);
-    $this->assertSame('woman-kiss-man', $emojis[1]['short_name']);
-    $this->assertSame('mending_heart', $emojis[2]['short_name']);
-  }
-
-  public function testEmoji14_0() {
-    # Spot check a few emoji from Emoji 14.0
-    # https://emojipedia.org/emoji-14.0/
-    $string = '🫳🫗';
-    $emojis = detect_emoji($string);
-    $this->assertCount(2, $emojis);
-    $this->assertSame('palm_down_hand', $emojis[0]['short_name']);
-    $this->assertSame('pouring_liquid', $emojis[1]['short_name']);
   }
 
   public function testLongEmojiString() {

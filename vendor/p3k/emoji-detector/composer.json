@@ -24,14 +24,16 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "require": {
-    "php": ">=7.2",
-    "ext-mbstring": "*"
+    "php": ">=7.4",
+    "ext-mbstring": "*",
+    "ext-intl": "*"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.5"
   },
   "scripts": {
     "test": "vendor/bin/phpunit",
-    "build": "php build/generate-map.php"
+    "build": "php build/build.php",
+    "build-reverse": "php build/build-reverse.php"
   }
 }

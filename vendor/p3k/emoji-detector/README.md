@@ -3,6 +3,14 @@ Emoji Detection
 
 This library will find all emoji in an input string and return information about each emoji character. It supports emoji with skin tone modifiers, as well as the composite emoji that are made up of multiple people.
 
+The current version supports Emoji version 15.1 (Sept 2023)
+
+You can see a catalog of the emoji data here:
+
+* https://unicode.org/Public/emoji/15.1/emoji-test.txt
+* http://projects.iamcal.com/emoji-data/table.htm
+
+
 Installation
 ------------
 
@@ -135,13 +143,45 @@ $emoji = Emoji\is_single_emoji('😻🐈');
 // false
 ```
 
+### Remove emoji from a string
+
+You can remove all emoji from a string with this function, optionally removing trailing spaces.
+
+```php
+$string = "I like 🌮 and 🌯";
+echo Emoji\remove_emoji($string);
+// "I like  and "
+echo Emoji\remove_emoji($string, ['collapse' => true]);
+// "I like and";
+```
+
+Updates
+-------
+
+When a new emoji set is released, this library will need to be updated with the new unicode points and names. The source of the emoji data is [iamcal/emoji-data](https://github.com/iamcal/emoji-data), so first check there for the latest updates. You can build the new source files this library uses with the following command:
+
+```
+composer build
+```
+
+
+Tests
+-----
+
+A comprehensive set of tests is available to ensure things are working as expected, including tests for the new emoji added in new emoji versions. You can run the tests with the following command:
+
+```
+composer test
+```
+
+
 
 License
 -------
 
-Copyright 2017-2022 by Aaron Parecki.
+Made with ❤️ by Aaron Parecki.
 
-Available under the MIT license.
+Copyright 2017-2024 by Aaron Parecki. Available under the MIT license.
 
 Emoji data sourced from [iamcal/emoji-data](https://github.com/iamcal/emoji-data) under the MIT license.
 
