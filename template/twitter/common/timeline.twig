@@ -1,0 +1,288 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 lemon-pumpkin-pie.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{% macro render_timeline(timeline) %}
+    <div id="timeline" class="{# Obviously not this class for all cases. #}{{ [
+            'ProfileTimeline',
+        ]|join(' ') }}">
+        <div class="stream-container "
+            data-max-position=""
+            data-min-position="" {# TODO: Figure positions out. #}>
+            <ol id="stream-items-id" class="{{ [
+                    'stream-items',
+                    'js-navigable-stream',
+                ]|join(' ') }}">
+                {% for tweet in timeline.tweets %}
+                    <li id="stream-item-tweet-{{ tweet.id }}" class="{{ [
+                            'js-stream-item',
+                            'stream-item',
+                            'stream-item',
+                            'js-pinned', # TODO: Conditional.
+                        ]|join(' ') }}" data-item-id="{{ tweet.id }}"
+                        data-item-type="tweet" data-suggestion-json="{# TODO #}">
+                        {{ _self.render_tweet(tweet) }}
+                    </li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_tweet(tweet) %}
+    {% import "core/macros.twig" as core %}
+    {# TODO: Analyze classes. #}
+    <div class="{{ [
+            'tweet',
+            'js-stream-tweet',
+            'js-actionable-tweet',
+            'original-tweet', # TODO: Discern
+            'js-original-tweet',
+        ]|join(' ') }}"
+        data-tweet-id="{{ tweet.id }}"
+        data-item-id="{{ tweet.id }}"
+        data-permalink-path="{# Tweet URL #}"
+        data-conversation-id="{{ tweet.conversationId }}"
+        data-tweet-nonce="{# Tweet ID, maybe with random ID after #}"
+        data-tweet-stat-initialized="false{# TODO: Verify against non-JS page. #}"
+        data-screen-name="{{ tweet.author.screenName }}"
+        data-name="{{ core.simple_text(tweet.author.name) }}"
+        data-user-id="{{ tweet.userId }}"
+        data-you-follow="false"
+        data-follows-you="false"
+        data-you-block="false"
+        data-reply-to-users-json="{# TODO. #}"
+        data-disclosure-type=""
+        data-card2-type="audio"
+        data-has-cards="true">
+        <div class="context">
+            {# Retweet, pinned tweet banner. #}
+        </div>
+        <div class="content">
+            <div class="stream-item-header">
+                <a class="{{ [
+                        'account-group',
+                        'js-account-group',
+                        'js-action-profile',
+                        'js-user-profile-link',
+                        'js-nav',
+                    ]|join(' ') }}"
+                    href="{# Profile URL #}" 
+                    data-user-id="{{ tweet.userId }}">
+                    <img class="avatar js-action-profile-avatar"
+                        src="{{ tweet.author.avatarUrl }}"
+                        alt="{# Profile avatar accessibility text: I don't know what this would be. #}">
+                    <span class="FullNameGroup">
+                        <strong class="fullname show-popup-with-id u-textTruncate"
+                            data-aria-label-part="">
+                            {{ core.text(tweet.author.name) }}
+                        </strong>
+                        <span class="UserBadges">
+                            {% if tweet.author.verified %}
+                                <span class="Icon Icon--verified">
+                                    <span class="u-hiddenVisually">Verified account</span>
+                                </span>
+                            {% endif %}
+                        </span>
+                        <span class="UserNameBreak">&nbsp;</span>
+                    </span>
+                    <span class="username u-dir u-textTruncate" dir="ltr"
+                        data-aria-label-part="">
+                        @<b>{{ tweet.author.screenName }}</b>
+                    </span>
+                </a>
+                <small class="time">
+                    &nbsp;
+                    <a class="tweet-timestamp js-permalink js-nav js-tooltip"
+                        href="{# Tweet URL #}"
+                        title="{# Formatted tweet time in format "5:06 PM - 9 May 2019" #}"
+                        data-conversation-id="{# Tweet ID #}">
+                        <span class="_timestamp js-short-timestamp"
+                            data-aria-label-part="last"
+                            data-time="{# Seconds timestamp #}"
+                            data-time-ms="{# Milliseconds timestamp #}"
+                            data-long-form="true">{# Time text: "May 9" #}</span>
+                    </a>
+                </small>
+
+                <div class="{{ [
+                        'ProfileTweet-action',
+                        'ProfileTweet-action--more',
+                        'js-more-ProfileTweet-actions',
+                    ]|join(' ') }}">
+                    <button class="{{ [
+                            'ProfileTweet-actionButton',
+                            'u-textUserColorHover',
+                            'dropdown-toggle',
+                            'js-dropdown-toggle',
+                        ]|join(' ') }}"
+                        type="button" aria-haspopup="true">
+                        <div class="IconContainer js-tooltip" title="{# TODO: i18n #}More">
+                            <span class="Icon Icon--caretDownLight Icon--small"></span>
+                            <span class="u-hiddenVisually"></span>
+                        </div>
+                    </button>
+                    <div class="dropdown-menu is-autoCentered">
+                        <div class="dropdown-caret">
+                            <div class="caret-outer"></div>
+                            <div class="caret-inner"></div>
+                        </div>
+                        <ul>
+                            <li class="copy-link-to-tweet js-actionCopyLinkToTweet">
+                                <button class="dropdown-link" type="button">{# TODO: i18n #}Copy link to Tweet</button>
+                            </li>
+                            <li class="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
+                                <button class="dropdown-link" type="button">{# TODO: i18n #}Embed Tweet</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="js-tweet-text-container">
+                <p class="{{ [
+                        'TweetTextSize',
+                        'TweetTextSize--normal',
+                        'js-tweet-text',
+                        'tweet-text',
+                    ]|join(' ') }}"
+                    data-aria-label-part="0" lang="{{ tweet.lang }}">{# TODO: Improve #}{#
+                    #}{{- core.tweet_text(tweet.fullText) }}{#
+                #}</p>
+            </div>
+            <div class="card2 js-media-container" data-card2-name="audio">
+                {# TODO: What is this element, exactly? Does not exist on all
+                   Tweets either. #}
+            </div>
+            <div class="stream-item-footer">
+                <div class="ProfileTweet-actionCountList u-hiddenVisually">
+                    <span class="{{ [
+                            'ProfileTweet-action--reply',
+                            'u-hiddenVisually'
+                        ]|join(' ') }}">
+                        <span class="ProfileTweet-actionCount"
+                            data-tweet-stat-count="{# Stat number #}">
+                            <span id="profile-tweet-action-reply-count-aria-{{ tweet.id }}"
+                                class="ProfileTweet-actionCountForAria"
+                                data-aria-label-part="">17,863 replies</span>
+                        </span>
+                        <span class="{{ [
+                            'ProfileTweet-action--retweet',
+                            'u-hiddenVisually'
+                        ]|join(' ') }}">
+                        <span class="ProfileTweet-actionCount"
+                            data-tweet-stat-count="{# Stat number #}">
+                            <span id="profile-tweet-action-retweet-count-aria-{{ tweet.id }}"
+                                class="ProfileTweet-actionCountForAria"
+                                data-aria-label-part="">7,031 retweets</span>
+                        </span>
+                        <span class="{{ [
+                            'ProfileTweet-action--favorite',
+                            'u-hiddenVisually'
+                        ]|join(' ') }}">
+                        <span class="ProfileTweet-actionCount"
+                            data-tweet-stat-count="{# Stat number #}">
+                            <span id="profile-tweet-action-favorite-count-aria-{{ tweet.id }}"
+                                class="ProfileTweet-actionCountForAria"
+                                data-aria-label-part="">27,971 likes</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="ProfileTweet-actionList js-actions" role="group"
+                    aria-label="Tweet actions">
+                    <div class="{{ [
+                            'ProfileTweet-action',
+                            'ProfileTweet-action--reply',
+                        ]|join(' ') }}">
+                        <button class="{{ [
+                                'ProfileTweet-actionButton',
+                                'js-actionButton',
+                                'js-actionReply',
+                            ]|join(' ') }}"
+                            data-modal="ProfileTweet-reply"
+                            type="button"
+                            aria-describedby="profile-tweet-action-reply-count-aria-{{ tweet.id }}">
+                            <div class="IconContainer js-tooltip" title="Reply">
+                                <span class="Icon Icon--medium Icon--reply"></span>
+                                <span class="u-hiddenVisually">Reply</span>
+                            </div>
+                            &nbsp;
+                            <span class="ProfileTweet-actionCount"
+                                data-tweet-stat-count="">
+                                <span class="ProfileTweet-actionCountForPresentation"
+                                    aria-hidden="true">{{ tweet.replyCount }}</span>
+                            </span>
+                        </button>
+                    </div>
+                    <div class="{{ [
+                            'ProfileTweet-action',
+                            'ProfileTweet-action--retweet',
+                            'js-toggleState',
+                            'js-toggleRt',
+                        ]|join(' ') }}">
+                        <button class="{{ [
+                                'ProfileTweet-actionButton',
+                                'js-actionButton',
+                                'js-actionRetweet',
+                            ]|join(' ') }}"
+                            data-modal="ProfileTweet-retweet"
+                            type="button"
+                            aria-describedby="profile-tweet-action-retweet-count-aria-{{ tweet.id }}">
+                            <div class="IconContainer js-tooltip" title="Retweet">
+                                <span class="Icon Icon--medium Icon--retweet"></span>
+                                <span class="u-hiddenVisually">Retweet</span>
+                            </div>
+                            &nbsp;
+                            <span class="ProfileTweet-actionCount"
+                                data-tweet-stat-count="">
+                                <span class="ProfileTweet-actionCountForPresentation"
+                                    aria-hidden="true">{{ tweet.retweetCount }}</span>
+                            </span>
+                        </button>
+                        {# TODO: Undo button for retweet. #}
+                    </div>
+                    <div class="{{ [
+                            'ProfileTweet-action',
+                            'ProfileTweet-action--favorite',
+                            'js-toggleState',
+                        ]|join(' ') }}">
+                        <button class="{{ [
+                                'ProfileTweet-actionButton',
+                                'js-actionButton',
+                                'js-actionFavorite',
+                            ]|join(' ') }}"
+                            data-modal="ProfileTweet-favorite"
+                            type="button"
+                            aria-describedby="profile-tweet-action-favorite-count-aria-{{ tweet.id }}">
+                            <div class="IconContainer js-tooltip" title="Like">
+                                <span class="Icon Icon--heart Icon--medium" role="presentation"></span>
+                                <div class="HeartAnimation"></div>
+                                <span class="u-hiddenVisually">Like</span>
+                            </div>
+                            &nbsp;
+                            <span class="ProfileTweet-actionCount"
+                                data-tweet-stat-count="">
+                                <span class="ProfileTweet-actionCountForPresentation"
+                                    aria-hidden="true">{{ tweet.favoriteCount }}</span>
+                            </span>
+                        </button>
+                        {# TODO: Undo button for like. #}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}

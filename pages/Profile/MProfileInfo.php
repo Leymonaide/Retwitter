@@ -28,6 +28,7 @@ class MProfileInfo
 {
     public FormattedString $name;
     public string $screenName;
+    public bool $verified = false;
     public ?FormattedString $bio = null;
     public ?FormattedString $location = null;
     public ?FormattedString $url = null;
@@ -40,12 +41,13 @@ class MProfileInfo
         $displayName = $parser->getDisplayName() ?? $this->screenName;
 
         $this->name = ParsingUtils::formatEmojis($displayName);
+        $this->verified = $parser->getVerified();
 
         // TODO: This should use a different function that formats a string with
         // emojis as well as links, but that function doesn't exist yet.
         if ($bio = $parser->getDescription())
         {
-            $this->bio = ParsingUtils::formatEmojis( $bio);
+            $this->bio = ParsingUtils::formatEmojis($bio);
         }
 
         if ($location = $parser->getLocation())

@@ -16,4 +16,32 @@
 
 # Title of profile page:
 page_title: "%s (@%s) | Twitter"
+suspended_page_title: "Twitter / Account suspended"
+
 bio_join_date: "Joined %s"
+bio_birthday: "Born %s"
+
+stat_tweets: "Tweets"
+stat_tweets_tip: "%s Tweets"
+stat_following: "Following"
+stat_following_tip: "%s Following"
+stat_followers: "Followers"
+stat_followers_tip: "%s Followers"
+stat_likes: "Likes"
+stat_likes_tip: "%s Likes"
+stat_lists: "Lists"
+stat_lists_tip: "%s Lists"
+
+verified_badge: "Verified account"
+
+tab_tweets: "Tweets"
+tab_with_replies: "Tweets & replies"
+tab_media: "Media"
+tab_active: "%s, current page."
+
+suspended_title: "Account suspended"
+suspended_message: "This account has been suspended."
+
+signup_promo_header: "New to Twitter?"
+signup_promo_message: "Sign up now to get your own personalized timeline!"
+signup_promo_action: "Sign up"

@@ -22,6 +22,7 @@ namespace Retwitter\Page\Profile;
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Page\Base\BasePageContext;
+use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Utils\ParsingUtils;
 
 /**
@@ -42,6 +43,7 @@ class ProfilePageContext extends BasePageContext
 
     public ?MProfileCanopy $canopy = null;
     public ?MProfileInfo $info = null;
+    public ?MProfileContent $content = null;
     
     private NamespaceBoundLanguageApi $i18n;
     
@@ -55,8 +57,14 @@ class ProfilePageContext extends BasePageContext
     {
         $this->canopy = new MProfileCanopy($parser);
         $this->info = new MProfileInfo($parser);
+        $this->content = new MProfileContent($parser);
 
         $this->setUpTitle($parser);
+    }
+
+    public function insertTimeline(ITimelineDataParser $parser): void
+    {
+        $this->content?->setTimeline($parser);
     }
 
     private function setUpTitle(IProfileDataParser $parser): void

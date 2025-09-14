@@ -17,25 +17,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Timeline;
 
-use Rehike\FormattedString;
-use Retwitter\Utils\ParsingUtils;
+use DateTime;
+use Retwitter\IApiSourceProvider;
+use Retwitter\Page\Profile\IProfileDataParser;
 
-class MProfileCanopyCard
+/**
+ * API-agnostic interface for parsing timeline data.
+ */
+interface ITimelineDataParser extends IApiSourceProvider
 {
-    public string $avatarUrl;
-    public FormattedString $displayName;
-    public string $screenName;
-    public bool $verified;
-
-    public function __construct(IProfileDataParser $parser)
-    {
-        $this->avatarUrl = $parser->getAvatarUrl() ?? "";
-        $this->screenName = $parser->getUsername() ?? "";
-        $this->displayName = ParsingUtils::formatEmojis(
-            $parser->getDisplayName() ?? $this->screenName
-        );
-        $this->verified = $parser->getVerified();
-    }
+    /**
+     * @return MTweet[]
+     */
+    public function parseAll(): array;
 }

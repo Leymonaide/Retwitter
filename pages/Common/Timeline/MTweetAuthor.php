@@ -17,25 +17,24 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Timeline;
 
 use Rehike\FormattedString;
+use Retwitter\Page\Profile\IProfileDataParser;
 use Retwitter\Utils\ParsingUtils;
 
-class MProfileCanopyCard
+class MTweetAuthor
 {
-    public string $avatarUrl;
-    public FormattedString $displayName;
+    public FormattedString $name;
     public string $screenName;
-    public bool $verified;
+    public bool $verified = false;
+    public string $avatarUrl;
 
     public function __construct(IProfileDataParser $parser)
     {
-        $this->avatarUrl = $parser->getAvatarUrl() ?? "";
-        $this->screenName = $parser->getUsername() ?? "";
-        $this->displayName = ParsingUtils::formatEmojis(
-            $parser->getDisplayName() ?? $this->screenName
-        );
+        $this->name = ParsingUtils::formatEmojis($parser->getDisplayName());
+        $this->screenName = $parser->getUsername();
         $this->verified = $parser->getVerified();
+        $this->avatarUrl = $parser->getAvatarUrl();
     }
 }

@@ -41,7 +41,12 @@ wrapper-profile
 {% if app.page.canopy %}
 {% set canopy = app.page.canopy %}
 {% import "core/macros.twig" as core %}
-<div class="ProfileCanopy ProfileCanopy--withNav ProfileCanopy--large js-variableHeightTopBar">
+<div class="{{ [
+        'ProfileCanopy',
+        'ProfileCanopy--withNav',
+        'ProfileCanopy--large',
+        'js-variableHeightTopBar',
+    ]|join(' ') }}">
     <div class="ProfileCanopy-inner">
         <div class="ProfileCanopy-header u-bgUserColor">
             <div class="ProfileCanopy-headerBg">
@@ -90,7 +95,7 @@ wrapper-profile
                                         {% if canopy.card.verified %}
                                         <span class="UserBadges">
                                             <span class="Icon Icon--verified">
-                                                <span class="u-hiddenVisually">{{ app.msgs.verifiedAccount }}</span>
+                                                <span class="u-hiddenVisually">{{ app.page.i18n.get('verified_account') }}</span>
                                             </span>
                                         </span>
                                         {% endif %}
@@ -156,9 +161,9 @@ wrapper-profile
                                     <a href="/{{ info.screenName }}" class="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{{ core.text(info.name) }}</a>
                                     {% if info.verified %}
                                     <span class="ProfileHeaderCard-badges">
-                                        <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.msgs.verifiedAccount }}">
+                                        <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.page.i18n.get('verified_account') }}">
                                             <span class="Icon Icon--verified">
-                                                <span class="u-hiddenVisually">{{ app.msgs.verifiedAccount }}</span>
+                                                <span class="u-hiddenVisually">{{ app.page.i18n.get('verified_account') }}</span>
                                             </span>
                                         </a>
                                     </span>
@@ -231,6 +236,9 @@ wrapper-profile
                     </ul>
                 </div>
             </div>
+            {# TODO: Conditional rendering for timeline. #}
+            {% from "common/timeline.twig" import render_timeline %}
+            {{ render_timeline(app.page.content.timeline) }}
             {% endblock %}
 
             {% block col_three_content %}

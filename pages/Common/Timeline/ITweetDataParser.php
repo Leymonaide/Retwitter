@@ -17,28 +17,29 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
 use Retwitter\IApiSourceProvider;
+use Retwitter\Page\Profile\IProfileDataParser;
 
 /**
- * API-agnostic interface for API data.
+ * API-agnostic interface for parsing Tweet data.
  */
-interface IProfileDataParser extends IApiSourceProvider
+interface ITweetDataParser extends IApiSourceProvider
 {
-    public function getUsername(): ?string;
-    public function getHandle(): ?string;
-    public function getDisplayName(): ?string;
-    public function getAvatarUrl(): ?string;
-    public function getBannerUrl(): ?string;
-    public function getCreationTime(): ?DateTime;
-    public function getDescription(): ?string;
-    public function getLocation(): ?string;
-    public function getVerified(): bool;
-    public function getTweetCount(): ?int;
-    public function getFollowingCount(): ?int;
-    public function getFollowerCount(): ?int;
+    public function getId(): string;
+    public function getConversationId(): string;
+    public function getUserId(): string;
+    public function getFullText(): ?string;
+    public function getAuthorParser(): ?IProfileDataParser;
+    public function getLang(): ?string;
+    public function getCreatedAt(): ?string;
     public function getFavoritesCount(): ?int;
-    public function getListCount(): ?int;
+    public function getReplyCount(): ?int;
+    public function getRetweetCount(): ?int;
+    public function getQuoteTweetCount(): ?int;
+
+    public function getPinned(): bool;
+    public function setPinned(bool $value): void;
 }

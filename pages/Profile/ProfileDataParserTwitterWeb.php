@@ -34,7 +34,7 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
 
     private function getApiResult(): ?object
     {
-        return $this->data?->data?->user?->result;
+        return $this->data;
     }
 
     public function getSourceApi(): ApiSource
@@ -80,5 +80,37 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
     public function getLocation(): ?string
     {
         return $this->getApiResult()?->location?->location;
+    }
+
+    public function getVerified(): bool
+    {
+        return $this->getApiResult()?->verification->verified
+            ?? $this->getApiResult()?->is_blue_verified
+            ?? false;
+    }
+
+    public function getTweetCount(): ?int
+    {
+        return $this->getApiResult()?->legacy->statuses_count;
+    }
+
+    public function getFollowingCount(): ?int
+    {
+        return $this->getApiResult()?->legacy->friends_count;
+    }
+
+    public function getFollowerCount(): ?int
+    {
+        return $this->getApiResult()?->legacy->followers_count;
+    }
+
+    public function getFavoritesCount(): ?int
+    {
+        return $this->getApiResult()?->legacy->favourites_count;
+    }
+
+    public function getListCount(): ?int
+    {
+        return $this->getApiResult()?->legacy->listed_count;
     }
 }

@@ -19,23 +19,21 @@
 
 namespace Retwitter\Page\Profile;
 
-use Rehike\FormattedString;
-use Retwitter\Utils\ParsingUtils;
-
-class MProfileCanopyCard
+class MProfileHeading
 {
-    public string $avatarUrl;
-    public FormattedString $displayName;
-    public string $screenName;
-    public bool $verified;
+    /**
+     * @var MProfileHeadingTab[]
+     */
+    public array $tabs = [];
 
-    public function __construct(IProfileDataParser $parser)
+    public function __construct(
+        public string $title,
+    )
     {
-        $this->avatarUrl = $parser->getAvatarUrl() ?? "";
-        $this->screenName = $parser->getUsername() ?? "";
-        $this->displayName = ParsingUtils::formatEmojis(
-            $parser->getDisplayName() ?? $this->screenName
-        );
-        $this->verified = $parser->getVerified();
+    }
+
+    public function addTab(MProfileHeadingTab $tab): void
+    {
+        $this->tabs[] = $tab;
     }
 }

@@ -20,22 +20,29 @@
 namespace Retwitter\Page\Profile;
 
 use Rehike\FormattedString;
+use Rehike\i18n\i18n;
+use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
 
-class MProfileCanopyCard
+class MProfileCanopyStat
 {
-    public string $avatarUrl;
-    public FormattedString $displayName;
-    public string $screenName;
-    public bool $verified;
+    public string $value;
+    public string $tooltip;
+    public string $activeLabel;
 
-    public function __construct(IProfileDataParser $parser)
+    public function __construct(
+        public string $id,
+        public string $label,
+        public int $count,
+               string $tooltip,
+        public string $url,
+        public bool $active = false,
+    )
     {
-        $this->avatarUrl = $parser->getAvatarUrl() ?? "";
-        $this->screenName = $parser->getUsername() ?? "";
-        $this->displayName = ParsingUtils::formatEmojis(
-            $parser->getDisplayName() ?? $this->screenName
-        );
-        $this->verified = $parser->getVerified();
+        $i18n = i18n::getNamespace("profile");
+
+        $this->value = NumberFormat::shorten($this->count);
+        $this->tooltip = sprintf($tooltip, number_format($this->count));
+        $this->activeLabel = $i18n->format("tab_active", $this->label);
     }
 }
