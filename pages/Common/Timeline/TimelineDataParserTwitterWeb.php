@@ -49,7 +49,7 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
 
         foreach ($entries as $entry)
         {
-            $entryContent = $entry->result->content->itemContent;
+            $entryContent = $entry->content->itemContent;
 
             if ("TimelineTweet" == $entryContent->itemType)
             {
@@ -57,7 +57,13 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                     $entryContent->tweet_results->result
                 );
 
-                // TODO: Attach social context (pin, retweet, etc.)
+                
+                if ("Pin" == $entryContent?->socialContext?->contextType)
+                {
+                    $tweetParser->setSocialContext(
+                        new MTweetSocialContext(TweetSocialContext::Pin)
+                    );
+                }
 
                 $result[] = new MTweet($tweetParser);
             }
@@ -70,12 +76,12 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
      * Executes all timeline instructions and builds a straight list of the
      * resulting timeline.
      * 
-     * @return _TimelineEntry[]
+     * @return object[]
      */
     private function executeInstructions(): array
     {
         /**
-         * @var _TimelineEntry[]
+         * @var object[]
          */
         $result = [];
 
@@ -85,11 +91,7 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
             {
                 case "TimelinePinEntry":
                 {
-                    $entry = new _TimelineEntry();
-                    $entry->pinned = true;
-                    $entry->result = $instruction->entry;
-
-                    $result[] = $entry;
+                    $result[] = $instruction->entry;
 
                     break;
                 }
@@ -98,10 +100,7 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                 {
                     foreach ($instruction->entries as $innerEntry)
                     {
-                        $entry = new _TimelineEntry();
-                        $entry->result = $innerEntry;
-
-                        $result[] = $entry;
+                        $result[] = $innerEntry;
                     }
 
                     break;
@@ -111,20 +110,4 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
 
         return $result;
     }
-}
-
-class _TimelineEntry
-{
-    /**
-     * Specifies that this entry is pinned.
-     * 
-     * TODO: See "socialContext" in timeline entry object from the actual API.
-     * It seems to already encode this information.
-     */
-    public bool $pinned = false;
-
-    /**
-     * The original result.
-     */
-    public object $result;
 }

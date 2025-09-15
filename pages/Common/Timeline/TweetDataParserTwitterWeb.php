@@ -28,12 +28,23 @@ use Retwitter\Utils\ParsingUtils;
 class TweetDataParserTwitterWeb implements ITweetDataParser
 {
     private object $data;
-    private bool $isPinned = false;
+    private ?MTweetSocialContext $socialContext = null;
 
     public function __construct(object $data)
     {
-        \Rehike\Logging\DebugLogger::print("%s", json_encode($data));
         $this->data = $data;
+
+        // A social context will be constructed for retweets by default, as
+        // their social context is technically only a client-side representation
+        // and not actually reported in the stream data returned by the Twitter
+        // API.
+        if ($this->getIsRetweet())
+        {
+            $this->socialContext = new MTweetSocialContext(
+                type: TweetSocialContext::Retweet,
+                retweeterProfile: $this->getRetweetAuthorParser(),
+            );
+        }
     }
 
     public function getSourceApi(): ApiSource
@@ -41,29 +52,47 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return ApiSource::TwitterWeb;
     }
 
+    /**
+     * Gets the best API result for the tweet.
+     * 
+     * For regular tweets, this is the same as the root result data returned by
+     * getRootData(). For retweets, this is the result data for the retweet.
+     */
+    private function getData(): object
+    {
+        return $this->getIsRetweet()
+            ? $this->getRootData()->legacy->retweeted_status_result->result
+            : $this->getRootData();
+    }
+
+    private function getRootData(): object
+    {
+        return $this->data;
+    }
+
     public function getId(): string
     {
-        return $this->data->legacy->id_str;
+        return $this->getRootData()->legacy->id_str;
     }
 
     public function getConversationId(): string
     {
-        return $this->data->legacy->conversation_id_str;
+        return $this->getRootData()->legacy->conversation_id_str;
     }
 
     public function getUserId(): string
     {
-        return $this->data->legacy->user_id_str;
+        return $this->getRootData()->legacy->user_id_str;
     }
 
     public function getFullText(): ?string
     {
-        return $this->data->legacy?->full_text;
+        return $this->getRootData()->legacy?->full_text;
     }
 
-    public function getAuthorParser(): ?IProfileDataParser
+    private function createAuthorParser(object $dataRoot): ?IProfileDataParser
     {
-        if ($result = $this->data?->core?->user_results?->result)
+        if ($result = $dataRoot?->core?->user_results?->result)
         {
             return new ProfileDataParserTwitterWeb($result);
         }
@@ -71,43 +100,58 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return null;
     }
 
+    public function getAuthorParser(): ?IProfileDataParser
+    {
+        return $this->createAuthorParser($this->getData());
+    }
+
+    public function getRetweetAuthorParser(): ?IProfileDataParser
+    {
+        return $this->createAuthorParser($this->getRootData());
+    }
+
     public function getLang(): ?string
     {
-        return $this->data->legacy?->lang;
+        return $this->getRootData()->legacy?->lang;
     }
 
     public function getCreatedAt(): ?string
     {
-        return $this->data->legacy?->created_at;
+        return $this->getRootData()->legacy?->created_at;
     }
 
     public function getFavoritesCount(): ?int
     {
-        return $this->data->legacy?->favorite_count;
+        return $this->getRootData()->legacy?->favorite_count;
     }
 
     public function getReplyCount(): ?int
     {
-        return $this->data->legacy?->reply_count;
+        return $this->getRootData()->legacy?->reply_count;
     }
 
     public function getRetweetCount(): ?int
     {
-        return $this->data->legacy?->retweet_count;
+        return $this->getRootData()->legacy?->retweet_count;
     }
 
     public function getQuoteTweetCount(): ?int
     {
-        return $this->data->legacy?->quote_count;
+        return $this->getRootData()->legacy?->quote_count;
     }
 
-    public function getPinned(): bool
+    public function getIsRetweet(): bool
     {
-        return $this->isPinned;
+        return isset($this->getRootData()->legacy->retweeted_status_result);
     }
 
-    public function setPinned(bool $value): void
+    public function getSocialContext(): ?MTweetSocialContext
     {
-        $this->isPinned = $value;
+        return $this?->socialContext ?? null;
+    }
+
+    public function setSocialContext(?MTweetSocialContext $value): void
+    {
+        $this->socialContext = $value;
     }
 }

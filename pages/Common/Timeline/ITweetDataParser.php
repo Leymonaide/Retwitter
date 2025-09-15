@@ -33,13 +33,15 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getUserId(): string;
     public function getFullText(): ?string;
     public function getAuthorParser(): ?IProfileDataParser;
+    public function getRetweetAuthorParser(): ?IProfileDataParser;
     public function getLang(): ?string;
     public function getCreatedAt(): ?string;
     public function getFavoritesCount(): ?int;
     public function getReplyCount(): ?int;
     public function getRetweetCount(): ?int;
     public function getQuoteTweetCount(): ?int;
+    public function getIsRetweet(): bool;
 
-    public function getPinned(): bool;
-    public function setPinned(bool $value): void;
+    public function getSocialContext(): ?MTweetSocialContext;
+    public function setSocialContext(?MTweetSocialContext $context): void;
 }

@@ -35,7 +35,8 @@ class MTweet
     public string $createdAtStr;
     public DateTime $createdAt;
     public bool $isQuoteTweet = false;
-    public bool $isPinned = false;
+    public bool $isUserPinned = true;
+    public ?MTweetSocialContext $socialContext = null;
     // public bool $isRetweet = false;
 
     // TODO: Temporary for presentation, should be restructured:
@@ -72,6 +73,8 @@ class MTweet
             $this->favoriteCount = NumberFormat::shorten($favoriteCount);
         }
 
-        $this->isPinned = $parser->getPinned();
+        $this->socialContext = $parser->getSocialContext();
+        $this->isUserPinned = ($this?->socialContext?->type
+            == TweetSocialContext::Pin) ?? false;
     }
 }

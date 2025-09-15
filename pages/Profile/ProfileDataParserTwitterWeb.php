@@ -52,6 +52,11 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         return ParsingUtils::getUsernameAsHandle($this->getUsername());
     }
 
+    public function getId(): ?string
+    {
+        return $this->getApiResult()?->rest_id;
+    }
+
     public function getDisplayName(): ?string
     {
         return $this->getApiResult()?->core?->name;

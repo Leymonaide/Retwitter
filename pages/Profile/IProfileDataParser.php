@@ -29,6 +29,7 @@ interface IProfileDataParser extends IApiSourceProvider
 {
     public function getUsername(): ?string;
     public function getHandle(): ?string;
+    public function getId(): ?string;
     public function getDisplayName(): ?string;
     public function getAvatarUrl(): ?string;
     public function getBannerUrl(): ?string;

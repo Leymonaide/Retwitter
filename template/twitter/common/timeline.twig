@@ -32,7 +32,7 @@
                             'js-stream-item',
                             'stream-item',
                             'stream-item',
-                            'js-pinned', # TODO: Conditional.
+                            tweet.isUserPinned ? 'js-pinned', # TODO: Conditional.
                         ]|join(' ') }}" data-item-id="{{ tweet.id }}"
                         data-item-type="tweet" data-suggestion-json="{# TODO #}">
                         {{ _self.render_tweet(tweet) }}
@@ -45,6 +45,7 @@
 
 {% macro render_tweet(tweet) %}
     {% import "core/macros.twig" as core %}
+    {% set TweetSocialContext = enum("Retwitter\\Page\\Common\\Timeline\\TweetSocialContext") %}
     {# TODO: Analyze classes. #}
     <div class="{{ [
             'tweet',
@@ -52,6 +53,7 @@
             'js-actionable-tweet',
             'original-tweet', # TODO: Discern
             'js-original-tweet',
+            tweet.isUserPinned ? 'user-pinned',
         ]|join(' ') }}"
         data-tweet-id="{{ tweet.id }}"
         data-item-id="{{ tweet.id }}"
@@ -70,7 +72,27 @@
         data-card2-type="audio"
         data-has-cards="true">
         <div class="context">
-            {# Retweet, pinned tweet banner. #}
+            {% if tweet.socialContext.type == TweetSocialContext.Retweet %}
+                <div class="tweet-context with-icn ">
+                    <span class="Icon Icon--small Icon--retweeted"></span>
+                    &nbsp;
+                    <span class="js-retweet-text">
+                        <a class="pretty-link js-user-profile-link"
+                            href="{{ tweet.socialContext.retweeterUrl }}"
+                            data-user-id="{{ tweet.socialContext.retweeterUserId }}"
+                            rel="noopener">
+                            <b>{{ core.text(tweet.socialContext.retweeterDisplayName) }}</b>
+                        </a>
+                        Retweeted
+                    </span>
+                </div>
+            {% elseif tweet.socialContext.type == TweetSocialContext.Pin %}
+                <div class="tweet-context with-icn pinned">
+                    <span class="Icon Icon--small Icon--pinned u-TextUserColor"></span>
+                    &nbsp;
+                    <span class="js-pinned-text" data-aria-label-part="">Pinned Tweet</span>
+                </div>
+            {% endif %}
         </div>
         <div class="content">
             <div class="stream-item-header">
