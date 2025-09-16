@@ -21,6 +21,7 @@ namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
 use Rehike\FormattedString;
+use Rehike\i18n\i18n;
 use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
 
@@ -37,12 +38,7 @@ class MTweet
     public bool $isQuoteTweet = false;
     public bool $isUserPinned = true;
     public ?MTweetSocialContext $socialContext = null;
-    // public bool $isRetweet = false;
-
-    // TODO: Temporary for presentation, should be restructured:
-    public string $favoriteCount = "";
-    public string $replyCount = "";
-    public string $retweetCount = "";
+    public ?MTweetActions $actionStrip = null;
 
     public function __construct(ITweetDataParser $parser)
     {
@@ -58,23 +54,73 @@ class MTweet
         $this->createdAtStr = $parser->getCreatedAt();
         $this->createdAt = new DateTime($this->createdAtStr);
 
-        if (($retweetCount = $parser->getRetweetCount()) > 0)
-        {
-            $this->retweetCount = NumberFormat::shorten($retweetCount);
-        }
-
-        if (($replyCount = $parser->getReplyCount()) > 0)
-        {
-            $this->replyCount = NumberFormat::shorten($replyCount);
-        }
-        
-        if (($favoriteCount = $parser->getFavoritesCount()) > 0)
-        {
-            $this->favoriteCount = NumberFormat::shorten($favoriteCount);
-        }
+        $this->actionStrip = new MTweetActions($parser);
 
         $this->socialContext = $parser->getSocialContext();
         $this->isUserPinned = ($this?->socialContext?->type
             == TweetSocialContext::Pin) ?? false;
+    }
+
+    public function getUrl(): string
+    {
+        return "/" . $this->author?->screenName ?? "i" . "/" . $this->conversationId;
+    }
+
+    public function getTimeForPresentation(): string
+    {
+        if (null == $this->createdAt)
+        {
+            return "";
+        }
+        
+        $i18n = i18n::getNamespace("common");
+        $currentTime = new DateTime();
+        $absoluteTime = $this->createdAt;
+        $relativeTime = $currentTime->diff($this->createdAt);
+
+        if ($relativeTime->y > 1) // Month, day, and year.
+        {
+            return $absoluteTime->format($i18n->get("dt_ymd"));
+        }
+        else if ($relativeTime->d > 1) // Month and day without year
+        {
+            return $absoluteTime->format($i18n->get("dt_ym"));
+        }
+        else if ($relativeTime->h > 1) // Hours (up to 24 days)
+        {
+            $template = $i18n->get("dt_h_template");
+            return sprintf($template, $relativeTime->h);
+        }
+        else if ($relativeTime->m > 1) // Minutes (up to 59 minutes)
+        {
+            $template = $i18n->get("dt_m_template");
+            return sprintf($template, $relativeTime->m);
+        }
+        else // Seconds (down to 0 seconds)
+        {
+            $template = $i18n->get("dt_s_template");
+            return sprintf($template, $relativeTime->s);
+        }
+    }
+
+    public function getTimeSeconds(): int
+    {
+        if (null == $this->createdAt)
+        {
+            return 0;
+        }
+
+        return $this->createdAt->getTimestamp();
+    }
+
+    public function getTimeMilliseconds(): string
+    {
+        if (null == $this->createdAt)
+        {
+            return "";
+        }
+
+        // Format with milliseconds
+        return $this->createdAt->format("Uv");
     }
 }

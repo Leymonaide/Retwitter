@@ -1,0 +1,24 @@
+# This file is part of the Retwitter project.
+# Copyright (c) 2025 lemon-pumpkin-pie.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# Date/Time localization constants:
+dt_ymd: "j M Y" # Year, month, and day all shown, i.e. "1 Mar 2018". As far as
+                # I can tell, Twitter used the British order for these long
+                # dates, and the American order for short dates.
+dt_ym: "M j" # Year and month shown, i.e. "May 9"
+dt_h_template: "%sh" # Up to "23h"
+dt_m_template: "%sm" # Up to "59m"
+dt_s_template: "%ss" # Up to "59s"
