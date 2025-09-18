@@ -23,6 +23,7 @@ class MOpenButton
     ];
 
     public string $text = "";
+    public bool $hasArrow = true;
 
     private function setText(string $text): void
     {
@@ -36,7 +37,6 @@ class MOpenButton
         if ($errorCount > 0) $this->class[] = "rebug-open-button-has-error";
 
         $this->setText(self::getTitle($errorCount, $condensed));
-        $this->hasArrow = true;
     }
 
     /**

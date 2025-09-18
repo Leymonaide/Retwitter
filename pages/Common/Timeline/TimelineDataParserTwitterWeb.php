@@ -48,6 +48,7 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
         $entries = $this->executeInstructions();
 
         foreach ($entries as $entry)
+        if (isset($entry->content->itemContent))
         {
             $entryContent = $entry->content->itemContent;
 
@@ -56,9 +57,9 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                 $tweetParser = new TweetDataParserTwitterWeb(
                     $entryContent->tweet_results->result
                 );
-
                 
-                if ("Pin" == $entryContent?->socialContext?->contextType)
+                if (isset($entryContent->socialContext->contextType)
+                    && "Pin" == $entryContent->socialContext->contextType)
                 {
                     $tweetParser->setSocialContext(
                         new MTweetSocialContext(TweetSocialContext::Pin)
