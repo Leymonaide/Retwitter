@@ -40,7 +40,7 @@ class ProfileController
             $username = $this->getRequest()->path[0];
             $username = ParsingUtils::getUsernameAsTextOnly($username);
             
-            $tab = $this->getRequest()->path[1];
+            $tab = $this->getRequest()->path[1] ?? "";
             $tab = ProfileTab::tryFrom($tab) ?? ProfileTab::RecentTweets;
             
             $context = new ProfilePageContext(
