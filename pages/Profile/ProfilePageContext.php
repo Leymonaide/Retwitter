@@ -30,34 +30,25 @@ use Retwitter\Utils\ParsingUtils;
  */
 class ProfilePageContext extends BasePageContext
 {
-    /**
-     * List of valid tweet tab subpage values.
-     * 
-     * @var string[]
-     */
-    public const VALID_TWEET_TABS = [
-        "",
-        "with_replies",
-        "media",
-    ];
-
+    public ProfileTab $tab;
     public ?MProfileCanopy $canopy = null;
     public ?MProfileInfo $info = null;
     public ?MProfileContent $content = null;
     
     private NamespaceBoundLanguageApi $i18n;
     
-    public function __construct()
+    public function __construct(ProfileTab $tab)
     {
         parent::__construct();
         $this->i18n = i18n::getNamespace("profile");
+        $this->tab = $tab;
     }
 
     public function insertUserData(IProfileDataParser $parser): void
     {
-        $this->canopy = new MProfileCanopy($parser);
+        $this->canopy = new MProfileCanopy($parser, $this->tab);
         $this->info = new MProfileInfo($parser);
-        $this->content = new MProfileContent($parser);
+        $this->content = new MProfileContent($parser, $this->tab);
 
         $this->setUpTitle($parser);
     }

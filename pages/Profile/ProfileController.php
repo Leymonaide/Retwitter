@@ -37,12 +37,16 @@ class ProfileController
         return async(function () {
             $this->setTemplate("profile");
 
-            $context = new ProfilePageContext();
-            $this->setPageContext($context);
-
-            // Request page:
             $username = $this->getRequest()->path[0];
             $username = ParsingUtils::getUsernameAsTextOnly($username);
+            
+            $tab = $this->getRequest()->path[1];
+            $tab = ProfileTab::tryFrom($tab) ?? ProfileTab::RecentTweets;
+            
+            $context = new ProfilePageContext(
+                tab: $tab,
+            );
+            $this->setPageContext($context);
 
             // $userResponse = yield Network::graphqlRequest(
             //     action: "96tVxbPqMZDoYB5pmzezKA/UserByScreenName",

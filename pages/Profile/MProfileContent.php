@@ -28,19 +28,18 @@ class MProfileContent
     public MProfileHeading $heading;
     public ?MTimeline $timeline = null;
 
-    public function __construct(IProfileDataParser $parser)
+    public function __construct(IProfileDataParser $parser, ProfileTab $tab)
     {
         $i18n = i18n::getNamespace("profile");
         $username = $parser->getUsername();
 
-        // TODO: Match tab and get string.
         $this->heading = new MProfileHeading($i18n->get("tab_tweets"));
 
         $this->heading->addTab(new MProfileHeadingTab(
             label: $i18n->get("tab_tweets"),
             url: "/$username",
             tab: "tweets",
-            active: false, // TODO.
+            active: ProfileTab::RecentTweets == $tab,
             openSignup: false,
         ));
 
@@ -48,7 +47,7 @@ class MProfileContent
             label: $i18n->get("tab_with_replies"),
             url: "/$username/with_replies",
             tab: "tweets_with_replies",
-            active: false, // TODO.
+            active: ProfileTab::WithReplies == $tab,
             openSignup: true,
         ));
 
@@ -56,7 +55,7 @@ class MProfileContent
             label: $i18n->get("tab_media"),
             url: "/$username/media",
             tab: "photos_and_videos",
-            active: false, // TODO.
+            active: ProfileTab::Media == $tab,
             openSignup: true,
         ));
     }

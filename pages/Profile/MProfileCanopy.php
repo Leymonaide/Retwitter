@@ -32,7 +32,7 @@ class MProfileCanopy
      */
     public array $stats = [];
 
-    public function __construct(IProfileDataParser $parser)
+    public function __construct(IProfileDataParser $parser, ProfileTab $tab)
     {
         $this->banner = $parser->getBannerUrl();
         $this->avatar = new MProfileAvatar($parser);
@@ -47,7 +47,7 @@ class MProfileCanopy
             count: $parser->getTweetCount(),
             tooltip: $i18n->get("stat_tweets_tip"),
             url: "/$name",
-            active: true, // TODO: Check for tweet tabs.
+            active: in_array($tab, ProfileTab::VALID_TWEET_TABS),
         );
 
         $this->stats[] = new MProfileCanopyStat(
@@ -56,7 +56,7 @@ class MProfileCanopy
             count: $parser->getFollowingCount(),
             tooltip: $i18n->get("stat_following_tip"),
             url: "/$name/following",
-            active: false, // TODO: Check for tweet tabs.
+            active: ProfileTab::Following == $tab,
         );
 
         $this->stats[] = new MProfileCanopyStat(
@@ -65,7 +65,7 @@ class MProfileCanopy
             count: $parser->getFollowerCount(),
             tooltip: $i18n->get("stat_followers_tip"),
             url: "/$name/followers",
-            active: false, // TODO: Check for tweet tabs.
+            active: ProfileTab::Followers == $tab,
         );
 
         $this->stats[] = new MProfileCanopyStat(
@@ -74,7 +74,7 @@ class MProfileCanopy
             count: $parser->getFavoritesCount(),
             tooltip: $i18n->get("stat_likes_tip"),
             url: "/$name/likes",
-            active: false, // TODO: Check for tweet tabs.
+            active: ProfileTab::Likes == $tab,
         );
 
         $this->stats[] = new MProfileCanopyStat(
@@ -83,7 +83,7 @@ class MProfileCanopy
             count: $parser->getListCount(),
             tooltip: $i18n->get("stat_lists_tip"),
             url: "/$name/lists",
-            active: false, // TODO: Check for tweet tabs.
+            active: ProfileTab::Lists == $tab,
         );
     }
 }
