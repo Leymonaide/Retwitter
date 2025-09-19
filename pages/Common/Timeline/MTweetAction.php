@@ -20,6 +20,7 @@
 namespace Retwitter\Page\Common\Timeline;
 
 use Rehike\FormattedString;
+use Rehike\i18n\i18n;
 use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
 
@@ -27,13 +28,15 @@ class MTweetAction
 {
     public string $formattedCount = "";
     public string $tooltip = "";
-
+    public string $accessibilityText = "";
 
     public function __construct(
         public TweetAction $actionType,
         public int $count,
     )
     {
+        $i18n = i18n::getNamespace("common");
+
         if ($count > 0)
         {
             $this->formattedCount = NumberFormat::shorten($count);
@@ -41,11 +44,25 @@ class MTweetAction
 
         $this->tooltip = match ($actionType)
         {
-            TweetAction::Reply => "Reply",
-            TweetAction::Retweet => "Retweet",
-            TweetAction::Favorite => "Favorite",
+            TweetAction::Reply => $i18n->get("tweet_action_reply_tooltip"),
+            TweetAction::Retweet => $i18n->get("tweet_action_retweet_tooltip"),
+            TweetAction::Favorite => $i18n->get("tweet_action_favorite_tooltip"),
 
             default => ""
         };
+
+        $i18nA11yBase = match ($actionType)
+        {
+            TweetAction::Reply => "tweet_a11y_reply_count",
+            TweetAction::Retweet => "tweet_a11y_retweet_count",
+            TweetAction::Favorite => "tweet_a11y_favorite_count",
+
+            default => ""
+        };
+        $a11ySuffix = $count == 1 ? "_singular" : "_plural";
+        $this->accessibilityText = $i18n->format(
+            "$i18nA11yBase$a11ySuffix", 
+            $i18n->formatNumber($count)
+        );
     }
 }

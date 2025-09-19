@@ -17,6 +17,9 @@
 #}
 
 {% macro render_timeline(timeline) %}
+    {% types {
+        timeline: "Retwitter\\Page\\Common\\Timeline\\MTimeline",
+    } %}
     <div id="timeline" class="{# Obviously not this class for all cases. #}{{ [
             'ProfileTimeline',
         ]|join(' ') }}">
@@ -44,6 +47,9 @@
 {% endmacro %}
 
 {% macro render_tweet(tweet) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+    } %}
     {% import "core/macros.twig" as core %}
     {% set TweetSocialContext = enum("Retwitter\\Page\\Common\\Timeline\\TweetSocialContext") %}
     {# TODO: Analyze classes. #}
@@ -204,38 +210,9 @@
             </div>
             <div class="stream-item-footer">
                 <div class="ProfileTweet-actionCountList u-hiddenVisually">
-                    {# TODO: Restructure this. #}
-                    <span class="{{ [
-                            'ProfileTweet-action--reply',
-                            'u-hiddenVisually'
-                        ]|join(' ') }}">
-                        <span class="ProfileTweet-actionCount"
-                            data-tweet-stat-count="{# Stat number #}">
-                            <span id="profile-tweet-action-reply-count-aria-{{ tweet.id }}"
-                                class="ProfileTweet-actionCountForAria"
-                                data-aria-label-part="">17,863 replies</span>
-                        </span>
-                        <span class="{{ [
-                            'ProfileTweet-action--retweet',
-                            'u-hiddenVisually'
-                        ]|join(' ') }}">
-                        <span class="ProfileTweet-actionCount"
-                            data-tweet-stat-count="{# Stat number #}">
-                            <span id="profile-tweet-action-retweet-count-aria-{{ tweet.id }}"
-                                class="ProfileTweet-actionCountForAria"
-                                data-aria-label-part="">7,031 retweets</span>
-                        </span>
-                        <span class="{{ [
-                            'ProfileTweet-action--favorite',
-                            'u-hiddenVisually'
-                        ]|join(' ') }}">
-                        <span class="ProfileTweet-actionCount"
-                            data-tweet-stat-count="{# Stat number #}">
-                            <span id="profile-tweet-action-favorite-count-aria-{{ tweet.id }}"
-                                class="ProfileTweet-actionCountForAria"
-                                data-aria-label-part="">27,971 likes</span>
-                        </span>
-                    </span>
+                    {% for tweet_action in tweet.actionStrip.actions %}
+                        {{ _self.tweet_action_count(tweet, tweet_action) }}
+                    {% endfor %}
                 </div>
                 <div class="ProfileTweet-actionList js-actions" role="group"
                     aria-label="Tweet actions">
@@ -248,7 +225,40 @@
     </div>
 {% endmacro %}
 
+{# Tweet action count for accessibility. #}
+{% macro tweet_action_count(tweet, tweet_action) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        tweet_action: "Retwitter\\Page\\Common\\Timeline\\MTweetAction",
+    } %}
+    {% set TweetAction = enum("Retwitter\\Page\\Common\\Timeline\\TweetAction") %}
+    {# TODO: Figure out how to DRY #}
+    {% if tweet_action.actionType == TweetAction.Reply %}
+        {% set action_name = "reply" %}
+    {% elseif tweet_action.actionType == TweetAction.Retweet %}
+        {% set action_name = "retweet" %}
+    {% elseif tweet_action.actionType == TweetAction.Favorite %}
+        {% set action_name = "favorite" %}
+    {% endif %}
+
+    <span class="{{ [
+        'ProfileTweet-action--' ~ action_name,
+        'u-hiddenVisually'
+    ]|join(' ') }}">
+        <span class="ProfileTweet-actionCount"
+            data-tweet-stat-count="{{ tweet_action.count }}">
+            <span id="profile-tweet-action-{{ action_name }}-count-aria-{{ tweet.id }}"
+                class="ProfileTweet-actionCountForAria"
+                data-aria-label-part="">{{ tweet_action.accessibilityText }}</span>
+        </span>
+    </span>
+{% endmacro %}
+
 {% macro tweet_action_button(tweet, tweet_action) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        tweet_action: "Retwitter\\Page\\Common\\Timeline\\MTweetAction",
+    } %}
     {% set TweetAction = enum("Retwitter\\Page\\Common\\Timeline\\TweetAction") %}
     {% if tweet_action.actionType == TweetAction.Reply %}
         {% set action_name = "reply" %}
@@ -310,6 +320,7 @@
 {% endmacro %}
 
 {% macro tweet_action_icon_std(icon_type) %}
+    {% types { icon_type: "string" } %}
     <span class="Icon Icon--medium Icon--{{ icon_type }}"></span>
 {% endmacro %}
 
