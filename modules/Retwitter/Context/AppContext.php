@@ -34,12 +34,15 @@ final class AppContext
     public function __construct()
     {
         $this->i18n = new RehikeUtilsI18nDelegate();
+        $this->requestUrl = $_SERVER["REQUEST_URI"];
     }
     
     public static function getInstance(): AppContext
     {
         return self::$instance;
     }
+
+    public string $requestUrl;
 
     /**
      * The context of the current page.

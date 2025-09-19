@@ -50,6 +50,8 @@ class ProfilePageContext extends BasePageContext
         $this->info = new MProfileInfo($parser);
         $this->content = new MProfileContent($parser, $this->tab);
 
+        $this->addModule("pages_profile");
+
         $this->setUpTitle($parser);
     }
 

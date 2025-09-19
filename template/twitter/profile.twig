@@ -127,6 +127,15 @@ wrapper-profile
                                         </a>
                                     </li>
                                     {% endfor %}
+                                    <li class="{{ [
+                                            'ProfileNav-item',
+                                            'ProfileNav-item--more',
+                                            'dropdown',
+                                            'is-hidden',
+                                        ]|join(' ') }}" style="">
+                                        {# TODO: Used for overflow. The current implementation is to get
+                                           JS loaded at all. #}
+                                    </li>
                                 </ul>
                             </div>
                         </div>

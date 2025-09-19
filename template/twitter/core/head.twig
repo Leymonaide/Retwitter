@@ -199,7 +199,9 @@
 {{ core.preload_js("init") }}
 {{ core.preload_js("commons") }}
 {%- for module in app.page.modules -%}
-{{ core.preload_js(module) }}
+{# TODO: Since preload_js is only aware of string module names at the moment,
+   this means that the module path being loaded in PHP is pointless. #}
+{{ core.preload_js(module.moduleName) }}
 {%- endfor -%}
 <title>{{ app.page.title ?? "Twitter" }}</title>
 <link rel="shortcut icon" href="https://abs.twimg.com/favicons/favicon.ico" type="image/x-icon">

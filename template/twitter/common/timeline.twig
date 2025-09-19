@@ -26,6 +26,8 @@
         <div class="stream-container "
             data-max-position=""
             data-min-position="" {# TODO: Figure positions out. #}>
+            <div class="stream-item js-new-items-bar-container">
+            </div>
             <ol id="stream-items-id" class="{{ [
                     'stream-items',
                     'js-navigable-stream',
@@ -33,7 +35,6 @@
                 {% for tweet in timeline.tweets %}
                     <li id="stream-item-tweet-{{ tweet.id }}" class="{{ [
                             'js-stream-item',
-                            'stream-item',
                             'stream-item',
                             tweet.isUserPinned ? 'js-pinned', # TODO: Conditional.
                         ]|join(' ') }}" data-item-id="{{ tweet.id }}"
@@ -59,6 +60,7 @@
             'js-actionable-tweet',
             'original-tweet', # TODO: Discern
             'js-original-tweet',
+            tweet.socialContext ? 'tweet-has-context',
             tweet.isUserPinned ? 'user-pinned',
         ]|join(' ') }}"
         data-tweet-id="{{ tweet.id }}"
@@ -155,41 +157,44 @@
                     </a>
                 </small>
 
+                
                 <div class="{{ [
                         'ProfileTweet-action',
                         'ProfileTweet-action--more',
                         'js-more-ProfileTweet-actions',
                     ]|join(' ') }}">
-                    <button class="{{ [
-                            'ProfileTweet-actionButton',
-                            'u-textUserColorHover',
-                            'dropdown-toggle',
-                            'js-dropdown-toggle',
-                        ]|join(' ') }}"
-                        type="button" aria-haspopup="true">
-                        <div class="IconContainer js-tooltip"
-                            title="{{ app.i18n.get("common", "more_tooltip") }}">
-                            <span class="Icon Icon--caretDownLight Icon--small"></span>
-                            <span class="u-hiddenVisually"></span>
+                    <div class="dropdown">
+                        <button class="{{ [
+                                'ProfileTweet-actionButton',
+                                'u-textUserColorHover',
+                                'dropdown-toggle',
+                                'js-dropdown-toggle',
+                            ]|join(' ') }}"
+                            type="button" aria-haspopup="true">
+                            <div class="IconContainer js-tooltip"
+                                title="{{ app.i18n.get("common", "more_tooltip") }}">
+                                <span class="Icon Icon--caretDownLight Icon--small"></span>
+                                <span class="u-hiddenVisually"></span>
+                            </div>
+                        </button>
+                        <div class="dropdown-menu is-autoCentered">
+                            <div class="dropdown-caret">
+                                <div class="caret-outer"></div>
+                                <div class="caret-inner"></div>
+                            </div>
+                            <ul>
+                                <li class="copy-link-to-tweet js-actionCopyLinkToTweet">
+                                    <button class="dropdown-link" type="button">
+                                        {{ app.i18n.get("common", "tweet_menu_copy_link") }}
+                                    </button>
+                                </li>
+                                <li class="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
+                                    <button class="dropdown-link" type="button">
+                                        {{ app.i18n.get("common", "tweet_menu_embed") }}
+                                    </button>
+                                </li>
+                            </ul>
                         </div>
-                    </button>
-                    <div class="dropdown-menu is-autoCentered">
-                        <div class="dropdown-caret">
-                            <div class="caret-outer"></div>
-                            <div class="caret-inner"></div>
-                        </div>
-                        <ul>
-                            <li class="copy-link-to-tweet js-actionCopyLinkToTweet">
-                                <button class="dropdown-link" type="button">
-                                    {{ app.i18n.get("common", "tweet_menu_copy_link") }}
-                                </button>
-                            </li>
-                            <li class="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
-                                <button class="dropdown-link" type="button">
-                                    {{ app.i18n.get("common", "tweet_menu_embed") }}
-                                </button>
-                            </li>
-                        </ul>
                     </div>
                 </div>
             </div>

@@ -31,6 +31,11 @@ abstract class BasePageContext
     public MTopbar $topbar;
     public MFooter $footer;
 
+    /**
+     * @var PageJsModule[]
+     */
+    public array $modules = [];
+
     public function __construct()
     {
         $this->topbar = new MTopbar();
@@ -51,5 +56,28 @@ abstract class BasePageContext
     public function getTopbar(): MTopbar
     {
         return $this->topbar;
+    }
+
+    public function getFooter(): MFooter
+    {
+        return $this->footer;
+    }
+
+    /**
+     * @return PageJsModule[]
+     */
+    public function getModules(): array
+    {
+        return $this->modules;
+    }
+
+    public function addModule(string|PageJsModule $module): void
+    {
+        if (is_string($module))
+        {
+            $module = new PageJsModule($module);
+        }
+
+        $this->modules[] = $module;
     }
 }
