@@ -1,0 +1,75 @@
+<?php
+/* 
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 lemon-pumpkin-pie.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Retwitter\Page\Base;
+
+use Rehike\i18n\i18n;
+use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+
+class MFooter
+{
+    public string $copyright;
+
+    /**
+     * @var MFooterLink[]
+     */
+    public array $links = [];
+
+    public function __construct()
+    {
+        $i18n = i18n::getNamespace("footer");
+
+        $this->copyright = $i18n->format("copyright_format", date("Y"));
+
+        $this->links[] = new MFooterLink(
+            label: $i18n->get("link_about"),
+            url: "/about",
+        );
+
+        $this->links[] = new MFooterLink(
+            label: $i18n->get("link_help"),
+            url: "//support.twitter.com/",
+        );
+
+        $this->links[] = new MFooterLink(
+            label: $i18n->get("link_terms"),
+            url: "/tos",
+        );
+
+        $this->links[] = new MFooterLink(
+            label: $i18n->get("link_privacy"),
+            url: "/privacy",
+        );
+
+        $this->links[] = new MFooterLink(
+            label: $i18n->get("link_cookies"),
+            url: "//support.twitter.com/articles/20170514",
+        );
+
+        $this->links[] = new MFooterLink(
+            label: $i18n->get("link_ads_info"),
+            url: "//support.twitter.com/articles/20170451",
+        );
+
+        $this->links[] = new MFooterLink(
+            label: $i18n->get("link_retwitter"),
+            url: "//github.com/lemon-pumpkin-pie/Retwitter",
+        );
+    }
+}

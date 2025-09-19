@@ -16,15 +16,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
 
-{% macro render(config) %}
+{% macro render(footer, config) %}
 <div class="Footer module roaming-module {{ config.slim ? "Footer--slim" }} {{ config.blankBackground ? "Footer--blankBackground" }}">
     <div class="flex-module">
         <div class="flex-module-inner js-items-container">
             <ul class="u-cf">
                 <li class="Footer-item Footer-copyright copyright">
-                    {{ app.footer.copyright }}
+                    {{ footer.copyright }}
                 </li>
-                {% for link in app.footer.links %}
+                {% for link in footer.links %}
                 <li class="Footer-item">
                     <a href="{{ link.url }}" class="Footer-link" rel="noopener">
                         {{ link.label }}

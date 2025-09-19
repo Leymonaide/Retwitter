@@ -19,37 +19,15 @@
 
 namespace Retwitter\Page\Base;
 
-abstract class BasePageContext
+use Rehike\i18n\i18n;
+use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+
+class MFooterLink
 {
-    /**
-     * The title of the current page.
-     * 
-     * @var string
-     */
-    private string $title = "Twitter";
-
-    public MTopbar $topbar;
-    public MFooter $footer;
-
-    public function __construct()
+    public function __construct(
+        public string $label,
+        public string $url,
+    )
     {
-        $this->topbar = new MTopbar();
-        $this->footer = new MFooter();
-    }
-
-    public function getTitle(): string
-    {
-        return $this->title;
-    }
-
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
-        return $this;
-    }
-
-    public function getTopbar(): MTopbar
-    {
-        return $this->topbar;
     }
 }
