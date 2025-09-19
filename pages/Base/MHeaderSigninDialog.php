@@ -20,6 +20,9 @@
 namespace Retwitter\Page\Base;
 
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+use Retwitter\Page\Common\EdgeButtonSize;
+use Retwitter\Page\Common\EdgeButtonStyle;
+use Retwitter\Page\Common\MEdgeButton;
 
 class MHeaderSigninDialog
 {
@@ -29,9 +32,8 @@ class MHeaderSigninDialog
     public string $rememberMeLabel;
     public string $signUpTitle;
     public object $forgotPasswordLink; // TODO: Formatted string object like this.
-    // TODO: Add EdgeButton
-    // public EdgeButton $loginButton;
-    // public EdgeButton $signUpButton;
+    public MEdgeButton $loginButton;
+    public MEdgeButton $signUpButton;
 
     public function __construct(NamespaceBoundLanguageApi $strings)
     {
@@ -46,23 +48,17 @@ class MHeaderSigninDialog
             "url" => "/account/begin_password_reset",
         ];
 
-        /* TODO: From Titter, unmodified.
-        $this->loginButton = new EdgeButton(
-            style: "primary",
-            size: "medium",
-            label: $strings->signinPromoAction,
+        $this->loginButton = new MEdgeButton(
+            style: EdgeButtonStyle::Primary,
+            size: EdgeButtonSize::Medium,
+            label: $strings->get("signin_promo_action"),
             asInput: true
         );
-        $this->signUpButton = new EdgeButton(
-            style: "secondary",
-            size: "medium",
-            label: $strings->signUpButton,
+        $this->signUpButton = new MEdgeButton(
+            style: EdgeButtonStyle::Secondary,
+            size: EdgeButtonSize::Medium,
+            label: $strings->get("sign_up_button"),
             url: "/signup",
-            class: [
-                "u-block",
-                "js-signup"
-            ]
         );
-        */
     }
 }

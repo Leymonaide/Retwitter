@@ -19,6 +19,7 @@
 
 namespace Retwitter\Context;
 
+use Rehike\TemplateUtilsDelegate\RehikeUtilsI18nDelegate;
 use Retwitter\Page\Base\BasePageContext;
 
 final class AppContext
@@ -28,6 +29,11 @@ final class AppContext
     public static function __initStatic(): void
     {
         self::$instance = new AppContext();
+    }
+
+    public function __construct()
+    {
+        $this->i18n = new RehikeUtilsI18nDelegate();
     }
     
     public static function getInstance(): AppContext
@@ -39,6 +45,8 @@ final class AppContext
      * The context of the current page.
      */
     public BasePageContext $page;
+
+    public RehikeUtilsI18nDelegate $i18n;
 
     /**
      * The current language ID of the application.

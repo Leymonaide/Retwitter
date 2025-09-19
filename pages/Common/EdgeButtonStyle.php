@@ -17,14 +17,15 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Common;
 
 /**
- * An action that shows at the bottom of a Tweet in the timeline.
+ * The style of a button.
+ * 
+ * The backing scalar string is the default template name.
  */
-enum TweetAction
+enum EdgeButtonStyle : string
 {
-    case Reply;
-    case Retweet;
-    case Favorite;
+    case Primary = "primary";
+    case Secondary = "secondary";
 }

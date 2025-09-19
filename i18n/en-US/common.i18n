@@ -22,3 +22,12 @@ dt_ym: "M j" # Year and month shown, i.e. "May 9"
 dt_h_template: "%sh" # Up to "23h"
 dt_m_template: "%sm" # Up to "59m"
 dt_s_template: "%ss" # Up to "59s"
+
+verified_tooltip: "Verified account"
+
+more_tooltip: "More"
+
+tweet_social_context_retweeted: "%s Retweeted"
+tweet_social_context_pinned: "Pinned Tweet"
+tweet_menu_copy_link: "Copy link to Tweet"
+tweet_menu_embed: "Embed Tweet"

@@ -32,8 +32,6 @@ stat_likes_tip: "%s Likes"
 stat_lists: "Lists"
 stat_lists_tip: "%s Lists"
 
-verified_badge: "Verified account"
-
 tab_tweets: "Tweets"
 tab_with_replies: "Tweets & replies"
 tab_media: "Media"

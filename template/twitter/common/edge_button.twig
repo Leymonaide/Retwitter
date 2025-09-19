@@ -16,21 +16,33 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
 
-{% macro render(data) %}
+{# Class and attributes are optional arguments for special template cases. #}
+{% macro render(data, classes, attributes) %}
 {%- if data.asInput -%}
-<input class="{{ _self.class(data) }}" {{ _self.attributes(data) }} type="submit" value="{{ data.label }}">
+    <input class="{{ _self.class(data, classes) }}"
+        {{ _self.attributes(data, attributes) }}
+        type="submit" value="{{ data.label }}">
 {%- else -%}
-<{{ data.url ? "a" : "button" }} {% if data.url %}href="{{ data.url }}"{% endif %} class="{{ _self.class(data) }}" {{ _self.attributes(data) }}>
-    {{ data.label }}
-</{{ data.url ? "a" : "button" }}>
+    {% set tag = data.url ? "a" : "button" %}
+    <{{ tag }}
+        {% if data.url %}href="{{ data.url }}"{% endif %}
+        class="{{ _self.class(data, classes) }}"
+        {{ _self.attributes(data, attributes) }}>
+        {{ data.label }}
+    </{{ tag }}>
 {%- endif -%}
 {% endmacro %}
 
-{% macro class(data) %}
-EdgeButton EdgeButton--{{ data.style }} EdgeButton--{{ data.size }} {% for class in data.class %}{{ class ~ " " }}{% endfor %}
+{#
+    The default scalar values from the codebehind for style and size match what
+    Twitter's templates use, so they work. In the future, a macro to map enum
+    to a CSS class name, etc. may be required.
+#}
+{% macro class(data, class) %}
+EdgeButton EdgeButton--{{ data.style.value }} EdgeButton--{{ data.size.value }} {{ classes|join(' ') }}
 {% endmacro %}
 
-{% macro attributes(data) %}
+{% macro attributes(data, attributes) %}
 {%- for name, value in data.attributes -%}
 data-{{ name }}="{{ value }}"
 {%- endfor -%}

@@ -17,14 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Common;
 
-/**
- * An action that shows at the bottom of a Tweet in the timeline.
- */
-enum TweetAction
+class MEdgeButton
 {
-    case Reply;
-    case Retweet;
-    case Favorite;
+    public function __construct(
+        public EdgeButtonStyle $style,
+        public EdgeButtonSize $size,
+        public string $label,
+        public ?string $url = null,
+        public bool $asInput = false, // TODO: Consider migration to template.
+    )
+    {
+    }
 }

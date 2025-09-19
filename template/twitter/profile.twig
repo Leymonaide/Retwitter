@@ -95,7 +95,7 @@ wrapper-profile
                                         {% if canopy.card.verified %}
                                         <span class="UserBadges">
                                             <span class="Icon Icon--verified">
-                                                <span class="u-hiddenVisually">{{ app.page.i18n.get('verified_account') }}</span>
+                                                <span class="u-hiddenVisually">{{ app.i18n.get('common', 'verified_tooltip') }}</span>
                                             </span>
                                         </span>
                                         {% endif %}
@@ -161,9 +161,9 @@ wrapper-profile
                                     <a href="/{{ info.screenName }}" class="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{{ core.text(info.name) }}</a>
                                     {% if info.verified %}
                                     <span class="ProfileHeaderCard-badges">
-                                        <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.page.i18n.get('verified_account') }}">
+                                        <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.page.i18n.get('verified_tooltip') }}">
                                             <span class="Icon Icon--verified">
-                                                <span class="u-hiddenVisually">{{ app.page.i18n.get('verified_account') }}</span>
+                                                <span class="u-hiddenVisually">{{ app.i18n.get('common', 'verified_tooltip') }}</span>
                                             </span>
                                         </a>
                                     </span>
