@@ -90,6 +90,11 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return $this->getRootData()->legacy?->full_text;
     }
 
+    public function getDisplayTextRange(): ?array
+    {
+        return $this->getRootData()->legacy?->display_text_range;
+    }
+
     private function createAuthorParser(object $dataRoot): ?IProfileDataParser
     {
         if ($result = $dataRoot?->core?->user_results?->result)
