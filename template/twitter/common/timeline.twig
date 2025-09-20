@@ -209,10 +209,17 @@
                     #}{{- core.tweet_text(tweet.fullText) }}{#
                 #}</p>
             </div>
+            {% if tweet.media is not empty %}
+                {% for media in tweet.media %}
+                    {{ _self.tweet_adaptive_media(media) }}
+                {% endfor %}
+            {% endif %}
+            {#}
             <div class="card2 js-media-container" data-card2-name="audio">
-                {# TODO: What is this element, exactly? Does not exist on all
-                   Tweets either. #}
+                TODO: What is this element, exactly? Does not exist on all
+                Tweets either.
             </div>
+            #}
             <div class="stream-item-footer">
                 <div class="ProfileTweet-actionCountList u-hiddenVisually">
                     {% for tweet_action in tweet.actionStrip.actions %}
@@ -224,6 +231,44 @@
                     {% for tweet_action in tweet.actionStrip.actions %}
                         {{ _self.tweet_action_button(tweet, tweet_action) }}
                     {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro tweet_adaptive_media(tweet_media) %}
+    {% types {
+        tweet_media: "Retwitter\\Page\\Common\\Timeline\\MTweetMedia",
+    } %}
+
+    <div class="AdaptiveMediaOuterContainer">
+        <div class="{{ [
+                'AdaptiveMedia',
+                'is-square',
+            ]|join(' ') }}">
+            <div class="AdaptiveMediaContainer">
+                {# TODO: Discern. #}
+                <div class="AdaptiveMedia-singlePhoto"
+                    {# Style here controls the entire height of the media embed.
+                       Of course, this also needs to be calculated dynamically. #}
+                    style="padding-top: calc(0.75 * 100% - 0.5px);">
+                    <div class="{{ [
+                            'AdaptiveMedia-photoContainer',
+                            'js-adaptive-photo',
+                        ]|join(' ') }}"
+                        data-image-url="{{ tweet_media.mediaUrl }}"
+                        data-element-context="platform_photo_card"
+                        style="background-color:rgba(48,39,32,1.0);"
+                        data-dominant-color="[48,39,32]">
+                        <img data-aria-label-part=""
+                            src="{{ tweet_media.mediaUrl }}"
+                            alt=""
+                            {# TODO: Top of photo can be a negative number,
+                               probably to shift the image upwards so the crop
+                               is centered. Figure this out. #}
+                            style="width: 100%; top: -0px;">
+                    </div>
                 </div>
             </div>
         </div>

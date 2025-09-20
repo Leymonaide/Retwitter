@@ -150,6 +150,39 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return isset($this->getRootData()->legacy->retweeted_status_result);
     }
 
+    /**
+     * @return MTweetMedia[]
+     */
+    public function getMedia(): array
+    {
+        if (!isset($this->getRootData()->legacy->entities->media))
+        {
+            return [];
+        }
+
+        $result = [];
+
+        foreach ($this->getRootData()->legacy->entities->media as $media)
+        {
+            $result[] = new MTweetMedia(
+                type: match ($media->type) {
+                    "photo" => TweetMediaType::Photo,
+                    "video" => TweetMediaType::Video,
+                },
+                availability: match ($media->ext_media_availability->status) {
+                    "Available" => TweetMediaAvailability::Available,
+                },
+                expandedUrl: $media->expanded_url,
+                mediaKey: $media->media_key,
+                mediaUrl: $media->media_url_https,
+                shortUrl: $media->url,
+                displayUrl: $media->display_url,
+            );
+        }
+
+        return $result;
+    }
+
     public function getSocialContext(): ?MTweetSocialContext
     {
         return $this?->socialContext ?? null;

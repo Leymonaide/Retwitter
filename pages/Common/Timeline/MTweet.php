@@ -38,6 +38,12 @@ class MTweet
     public bool $isQuoteTweet = false;
     public bool $isUserPinned = true;
     public ?MTweetSocialContext $socialContext = null;
+
+    /**
+     * @var MTweetMedia[]
+     */
+    public array $media = [];
+
     public ?MTweetActions $actionStrip = null;
 
     public function __construct(ITweetDataParser $parser)
@@ -61,6 +67,8 @@ class MTweet
         $this->lang = $parser->getLang();
         $this->createdAtStr = $parser->getCreatedAt();
         $this->createdAt = new DateTime($this->createdAtStr);
+
+        $this->media = $parser->getMedia();
 
         $this->actionStrip = new MTweetActions($parser);
 

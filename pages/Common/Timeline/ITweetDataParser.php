@@ -43,6 +43,11 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getQuoteTweetCount(): ?int;
     public function getIsRetweet(): bool;
 
+    /**
+     * @return MTweetMedia[]
+     */
+    public function getMedia(): array;
+
     public function getSocialContext(): ?MTweetSocialContext;
     public function setSocialContext(?MTweetSocialContext $context): void;
 }
