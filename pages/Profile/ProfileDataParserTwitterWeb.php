@@ -50,7 +50,9 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
 
     public function getHandle(): ?string
     {
-        return ParsingUtils::getUsernameAsHandle($this->getUsername());
+        if ($username = $this->getUsername())
+            return ParsingUtils::getUsernameAsHandle($username);
+        return null;
     }
 
     public function getId(): ?string

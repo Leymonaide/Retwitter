@@ -77,13 +77,18 @@ class MProfileCanopy
             active: ProfileTab::Likes == $tab,
         );
 
-        $this->stats[] = new MProfileCanopyStat(
-            id: "lists",
-            label: $i18n->get("stat_lists"),
-            count: $parser->getListCount(),
-            tooltip: $i18n->get("stat_lists_tip"),
-            url: "/$name/lists",
-            active: ProfileTab::Lists == $tab,
-        );
+        // Currently, only the list count is known to actually be null. Perhaps
+        // everything here should be moved to use a null check in the future?
+        if (null !== $parser->getListCount())
+        {
+            $this->stats[] = new MProfileCanopyStat(
+                id: "lists",
+                label: $i18n->get("stat_lists"),
+                count: $parser->getListCount(),
+                tooltip: $i18n->get("stat_lists_tip"),
+                url: "/$name/lists",
+                active: ProfileTab::Lists == $tab,
+            );
+        }
     }
 }

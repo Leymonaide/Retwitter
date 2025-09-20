@@ -22,6 +22,8 @@ namespace Retwitter;
 use Rehike\ConfigManager\Config;
 use Rehike\PropertyAtPath;
 
+use Retwitter\ConfigDefinitions\NitterSourceProxyMedia;
+
 use Rehike\ConfigManager\Properties\{
     BoolProp,
     EnumProp,
@@ -41,6 +43,15 @@ class ConfigDefinitions
             "appearance" => [
             ],
             "experiments" => [
+            ],
+            "behavior" => [
+                "nitterSourceProxyMedia" => new EnumProp(
+                    defaultValue: NitterSourceProxyMedia::No->value,
+                    validValues: [
+                        NitterSourceProxyMedia::No->value,
+                        NitterSourceProxyMedia::Yes->value,
+                    ]
+                ),
             ],
             "advanced" => [
                 "enableDebugger" => new BoolProp(false),

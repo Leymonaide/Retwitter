@@ -19,14 +19,19 @@
 
 namespace Retwitter\Page\Profile;
 
+use PHPHtmlParser\Dom;
 use Rehike\ControllerV2\IGetControllerAsync;
 use Retwitter\Network;
+use Retwitter\NitterSourceInfo;
+use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;
 use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
+
+const PROFILE_TEST_NITTER = true;
 
 class ProfileController
     extends RetwitterPageController
@@ -89,6 +94,8 @@ class ProfileController
 
             //$userData = $userResponse->getJson();
 
+if (!PROFILE_TEST_NITTER)
+{
             $userData = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_main.json"));
 
             $dataParser = new ProfileDataParserTwitterWeb($userData->data->user->result);
@@ -99,6 +106,20 @@ class ProfileController
                 $timelineData->data->user->result->timeline->timeline
             );
             $context->insertTimeline($timelineParser);
+}
+else
+{
+            $rawDocument = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/test_nitter_profile.html");
+            $dom = new Dom();
+            $dom->loadStr($rawDocument);
+            
+            $dataParser = new ProfileDataParserNitter(
+                new NitterSourceInfo(),
+                $dom
+            );
+
+            $context->insertUserData($dataParser);
+}
 
             $this->renderPage();
         });
