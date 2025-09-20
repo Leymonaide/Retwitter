@@ -139,4 +139,19 @@ class MTweet
         // Format with milliseconds
         return $this->createdAt->format("Uv");
     }
+
+    /**
+     * Utility function useful for templating.
+     */
+    public function areAllStatsEmpty(): bool
+    {
+        $sum = 0;
+        
+        foreach ($this->actionStrip->actions as $action)
+        {
+            $sum += $action->count;
+        }
+
+        return $sum == 0;
+    }
 }

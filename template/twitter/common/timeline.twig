@@ -68,7 +68,15 @@
         data-permalink-path="{{ tweet.getUrl() }}"
         data-conversation-id="{{ tweet.conversationId }}"
         data-tweet-nonce="{# Tweet ID, maybe with random ID after #}"
-        data-tweet-stat-initialized="false{# TODO: Verify against non-JS page. #}"
+        {# TODO: The below information is wrong. Sometimes tweets just get blank
+           stat buttons, which are initialized on the client side. Figure out
+           what conditions this happens under and replicate, or settle for an
+           inaccurate implementation (which I imagine is fine) #}
+        {# data-tweet-stat-initialized seems to only appear at template time as
+           "true" if the tweet has any stat information at template time. #}
+        {% if not tweet.areAllStatsEmpty() %}
+            data-tweet-stat-initialized="true"
+        {% endif %}
         data-screen-name="{{ tweet.author.screenName }}"
         data-name="{{ core.simple_text(tweet.author.name) }}"
         data-user-id="{{ tweet.userId }}"
@@ -77,8 +85,12 @@
         data-you-block="false"
         data-reply-to-users-json="{# TODO. #}"
         data-disclosure-type=""
+        {# The following don't seem to be there for most tweets, just the one I
+           happened to start copying from.
         data-card2-type="audio"
-        data-has-cards="true">
+        data-has-cards="true"
+        #}
+        >
         <div class="context">
             {% if tweet.socialContext.type == TweetSocialContext.Retweet %}
                 <div class="tweet-context with-icn ">
@@ -117,7 +129,7 @@
                         'js-user-profile-link',
                         'js-nav',
                     ]|join(' ') }}"
-                    href="{# Profile URL #}" 
+                    href="/{{ tweet.author.screenName }}"
                     data-user-id="{{ tweet.userId }}">
                     <img class="avatar js-action-profile-avatar"
                         src="{{ tweet.author.avatarUrl }}"
@@ -259,6 +271,9 @@
                         ]|join(' ') }}"
                         data-image-url="{{ tweet_media.mediaUrl }}"
                         data-element-context="platform_photo_card"
+                        {# TODO: The dominant color does not seem to be reported
+                           by Twitter's API anymore, so this will probably have
+                           to be worked around in some way. #}
                         style="background-color:rgba(48,39,32,1.0);"
                         data-dominant-color="[48,39,32]">
                         <img data-aria-label-part=""
@@ -293,7 +308,7 @@
 
     <span class="{{ [
         'ProfileTweet-action--' ~ action_name,
-        'u-hiddenVisually'
+        'u-hiddenVisually',
     ]|join(' ') }}">
         <span class="ProfileTweet-actionCount"
             data-tweet-stat-count="{{ tweet_action.count }}">
