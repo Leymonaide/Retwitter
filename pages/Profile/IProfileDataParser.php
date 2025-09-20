@@ -21,6 +21,7 @@ namespace Retwitter\Page\Profile;
 
 use DateTime;
 use Retwitter\IApiSourceProvider;
+use Retwitter\Page\Common\VerificationType;
 
 /**
  * API-agnostic interface for API data.
@@ -37,6 +38,7 @@ interface IProfileDataParser extends IApiSourceProvider
     public function getDescription(): ?string;
     public function getLocation(): ?string;
     public function getVerified(): bool;
+    public function getVerificationType(): VerificationType;
     public function getTweetCount(): ?int;
     public function getFollowingCount(): ?int;
     public function getFollowerCount(): ?int;

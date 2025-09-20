@@ -22,6 +22,7 @@ namespace Retwitter\Page\Profile;
 use DateTime;
 use Retwitter\ApiSource;
 use Retwitter\Utils\ParsingUtils;
+use Retwitter\Page\Common\VerificationType;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser
 {
@@ -89,9 +90,28 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
 
     public function getVerified(): bool
     {
-        return $this->getApiResult()?->verification->verified
-            ?? $this->getApiResult()?->is_blue_verified
-            ?? false;
+        return !in_array($this->getVerificationType(), [
+            VerificationType::NotVerified,
+            VerificationType::DataUnavailable,
+        ]);
+    }
+
+    public function getVerificationType(): VerificationType
+    {
+        $result = $this->getApiResult();
+
+        if (isset($result->verification->verified)
+            && $result->verification->verified)
+        {
+            return VerificationType::Verified;
+        }
+
+        if (isset($result->is_blue_verified) && $result->is_blue_verified)
+        {
+            return VerificationType::VerifiedBlue;
+        }
+
+        return VerificationType::NotVerified;
     }
 
     public function getTweetCount(): ?int
