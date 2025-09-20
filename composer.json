@@ -4,6 +4,7 @@
         "google/protobuf": "^3.21.11",
         "bluelibraries/dns": "^1.1",
         "p3k/emoji-detector": "^1.0",
-        "stillat/numeral.php": "^2.0"
+        "stillat/numeral.php": "^2.0",
+        "paquettg/php-html-parser": "^3.1"
     }
 }
