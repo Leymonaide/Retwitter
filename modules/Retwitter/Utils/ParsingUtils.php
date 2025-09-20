@@ -91,11 +91,17 @@ class ParsingUtils
                 $builder->createAndAddRun($beforeText);
             }
 
-            // Twemoji URLS omit U+FE0F.
-            $code = preg_replace(
-                "/(^|-)fe0f($|-)/", "", 
-                strtolower($emoji["hex_str"])
-            );
+            // Twemoji URLs omit the variation selector character (U+FE0F)
+            // UNLESS the emoji has a zero-width joiner (U+200D).
+            // https://github.com/twitter/twemoji/blob/36bac6943fb39df00c9ba221263ea73b9445fa23/scripts/build.js#L337-L350
+            $code = strtolower($emoji["hex_str"]);
+            if (!preg_match("/-200d-/", $code))
+            {
+                $code = preg_replace(
+                    "/(^|-)fe0f($|-)/", "", 
+                    $code
+                );
+            }
             
             $runBuilder = $builder->createRunBuilder();
             $runBuilder->emoji = (object)[
