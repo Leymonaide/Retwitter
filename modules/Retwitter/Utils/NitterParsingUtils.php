@@ -87,6 +87,6 @@ class NitterParsingUtils
         if (null == $number)
             return null;
         $formatter = new NumberFormatter("en-US", NumberFormatter::DECIMAL);
-        return (int)$formatter->parse($number);
+        return (int)$formatter->parse(trim($number));
     }
 }

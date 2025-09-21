@@ -154,11 +154,12 @@ class TweetDataParserNitter implements ITweetDataParser
         return null;
     }
 
-    private function parseStat(string $selector): ?int
+    private function getAndParseStat(string $selector): ?int
     {
         if ($statNode = $this->findFirst($selector))
         {
             $countText = $statNode->getParent()->text;
+
             return NitterParsingUtils::parseNumber($countText) ?? 0;
         }
 
@@ -167,22 +168,22 @@ class TweetDataParserNitter implements ITweetDataParser
 
     public function getFavoritesCount(): ?int
     {
-        return $this->parseStat(".tweet-stat .icon-heart");
+        return $this->getAndParseStat(".tweet-stat .icon-heart");
     }
 
     public function getReplyCount(): ?int
     {
-        return $this->parseStat(".tweet-stat .icon-comment");
+        return $this->getAndParseStat(".tweet-stat .icon-comment");
     }
 
     public function getRetweetCount(): ?int
     {
-        return $this->parseStat(".tweet-stat .icon-retweet");
+        return $this->getAndParseStat(".tweet-stat .icon-retweet");
     }
 
     public function getQuoteTweetCount(): ?int
     {
-        return $this->parseStat(".tweet-stat .icon-retweet");
+        return $this->getAndParseStat(".tweet-stat .icon-retweet");
     }
 
     public function getIsRetweet(): bool
