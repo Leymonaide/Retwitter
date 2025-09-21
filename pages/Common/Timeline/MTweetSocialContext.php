@@ -21,9 +21,7 @@ namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
 use Rehike\FormattedString;
-use Retwitter\Page\Profile\IProfileDataParser;
-use Retwitter\Utils\NumberFormat;
-use Retwitter\Utils\ParsingUtils;
+use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 
 class MTweetSocialContext
 {
@@ -33,7 +31,7 @@ class MTweetSocialContext
 
     public function __construct(
         public TweetSocialContext $type,
-        ?IProfileDataParser $retweeterProfile = null,
+        ?IBasicProfileInfoDataParser $retweeterProfile = null,
     )
     {
         if (null !== $retweeterProfile)

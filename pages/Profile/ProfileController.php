@@ -23,6 +23,7 @@ use PHPHtmlParser\Dom;
 use Rehike\ControllerV2\IGetControllerAsync;
 use Retwitter\Network;
 use Retwitter\NitterSourceInfo;
+use Retwitter\Page\Common\Timeline\Nitter\TimelineDataParserNitter;
 use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;
 use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TimelineDataParserTwitterWeb;
@@ -112,13 +113,22 @@ else
             $rawDocument = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/test_nitter_profile.html");
             $dom = new Dom();
             $dom->loadStr($rawDocument);
+
+            $nitterSourceInfo = new NitterSourceInfo();
             
             $dataParser = new ProfileDataParserNitter(
-                new NitterSourceInfo(),
+                $nitterSourceInfo,
                 $dom
             );
 
             $context->insertUserData($dataParser);
+
+            $timelineParser = new TimelineDataParserNitter(
+                $nitterSourceInfo,
+                $dom,
+            );
+
+            $context->insertTimeline($timelineParser);
 }
 
             $this->renderPage();

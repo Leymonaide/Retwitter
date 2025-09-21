@@ -17,24 +17,30 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Common;
 
-use Rehike\FormattedString;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
-use Retwitter\Utils\ParsingUtils;
+use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node\AbstractNode;
 
-class MTweetAuthor
+/**
+ * Shared parser methods.
+ */
+trait NitterDocumentParserUtils
 {
-    public FormattedString $name;
-    public string $screenName;
-    public bool $verified = false;
-    public string $avatarUrl;
+    protected Dom $document;
 
-    public function __construct(IBasicProfileInfoDataParser $parser)
+    /**
+     * Finds the first HTML element matching the selector.
+     */
+    private function findFirst(string $selector): ?AbstractNode
     {
-        $this->name = ParsingUtils::formatEmojis($parser->getDisplayName());
-        $this->screenName = $parser->getUsername();
-        $this->verified = $parser->getVerified();
-        $this->avatarUrl = $parser->getAvatarUrl();
+        $collection = $this->document->find($selector);
+        
+        if (null != $collection)
+        {
+            return $collection[0];
+        }
+
+        return null;
     }
 }

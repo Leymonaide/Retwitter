@@ -64,8 +64,8 @@ class MTweet
         $this->fullText = ParsingUtils::formatEmojis($sourceText);
 
         $this->author = new MTweetAuthor($parser->getAuthorParser());
-        $this->lang = $parser->getLang();
-        $this->createdAtStr = $parser->getCreatedAt();
+        $this->lang = $parser->getLang() ?? "en";
+        $this->createdAtStr = $parser->getCreatedAt() ?? "";
         $this->createdAt = new DateTime($this->createdAtStr);
 
         $this->media = $parser->getMedia();

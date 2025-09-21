@@ -19,11 +19,9 @@
 
 namespace Retwitter\Page\Common\Timeline;
 
-use DateTime;
 use Retwitter\ApiSource;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
-use Retwitter\Utils\ParsingUtils;
 
 class TweetDataParserTwitterWeb implements ITweetDataParser
 {
@@ -95,7 +93,7 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return $this->getRootData()->legacy?->display_text_range;
     }
 
-    private function createAuthorParser(object $dataRoot): ?IProfileDataParser
+    private function createAuthorParser(object $dataRoot): ?IBasicProfileInfoDataParser
     {
         if ($result = $dataRoot?->core?->user_results?->result)
         {
@@ -105,12 +103,12 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return null;
     }
 
-    public function getAuthorParser(): ?IProfileDataParser
+    public function getAuthorParser(): ?IBasicProfileInfoDataParser
     {
         return $this->createAuthorParser($this->getData());
     }
 
-    public function getRetweetAuthorParser(): ?IProfileDataParser
+    public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser
     {
         return $this->createAuthorParser($this->getRootData());
     }

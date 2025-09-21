@@ -1,0 +1,119 @@
+<?php
+/* 
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 lemon-pumpkin-pie.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+namespace Retwitter\Page\Common\Timeline\Nitter;
+
+use PHPHtmlParser\Dom\Node\AbstractNode;
+use Retwitter\ApiSource;
+use Retwitter\NitterSourceInfo;
+use Retwitter\Utils\NitterParsingUtils;
+use Retwitter\Utils\ParsingUtils;
+use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\VerificationType;
+
+class TweetAuthorDataParser implements IBasicProfileInfoDataParser
+{
+    public function __construct(
+        private NitterSourceInfo $sourceInfo,
+        private AbstractNode $rootNode,
+    )
+    {
+    }
+
+    /**
+     * Finds the first HTML element matching the selector.
+     * 
+     * This is a duplicate of NitterDocumentParserUtils that works on the
+     * rootNode this class has. Also copied from TweetDataParserNitter.
+     * 
+     * TODO: Refactor.
+     */
+    private function findFirst(string $selector): ?AbstractNode
+    {
+        $collection = $this->rootNode->find($selector);
+        
+        if (null != $collection)
+        {
+            return $collection[0];
+        }
+
+        return null;
+    }
+
+    public function getSourceApi(): ApiSource
+    {
+        return ApiSource::Nitter;
+    }
+
+    public function getUsername(): ?string
+    {
+        if ($username = $this->findFirst(".tweet-name-row .username")?->text)
+            return ParsingUtils::getUsernameAsTextOnly($username);
+        return null;
+    }
+
+    public function getHandle(): ?string
+    {
+        if ($username = $this->findFirst(".tweet-name-row .username")?->text)
+            return ParsingUtils::getUsernameAsHandle($username);
+        return null;
+    }
+
+    public function getId(): ?string
+    {
+        // Nitter does not provide this information, surprisingly.
+        // It's not that useful anyways.
+        return null;
+    }
+
+    public function getDisplayName(): ?string
+    {
+        if ($displayName = $this->findFirst(".tweet-name-row .fullname")?->text)
+        {
+            return html_entity_decode($displayName);
+        }
+
+        return null;
+    }
+
+    public function getAvatarUrl(): ?string
+    {
+        if ($avatar = $this->findFirst(".tweet-header .tweet-avatar img")
+                ?->getAttribute("src"))
+        {
+            return NitterParsingUtils::resolveImageUrl($avatar);
+        }
+
+        return null;
+    }
+
+    public function getVerified(): bool
+    {
+        return !in_array($this->getVerificationType(), [
+            VerificationType::NotVerified,
+            VerificationType::DataUnavailable,
+        ]);
+    }
+
+    public function getVerificationType(): VerificationType
+    {
+        // TODO.
+        return VerificationType::DataUnavailable;
+    }
+}

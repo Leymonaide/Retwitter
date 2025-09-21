@@ -31,6 +31,7 @@ use Retwitter\Utils\ParsingUtils;
 class ProfilePageContext extends BasePageContext
 {
     public ProfileTab $tab;
+    public ?MProfileError $error = null;
     public ?MProfileCanopy $canopy = null;
     public ?MProfileInfo $info = null;
     public ?MProfileContent $content = null;

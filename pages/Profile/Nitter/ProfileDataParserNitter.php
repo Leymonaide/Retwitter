@@ -20,14 +20,13 @@
 namespace Retwitter\Page\Profile\Nitter;
 
 use DateTime;
-use NumberFormatter;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Node\AbstractNode;
-use Rehike\ConfigManager\Config;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
-use Retwitter\ConfigDefinitions\NitterSourceProxyMedia;
+use Retwitter\Page\Common\NitterDocumentParserUtils;
 use Retwitter\Utils\ParsingUtils;
+use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Profile\IProfileDataParser;
 
@@ -50,83 +49,15 @@ use Retwitter\Page\Profile\IProfileDataParser;
  */
 class ProfileDataParserNitter implements IProfileDataParser
 {
+    // Provides $document
+    use NitterDocumentParserUtils;
+
     public function __construct(
         private NitterSourceInfo $sourceInfo,
-        private Dom $document
+        Dom $document,
     )
     {
-    }
-
-    /**
-     * Finds the first HTML element matching the selector.
-     */
-    private function findFirst(string $selector): ?AbstractNode
-    {
-        $collection = $this->document->find($selector);
-        
-        if (null != $collection)
-        {
-            return $collection[0];
-        }
-
-        return null;
-    }
-
-    // TODO: There are a few general functions here that are useful for parsing
-    // all sorts of Nitter responses. I just put them here for convenience, but
-    // they could benefit from migration to a utilities class.
-
-    /**
-     * Resolves the Nitter image URL matching the user's settings.
-     */
-    private function resolveImageUrl(string $nitterUrl): string
-    {
-        // TODO: Account for setting to proxy Nitter image URL. This requires
-        // the Nitter host URL to be reported in the NitterSourceInfo because
-        // Nitter's HTML uses relative URLs.
-        $shouldProxy = NitterSourceProxyMedia::tryFrom(
-            Config::getConfigProp("behavior.nitterSourceProxyMedia")
-        ) ?? NitterSourceProxyMedia::No;
-
-        if ($shouldProxy)
-        {
-            // Above todo.
-        }
-
-        // Remove "/pic/" from the start of the string.
-        $twitterUrlEncoded = $nitterUrl;
-        if (str_starts_with($twitterUrlEncoded, "/pic/"))
-        {
-            $twitterUrlEncoded = substr($twitterUrlEncoded, strlen("/pic/"));
-        }
-
-        // The Twitter CDN URL is encoded for a URL, so it must be decoded.
-        $twitterUrl = urldecode($twitterUrlEncoded);
-
-        // Guarantee that the path is absolute. Some Nitter proxy URLs are
-        // prepended with a protocol, others aren't.
-        if (!str_starts_with($twitterUrl, "https://")
-            && !str_starts_with($twitterUrl, "http://"))
-        {
-            $twitterUrl = "https://$twitterUrl";
-        }
-
-        return $twitterUrl;
-    }
-
-    /**
-     * Parses a number from the Nitter response.
-     * 
-     * Nitter only serves formatted numbers in the English language, which have
-     * things such as comma separators. Since the API contract requires integer
-     * numbers in most places, this will have to do.
-     */
-    private function parseNumber(?string $number): ?int
-    {
-        if (null == $number)
-            return null;
-        $formatter = new NumberFormatter("en-US", NumberFormatter::DECIMAL);
-        return (int)$formatter->parse($number);
+        $this->document = $document;
     }
 
     public function getSourceApi(): ApiSource
@@ -170,7 +101,7 @@ class ProfileDataParserNitter implements IProfileDataParser
         if ($banner = $this->findFirst(".profile-banner img")
                 ?->getAttribute("src"))
         {
-            return $this->resolveImageUrl($banner);
+            return NitterParsingUtils::resolveImageUrl($banner);
         }
 
         return null;
@@ -187,7 +118,7 @@ class ProfileDataParserNitter implements IProfileDataParser
         if ($avatar = $this->findFirst(".profile-card-avatar img")
                 ?->getAttribute("src"))
         {
-            return $this->resolveImageUrl($avatar);
+            return NitterParsingUtils::resolveImageUrl($avatar);
         }
 
         return null;
@@ -246,28 +177,28 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getTweetCount(): ?int
     {
-        return $this->parseNumber(number: 
+        return NitterParsingUtils::parseNumber(number: 
             $this->findFirst(".profile-statlist li.posts .profile-stat-num")?->text
         );
     }
 
     public function getFollowingCount(): ?int
     {
-        return $this->parseNumber(number: 
+        return NitterParsingUtils::parseNumber(number: 
             $this->findFirst(".profile-statlist li.following .profile-stat-num")?->text
         );
     }
 
     public function getFollowerCount(): ?int
     {
-        return $this->parseNumber(number: 
+        return NitterParsingUtils::parseNumber(number: 
             $this->findFirst(".profile-statlist li.followers .profile-stat-num")?->text
         );
     }
 
     public function getFavoritesCount(): ?int
     {
-        return $this->parseNumber(number: 
+        return NitterParsingUtils::parseNumber(number: 
             $this->findFirst(selector: ".profile-statlist li.likes .profile-stat-num")?->text
         );
     }

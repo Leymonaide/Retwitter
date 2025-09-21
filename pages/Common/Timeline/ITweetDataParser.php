@@ -21,7 +21,7 @@ namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
 use Retwitter\IApiSourceProvider;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 
 /**
  * API-agnostic interface for parsing Tweet data.
@@ -33,8 +33,8 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getUserId(): string;
     public function getFullText(): ?string;
     public function getDisplayTextRange(): ?array;
-    public function getAuthorParser(): ?IProfileDataParser;
-    public function getRetweetAuthorParser(): ?IProfileDataParser;
+    public function getAuthorParser(): ?IBasicProfileInfoDataParser;
+    public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser;
     public function getLang(): ?string;
     public function getCreatedAt(): ?string;
     public function getFavoritesCount(): ?int;

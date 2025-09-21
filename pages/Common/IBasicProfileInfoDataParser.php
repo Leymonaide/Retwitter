@@ -17,31 +17,22 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common;
 
 use DateTime;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\IApiSourceProvider;
 use Retwitter\Page\Common\VerificationType;
 
 /**
  * API-agnostic interface for API data.
  */
-interface IProfileDataParser extends IBasicProfileInfoDataParser
+interface IBasicProfileInfoDataParser extends IApiSourceProvider
 {
     public function getUsername(): ?string;
     public function getHandle(): ?string;
     public function getId(): ?string;
     public function getDisplayName(): ?string;
     public function getAvatarUrl(): ?string;
-    public function getBannerUrl(): ?string;
-    public function getCreationTime(): ?DateTime;
-    public function getDescription(): ?string;
-    public function getLocation(): ?string;
     public function getVerified(): bool;
     public function getVerificationType(): VerificationType;
-    public function getTweetCount(): ?int;
-    public function getFollowingCount(): ?int;
-    public function getFollowerCount(): ?int;
-    public function getFavoritesCount(): ?int;
-    public function getListCount(): ?int;
 }
