@@ -28,7 +28,10 @@ class NitterParsingUtils
     /**
      * Resolves the Nitter image URL matching the user's settings.
      */
-    public static function resolveImageUrl(string $nitterUrl): string
+    public static function resolveImageUrl(
+        string $nitterUrl,
+        string $assumeDomain = "pbs.twimg.com",
+    ): string
     {
         // TODO: Account for setting to proxy Nitter image URL. This requires
         // the Nitter host URL to be reported in the NitterSourceInfo because
@@ -58,6 +61,15 @@ class NitterParsingUtils
             && !str_starts_with($twitterUrl, "http://"))
         {
             $twitterUrl = "https://$twitterUrl";
+        }
+
+        // Some Nitter URLs also don't include the host domain. In such cases,
+        // the URL must be inserted manually.
+        if (strpos($twitterUrl, $assumeDomain) === false)
+        {
+            $twitterUrl = explode("://", $twitterUrl);
+            $twitterUrl[1] = $assumeDomain . "/" . $twitterUrl[1];
+            $twitterUrl = implode("://", $twitterUrl);
         }
 
         return $twitterUrl;
