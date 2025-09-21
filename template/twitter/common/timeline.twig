@@ -106,7 +106,7 @@
                                     <b>{{ core.text(tweet.socialContext.retweeterDisplayName) }}</b>
                                 </a>
                             {%- endset -%}
-                            {{ app.i18n.format("common", "tweet_social_context_retweeted", profile_link) }}
+                            {{ app.i18n.format("common", "tweet_social_context_retweeted", profile_link)|raw }}
                         {% endwith %}
                     </span>
                 </div>

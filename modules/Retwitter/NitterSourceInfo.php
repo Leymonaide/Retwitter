@@ -19,8 +19,26 @@
 
 namespace Retwitter;
 
+use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;
+
 class NitterSourceInfo
 {
-    // TODO: Figure out what to do with this class. It at least needs to provide
-    // the host URL for the proxy image setting.
+    /**
+     * @param string $nitterSourceUri The URL of the Nitter service.
+     */
+    public function __construct(
+        public string $nitterSourceUri,
+    )
+    {
+    }
+
+    /**
+     * Used for retweet source context on profile timelines.
+     */
+    public ?ProfileDataParserNitter $profileData = null;
+
+    public function setProfileData(?ProfileDataParserNitter $profileData): void
+    {
+        $this->profileData = $profileData;
+    }
 } 

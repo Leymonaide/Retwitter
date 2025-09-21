@@ -114,7 +114,9 @@ else
             $dom = new Dom();
             $dom->loadStr($rawDocument);
 
-            $nitterSourceInfo = new NitterSourceInfo();
+            $nitterSourceInfo = new NitterSourceInfo(
+                nitterSourceUri: "https://nitter.net"
+            );
             
             $dataParser = new ProfileDataParserNitter(
                 $nitterSourceInfo,
@@ -122,6 +124,7 @@ else
             );
 
             $context->insertUserData($dataParser);
+            $nitterSourceInfo->setProfileData($dataParser);
 
             $timelineParser = new TimelineDataParserNitter(
                 $nitterSourceInfo,

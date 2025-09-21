@@ -22,6 +22,7 @@ namespace Retwitter\Page\Common\Timeline;
 use DateTime;
 use Rehike\FormattedString;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Utils\ParsingUtils;
 
 class MTweetSocialContext
 {
@@ -36,7 +37,11 @@ class MTweetSocialContext
     {
         if (null !== $retweeterProfile)
         {
-            $this->retweeterDisplayName = $retweeterProfile->getDisplayName();
+            if ($rawDisplayName = $retweeterProfile->getDisplayName())
+            {
+                $this->retweeterDisplayName = ParsingUtils::formatEmojis($rawDisplayName);
+            }
+            
             $this->retweeterUrl = "/" . $retweeterProfile->getUsername();
             $this->retweeterUserId = $retweeterProfile->getId();
         }

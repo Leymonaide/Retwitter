@@ -26,6 +26,7 @@ use Retwitter\Page\Common\NitterDocumentParserUtils;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use PHPHtmlParser\Dom\Node\AbstractNode;
+use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\Timeline\MTweetMedia;
 
@@ -38,6 +39,13 @@ class TweetDataParserNitter implements ITweetDataParser
         private AbstractNode $rootNode,
     )
     {
+        if ($this->getIsRetweet() && null != $sourceInfo->profileData)
+        {
+            $this->setSocialContext(new MTweetSocialContext(
+                type: TweetSocialContext::Retweet,
+                retweeterProfile: $sourceInfo->profileData,
+            ));
+        }
     }
 
     /**
@@ -128,15 +136,9 @@ class TweetDataParserNitter implements ITweetDataParser
 
     public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser
     {
-        // TODO: This is a somewhat difficult case to handle because Nitter does
-        // not return any data about the retweeter, other than display name
-        // already in a formatted string. Since the only context retweets can be
-        // seen on a Nitter timeline is on a user profile anyways, this can
-        // take information from the profile (as is done for the social context
-        // view already), but this would require an additional class handling
-        // IBasicProfileInfoDataParser for this specific case. Nothing currently
-        // uses this function, so it's not a priority issue for me.
-        return null;
+        // Since retweets can only happen in a profile context, we'll just
+        // return the profile information.
+        return $this->sourceInfo->profileData;
     }
 
     public function getLang(): ?string
