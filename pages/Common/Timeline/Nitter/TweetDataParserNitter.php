@@ -28,7 +28,10 @@ use Retwitter\Page\Common\NitterDocumentParserUtils;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use PHPHtmlParser\Dom\Node\AbstractNode;
+use Retwitter\Page\Common\Timeline\TweetMediaAvailability;
+use Retwitter\Page\Common\Timeline\TweetMediaType;
 use Retwitter\Page\Common\Timeline\TweetSocialContext;
+use Retwitter\Url;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\Timeline\MTweetMedia;
 
@@ -296,8 +299,55 @@ class TweetDataParserNitter implements ITweetDataParser
      */
     public function getMedia(): array
     {
-        // TODO.
-        return [];
+        $result = [];
+
+        $attachmentsContainer = $this->findFirst(".attachments");
+
+        if (null === $attachmentsContainer)
+        {
+            return [];
+        }
+
+        foreach ($attachmentsContainer->find(".attachment") as $attachmentEl)
+        {
+            $elementClasses = explode(" ", $attachmentEl->getAttribute("class"));
+
+            if (in_array("image", $elementClasses))
+            {
+                $imgEl = $attachmentEl->find("img")[0];
+                
+                if (null == $imgEl)
+                {
+                    continue;
+                }
+                
+                $previewSource = NitterParsingUtils::resolveImageUrl(
+                    $imgEl->getAttribute("src")
+                );
+
+                // The expanded source URL is the preview source URL minus the
+                // parameters to request it at a low size.
+                $temp = new Url($previewSource);
+                $temp->setParameters([]);
+
+                $expandedSource = (string)$temp;
+
+                $ownerUsername = $this->getAuthorParser()?->getUsername() ?? "i";
+                $tweetUri = "/$ownerUsername/" . $this->getId();
+                
+                $result[] = new MTweetMedia(
+                    type: TweetMediaType::Photo,
+                    availability: TweetMediaAvailability::Available,
+                    expandedUrl: $expandedSource,
+                    mediaKey: "0", // TODO
+                    mediaUrl: $expandedSource,
+                    shortUrl: $tweetUri,
+                    displayUrl: $previewSource,
+                );
+            }
+        }
+
+        return $result;
 
         // if (!isset($this->getRootData()->legacy->entities->media))
         // {

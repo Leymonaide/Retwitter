@@ -114,6 +114,11 @@ class Url implements Stringable
     {
         $result = parse_url($source);
 
+        if (isset($result["scheme"]))
+        {
+            $this->protocol = $result["scheme"];
+        }
+
         if (isset($result["host"]))
         {
             $this->host = $result["host"];
@@ -148,7 +153,7 @@ class Url implements Stringable
         {
             $this->params = [];
 
-            foreach ($result["query"] as $query)
+            foreach (explode("&", $result["query"]) as $query)
             {
                 // In the case of malformed input, the current design drops
                 // everything from the second = until the next &. This might be
@@ -182,9 +187,21 @@ class Url implements Stringable
         return $this->protocol;
     }
 
+    public function setProtocol(?string $protocol): static
+    {
+        $this->protocol = $protocol;
+        return $this;
+    }
+
     public function getUsername(): ?string
     {
         return $this->username;
+    }
+
+    public function setUsername(?string $username): static
+    {
+        $this->username = $username;
+        return $this;
     }
 
     public function getPassword(): ?string
@@ -192,14 +209,32 @@ class Url implements Stringable
         return $this->password;
     }
 
+    public function setPassword(?string $password): static
+    {
+        $this->password = $password;
+        return $this;
+    }
+
     public function getHost(): ?string
     {
         return $this->host;
     }
 
+    public function setHost(?string $host): static
+    {
+        $this->host = $host;
+        return $this;
+    }
+
     public function getPort(): ?int
     {
         return $this->port;
+    }
+
+    public function setPort(?int $port): static
+    {
+        $this->port = $port;
+        return $this;
     }
 
     /**
@@ -249,6 +284,12 @@ class Url implements Stringable
         return $this->path;
     }
 
+    public function setPath(array $path): static
+    {
+        $this->path = $path;
+        return $this;
+    }
+
     public function getPathAsString(): string
     {
         return implode("/", $this->path);
@@ -257,6 +298,12 @@ class Url implements Stringable
     public function getParameters(): array
     {
         return $this->params;
+    }
+
+    public function setParameters(array $params): static
+    {
+        $this->params = $params;
+        return $this;
     }
 
     public function getParametersAsString(): string
@@ -284,5 +331,11 @@ class Url implements Stringable
     public function getFragment(): ?string
     {
         return $this->fragment;
+    }
+
+    public function setFragment(?string $fragment): static
+    {
+        $this->fragment = $fragment;
+        return $this;
     }
 }
