@@ -24,10 +24,10 @@ use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;
 class NitterSourceInfo
 {
     /**
-     * @param string $nitterSourceUri The URL of the Nitter service.
+     * @param $nitterSourceUri The URL of the Nitter 
      */
     public function __construct(
-        public string $nitterSourceUri,
+        public Url $nitterSourceUri,
     )
     {
     }

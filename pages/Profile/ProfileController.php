@@ -29,6 +29,7 @@ use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
+use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
@@ -115,7 +116,7 @@ else
             $dom->loadStr($rawDocument);
 
             $nitterSourceInfo = new NitterSourceInfo(
-                nitterSourceUri: "https://nitter.net"
+                nitterSourceUri: new Url("https://nitter.net")
             );
             
             $dataParser = new ProfileDataParserNitter(
