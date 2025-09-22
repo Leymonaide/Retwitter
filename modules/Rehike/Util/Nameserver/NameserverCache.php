@@ -1,6 +1,8 @@
 <?php
 namespace Rehike\Util\Nameserver;
 
+use Rehike\Exception\FileSystem\FsFileDoesNotExistException;
+use Rehike\Exception\FileSystem\FsFileReadFailureException;
 use Rehike\FileSystem;
 use Rehike\Logging\DebugLogger;
 
@@ -37,7 +39,26 @@ class NameserverCache
             return null;
         }
 
-        $jsonStr = FileSystem::getFileContents(self::CACHE_FILE);
+        try
+        {
+            $jsonStr = FileSystem::getFileContents(self::CACHE_FILE);
+        }
+        catch (FsFileReadFailureException $e)
+        {
+            DebugLogger::print(
+                "[NameserverCache] Failed to read nameserver cache file " .
+                "with exception: %s", $e->getMessage()
+            );
+            return null;
+        }
+        catch (FsFileDoesNotExistException $e)
+        {
+            DebugLogger::print(
+                "[NameserverCache] Nameserver cache file somehow " .
+                "managed to stop existing after the proper check."
+            );
+            return null;
+        }
 
         if (!is_string($jsonStr))
         {
@@ -60,7 +81,7 @@ class NameserverCache
             && isset($entry->domain)
             && isset($entry->expire)
             && $entry->domain == $domain
-            && $entry->expire < time() + self::VALID_TIME
+            && $entry->expire < time()
         )
         {
             return new NameserverInfo($domain, $entry->ip);
