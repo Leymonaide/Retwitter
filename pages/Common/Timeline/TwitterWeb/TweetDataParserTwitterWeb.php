@@ -17,11 +17,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Common\Timeline\TwitterWeb;
 
 use Retwitter\ApiSource;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
-use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
+use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
+use Retwitter\Page\Common\Timeline\ITweetDataParser;
+use Retwitter\Page\Common\Timeline\MTweetSocialContext;
+use Retwitter\Page\Common\Timeline\TweetSocialContext;
+use Retwitter\Page\Common\Timeline\MTweetMedia;
+use Retwitter\Page\Common\Timeline\TweetMediaType;
+use Retwitter\Page\Common\Timeline\TweetMediaAvailability;
 
 class TweetDataParserTwitterWeb implements ITweetDataParser
 {

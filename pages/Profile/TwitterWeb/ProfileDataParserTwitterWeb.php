@@ -17,12 +17,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Profile\TwitterWeb;
 
 use DateTime;
 use Retwitter\ApiSource;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
+use Retwitter\Page\Profile\IProfileDataParser;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser
 {

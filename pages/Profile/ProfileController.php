@@ -24,9 +24,10 @@ use Rehike\ControllerV2\IGetControllerAsync;
 use Retwitter\Network;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\Timeline\Nitter\TimelineDataParserNitter;
+use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
 use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;
 use Retwitter\Page\Base\RetwitterPageController;
-use Retwitter\Page\Common\Timeline\TimelineDataParserTwitterWeb;
+use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
 use Retwitter\Url;
