@@ -19,6 +19,8 @@
 
 namespace Retwitter\Page\Common\Timeline\Nitter;
 
+use DateTime;
+use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
@@ -150,9 +152,105 @@ class TweetDataParserNitter implements ITweetDataParser
         return null;
     }
 
+    /**
+     * Gets the creation time of the tweet.
+     * 
+     * Nitter formats the creation date using the template:
+     * "MMM d', 'YYYY' · 'h:mm tt' UTC'"
+     * 
+     * An example is:
+     * "Sep 11, 2025 · 12:31 PM UTC"
+     * 
+     * https://github.com/zedeus/nitter/blob/e40c61a6ae76431c570951cc4925f38523b00a82/src/formatters.nim#L128-L129
+     * 
+     * Of course, it can't be easy and just give a timestamp, so we must parse
+     * the string it gives us.
+     */
     public function getCreatedAt(): ?string
     {
-        // TODO.
+        if ($time = $this->findFirst(".tweet-date a")
+                ?->getAttribute("title"))
+        {
+            /*
+             * We should always get exactly 7 tokens:
+             *  - "Sep"   - The month token, looked up in the months table and
+             *              mapped to its corresponding integer.
+             *  - "11,"   - The day token, parsed into a single integer. This
+             *              must be stripped of the trailing comma.
+             *  - "2025"  - The year token, parsed into a single integer.
+             *  - "·"     - Ignored
+             *  - "12:31" - The time token, split and parsed into two integers
+             *  - "PM"    - The meridian modifier
+             *  - "UTC"   - The time zone.
+             */
+            $tokens = explode(" ", $time);
+
+            // These are just useful constants.
+            $T_MONTH = 0;
+            $T_DAY = 1;
+            $T_YEAR = 2;
+            $T_SEPARATOR = 3; // Always "-", ignored.
+            $T_TIME = 4;
+            $T_MERIDIAN = 5; // Either "AM" or "PM"
+            $T_TIMEZONE = 6; // Always "UTC", ignored.
+            $T_TIME_H    = 0; // First index of $timeParts array.
+            $T_TIME_M    = 1;
+
+            if (count($tokens) != 7)
+            {
+                // Invalid format.
+                DebugLogger::print(__METHOD__.": Time token count not equal to 7: { %s }",
+                    '"' . implode("\", \"", $tokens) . '"',
+                );
+                return null;
+            }
+
+            if ("·" != $tokens[$T_SEPARATOR])
+            {
+                // Invalid format - separator is not "·".
+                DebugLogger::print(__METHOD__.": T_SEPARATOR ('%s') != expected '-'. Tokens: { %s }",
+                    $tokens[$T_SEPARATOR],
+                    '"' . implode("\", \"", $tokens) . '"',
+                );
+                return null;
+            }
+
+            if (!in_array($tokens[$T_MERIDIAN], NitterParsingUtils::DATE_VALID_MERIDIAN))
+            {
+                // Invalid format - meridian is outside of "AM" and "PM".
+                DebugLogger::print(__METHOD__.": T_MERIDIAN ('%s') outside of AM/PM. Tokens: { %s }",
+                    $tokens[$T_MERIDIAN],
+                    '"' . implode("\", \"", $tokens) . '"',
+                );
+                return null;
+            }
+
+            $timeParts = explode(":", $tokens[$T_TIME]);
+
+            if (count($timeParts) < 2)
+            {
+                // Invalid format - there must always be two numbers.
+                DebugLogger::print(__METHOD__.": T_TIME format seems . Tokens: { %s } Parts: { %s }",
+                    '"' . implode("\", \"", $tokens) . '"',
+                    '"' . implode("\", \"", $timeParts) . '"',
+                );
+                return null;
+            }
+
+            $hours = (int)$timeParts[$T_TIME_H];
+            $minutes = (int)$timeParts[$T_TIME_M];
+            $month = NitterParsingUtils::DATE_SHORT_MONTHS[$tokens[$T_MONTH]];
+            $day = (int)trim($tokens[$T_DAY], ",");
+            $year = (int)$tokens[$T_YEAR];
+
+            if ("PM" == $T_MERIDIAN)
+            {
+                $hours += 12;
+            }
+
+            return "$year-$month-{$day}T$hours:$minutes:00+00:00";
+        }
+
         return null;
     }
 
