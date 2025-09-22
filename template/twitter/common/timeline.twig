@@ -36,7 +36,7 @@
                     <li id="stream-item-tweet-{{ tweet.id }}" class="{{ [
                             'js-stream-item',
                             'stream-item',
-                            tweet.isUserPinned ? 'js-pinned', # TODO: Conditional.
+                            tweet.isUserPinned ? 'js-pinned',
                         ]|join(' ') }}" data-item-id="{{ tweet.id }}"
                         data-item-type="tweet" data-suggestion-json="{# TODO #}">
                         {{ _self.render_tweet(tweet) }}

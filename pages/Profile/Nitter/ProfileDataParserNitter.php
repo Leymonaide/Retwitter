@@ -20,8 +20,10 @@
 namespace Retwitter\Page\Profile\Nitter;
 
 use DateTime;
+use DateTimeImmutable;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Node\AbstractNode;
+use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\NitterDocumentParserUtils;
@@ -107,9 +109,102 @@ class ProfileDataParserNitter implements IProfileDataParser
         return null;
     }
 
+    /**
+     * Gets the creation time of the user.
+     * 
+     * Nitter formats the join date using the template:
+     * "h:mm tt - d MMM YYYY"
+     * 
+     * An example is:
+     * "5:01 AM - 27 Dec 2021"
+     * 
+     * https://github.com/zedeus/nitter/blob/e40c61a6ae76431c570951cc4925f38523b00a82/src/formatters.nim#L125-L126
+     * 
+     * Of course, it can't be easy and just give a timestamp, so we must parse
+     * the string it gives us.
+     */
     public function getCreationTime(): ?DateTime
     {
-        // TODO.
+        if ($time = $this->findFirst(".profile-joindate span")
+                ?->getAttribute("title"))
+        {
+            /*
+             * We should always get exactly 6 tokens:
+             *  - "5:01"  - The time token, split and parsed into two integers
+             *  - "AM"    - The meridian modifier
+             *  - "-"     - Ignored
+             *  - "27"    - The day token, parsed into a single integer
+             *  - "Dec"   - The month token, looked up in the months table and
+             *              mapped to its corresponding integer.
+             *  - "2021"  - The year token, parsed into a single integer.
+             */
+            $tokens = explode(" ", $time);
+
+            // These are just useful constants.
+            $T_TIME      = 0;
+            $T_MERIDIAN  = 1; // Either "AM" or "PM"
+            $T_SEPARATOR = 2; // Always "-", ignored.
+            $T_DAY       = 3;
+            $T_MONTH     = 4;
+            $T_YEAR      = 5;
+            $T_TIME_H    = 0; // First index of $timeParts array.
+            $T_TIME_M    = 1;
+
+            if (count($tokens) != 6)
+            {
+                // Invalid format.
+                DebugLogger::print(__METHOD__.": Time token count not equal to 6: { %s }",
+                    '"' . implode("\", \"", $tokens) . '"',
+                );
+                return null;
+            }
+
+            if ("-" != $tokens[$T_SEPARATOR])
+            {
+                // Invalid format - separator is not "-".
+                DebugLogger::print(__METHOD__.": T_SEPARATOR ('%s') != expected '-'. Tokens: { %s }",
+                    $tokens[$T_SEPARATOR],
+                    '"' . implode("\", \"", $tokens) . '"',
+                );
+                return null;
+            }
+
+            if (!in_array($tokens[$T_MERIDIAN], NitterParsingUtils::DATE_VALID_MERIDIAN))
+            {
+                // Invalid format - meridian is outside of "AM" and "PM".
+                DebugLogger::print(__METHOD__.": T_MERIDIAN ('%s') outside of AM/PM. Tokens: { %s }",
+                    $tokens[$T_MERIDIAN],
+                    '"' . implode("\", \"", $tokens) . '"',
+                );
+                return null;
+            }
+
+            $timeParts = explode(":", $tokens[$T_TIME]);
+
+            if (count($timeParts) < 2)
+            {
+                // Invalid format - there must always be two numbers.
+                DebugLogger::print(__METHOD__.": T_TIME format seems . Tokens: { %s } Parts: { %s }",
+                    '"' . implode("\", \"", $tokens) . '"',
+                    '"' . implode("\", \"", $timeParts) . '"',
+                );
+                return null;
+            }
+
+            $hours = (int)$timeParts[$T_TIME_H];
+            $minutes = (int)$timeParts[$T_TIME_M];
+            $month = NitterParsingUtils::DATE_SHORT_MONTHS[$tokens[$T_MONTH]];
+            $day = (int)$tokens[$T_DAY];
+            $year = (int)$tokens[$T_YEAR];
+
+            if ("PM" == $T_MERIDIAN)
+            {
+                $hours += 12;
+            }
+
+            return new DateTime("$year-$month-{$day}T$hours:$minutes:00+00:00");
+        }
+
         return null;
     }
 

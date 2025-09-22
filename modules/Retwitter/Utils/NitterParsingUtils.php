@@ -26,6 +26,35 @@ use Retwitter\ConfigDefinitions\NitterSourceProxyMedia;
 class NitterParsingUtils
 {
     /**
+     * Valid meridian time modifiers.
+     */
+    public const DATE_VALID_MERIDIAN = [
+        "AM",
+        "PM",
+    ];
+
+    /**
+     * Taken from:
+     * https://nim-lang.org/docs/times.html#10
+     * 
+     * @var int[]
+     */
+    public const DATE_SHORT_MONTHS = [
+        "Jan" => 1,
+        "Feb" => 2,
+        "Mar" => 3,
+        "Apr" => 4,
+        "May" => 5,
+        "Jun" => 6,
+        "Jul" => 7,
+        "Aug" => 8,
+        "Sep" => 9,
+        "Oct" => 10,
+        "Nov" => 11,
+        "Dec" => 12,
+    ];
+
+    /**
      * Resolves the Nitter image URL matching the user's settings.
      */
     public static function resolveImageUrl(
