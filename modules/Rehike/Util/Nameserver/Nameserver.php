@@ -41,6 +41,12 @@ class Nameserver
 {
     public const DEFAULT_NS = "1.1.1.1";
 
+    /**
+     * Used to prevent rewriting the same contents we get from the cache back
+     * into it.
+     */
+    private static bool $gotFromCache = false;
+
     private function __construct() {}
     
     /**
@@ -63,7 +69,10 @@ class Nameserver
         $hostname = self::getHostName($uri);
 
         $result = self::lookup($hostname, $port);
-        NameserverCache::write($result);
+        if (false == self::$gotFromCache)
+        {
+            NameserverCache::write($result);
+        }
         return $result;
     }
 
@@ -119,6 +128,7 @@ class Nameserver
             throw new DnsLookupException($uri, $lookupServer);
         }
 
+        self::$gotFromCache = true;
         return $cachedInfo;
     }
     

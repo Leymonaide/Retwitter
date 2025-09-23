@@ -81,11 +81,25 @@ class NameserverCache
             && isset($entry->domain)
             && isset($entry->expire)
             && $entry->domain == $domain
-            && $entry->expire < time()
+            && $entry->expire > time()
         )
         {
             return new NameserverInfo($domain, $entry->ip);
         }
+
+        DebugLogger::print(
+            "Nameserver cache file is invalid.\n" .
+            " - Entry is set: %s\n" .
+            " - Entry domain is set: %s\n" .
+            " - Entry expire is set: %s\n" .
+            " - Entry domain is same: %s\n" .
+            " - Entry expire time is less than current time: %s\n",
+            isset($entry) ? "true" : "false",
+            isset($entry->domain) ? "true" : "false",
+            isset($entry->expire) ? "true" : "false",
+            @$entry->domain == $domain ? "true" : "false",
+            @$entry->expire > time() ? "true" : "false",
+        );
 
         return null;
     }
@@ -101,7 +115,18 @@ class NameserverCache
 
         if (FileSystem::fileExists(self::CACHE_FILE))
         {
-            $jsonStr = FileSystem::getFileContents(self::CACHE_FILE);
+            try
+            {
+                $jsonStr = FileSystem::getFileContents(self::CACHE_FILE);
+            }
+            catch (FsFileDoesNotExistException|FsFileReadFailureException $e)
+            {
+                DebugLogger::print(
+                    "Failed to read file contents while attempting" .
+                    "to write nameserver cache contents."
+                );
+                $jsonStr = null;
+            }
 
             if ($jsonStr)
             {
