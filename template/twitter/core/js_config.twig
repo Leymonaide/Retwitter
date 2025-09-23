@@ -107,7 +107,7 @@
     "needsPhoneVerification": false,
     "allowAdsPersonalization": true,
     "scribeBufferSize": 3,
-    "pageName": "",
+    "pageName": "{{ retwitter_g_js_page_name }}",
     "sectionName": "",
     "scribeParameters": {},
     "recaptchaApiUrl": "https:\/\/www.google.com\/recaptcha\/api\/js\/recaptcha_ajax.js",
@@ -288,7 +288,7 @@
         ],
         "format": "ProfileOther"
     },
-    "pageContext": "profile",
+    "pageContext": "{{ retwitter_g_js_page_context }}",
     "passwordResetAdvancedLoginForm": true,
     "skipAutoSignupDialog": false,
     "shouldReplaceSignupWithLogin": false,
@@ -331,7 +331,7 @@
         "cache_ttl": 300,
         "body_class_names": "{{ include("core/body_class.twig")|e("js") }}",
         "doc_class_names": "",
-        "route_name": "",
+        "route_name": "profile",
         "page_container_class_names": "AppContent",
         "ttft_navigation": false
     }

@@ -47,6 +47,44 @@
                 </div>
             </div>
         </div>
+        {# TODO: There are a fuckton of elements at the bottom of the document
+           that need to be inserted for presumably most JS functionality to work
+           out. #}
+        <div class="gallery-overlay"></div>
+        <div class="Gallery with-tweet">
+            <style class="Gallery-styles"></style>
+            <div class="Gallery-closeTarget"></div>
+            <div class="Gallery-content">
+                <div class="GalleryTweet-newsCameraBadge"></div>
+                <button class="{{ [
+                        'modal-btn',
+                        'modal-close',
+                        'modal-close-fixed',
+                        'js-close',
+                    ]|join(' ') }}" type="button">
+                    <span class="Icon Icon--close Icon--large">
+                        <span class="visuallyhidden">Close{# TODO: i18n#}</span>
+                    </span>
+                </button>
+                <div class="Gallery-media"></div>
+                <div class="GalleryNav GalleryNav--prev">
+                    <span class="GalleryNav-handle GalleryNav-handle--prev">
+                        <span class="Icon Icon--caretLeft Icon--large">
+                            <span class="u-hiddenVisually">Previous</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="GalleryNav GalleryNav--next">
+                    <span class="GalleryNav-handle GalleryNav-handle--next">
+                        <span class="Icon Icon--caretRight Icon--large">
+                            <span class="u-hiddenVisually">Next</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="GalleryTweet"></div>
+            </div>
+        </div>
+        <div class="modal-overlay"></div>
         <link rel="stylesheet" href="{{ rehike.resource.resolveVersioned("rehike/css/www-rebug-retwitter-base.css") }}">
         {% include "@rehike/rehike/debugger/main.twig" %}
         <input type="hidden" class="swift-boot-module" value="app/pages/profile/highline_landing">
