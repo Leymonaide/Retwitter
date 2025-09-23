@@ -32,6 +32,7 @@ class ProfilePageContext extends BasePageContext
 {
     public ProfileTab $tab;
     public ?MProfileError $error = null;
+    public ?MProfileJsConfigInfo $jsConfig = null;
     public ?MProfileCanopy $canopy = null;
     public ?MProfileInfo $info = null;
     public ?MProfileContent $content = null;
@@ -47,11 +48,12 @@ class ProfilePageContext extends BasePageContext
 
     public function insertUserData(IProfileDataParser $parser): void
     {
+        $this->jsConfig = new MProfileJsConfigInfo($parser);
         $this->canopy = new MProfileCanopy($parser, $this->tab);
         $this->info = new MProfileInfo($parser);
         $this->content = new MProfileContent($parser, $this->tab);
 
-        $this->addModule("pages_profile");
+        $this->addJsModule("pages_profile");
 
         $this->setUpTitle($parser);
     }

@@ -66,12 +66,12 @@ abstract class BasePageContext
     /**
      * @return PageJsModule[]
      */
-    public function getModules(): array
+    public function getJsModules(): array
     {
         return $this->modules;
     }
 
-    public function addModule(string|PageJsModule $module): void
+    public function addJsModule(string|PageJsModule $module): void
     {
         if (is_string($module))
         {
