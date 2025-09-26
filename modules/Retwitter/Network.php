@@ -105,7 +105,8 @@ else
             yield $transaction->init();
 if (!CLIENT_TRANSACTION_TEST_STATIC)
 {
-            $transactionStr = $transaction->generateTransactionId("GET", "{$host}/graphql/{$action}?variables={$svariables}&features={$sfeatures}");
+            // The transaction ID does not take in parameters or the host name.
+            $transactionStr = $transaction->generateTransactionId("GET", "/graphql/{$action}");
 }
 else
 {
