@@ -36,6 +36,9 @@ namespace Retwitter\Constants
     const VERSION_MAJOR_INT = 0;
     const VERSION_MINOR_INT = 0;
     const VERSION_SUB_INT   = 1;
+
+    // Temporary testing constant:
+    const CLIENT_TRANSACTION_TEST_STATIC = false;
 }
 
 // DO NOT EDIT BELOW THIS LINE!!!

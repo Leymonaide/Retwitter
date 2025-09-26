@@ -20,10 +20,13 @@
 namespace Retwitter;
 
 use Rehike\Async\Promise;
+use Rehike\Logging\DebugLogger;
 use Rehike\Network\IResponse;
 use Rehike\Network\NetworkCore;
 use function Rehike\Async\async;
 
+use Retwitter\ClientTransaction\ClientTransaction;
+use const Retwitter\Constants\CLIENT_TRANSACTION_TEST_STATIC;
 
 /**
  * Manages network requests to the Twitter/X.com service.
@@ -35,7 +38,7 @@ class Network
     public const API_VERSION = "1.1";
     public const API_AUTH = "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA";
 
-    protected const DNS_OVERRIDE_HOST = "1.1.1.1";
+    public const DNS_OVERRIDE_HOST = "1.1.1.1";
 
     /**
      * @return Promise<IResponse>
@@ -69,6 +72,52 @@ class Network
             $host = self::API_HOST;
 
             $guestToken = yield TwitterGuestToken::getGuestToken();
+
+            // TODO: Restructure all code relating to this. This is just
+            // temporary testing code at the moment.
+if (!CLIENT_TRANSACTION_TEST_STATIC)
+{
+            $twitterHomepage = yield NetworkCore::request("https://x.com", [
+                "headers" => [
+                    // This actually needs a Google Chrome UA in order to return
+                    // https://abs.twimg.com/responsive-web/client-web
+                    // links instead of client-web-legacy.
+                    "User-Agent" => "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36",
+                    "Accept" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                    "Accept-Language" => "en",
+                    "Cache-Control" => "no-cache",
+                    "Pragma" => "no-cache",
+                    "Priority" => "u=0, i",
+                    "Sec-Fetch-Mode" => "navigate",
+                    "Sec-Fetch-Dest" => "document",
+                    "Sec-Fetch-Site" => "none",
+                    "Sec-Fetch-User" => "?1",
+                    "Upgrade-Insecure-Requests" => "1",
+                ],
+                "dnsOverride" => self::DNS_OVERRIDE_HOST,
+            ]);
+}
+else
+{
+            $twitterHomepage = file_get_contents($_SERVER["DOCUMENT_ROOT"] ."\\cache\\test_transaction.html");
+}
+            $transaction = new ClientTransaction($twitterHomepage);
+            yield $transaction->init();
+if (!CLIENT_TRANSACTION_TEST_STATIC)
+{
+            $transactionStr = $transaction->generateTransactionId("GET", "{$host}/graphql/{$action}?variables={$svariables}&features={$sfeatures}");
+}
+else
+{
+            $transactionStr = $transaction->generateTransactionId(
+                "POST", "/graphql/abcdefg/TweetDetail"
+            );
+}
+            DebugLogger::print("Final transaction string: %s", $transactionStr);
+if (CLIENT_TRANSACTION_TEST_STATIC)
+{
+            throw new \Exception("DEBUGDEBUG: Testing transaction string.");
+}
             
             $response = yield NetworkCore::request(
                 "{$host}/graphql/{$action}?variables={$svariables}&features={$sfeatures}",
@@ -80,7 +129,7 @@ class Network
                         "X-Twitter-Client-Language" => "en", // TODO: i18n
                         "X-Guest-Token" => $guestToken,
                         // TODO: NECESSARY BELOW, FIGURE OUT HOW TO GET:
-                        "X-Client-Transaction-ID" => "jIwzZh9hbmKAQVVBv3xMBE5zlP9PMUIW0oiG+aBNq8iPb5STZ1YGv7fZW3dAtsj27mYK/IgWBL4jsYrmux0K0cUE6+Cgjw",
+                        "X-Client-Transaction-ID" => $transactionStr,
                     ],
                     "onError" => "ignore",
                     "dnsOverride" => self::DNS_OVERRIDE_HOST,
