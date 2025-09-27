@@ -48,12 +48,26 @@ class ClientTransaction
     private ?string $key = null;
     private array $keyBytes = [];
     private string $animationKey = "";
+    private string $keyword = self::DEFAULT_KEYWORD;
+    private int $additionalRandomNumber = self::ADDITIONAL_RANDOM_NUMBER;
 
     public function __construct(string $twitterDocument)
     {
         $this->twitterDocument = new Dom();
         $this->twitterDocument->loadStr($twitterDocument);
         $this->rawDocument = $twitterDocument;
+    }
+
+    public function setKeyword(string $keyword): static
+    {
+        $this->keyword = $keyword;
+        return $this;
+    }
+
+    public function setAdditionalRandomNumber(int $number): static
+    {
+        $this->additionalRandomNumber = $number;
+        return $this;
     }
 
     /**
@@ -141,7 +155,7 @@ class ClientTransaction
             ($timestamp >> 24) & 0xff,
         ];
 
-        $keyword = self::DEFAULT_KEYWORD;
+        $keyword = $this->keyword;
 
         $data = "{$method}!{$path}!{$timestamp}{$keyword}{$this->animationKey}";
 
@@ -180,7 +194,7 @@ else
             ...$this->keyBytes,
             ...$timeBytes,
             ...array_slice($hashBytes, 0, 16),
-            self::ADDITIONAL_RANDOM_NUMBER,
+            $this->additionalRandomNumber,
         ];
 
         $byteBuffer = "";
