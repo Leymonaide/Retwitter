@@ -39,8 +39,8 @@ use const Retwitter\Constants\CLIENT_TRANSACTION_TEST_STATIC;
  */
 class ClientTransaction
 {
-    private const ADDITIONAL_RANDOM_NUMBER = 3;
-    private const DEFAULT_KEYWORD = "obfiowerehiring";
+    public const DEFAULT_ADDITIONAL_RANDOM_NUMBER = 3;
+    public const DEFAULT_KEYWORD = "obfiowerehiring";
 
     private Dom $twitterDocument;
     private string $rawDocument;
@@ -49,7 +49,7 @@ class ClientTransaction
     private array $keyBytes = [];
     private string $animationKey = "";
     private string $keyword = self::DEFAULT_KEYWORD;
-    private int $additionalRandomNumber = self::ADDITIONAL_RANDOM_NUMBER;
+    private int $additionalRandomNumber = self::DEFAULT_ADDITIONAL_RANDOM_NUMBER;
 
     public function __construct(string $twitterDocument)
     {
