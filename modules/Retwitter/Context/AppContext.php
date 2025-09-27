@@ -51,6 +51,8 @@ final class AppContext
 
     public RehikeUtilsI18nDelegate $i18n;
 
+    public bool $loggedIn = false;
+
     /**
      * The current language ID of the application.
      */

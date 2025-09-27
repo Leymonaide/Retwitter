@@ -17,22 +17,22 @@
 #}
 {% from "common/edge_button.twig" import render as edge_button %}
 {% with { topbar: app.page.getTopbar() } %}
-<div class="global-nav global-nav--newLoggedOut" data-section-term="top_nav">
+<div class="{{ [
+        'global-nav',
+        not app.loggedIn ? 'global-nav--newLoggedOut',
+    ]|join(' ') }}" data-section-term="top_nav">
     <div class="global-nav-inner">
         <div class="container">
+            {% if app.loggedIn %}
+                <h1 class="Icon Icon--bird bird-topbar-etched" 
+                    style="display: inline-block; width: 24px; height: 21px;">
+                    <span class="visuallyhidden">Twitter</span>
+                </h1>
+                <div class="pushstate-spinner"></div>
+            {% endif %}
             <ul class="nav js-global-actions" role="navigation" id="global-actions">
                 {% for item in topbar.nav.items %}
-                <li id="global-nav-{{ item.id }}" class="{{ item.id }}" data-global-action="{{ item.id }}">
-                    <a href="{{ item.url }}" class="js-nav js-tooltip js-dynamic-tooltip" data-placement="bottom" data-component-context="{{ item.id }}_nav" data-nav="{{ item.id }}">
-                        <span class="Icon Icon--{{ item.icon }} Icon--large"></span>
-                        {%- if item.activeIcon -%}
-                        <span class="Icon Icon--{{ item.icon }}Filled Icon--large"></span>
-                        {%- endif -%}
-                        <span class="text" aria-hidden="true">{{ item.label }}</span>
-                        <span class="u-hiddenVisually a11y-inactive-page-text">{{ item.label }}</span>
-                        <span class="u-hiddenVisually a11y-active-page-text">{{ item.activeLabel }}</span>
-                    </a>
-                </li>
+                    {{ _self.nav_tab(item) }}
                 {% endfor %}
             </ul>
             <div class="pull-right nav-extras">
@@ -50,55 +50,210 @@
                         </span>
                     </form>
                 </div>
-                <ul id="session" class="nav secondary-nav session-dropdown">
-                    <li class="dropdown js-session">
-                        {% set link = topbar.signinLink %}
-                        <a href="{{ link.url }}" id="signin-link" class="dropdown-toggle js-dropdown-toggle dropdown-signin">
-                            <small>{{ link.question }}</small>
-                            <span class="emphasize">{{ link.action }}</span>
-                            <span class="caret"></span>
-                        </a>
-                        <div id="signin-dropdown" class="dropdown-menu dropdown-form dropdown-menu--rightAlign is-forceRight">
-                            {% set dialog = link.dialog %}
-                            <span class="dropdown-caret right">
-                                <span class="caret-outer"></span>
-                                <span class="caret-inner">  </span>
-                            </span>
-                            <div class="signin-dialog-body">
-                                <div>{{ dialog.title }}</div>
-                                <form action="https://twitter.com/sessions" method="post" class="LoginForm js-front-signin" data-form-component="login_callout" data-element="form">
-                                    <div class="LoginForm-input LoginForm-username">
-                                        <input class="text-input email-input js-signin-email" type="text" name="session[username_or_email]" autocomplete="username" placeholder="{{ dialog.usernamePlaceholder }}">
-                                    </div>
-                                    <div class="LoginForm-input LoginForm-password">
-                                        <input class="text-input" type="password" name="session[password]" placeholder="{{ dialog.passwordPlaceholder }}" autocomplete="current-password">
-                                    </div>
-                                    <div class="LoginForm-rememberForgot">
-                                        <label>
-                                            <input type="checkbox" value="1" name="remember_me" checked="checked">
-                                            <span>{{ dialog.rememberMeLabel }}</span>
-                                        </label>
-                                        <span class="separator">&middot;</span>
-                                        <a href="{{ dialog.forgotPasswordLink.url }}" class="forgot" rel="noopener">
-                                            {{ dialog.forgotPasswordLink.text }}
-                                        </a>
-                                    </div>
-                                    {{ edge_button(dialog.loginButton) }}
-                                </form>
-                                <hr>
-                                <div class="signup SignupForm">
-                                    <div class="SignupForm-header">{{ dialog.signUpTitle }}</div>
-                                    {{ edge_button(dialog.signUpButton, [
-                                        'u-block',
-                                        'js-signup',
-                                    ]) }}
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
+                {% if app.loggedIn %}
+                    <ul id="session" class="nav right-actions">
+                        {{ _self.session_logged_in(topbar.userDropdown) }}
+                    </ul>
+                {% else %}
+                    <ul id="session" class="nav secondary-nav session-dropdown">
+                        {{ _self.session_signin_upsell(topbar.signinLink) }}
+                    </ul>
+                {% endif %}
             </div>
         </div>
     </div>
 </div>
 {% endwith %}
+
+{% macro nav_tab(item) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+    } %}
+
+    {# All navigation tabs have different wrappers for each type. #}
+    {% if item.id == "connect" %}
+        {# Notifications #}
+        <li class="people notifications" data-global-action="{{ item.id }}">
+            {% set notifications_foot %}
+                <span class="count">
+                    <span class="count-inner">0{# TODO: Get notifications count. #}</span>
+                </span>
+            {% endset %}
+            {{ _self.nav_tab_inner_std(item, notifications_foot) }}
+        </li>
+    {% elseif item.id == "dm" %}
+        {# Special direct messages tab #}
+        <li class="dm-nav">
+            {{ _self.nav_tab_inner_dm(item) }}
+        </li>
+    {% elseif item.id == "moments" and app.loggedIn %}
+        {# Moments only has JS metadata when logged in. #}
+        <li class="moments js-moments tab " data-global-action="{{ item.id }}">
+            {{ _self.nav_tab_inner_std(item) }}
+        </li>
+    {% else %}
+        {# All other tabs (Home, logged out Moments) #}
+        <li id="global-nav-{{ item.id }}" class="{{ item.id }}" 
+            data-global-action="{{ item.id }}">
+            {{ _self.nav_tab_inner_std(item) }}
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro nav_tab_inner_icon_std(item) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+    } %}
+
+    <span class="Icon Icon--{{ item.icon }} Icon--large"></span>
+    {%- if item.activeIcon -%}
+    <span class="Icon Icon--{{ item.icon }}Filled Icon--large"></span>
+    {%- endif -%}
+{% endmacro %}
+
+{% macro nav_tab_inner_std(item, foot_html = "") %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+        foot_html: "string",
+    } %}
+    
+    <a href="{{ item.url }}" class="js-nav js-tooltip js-dynamic-tooltip" 
+        data-placement="bottom" 
+        data-component-context="{{ item.id }}_nav" 
+        data-nav="{{ item.id }}">
+        {{ _self.nav_tab_inner_level2_std(item, foot_html) }}
+    </a>
+{% endmacro %}
+
+{% macro nav_tab_inner_level2_std(item, foot_html) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+        foot_html: "string",
+    } %}
+
+    {{ _self.nav_tab_inner_icon_std(item) }}
+    <span class="text" aria-hidden="true">{{ item.label }}</span>
+    {{ foot_html }}
+    <span class="u-hiddenVisually a11y-inactive-page-text">{{ item.label }}</span>
+    <span class="u-hiddenVisually a11y-active-page-text">{{ item.activeLabel }}</span>
+{% endmacro %}
+
+{% macro nav_tab_inner_dm(item) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavDirectMessagesItem",
+    } %}
+
+    <a class="{{ [
+            'js-tooltip',
+            'js-dynamic-tooltip',
+            'global-dm-nav',
+        ]|join(' ') }}"
+        role="button"
+        href="#"
+        data-placement="bottom">
+        {% set dm_foot %}
+            <span class="dm-new">
+                <span class="count-inner"></span>
+            </span>
+        {% endset %}
+        {{ _self.nav_tab_inner_level2_std(item, dm_foot) }}
+    </a>
+{% endmacro %}
+
+{% macro session_signin_upsell(link) %}
+    {% types {
+        link: "Retwitter\\Page\\Base\\MHeaderSigninLink",
+    } %}
+
+    <li class="dropdown js-session">
+        <a href="{{ link.url }}" id="signin-link" class="dropdown-toggle js-dropdown-toggle dropdown-signin">
+            <small>{{ link.question }}</small>
+            <span class="emphasize">{{ link.action }}</span>
+            <span class="caret"></span>
+        </a>
+        <div id="signin-dropdown" class="dropdown-menu dropdown-form dropdown-menu--rightAlign is-forceRight">
+            {% set dialog = link.dialog %}
+            <span class="dropdown-caret right">
+                <span class="caret-outer"></span>
+                <span class="caret-inner">  </span>
+            </span>
+            <div class="signin-dialog-body">
+                <div>{{ dialog.title }}</div>
+                <form action="https://twitter.com/sessions" method="post" class="LoginForm js-front-signin" data-form-component="login_callout" data-element="form">
+                    <div class="LoginForm-input LoginForm-username">
+                        <input class="text-input email-input js-signin-email" type="text" name="session[username_or_email]" autocomplete="username" placeholder="{{ dialog.usernamePlaceholder }}">
+                    </div>
+                    <div class="LoginForm-input LoginForm-password">
+                        <input class="text-input" type="password" name="session[password]" placeholder="{{ dialog.passwordPlaceholder }}" autocomplete="current-password">
+                    </div>
+                    <div class="LoginForm-rememberForgot">
+                        <label>
+                            <input type="checkbox" value="1" name="remember_me" checked="checked">
+                            <span>{{ dialog.rememberMeLabel }}</span>
+                        </label>
+                        <span class="separator">&middot;</span>
+                        <a href="{{ dialog.forgotPasswordLink.url }}" class="forgot" rel="noopener">
+                            {{ dialog.forgotPasswordLink.text }}
+                        </a>
+                    </div>
+                    {{ edge_button(dialog.loginButton) }}
+                </form>
+                <hr>
+                <div class="signup SignupForm">
+                    <div class="SignupForm-header">{{ dialog.signUpTitle }}</div>
+                    {{ edge_button(dialog.signUpButton, [
+                        'u-block',
+                        'js-signup',
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </li>
+{% endmacro %}
+
+{% macro session_logged_in(user_dropdown) %}
+    <li id="user-dropdown" class="me dropdown session js-session"
+        data-global-action="t1me">
+        <a id="user-dropdown-toggle" class="{{ [
+                'btn',
+                'js-tooltip',
+                'settings',
+                'dropdown-toggle',
+                'js-dropdown-toggle',
+            ]|join(' ') }}"
+            href="{# User profile URL #}"
+            data-placement="bottom"
+            role="button"
+            aria-haspopup="true"
+            title="Profile and settings">
+            <img class="avatar size32" src="{# User avatar #}"
+                data-user-id="{# User ID #}">
+        </a>
+        <div class="dropdown-menu">
+            <div class="dropdown-caret">
+                <span class="caret-outer"></span>
+                <span class="caret-inner"></span>
+            </div>
+            {# TODO!! #}
+        </div>
+    </li>
+    <li class="topbar-tweet-btn" role="complementary"
+        aria-labelledby="global-new-tweet-button">
+        {# TODO: Refactor into edge_button? #}
+        <button id="global-new-tweet-button" class="{{ [
+                'js-global-new-tweet',
+                'js-tooltip',
+                'EdgeButton',
+                'EdgeButton--primary',
+                'tweet-btn',
+                'js-dynamic-tooltip',
+            ]|join(' ') }}"
+            type="button" data-placement="bottom"
+            data-component-context="new_tweet_button">
+            {# Before the redesign, this button had an icon which was
+               Icon--tweet. After EdgeButton was introduced, the icon doesn't
+               fit into the top bar, so it was removed. #}
+            <span class="text">Tweet</span>
+        </button>
+    </li>
+{% endmacro %}
