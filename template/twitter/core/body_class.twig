@@ -21,4 +21,4 @@ three-col
 {% if app.os == "Windows" %}
 ms-windows
 {% endif %}
-logged-out
+{{ app.loggedIn ? "logged-in" : "logged-out" }}
