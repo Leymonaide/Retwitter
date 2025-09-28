@@ -290,21 +290,29 @@
     </div>
 {% endmacro %}
 
+{%- macro get_tweet_action_name(tweet_action) -%}
+    {% types {
+        tweet_action: "Retwitter\\Page\\Common\\Timeline\\MTweetAction",
+    } %}
+
+    {% set TweetAction = enum("Retwitter\\Page\\Common\\Timeline\\TweetAction") %}
+    {%- if tweet_action.actionType == TweetAction.Reply -%}
+        reply
+    {%- elseif tweet_action.actionType == TweetAction.Retweet -%}
+        retweet
+    {%- elseif tweet_action.actionType == TweetAction.Favorite -%}
+        favorite
+    {%- endif -%}
+{%- endmacro -%}
+
 {# Tweet action count for accessibility. #}
 {% macro tweet_action_count(tweet, tweet_action) %}
     {% types {
         tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
         tweet_action: "Retwitter\\Page\\Common\\Timeline\\MTweetAction",
     } %}
-    {% set TweetAction = enum("Retwitter\\Page\\Common\\Timeline\\TweetAction") %}
-    {# TODO: Figure out how to DRY #}
-    {% if tweet_action.actionType == TweetAction.Reply %}
-        {% set action_name = "reply" %}
-    {% elseif tweet_action.actionType == TweetAction.Retweet %}
-        {% set action_name = "retweet" %}
-    {% elseif tweet_action.actionType == TweetAction.Favorite %}
-        {% set action_name = "favorite" %}
-    {% endif %}
+    
+    {% set action_name = _self.get_tweet_action_name(tweet_action)|spaceless %}
 
     <span class="{{ [
         'ProfileTweet-action--' ~ action_name,
@@ -325,8 +333,8 @@
         tweet_action: "Retwitter\\Page\\Common\\Timeline\\MTweetAction",
     } %}
     {% set TweetAction = enum("Retwitter\\Page\\Common\\Timeline\\TweetAction") %}
+    {% set action_name = _self.get_tweet_action_name(tweet_action)|spaceless %}
     {% if tweet_action.actionType == TweetAction.Reply %}
-        {% set action_name = "reply" %}
         {% set action_container_classes = [ 'ProfileTweet-action--reply' ] %}
         {% set action_button_classes = [ 
             'js-actionButton',
@@ -334,7 +342,6 @@
         ] %}
         {% set action_icon = _self.tweet_action_icon_std("reply") %}
     {% elseif tweet_action.actionType == TweetAction.Retweet %}
-        {% set action_name = "retweet" %}
         {% set action_container_classes = [
             'ProfileTweet-action--retweet',
             'js-toggleState',
@@ -346,7 +353,6 @@
         ] %}
         {% set action_icon = _self.tweet_action_icon_std("retweet") %}
     {% elseif tweet_action.actionType == TweetAction.Favorite %}
-        {% set action_name = "favorite" %}
         {% set action_container_classes = [
             'ProfileTweet-action--favorite',
             'js-toggleState',
