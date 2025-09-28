@@ -253,7 +253,7 @@
             {# Before the redesign, this button had an icon which was
                Icon--tweet. After EdgeButton was introduced, the icon doesn't
                fit into the top bar, so it was removed. #}
-            <span class="text">Tweet</span>
+            <span class="text">{{ app.i18n.get("topbar", "new_tweet_button") }}</span>
         </button>
     </li>
 {% endmacro %}

@@ -40,3 +40,8 @@ tweet_a11y_retweet_count_singular: "%s retweet"
 tweet_a11y_retweet_count_plural: "%s retweets"
 tweet_a11y_favorite_count_singular: "%s like"
 tweet_a11y_favorite_count_plural: "%s likes"
+
+# Gallery messages:
+gallery_close: "Close"
+gallery_previous: "Previous"
+gallery_next: "Next"

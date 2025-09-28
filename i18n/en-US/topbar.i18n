@@ -30,3 +30,5 @@ remember_me_label: "Remember me"
 forgot_password_label: "Forgot password?"
 sign_up_header: "New to Twitter?"
 sign_up_button: "Sign up"
+
+new_tweet_button: "Tweet"
