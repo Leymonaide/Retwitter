@@ -277,16 +277,32 @@ else
         });
     }
 
+    private function findScriptRoot(): string
+    {
+        if (strpos(
+            $this->rawDocument, 
+            "/responsive-web/client-web-legacy/main") > 0)
+        {
+            // This is the case with Firefox (and probably other non-Chrome)
+            // user agents.
+            return "client-web-legacy";
+        }
+
+        return "client-web";
+    }
+
     private function findOnDemandScript(): ?string
     {
         $REGEX = "/(['\"])ondemand\\.s\\1:\\s*(['\"])([\\w]*)\\2/";
         $documentText = $this->rawDocument;
 
+        $scriptRoot = $this->findScriptRoot();
+
         if (preg_match($REGEX, $documentText, $matches))
         {
             $scriptName = $matches[3];
 
-            return "https://abs.twimg.com/responsive-web/client-web/ondemand.s.{$scriptName}a.js";
+            return "https://abs.twimg.com/responsive-web/$scriptRoot/ondemand.s.{$scriptName}a.js";
         }
 
         return null;
