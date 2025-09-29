@@ -126,7 +126,6 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
                         "X-Twitter-Active-User" => "Yes",
                         "X-Twitter-Client-Language" => "en", // TODO: i18n
                         "X-Guest-Token" => $guestToken,
-                        // TODO: NECESSARY BELOW, FIGURE OUT HOW TO GET:
                         "X-Client-Transaction-ID" => $transactionStr,
                     ],
                     "onError" => "ignore",
