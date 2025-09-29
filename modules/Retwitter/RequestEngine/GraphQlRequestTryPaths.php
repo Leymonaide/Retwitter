@@ -17,15 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter;
+namespace Retwitter\RequestEngine;
 
-class GraphQlRequestParams
+/**
+ * Possible paths taken when retrying a Twitter GraphQL request.
+ */
+enum GraphQlRequestTryPaths : int
 {
-    public function __construct(
-        public string $action,
-        public array $variables,
-        public array $features,
-    )
-    {
-    }
+    case NoRetryAttempt = 0;
+    case RegeneratedGuestToken = 1 << 1;
+    case BruteForcedFeatures = 1 << 2;
 }

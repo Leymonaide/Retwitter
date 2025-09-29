@@ -21,6 +21,7 @@ namespace Retwitter\Page\Profile;
 
 use PHPHtmlParser\Dom;
 use Rehike\ControllerV2\IGetControllerAsync;
+use Retwitter\GraphQlRequestParams;
 use Retwitter\Network;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\Timeline\Nitter\TimelineDataParserNitter;
@@ -30,6 +31,8 @@ use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
+use Retwitter\RequestEngine\GraphQlRequest;
+use Retwitter\RequestEngine\RequestManager;
 use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
@@ -50,6 +53,9 @@ class ProfileController
             $username = ParsingUtils::getUsernameAsTextOnly($username);
             
             $tab = $this->getRequest()->path[1] ?? "";
+
+            // Recent tweets can also represent no tab, such as in the case of
+            // profiles without any tweets.
             $tab = ProfileTab::tryFrom($tab) ?? ProfileTab::RecentTweets;
             
             $context = new ProfilePageContext(
@@ -59,7 +65,8 @@ class ProfileController
 
 if (!PROFILE_TEST_LOCAL)
 {
-            $userResponse = yield Network::graphqlRequest(
+            $requestManager = new RequestManager();
+            $userRequest = new GraphQlRequest(new GraphQlRequestParams(
                 action: "96tVxbPqMZDoYB5pmzezKA/UserByScreenName",
                 variables: [
                     "screen_name" => $username,
@@ -94,7 +101,12 @@ if (!PROFILE_TEST_LOCAL)
                     "hidden_profile_subscriptions_enabled" => false,
                     "subscriptions_verification_info_verified_since_enabled" => false,
                 ],
-            );
+            ));
+
+            $requestManager->addGraphQlRequest($userRequest);
+            yield $requestManager->runAll();
+
+            $userResponse = $userRequest->getResponse();
 
             \Rehike\Logging\DebugLogger::print("%s", json_encode($userResponse));
 

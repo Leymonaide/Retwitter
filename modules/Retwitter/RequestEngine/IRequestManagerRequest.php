@@ -17,15 +17,28 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace Retwitter;
+namespace Retwitter\RequestEngine;
 
-class GraphQlRequestParams
+use Rehike\Async\Promise;
+use Rehike\Network\IResponse;
+
+interface IRequestManagerRequest
 {
-    public function __construct(
-        public string $action,
-        public array $variables,
-        public array $features,
-    )
-    {
-    }
+    /**
+     * Try sending out this request.
+     * 
+     * @return Promise<bool> True if the request should be retried, false
+     *      otherwise.
+     */
+    public function try(): Promise/*<bool>*/;
+
+    /**
+     * Get the success status of the response.
+     */
+    public function succeeded(): bool;
+
+    /**
+     * Get the response contents.
+     */
+    public function getResponse(): ?IResponse;
 }
