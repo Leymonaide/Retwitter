@@ -11,6 +11,7 @@ Router::redirect([
 ]);
 
 Router::get([
+    "/" => Home\HomeController::class,
     "/test" => TestController::class,
     "/rehike/static/*" => rehike\StaticRouter::class,
     "default" => Profile\ProfileController::class,

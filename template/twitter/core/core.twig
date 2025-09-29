@@ -37,15 +37,17 @@
         </noscript>
         <a href="#timeline" class="u-hiddenVisually focusable">{{ app.skipToContent.message }}</a>
         <div id="doc" data-at-shortcutkeys="{{ app.shortcutKeys|json_encode }}" class="">
-            <div class="topbar js-topbar">
-                {% include "common/pageframe/topbar.twig" %}
-            </div>
-            <div id="page-outer">
-                <div id="page-container" class="AppContent {% block page_class %}{% endblock %}">
-                    {% block header %}{% endblock %}
-                    {% block content %}{% endblock %}
+            {% block doc_root_content %}
+                <div class="topbar js-topbar">
+                    {% include "common/pageframe/topbar.twig" %}
                 </div>
-            </div>
+                <div id="page-outer">
+                    <div id="page-container" class="AppContent {% block page_class %}{% endblock %}">
+                        {% block header %}{% endblock %}
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
         </div>
         {# TODO: There are a fuckton of elements at the bottom of the document
            that need to be inserted for presumably most JS functionality to work
