@@ -51,6 +51,12 @@ class TweetDataParserNitter implements ITweetDataParser
                 retweeterProfile: $sourceInfo->profileData,
             ));
         }
+        else if ($this->isPinned())
+        {
+            $this->setSocialContext(new MTweetSocialContext(
+                TweetSocialContext::Pin,
+            ));
+        }
     }
 
     /**
@@ -348,6 +354,11 @@ class TweetDataParserNitter implements ITweetDataParser
         }
 
         return $result;
+    }
+
+    private function isPinned(): bool
+    {
+        return $this->findFirst(".pinned .icon-pin") != null;
     }
 
     public function getSocialContext(): ?MTweetSocialContext
