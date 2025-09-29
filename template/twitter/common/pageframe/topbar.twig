@@ -234,7 +234,62 @@
                 <span class="caret-outer"></span>
                 <span class="caret-inner"></span>
             </div>
-            {# TODO!! #}
+            <ul>
+                <li class="current-user" data-name="profile">
+                    <a class="{{ [
+                            'account-summary',
+                            'account-summary-small',
+                            'js-nav',
+                        ]|join(' ') }}"
+                        href="{# User profile URL #}"
+                        data-nav="view_profile">
+                        <div class="content">
+                            <div class="{{ [
+                                    'account-group',
+                                    'js-mini-current-user',
+                                ]|join(' ') }}"
+                                data-user-id="{# Current user ID #}"
+                                data-screen-name="{# Current user username #}">
+                                <b class="fullname">{# Display name #}</b>
+                                <span class="screen-name hidden" dir="ltr">
+                                    {# @username #}
+                                </span>
+                                <small class="metadata">View profile</small>
+                            </div>
+                        </div>
+                    </a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li data-name="lists">
+                    <a href="{# twitter.com/me/lists #}" data-nav="all_lists">Lists</a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a href="//support.twitter.com" data-nav="help_center">Help</a>
+                </li>
+                <li class="js-keyboard-shortcut-trigger" data-nav="shortcuts">
+                    <button class="dropdown-link" type="button">Keyboard shortcuts</button>
+                </li>
+                <li>
+                    <a href="//ads.twitter.com/start?ref=gl-tw-tw-twitter-ads"
+                        target="_blank"
+                        data-nav="ads">Twitter Ads</a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a class="js-nav" href="/settings/account" data-nav="settings">Settings</a>
+                </li>
+                <li id="signout-button" class="js-signout-button" data-nav="logout">
+                    <button class="dropdown-link" type="button">Log out</button>
+                    <form id="signout-form" action="/logout" method="POST"
+                        class="t1-form dropdown-link-form signout-form">
+                        <input type="hidden" value="05cea5600404fe895dd10aae504129a5b55458b2" 
+                            name="authenticity_token" class="authenticity_token">
+                        <input type="hidden" name="reliability_event" class="js-reliability-event">
+                        <input type="hidden" name="scribe_log">
+                    </form>
+                </li>
+            </ul>
         </div>
     </li>
     <li class="topbar-tweet-btn" role="complementary"

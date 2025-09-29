@@ -20,6 +20,7 @@
 namespace Retwitter\Page\Base;
 
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+use Retwitter\Context\AppContext;
 
 class MHeaderNav
 {
@@ -33,10 +34,25 @@ class MHeaderNav
         $this->items[] = new MHeaderNavItem(
             strings: $strings,
             id: "home",
-            icon: "bird",
+            icon: AppContext::getInstance()->loggedIn ? "home" : "bird",
             label: $strings->get("tab_home"),
             url: "/",
             activeIcon: false,
         );
+
+        if (AppContext::getInstance()->loggedIn)
+        {
+            $this->items[] = new MHeaderNavNotificationsItem(
+                strings: $strings,
+                count: "0",
+                activeIcon: false,
+            );
+
+            $this->items[] = new MHeaderNavDirectMessagesItem(
+                strings: $strings,
+                count: "0",
+                activeIcon: false,
+            );
+        }
     }
 }
