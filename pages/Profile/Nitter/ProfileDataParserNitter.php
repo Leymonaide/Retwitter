@@ -250,7 +250,7 @@ class ProfileDataParserNitter implements IProfileDataParser
 
         if (null != $third)
         {
-            return $third?->text;
+            return html_entity_decode($third?->text);
         }
 
         return null;
