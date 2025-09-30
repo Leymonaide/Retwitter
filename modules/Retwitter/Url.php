@@ -251,7 +251,7 @@ class Url implements Stringable
 
         if ($protocol = $this->getProtocol())
         {
-            $result .= "$protocol:";
+            $result .= "$protocol://";
         }
 
         if ($username = $this->getUsername())
