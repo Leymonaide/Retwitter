@@ -35,7 +35,7 @@ class RequestManager
      */
     private array $requests = [];
 
-    public function addGraphQlRequest(GraphQlRequest $request): void
+    public function add(IRequestManagerRequest $request): void
     {
         $this->requests[] = $request;
     }

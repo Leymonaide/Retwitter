@@ -32,13 +32,14 @@ use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
 use Retwitter\RequestEngine\GraphQlRequest;
+use Retwitter\RequestEngine\NitterRequest;
 use Retwitter\RequestEngine\RequestManager;
 use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
 const PROFILE_TEST_LOCAL = false;
-const PROFILE_TEST_NITTER = false;
+const PROFILE_TEST_NITTER = true;
 
 class ProfileController
     extends RetwitterPageController
@@ -63,6 +64,8 @@ class ProfileController
             );
             $this->setPageContext($context);
 
+if (!PROFILE_TEST_NITTER)
+{
 if (!PROFILE_TEST_LOCAL)
 {
             $requestManager = new RequestManager();
@@ -103,7 +106,7 @@ if (!PROFILE_TEST_LOCAL)
                 ],
             ));
 
-            $requestManager->addGraphQlRequest($userRequest);
+            $requestManager->add($userRequest);
             yield $requestManager->runAll();
 
             $userResponse = $userRequest->getResponse();
@@ -113,8 +116,6 @@ if (!PROFILE_TEST_LOCAL)
             $userData = $userResponse->getJson();
 }
 
-if (!PROFILE_TEST_NITTER)
-{
 if (PROFILE_TEST_LOCAL)
 {
             $userData = json_decode(file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_main.json"));
@@ -134,13 +135,33 @@ if (PROFILE_TEST_LOCAL)
 }
 else
 {
-            $rawDocument = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/test_nitter_profile.html");
+if (PROFILE_TEST_LOCAL):
+            $rawDocument = file_get_contents($_SERVER["DOCUMENT_ROOT"] . "/cache/test_nitter_elonmusk.html");
+else:
+            $requestManager = new RequestManager();
+            $nitterRequest = new NitterRequest(new Url("/$username"));
+            $requestManager->add($nitterRequest);
+            yield $requestManager->runAll();
+
+            $response = $nitterRequest->getResponse();
+            $rawDocument = $response->getText();
+
+            \Rehike\Logging\DebugLogger::print("%s", var_export($response,true));
+            \Rehike\Logging\DebugLogger::print("aaa %s", $rawDocument);
+endif;
+
             $dom = new Dom();
             $dom->loadStr($rawDocument);
 
+if (!PROFILE_TEST_LOCAL):
             $nitterSourceInfo = new NitterSourceInfo(
-                nitterSourceUri: new Url("https://nitter.net")
+                nitterSourceUri: new Url($nitterRequest->getRequestUri()->getOrigin()),
             );
+else:
+            $nitterSourceInfo = new NitterSourceInfo(
+                nitterSourceUri: new Url("https://nitter.com/"),
+            );
+endif;
             
             $dataParser = new ProfileDataParserNitter(
                 $nitterSourceInfo,
