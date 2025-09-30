@@ -40,17 +40,23 @@ static-logged-out-home-page
                                 'js-signin-email',
                             ]|join(' ') }}" name="session[username_or_email]"
                             autocomplete="username" 
-                            placeholder="Phone, email, or username">
+                            placeholder="{{ app.i18n.get(
+                                "static_logged_out_homepage",
+                                "login_form_username_placeholder") }}">
                     </div>
                     
                     <div class="LoginForm-input LoginForm-password">
                     <input type="password" class="text-input"
-                        name="session[password]" placeholder="Password" 
+                        name="session[password]" placeholder="{{ app.i18n.get(
+                                "static_logged_out_homepage",
+                                "login_form_password_placeholder") }}" 
                         autocomplete="current-password">
                         <div class="LoginForm-staticForgot">
                             <a class="forgot"
                                 href="/account/begin_password_reset"
-                                rel="noopener">Forgot password?</a>
+                                rel="noopener">{{ app.i18n.get(
+                                    "static_logged_out_homepage",
+                                    "login_form_password_forgot") }}</a>
                         </div>
                     </div>
 
@@ -60,7 +66,9 @@ static-logged-out-home-page
                             'EdgeButton--medium',
                             'submit',
                             'js-submit',
-                        ]|join(' ') }}" value="Log in">
+                        ]|join(' ') }}" value="{{ app.i18n.get(
+                                    "static_logged_out_homepage",
+                                    "login_form_button_login") }}">
 
                     <input type="hidden" name="return_to_ssl" value="true">
                     <input type="hidden" name="scribe_log">
@@ -83,14 +91,20 @@ static-logged-out-home-page
                             'EdgeButton--secondary',
                             'EdgeButton--small',
                             'u-floatRight',
-                        ]|join(' ') }}" href="/login">Log in</a>
+                        ]|join(' ') }}" href="/login">{{ app.i18n.get(
+                            "static_logged_out_homepage",
+                            "login_form_button_login") }}</a>
                 </div>
                 <h1 class="StaticLoggedOutHomePage-signupTitle">
-                    See what’s happening in the world right now
+                    {{ app.i18n.get(
+                        "static_logged_out_homepage",
+                        "signup_title") }}
                 </h1>
                 <div class="StaticLoggedOutHomePage-noSignupForm">
                     <h2 class="StaticLoggedOutHomePage-signupSubtitle">
-                        Join Twitter today.
+                        {{ app.i18n.get(
+                            "static_logged_out_homepage",
+                            "signup_subtitle") }}
                     </h2>
                     <div class="StaticLoggedOutHomePage-buttons">
                         <a class="{{ [
@@ -100,7 +114,9 @@ static-logged-out-home-page
                                 'EdgeButton--primary',
                                 'StaticLoggedOutHomePage-buttonSignup',
                             ]|join(' ') }}"
-                            href="/signup">Sign Up</a>
+                            href="/signup">{{ app.i18n.get(
+                                "static_logged_out_homepage",
+                                "login_form_button_signup") }}</a>
                         <a class="{{ [
                                 'js-nav',
                                 'EdgeButton',
@@ -108,7 +124,9 @@ static-logged-out-home-page
                                 'EdgeButton--secondary',
                                 'StaticLoggedOutHomePage-buttonLogin',
                             ]|join(' ') }}"
-                            href="/login">Log in</a>
+                            href="/login">{{ app.i18n.get(
+                                "static_logged_out_homepage",
+                                "login_form_button_login") }}</a>
                     </div>
                 </div>
             </div>
@@ -128,29 +146,51 @@ static-logged-out-home-page
             </svg>
             <div class="StaticLoggedOutHomePage-communicationContent">
                 <div class="StaticLoggedOutHomePage-communicationItem">
-                    <span class="Icon Icon--search"></span> Follow your interests.
+                    <span class="Icon Icon--search"></span> {{ app.i18n.get(
+                        "static_logged_out_homepage",
+                        "communication_search") }}
                 </div>
                 <div class="StaticLoggedOutHomePage-communicationItem">
-                    <span class="Icon Icon--people"></span> Hear what people are talking about.
+                    <span class="Icon Icon--people"></span> {{ app.i18n.get(
+                        "static_logged_out_homepage",
+                        "communication_people") }}
                 </div>
                 <div class="StaticLoggedOutHomePage-communicationItem">
-                    <span class="Icon Icon--reply"></span> Join the conversation.
+                    <span class="Icon Icon--reply"></span> {{ app.i18n.get(
+                        "static_logged_out_homepage",
+                        "communication_reply") }}
                 </div>
             </div>
         </div>
     </div>
     <noscript>
         <div class="front-warning">
-            <h3>Twitter.com makes heavy use of JavaScript</h3>
-            <p>If you cannot enable it in your browser's preferences, you may have a better experience on our <a href="//m.twitter.com/" rel="noopener">mobile site</a>.</p>
+            <h3>{{ app.i18n.get(
+                "static_logged_out_homepage",
+                "js_warn_heading") }}</h3>
+            {% with %}
+                {% set link_html %}
+                    <a href="//m.twitter.com/" rel="noopener">{{ app.i18n.get(
+                        "static_logged_out_homepage",
+                        "js_warn_body_link") }}</a>
+                {% endset %}
+                <p>{{ app.i18n.format(
+                    "static_logged_out_homepage",
+                    "js_warn_body", link_html)|raw }}</p>
+            {% endwith %}
         </div>
     </noscript>
     <div class="front-warning" id="front-no-cookies-warn">
-        <h3>Twitter.com makes heavy use of browser cookies</h3>
-        <p>Please enable cookies in your browser preferences before signing in.</p>
+        <h3>{{ app.i18n.get(
+            "static_logged_out_homepage",
+            "cookie_warn_heading") }}</h3>
+        <p>{{ app.i18n.get(
+            "static_logged_out_homepage",
+            "cookie_warn_body") }}</p>
     </div>
     <div class="StreamsFooter StreamsFooter--fixed">
         <ul class="StreamsFooter-list u-cf">
+            {# TODO: i18n #}
             <li class="StreamsFooter-item"><a href="/about" rel="noopener">About</a></li>
             <li class="StreamsFooter-item"><a href="//support.twitter.com/" rel="noopener">Help Center</a></li>
             <li class="StreamsFooter-item"><a href="//blog.twitter.com/" rel="noopener">Blog</a></li>

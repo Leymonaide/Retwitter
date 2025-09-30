@@ -1,0 +1,39 @@
+# This file is part of the Retwitter project.
+# Copyright (c) 2025 lemon-pumpkin-pie.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+login_form_username_placeholder: "Phone, email, or username"
+login_form_password_placeholder: "Password"
+login_form_password_forgot: "Forgot password?"
+login_form_button_login: "Log in"
+login_form_button_signup: "Sign Up"
+
+signup_title: "See what’s happening in the world right now"
+signup_subtitle: "Join Twitter today."
+
+communication_search: "Follow your interests."
+communication_people: "Hear what people are talking about."
+communication_reply: "Join the conversation."
+
+js_warn_heading: "Twitter.com makes heavy use of JavaScript"
+js_warn_body: >
+    If you cannot enable it in your browser's preferences, you may have a better
+    experience on our %s.
+js_warn_body_link: "mobile site"
+
+cookie_warn_heading: "Twitter.com makes heavy use of browser cookies"
+cookie_warn_body: >
+    Please enable cookies in your browser preferences before signing in.
+
