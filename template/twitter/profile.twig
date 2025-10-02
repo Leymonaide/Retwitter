@@ -255,7 +255,7 @@ wrapper-profile
                                 <div class="ProfileHeaderCard-url {{ not info.url ? "u-hidden" }}">
                                     <span class="Icon Icon--url Icon--medium" aria-hidden="true" role="presentation"></span>
                                     <span class="ProfileHeaderCard-urlText u-dir" dir="ltr">
-                                        {{ core.text(info.url) }}
+                                        {{ core.text(info.url.formattedString) }}
                                     </span>
                                 </div>
                                 <div class="ProfileHeaderCard-joinDate">

@@ -31,7 +31,11 @@ class MProfileInfo
     public bool $verified = false;
     public ?FormattedString $bio = null;
     public ?FormattedString $location = null;
-    public ?FormattedString $url = null;
+    
+    // This is a formatted string which is not necessarily a valid URL, so be
+    // cautious when converting this to a Url object.
+    public ?MProfileUrl $url = null;
+
     public ?object $joinDate = null;
     public string $birthDate;
 
@@ -53,6 +57,11 @@ class MProfileInfo
         if ($location = $parser->getLocation())
         {
             $this->location = ParsingUtils::formatEmojis($location);
+        }
+
+        if ($url = $parser->getUrlParser())
+        {
+            $this->url = new MProfileUrl($url);
         }
 
         $joinDate = $parser->getCreationTime();

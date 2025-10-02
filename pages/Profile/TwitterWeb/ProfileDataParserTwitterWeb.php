@@ -21,6 +21,8 @@ namespace Retwitter\Page\Profile\TwitterWeb;
 
 use DateTime;
 use Retwitter\ApiSource;
+use Retwitter\Page\Profile\CommonProfileUrlParser;
+use Retwitter\Page\Profile\IProfileUrlParser;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Profile\IProfileDataParser;
@@ -89,6 +91,23 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
     public function getLocation(): ?string
     {
         return $this->getApiResult()?->location?->location;
+    }
+
+    public function getUrlParser(): ?IProfileUrlParser
+    {
+        $result = $this->getApiResult();
+
+        if (isset($result->legacy->entities->url->urls[0]))
+        {
+            // TODO: Option to disable t.co short link.
+            $urlData = $result->legacy->entities->url->urls[0];
+            return new CommonProfileUrlParser(
+                displayUrl: $urlData->display_url,
+                targetUrl: $urlData->url,
+            );
+        }
+
+        return null;
     }
 
     public function getVerified(): bool

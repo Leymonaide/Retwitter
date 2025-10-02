@@ -37,6 +37,7 @@ interface IProfileDataParser extends IBasicProfileInfoDataParser
     public function getCreationTime(): ?DateTime;
     public function getDescription(): ?string;
     public function getLocation(): ?string;
+    public function getUrlParser(): ?IProfileUrlParser;
     public function getVerified(): bool;
     public function getVerificationType(): VerificationType;
     public function getTweetCount(): ?int;

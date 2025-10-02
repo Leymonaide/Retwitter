@@ -24,6 +24,8 @@ use PHPHtmlParser\Dom;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
+use Retwitter\Page\Profile\CommonProfileUrlParser;
+use Retwitter\Page\Profile\IProfileUrlParser;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\VerificationType;
@@ -257,6 +259,29 @@ class ProfileDataParserNitter implements IProfileDataParser
         if (null != $third)
         {
             return html_entity_decode($third?->text);
+        }
+
+        return null;
+    }
+
+    public function getUrlParser(): ?IProfileUrlParser
+    {
+        /*
+         * This follows a similar structure to the profile location one, except
+         * it has an anchor in place of the second child, so it's a lot easier
+         * to find.
+         */
+        $a = $this->document->find(".profile-website a")[0];
+
+        if (null != $a)
+        {
+            $displayText = html_entity_decode($a?->text);
+            $href = $a->getAttribute("href");
+
+            return new CommonProfileUrlParser(
+                displayUrl: $displayText,
+                targetUrl: $href,
+            );
         }
 
         return null;
