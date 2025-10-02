@@ -22,3 +22,17 @@ link_privacy: "Privacy policy"
 link_cookies: "Cookies"
 link_ads_info: "Ads info"
 link_retwitter: "Retwitter"
+
+# These are links which only appear on the stream footer, not the generic page
+# footer:
+link_blog: "Blog"
+link_status: "Status"
+link_jobs: "Jobs"
+link_brand: "Brand"
+link_apps: "Apps"
+link_advertise: "Advertise"
+link_marketing: "Marketing"
+link_businesses: "Businesses"
+link_developers: "Developers"
+link_directory: "Directory"
+link_settings: "Settings"

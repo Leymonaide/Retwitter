@@ -1,5 +1,4 @@
-<?php
-/* 
+{#
  * This file is part of the Retwitter project.
  * Copyright (c) 2025 lemon-pumpkin-pie.
  * 
@@ -15,25 +14,17 @@
  *
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+#}
 
-namespace Retwitter\Page\Home;
-
-use Rehike\i18n\i18n;
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\Page\Base\BasePageContext;
-use Retwitter\Page\Base\MFooter;
-
-class HomePageContext extends BasePageContext
-{
-    //private NamespaceBoundLanguageApi $i18n;
-    public MFooter $streamFooter;
-    
-    public function __construct()
-    {
-        parent::__construct();
-        //$this->i18n = i18n::getNamespace("home");
-        $this->setTitle("Twitter. It's what's happening.");
-        $this->streamFooter = new MFooter(forStream: true);
-    }
-}
+{% macro render(footer) %}
+<div class="StreamsFooter StreamsFooter--fixed">
+    <ul class="StreamsFooter-list u-cf">
+        {% for link in footer.links %}
+            <li class="StreamsFooter-item">
+                <a href="{{ link.url }}" rel="noopener">{{ link.label }}</a>
+            </li>
+        {% endfor %}
+        <li class="StreamsFooter-item StreamsFooter-copyright">{{ footer.copyright }}</li>
+    </ul>
+</div>
+{% endmacro %}

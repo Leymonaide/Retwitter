@@ -188,28 +188,7 @@ static-logged-out-home-page
             "static_logged_out_homepage",
             "cookie_warn_body") }}</p>
     </div>
-    <div class="StreamsFooter StreamsFooter--fixed">
-        <ul class="StreamsFooter-list u-cf">
-            {# TODO: i18n #}
-            <li class="StreamsFooter-item"><a href="/about" rel="noopener">About</a></li>
-            <li class="StreamsFooter-item"><a href="//support.twitter.com/" rel="noopener">Help Center</a></li>
-            <li class="StreamsFooter-item"><a href="//blog.twitter.com/" rel="noopener">Blog</a></li>
-            <li class="StreamsFooter-item"><a href="//status.twitter.com/" rel="noopener">Status</a></li>
-            <li class="StreamsFooter-item"><a href="//about.twitter.com/careers" rel="noopener">Jobs</a></li>
-            <li class="StreamsFooter-item"><a href="/tos" rel="noopener">Terms</a></li>
-            <li class="StreamsFooter-item"><a href="/privacy" rel="noopener">Privacy Policy</a></li>
-            <li class="StreamsFooter-item"><a href="//support.twitter.com/articles/20170514" rel="noopener">Cookies</a></li>
-            <li class="StreamsFooter-item"><a href="//business.twitter.com/en/help/troubleshooting/how-twitter-ads-work.html" rel="noopener">Ads info</a></li>
-            <li class="StreamsFooter-item"><a href="//about.twitter.com/press/brand-assets" rel="noopener">Brand</a></li>
-            <li class="StreamsFooter-item"><a href="//about.twitter.com/products" rel="noopener">Apps</a></li>
-            <li class="StreamsFooter-item"><a href="//ads.twitter.com/?ref=gl-tw-tw-twitter-advertise" rel="noopener">Advertise</a></li>
-            <li class="StreamsFooter-item"><a href="//marketing.twitter.com/" rel="noopener">Marketing</a></li>
-            <li class="StreamsFooter-item"><a href="//business.twitter.com/" rel="noopener">Businesses</a></li>
-            <li class="StreamsFooter-item"><a href="//dev.twitter.com/" rel="noopener">Developers</a></li>
-            <li class="StreamsFooter-item"><a href="/i/directory/profiles" rel="noopener">Directory</a></li>
-            <li class="StreamsFooter-item"><a href="/settings/personalization" rel="noopener">Settings</a></li>
-            <li class="StreamsFooter-item StreamsFooter-copyright">{{ app.page.footer.copyright }}</li>
-        </ul>
-    </div>
+    {% import  "common/pageframe/streams_footer.twig" as streams_footer %}
+    {{ streams_footer.render(app.page.streamFooter) }}
 </div>
 {% endblock %}

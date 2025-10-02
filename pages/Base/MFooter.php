@@ -31,7 +31,7 @@ class MFooter
      */
     public array $links = [];
 
-    public function __construct()
+    public function __construct(bool $forStream = false)
     {
         $i18n = i18n::getNamespace("footer");
 
@@ -46,6 +46,24 @@ class MFooter
             label: $i18n->get("link_help"),
             url: "//support.twitter.com/",
         );
+
+        if ($forStream)
+        {
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_blog"),
+                url: "//blog.twitter.com/",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_status"),
+                url: "//status.twitter.com/",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_jobs"),
+                url: "//about.twitter.com/careers",
+            );
+        }
 
         $this->links[] = new MFooterLink(
             label: $i18n->get("link_terms"),
@@ -66,6 +84,49 @@ class MFooter
             label: $i18n->get("link_ads_info"),
             url: "//support.twitter.com/articles/20170451",
         );
+
+        if ($forStream)
+        {
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_brand"),
+                url: "//about.twitter.com/press/brand-assets",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_apps"),
+                url: "//about.twitter.com/products",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_advertise"),
+                url: "//ads.twitter.com/?ref=gl-tw-tw-twitter-advertise",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_marketing"),
+                url: "//marketing.twitter.com/",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_businesses"),
+                url: "//business.twitter.com/",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_developers"),
+                url: "//dev.twitter.com/",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_directory"),
+                url: "/i/directory/profiles",
+            );
+            
+            $this->links[] = new MFooterLink(
+                label: $i18n->get("link_settings"),
+                url: "/settings/personalization",
+            );
+        }
 
         $this->links[] = new MFooterLink(
             label: $i18n->get("link_retwitter"),
