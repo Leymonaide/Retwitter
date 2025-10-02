@@ -36,26 +36,6 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
     {
     }
 
-    /**
-     * Finds the first HTML element matching the selector.
-     * 
-     * This is a duplicate of NitterDocumentParserUtils that works on the
-     * rootNode this class has. Also copied from TweetDataParserNitter.
-     * 
-     * TODO: Refactor.
-     */
-    private function findFirst(string $selector): ?AbstractNode
-    {
-        $collection = $this->rootNode->find($selector);
-        
-        if (null != $collection)
-        {
-            return $collection[0];
-        }
-
-        return null;
-    }
-
     public function getSourceApi(): ApiSource
     {
         return ApiSource::Nitter;
@@ -63,14 +43,16 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
 
     public function getUsername(): ?string
     {
-        if ($username = $this->findFirst(".tweet-name-row .username")?->text)
+        if ($username = NitterParsingUtils::findFirst(
+                $this->rootNode, ".tweet-name-row .username")?->text)
             return ParsingUtils::getUsernameAsTextOnly($username);
         return null;
     }
 
     public function getHandle(): ?string
     {
-        if ($username = $this->findFirst(".tweet-name-row .username")?->text)
+        if ($username = NitterParsingUtils::findFirst(
+                $this->rootNode, ".tweet-name-row .username")?->text)
             return ParsingUtils::getUsernameAsHandle($username);
         return null;
     }
@@ -84,7 +66,8 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
 
     public function getDisplayName(): ?string
     {
-        if ($displayName = $this->findFirst(".tweet-name-row .fullname")?->text)
+        if ($displayName = NitterParsingUtils::findFirst(
+                $this->rootNode, ".tweet-name-row .fullname")?->text)
         {
             return html_entity_decode($displayName);
         }
@@ -94,7 +77,8 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
 
     public function getAvatarUrl(): ?string
     {
-        if ($avatar = $this->findFirst(".tweet-header .tweet-avatar img")
+        if ($avatar = NitterParsingUtils::findFirst(
+                $this->rootNode, ".tweet-header .tweet-avatar img")
                 ?->getAttribute("src"))
         {
             return NitterParsingUtils::resolveImageUrl($avatar);
@@ -116,7 +100,8 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
     // generalized here too.
     public function getVerificationType(): VerificationType
     {
-        $displayName = $this->findFirst(".tweet-name-row .fullname");
+        $displayName = NitterParsingUtils::findFirst(
+            $this->rootNode, ".tweet-name-row .fullname");
 
         if (null == $displayName)
         {

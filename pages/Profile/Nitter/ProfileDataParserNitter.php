@@ -20,13 +20,10 @@
 namespace Retwitter\Page\Profile\Nitter;
 
 use DateTime;
-use DateTimeImmutable;
 use PHPHtmlParser\Dom;
-use PHPHtmlParser\Dom\Node\AbstractNode;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
-use Retwitter\Page\Common\NitterDocumentParserUtils;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\VerificationType;
@@ -51,12 +48,9 @@ use Retwitter\Page\Profile\IProfileDataParser;
  */
 class ProfileDataParserNitter implements IProfileDataParser
 {
-    // Provides $document
-    use NitterDocumentParserUtils;
-
     public function __construct(
         private NitterSourceInfo $sourceInfo,
-        Dom $document,
+        private Dom $document,
     )
     {
         $this->document = $document;
@@ -69,14 +63,18 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getUsername(): ?string
     {
-        if ($username = $this->findFirst(".profile-card-username")?->text)
+        if ($username = NitterParsingUtils::findFirst(
+                $this->document, 
+                ".profile-card-username")?->text)
             return ParsingUtils::getUsernameAsTextOnly($username);
         return null;
     }
 
     public function getHandle(): ?string
     {
-        if ($username = $this->findFirst(".profile-card-username")?->text)
+        if ($username = NitterParsingUtils::findFirst(
+                $this->document,
+                ".profile-card-username")?->text)
             return ParsingUtils::getUsernameAsHandle($username);
         return null;
     }
@@ -90,7 +88,9 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getDisplayName(): ?string
     {
-        if ($displayName = $this->findFirst(".profile-card-fullname")?->text)
+        if ($displayName = NitterParsingUtils::findFirst(
+                $this->document,
+                ".profile-card-fullname")?->text)
         {
             return html_entity_decode($displayName);
         }
@@ -100,8 +100,9 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getBannerUrl(): ?string
     {
-        if ($banner = $this->findFirst(".profile-banner img")
-                ?->getAttribute("src"))
+        if ($banner = NitterParsingUtils::findFirst(
+                $this->document,
+                ".profile-banner img")?->getAttribute("src"))
         {
             return NitterParsingUtils::resolveImageUrl($banner);
         }
@@ -125,7 +126,8 @@ class ProfileDataParserNitter implements IProfileDataParser
      */
     public function getCreationTime(): ?DateTime
     {
-        if ($time = $this->findFirst(".profile-joindate span")
+        if ($time = NitterParsingUtils::findFirst(
+                $this->document, ".profile-joindate span")
                 ?->getAttribute("title"))
         {
             /*
@@ -210,7 +212,8 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getAvatarUrl(): ?string
     {
-        if ($avatar = $this->findFirst(".profile-card-avatar img")
+        if ($avatar = NitterParsingUtils::findFirst(
+                $this->document, ".profile-card-avatar img")
                 ?->getAttribute("src"))
         {
             return NitterParsingUtils::resolveImageUrl($avatar);
@@ -221,7 +224,10 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getDescription(): ?string
     {
-        if ($bio = $this->findFirst(".profile-bio p")?->text)
+        // TODO: This currently does not handle links in descriptions
+        // correctly.
+        if ($bio = NitterParsingUtils::findFirst(
+                $this->document, ".profile-bio p")?->text)
         {
             return html_entity_decode($bio);
         }
@@ -266,7 +272,8 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getVerificationType(): VerificationType
     {
-        $displayName = $this->findFirst(".profile-card-fullname");
+        $displayName = NitterParsingUtils::findFirst(
+            $this->document, ".profile-card-fullname");
 
         if (null == $displayName)
         {
@@ -299,28 +306,36 @@ class ProfileDataParserNitter implements IProfileDataParser
     public function getTweetCount(): ?int
     {
         return NitterParsingUtils::parseNumber(number: 
-            $this->findFirst(".profile-statlist li.posts .profile-stat-num")?->text
+            NitterParsingUtils::findFirst(
+                node: $this->document, 
+                selector: ".profile-statlist li.posts .profile-stat-num")?->text
         );
     }
 
     public function getFollowingCount(): ?int
     {
         return NitterParsingUtils::parseNumber(number: 
-            $this->findFirst(".profile-statlist li.following .profile-stat-num")?->text
+            NitterParsingUtils::findFirst(
+                node: $this->document,
+                selector: ".profile-statlist li.following .profile-stat-num")?->text
         );
     }
 
     public function getFollowerCount(): ?int
     {
         return NitterParsingUtils::parseNumber(number: 
-            $this->findFirst(".profile-statlist li.followers .profile-stat-num")?->text
+            NitterParsingUtils::findFirst(
+                node: $this->document,
+                selector: ".profile-statlist li.followers .profile-stat-num")?->text
         );
     }
 
     public function getFavoritesCount(): ?int
     {
         return NitterParsingUtils::parseNumber(number: 
-            $this->findFirst(selector: ".profile-statlist li.likes .profile-stat-num")?->text
+            NitterParsingUtils::findFirst(
+                node: $this->document,
+                selector: ".profile-statlist li.likes .profile-stat-num")?->text
         );
     }
 

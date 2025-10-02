@@ -20,6 +20,8 @@
 namespace Retwitter\Utils;
 
 use NumberFormatter;
+use PHPHtmlParser\Dom;
+use PHPHtmlParser\Dom\Node\AbstractNode;
 use Rehike\ConfigManager\Config;
 use Retwitter\ConfigDefinitions\NitterSourceProxyMedia;
 
@@ -117,5 +119,25 @@ class NitterParsingUtils
             return null;
         $formatter = new NumberFormatter("en-US", NumberFormatter::DECIMAL);
         return (int)$formatter->parse(trim($number));
+    }
+
+    /**
+     * Finds the first HTML element matching the selector.
+     */
+    public static function findFirst(
+        // Both AbstractNode and Dom have compatible find() methods, but they
+        // don't implement any common interface.
+        AbstractNode|Dom $node,
+        string $selector,
+    ): ?AbstractNode
+    {
+        $collection = $node->find($selector);
+        
+        if (null != $collection)
+        {
+            return $collection[0];
+        }
+
+        return null;
     }
 }

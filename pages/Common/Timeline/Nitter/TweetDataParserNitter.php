@@ -19,12 +19,10 @@
 
 namespace Retwitter\Page\Common\Timeline\Nitter;
 
-use DateTime;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
-use Retwitter\Page\Common\NitterDocumentParserUtils;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use PHPHtmlParser\Dom\Node\AbstractNode;
@@ -59,24 +57,6 @@ class TweetDataParserNitter implements ITweetDataParser
         }
     }
 
-    /**
-     * Finds the first HTML element matching the selector.
-     * 
-     * This is a duplicate of NitterDocumentParserUtils that works on the
-     * rootNode this class has.
-     */
-    private function findFirst(string $selector): ?AbstractNode
-    {
-        $collection = $this->rootNode->find($selector);
-        
-        if (null != $collection)
-        {
-            return $collection[0];
-        }
-
-        return null;
-    }
-
     public function getSourceApi(): ApiSource
     {
         return ApiSource::Nitter;
@@ -87,7 +67,10 @@ class TweetDataParserNitter implements ITweetDataParser
         /**
          * @var AbstractNode
          */
-        $tweetLinkNode = $this->findFirst(".tweet-link");
+        $tweetLinkNode = NitterParsingUtils::findFirst(
+            $this->rootNode,
+            ".tweet-link"
+        );
 
         if (null === $tweetLinkNode)
         {
@@ -126,7 +109,11 @@ class TweetDataParserNitter implements ITweetDataParser
 
     public function getFullText(): ?string
     {
-        if ($fullText = $this->findFirst(".tweet-content")?->text)
+        // TODO: This does not handle a lot of formatting things (newlines, god
+        // forbid styling).
+        // にこめも：あのめちゃデカいBlueユーザーのツイートを例にして
+        if ($fullText = NitterParsingUtils::findFirst(
+                $this->rootNode, ".tweet-content")?->text)
         {
             return html_entity_decode($fullText);
         }
@@ -177,7 +164,8 @@ class TweetDataParserNitter implements ITweetDataParser
      */
     public function getCreatedAt(): ?string
     {
-        if ($time = $this->findFirst(".tweet-date a")
+        if ($time = NitterParsingUtils::findFirst(
+                $this->rootNode, ".tweet-date a")
                 ?->getAttribute("title"))
         {
             /*
@@ -265,7 +253,8 @@ class TweetDataParserNitter implements ITweetDataParser
 
     private function getAndParseStat(string $selector): ?int
     {
-        if ($statNode = $this->findFirst($selector))
+        if ($statNode = NitterParsingUtils::findFirst(
+                $this->rootNode, $selector))
         {
             $countText = $statNode->getParent()->text;
 
@@ -297,7 +286,8 @@ class TweetDataParserNitter implements ITweetDataParser
 
     public function getIsRetweet(): bool
     {
-        return null != $this->findFirst(".retweet-header");
+        return null != NitterParsingUtils::findFirst(
+            $this->rootNode, ".retweet-header");
     }
 
     /**
@@ -307,7 +297,8 @@ class TweetDataParserNitter implements ITweetDataParser
     {
         $result = [];
 
-        $attachmentsContainer = $this->findFirst(".attachments");
+        $attachmentsContainer = NitterParsingUtils::findFirst(
+            $this->rootNode, ".attachments");
 
         if (null === $attachmentsContainer)
         {
@@ -358,7 +349,8 @@ class TweetDataParserNitter implements ITweetDataParser
 
     private function isPinned(): bool
     {
-        return $this->findFirst(".pinned .icon-pin") != null;
+        return NitterParsingUtils::findFirst(
+            $this->rootNode, ".pinned .icon-pin") != null;
     }
 
     public function getSocialContext(): ?MTweetSocialContext

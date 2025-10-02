@@ -19,27 +19,19 @@
 
 namespace Retwitter\Page\Common\Timeline\Nitter;
 
-use DateTime;
 use Retwitter\ApiSource;
-use Retwitter\Page\Common\NitterDocumentParserUtils;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MTweet;
-use Retwitter\Page\Profile\IProfileDataParser;
-use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
-use Retwitter\Utils\ParsingUtils;
+use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\NitterSourceInfo;
 use PHPHtmlParser\Dom;
-use PHPHtmlParser\Dom\Node\AbstractNode;
 use PHPHtmlParser\Dom\Node\InnerNode;
 
 class TimelineDataParserNitter implements ITimelineDataParser
 {
-    // Provides $document
-    use NitterDocumentParserUtils;
-
     public function __construct(
         private NitterSourceInfo $sourceInfo,
-        Dom $document,
+        private Dom $document,
     )
     {
         $this->document = $document;
@@ -60,7 +52,10 @@ class TimelineDataParserNitter implements ITimelineDataParser
         /**
          * @var InnerNode
          */
-        $timelineRootNode = $this->findFirst(".timeline");
+        $timelineRootNode = NitterParsingUtils::findFirst(
+            $this->document,
+            ".timeline",
+        );
 
         if (null == $timelineRootNode)
         {
