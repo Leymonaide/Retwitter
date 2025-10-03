@@ -21,8 +21,6 @@ use const DNS_CNAME;
 use const DNS_A    as DNS_IPV4;
 use const DNS_AAAA as DNS_IPV6;
 
-// TODO: PR changes to Rehike.
-
 /**
  * Utilities for DNS overriding.
  * 
