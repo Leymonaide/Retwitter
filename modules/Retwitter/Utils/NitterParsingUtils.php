@@ -22,7 +22,12 @@ namespace Retwitter\Utils;
 use NumberFormatter;
 use PHPHtmlParser\Dom;
 use PHPHtmlParser\Dom\Node\AbstractNode;
+use PHPHtmlParser\Dom\Node\InnerNode;
+use PHPHtmlParser\Dom\Node\TextNode;
 use Rehike\ConfigManager\Config;
+use Rehike\FormattedString;
+use Rehike\Util\FormattedStringBuilder;
+use Rehike\Util\FormattedStringBuilder\RunBuilder;
 use Retwitter\ConfigDefinitions\NitterSourceProxyMedia;
 
 class NitterParsingUtils
@@ -139,5 +144,87 @@ class NitterParsingUtils
         }
 
         return null;
+    }
+
+    /**
+     * Converts HTML to a formatted string.
+     */
+    public static function htmlToFormattedString(InnerNode $node): FormattedString
+    {
+        $fsb = new FormattedStringBuilder();
+
+        $runs = [];
+        self::htmlToFormattedStringRunBuilders(
+            runBuilders: $runs,
+            node: $node,
+        );
+
+        foreach ($runs as $run)
+        {
+            $fsb->addRunFromBuilder($run);
+        }
+
+        return $fsb->build();
+    }
+
+    /**
+     * Parses HTML into a series of formatted string run builders.
+     * 
+     * @return RunBuilder[]
+     */
+    public static function htmlToFormattedStringRunBuilders(
+        array &$runBuilders,
+        InnerNode|TextNode $node,
+        bool $bold = false,
+        bool $italic = false,
+        string $link = "",
+    ): void
+    {
+        if ($node instanceof InnerNode)
+        {
+            foreach ($node->getChildren() as $childNode)
+            {
+                if ("a" == $node->tag->name())
+                {
+                    $link = $node->getAttribute("href") ?? "";
+                }
+                else if ("b" == $node->tag->name())
+                {
+                    $bold = true;
+                }
+                else if ("i" == $node->tag->name())
+                {
+                    $italic = true;
+                }
+
+                self::htmlToFormattedStringRunBuilders(
+                    runBuilders: $runBuilders,
+                    node: $childNode,
+                    bold: $bold,
+                    italic: $italic,
+                    link: $link,
+                );
+            }
+        }
+        else //if ($node instanceof TextNode)
+        {
+            $runBuilder = new RunBuilder();
+            $runBuilder->setText($node->text());
+
+            if ($link)
+            {
+                $runBuilder->link = $link;
+            }
+            else if ($bold)
+            {
+                $runBuilder->setBold(true);
+            }
+            else if ($italic)
+            {
+                $runBuilder->setItalic(true);
+            }
+
+            $runBuilders[] = $runBuilder;
+        }
     }
 }

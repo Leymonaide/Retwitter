@@ -226,12 +226,15 @@ class ProfileDataParserNitter implements IProfileDataParser
 
     public function getDescription(): ?string
     {
-        // TODO: This currently does not handle links in descriptions
-        // correctly.
-        if ($bio = NitterParsingUtils::findFirst(
-                $this->document, ".profile-bio p")?->text)
+        if ($bioEl = NitterParsingUtils::findFirst(
+                $this->document, ".profile-bio p"))
         {
-            return html_entity_decode($bio);
+            // TODO: Make getDescription() return a formatted string. This would
+            // require the Twemoji parser to be able to operate on formatted
+            // strings. This would also be useful for TwitterWeb.
+            return \Rehike\Util\ParsingUtils::getText(
+                NitterParsingUtils::htmlToFormattedString($bioEl)
+            );
         }
 
         return null;
