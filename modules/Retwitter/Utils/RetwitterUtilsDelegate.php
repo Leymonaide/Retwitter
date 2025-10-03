@@ -19,6 +19,8 @@
 
 namespace Retwitter\Utils;
 
+use Rehike\TemplateUtilsDelegate\SafeHtml;
+
 class RetwitterUtilsDelegate
 {
     public ResourceUtils $resource;
@@ -26,5 +28,13 @@ class RetwitterUtilsDelegate
     public function __construct()
     {
         $this->resource = new ResourceUtils();
+    }
+
+    /**
+     * Converts a string to a SafeHtml object.
+     */
+    public static function toSafeHtml(string $str): SafeHtml
+    {
+        return new SafeHtml($str);
     }
 }

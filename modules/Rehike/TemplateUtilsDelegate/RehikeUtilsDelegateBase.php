@@ -104,4 +104,12 @@ abstract class RehikeUtilsDelegateBase extends stdClass
     {
         return rand(100000, 999999);
     }
+
+    /**
+     * Converts a string to a SafeHtml object.
+     */
+    public static function toSafeHtml(string $str): SafeHtml
+    {
+        return new SafeHtml($str);
+    }
 }

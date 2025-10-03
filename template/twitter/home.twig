@@ -174,9 +174,9 @@ static-logged-out-home-page
                         "static_logged_out_homepage",
                         "js_warn_body_link") }}</a>
                 {% endset %}
-                <p>{{ app.i18n.format(
+                <p>{{ app.i18n.formatHtml(
                     "static_logged_out_homepage",
-                    "js_warn_body", link_html)|raw }}</p>
+                    "js_warn_body", link_html|safeHtml) }}</p>
             {% endwith %}
         </div>
     </noscript>

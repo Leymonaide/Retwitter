@@ -95,6 +95,11 @@ final class Tasks
         $utils = new RetwitterUtilsDelegate();
         TemplateManager::addGlobal("retwitter", $utils);
 
+        TemplateManager::addFilter(
+            "safeHtml",
+            RetwitterUtilsDelegate::class . "::toSafeHtml",
+        );
+
         // Rebug needs a YT variable proxy, so give it the Rehike\YtApp instance:
         $ytApp = YtApp::getInstance();
         TemplateManager::addGlobal("yt", $ytApp);
