@@ -21,7 +21,7 @@ namespace Retwitter\Page\Profile;
 
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
-use Rehike\Util\FormattedStringBuilder;
+use Retwitter\Utils\FormattedStringBuilder;
 
 class MProfileUrl
 {

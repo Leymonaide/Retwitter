@@ -26,8 +26,8 @@ use PHPHtmlParser\Dom\Node\InnerNode;
 use PHPHtmlParser\Dom\Node\TextNode;
 use Rehike\ConfigManager\Config;
 use Rehike\FormattedString;
-use Rehike\Util\FormattedStringBuilder;
-use Rehike\Util\FormattedStringBuilder\RunBuilder;
+use Retwitter\Utils\FormattedStringBuilder;
+use Retwitter\Utils\FormattedStringBuilder\RunBuilder;
 use Retwitter\ConfigDefinitions\NitterSourceProxyMedia;
 
 class NitterParsingUtils

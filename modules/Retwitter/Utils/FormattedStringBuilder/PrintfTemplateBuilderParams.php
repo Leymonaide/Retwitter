@@ -1,5 +1,6 @@
 <?php
-namespace Rehike\Util\FormattedStringBuilder;
+// This file is licensed under the Mozilla Public License 2.0 by The Rehike Maintainers.
+namespace Retwitter\Utils\FormattedStringBuilder;
 
 /**
  * Arguments for the printf template builder method.

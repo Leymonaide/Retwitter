@@ -20,7 +20,7 @@
 namespace Retwitter\Utils;
 
 use Rehike\FormattedString;
-use Rehike\Util\FormattedStringBuilder;
+use Retwitter\Utils\FormattedStringBuilder;
 
 class ParsingUtils
 {

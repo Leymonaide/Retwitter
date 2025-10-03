@@ -1,9 +1,10 @@
 <?php
-namespace Rehike\Util;
+// This file is licensed under the Mozilla Public License 2.0 by The Rehike Maintainers.
+namespace Retwitter\Utils;
 
 use Rehike\FormattedString;
 
-use Rehike\Util\FormattedStringBuilder\{
+use Retwitter\Utils\FormattedStringBuilder\{
     PrintfTemplateBuilderParams,
     RunBuilder
 };
