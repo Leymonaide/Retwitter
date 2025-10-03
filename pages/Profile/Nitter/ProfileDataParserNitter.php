@@ -145,14 +145,14 @@ class ProfileDataParserNitter implements IProfileDataParser
             $tokens = explode(" ", $time);
 
             // These are just useful constants.
-            $T_TIME      = 0;
-            $T_MERIDIAN  = 1; // Either "AM" or "PM"
-            $T_SEPARATOR = 2; // Always "-", ignored.
-            $T_DAY       = 3;
-            $T_MONTH     = 4;
-            $T_YEAR      = 5;
-            $T_TIME_H    = 0; // First index of $timeParts array.
-            $T_TIME_M    = 1;
+            static $T_TIME      = 0;
+            static $T_MERIDIAN  = 1; // Either "AM" or "PM"
+            static $T_SEPARATOR = 2; // Always "-", ignored.
+            static $T_DAY       = 3;
+            static $T_MONTH     = 4;
+            static $T_YEAR      = 5;
+            static $T_TIME_H    = 0; // First index of $timeParts array.
+            static $T_TIME_M    = 1;
 
             if (count($tokens) != 6)
             {

@@ -183,15 +183,15 @@ class TweetDataParserNitter implements ITweetDataParser
             $tokens = explode(" ", $time);
 
             // These are just useful constants.
-            $T_MONTH = 0;
-            $T_DAY = 1;
-            $T_YEAR = 2;
-            $T_SEPARATOR = 3; // Always "-", ignored.
-            $T_TIME = 4;
-            $T_MERIDIAN = 5; // Either "AM" or "PM"
-            $T_TIMEZONE = 6; // Always "UTC", ignored.
-            $T_TIME_H    = 0; // First index of $timeParts array.
-            $T_TIME_M    = 1;
+            static $T_MONTH = 0;
+            static $T_DAY = 1;
+            static $T_YEAR = 2;
+            static $T_SEPARATOR = 3; // Always "-", ignored.
+            static $T_TIME = 4;
+            static $T_MERIDIAN = 5; // Either "AM" or "PM"
+            static $T_TIMEZONE = 6; // Always "UTC", ignored.
+            static $T_TIME_H    = 0; // First index of $timeParts array.
+            static $T_TIME_M    = 1;
 
             if (count($tokens) != 7)
             {
