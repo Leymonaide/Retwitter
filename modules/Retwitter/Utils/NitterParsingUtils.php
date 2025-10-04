@@ -214,7 +214,7 @@ class NitterParsingUtils
 
             if ($link)
             {
-                $runBuilder->link = $link;
+                $runBuilder->url = $link;
             }
             else if ($bold)
             {

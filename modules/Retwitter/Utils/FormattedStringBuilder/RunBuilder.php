@@ -16,7 +16,7 @@ class RunBuilder extends stdClass
     public string $text = "";
     public bool $bold = false;
     public bool $italic = false;
-    public ?string $link = null;
+    public ?string $url = null;
     
     public function build(): object
     {
@@ -34,9 +34,9 @@ class RunBuilder extends stdClass
             $out->italic = true;
         }
         
-        if (null != $this->link)
+        if (null != $this->url)
         {
-            $out->link = $this->link;
+            $out->url = $this->url;
         }
 
         // TODO(pumpkin): I'm pretty sure the whole reason this class extends

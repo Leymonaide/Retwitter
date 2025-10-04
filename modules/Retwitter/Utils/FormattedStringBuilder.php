@@ -80,7 +80,7 @@ class FormattedStringBuilder
         
         if ($runCreationFlags & self::RUN_AS_LINK)
         {
-            $builder->link = $linkText;
+            $builder->url = $linkText;
         }
         
         if ($runCreationFlags & self::RUN_DISPLAY_BOLD)
