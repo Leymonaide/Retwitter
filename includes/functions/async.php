@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Rehike\Async;
 
 const ASYNC_FUNCTION_FILE = __FILE__;

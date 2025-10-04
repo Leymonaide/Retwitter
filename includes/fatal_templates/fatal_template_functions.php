@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Rehike\ErrorHandler\FatalErrorTemplate;
 
 use Rehike\Logging\Common\FormattedString;

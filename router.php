@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Retwitter\Page;
 
 use Rehike\ControllerV2\Router;

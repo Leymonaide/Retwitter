@@ -1,5 +1,6 @@
 <?php
 // This file is licensed under the Mozilla Public License 2.0 by The Rehike Maintainers.
+declare(strict_types=1);
 namespace Retwitter\Version;
 
 /**

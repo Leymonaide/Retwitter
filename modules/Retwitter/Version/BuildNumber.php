@@ -1,5 +1,6 @@
 <?php
 // This file is licensed under the Mozilla Public License 2.0 by The Rehike Maintainers.
+declare(strict_types=1);
 namespace Retwitter\Version;
 
 /**
@@ -21,11 +22,11 @@ class BuildNumber
      */
     public static function getBuildNumber(): int
     {
-        $lastUpdateTime = VersionController::$versionInfo->time;
+        $lastUpdateTime = 0/*VersionController::$versionInfo->time*/;
         $diff = $lastUpdateTime - self::BUILDNUM_EPOCH;
         
         $baseNum = floor($diff / (60 * 60 * 24));
         
-        return $baseNum;
+        return (int)$baseNum;
     }
 }

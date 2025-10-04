@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Retwitter\Page\rehike;
 
 use Rehike\ControllerV2\BaseController;
