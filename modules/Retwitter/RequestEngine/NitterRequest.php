@@ -52,7 +52,7 @@ class NitterRequest implements IRequestManagerRequest
     {
         return async(function() {
             $this->response =
-                yield NetworkCore::request($this->url, [
+                yield NetworkCore::request((string)$this->url, [
                     "headers" => [
                         "User-Agent" => $_SERVER["HTTP_USER_AGENT"],
 

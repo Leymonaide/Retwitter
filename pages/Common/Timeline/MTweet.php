@@ -56,13 +56,17 @@ class MTweet
         $sourceText = $parser->getFullText();
         $textStart = $parser->getDisplayTextRange()[0] ?? 0;
         $textEnd = $parser->getDisplayTextRange()[1] ?? mb_strlen($sourceText);
-        $sourceText = mb_substr(
-            string: $sourceText,
-            start: $textStart,
-            length: $textEnd - $textStart
-        );
-        // TODO: Better function:
-        $this->fullText = ParsingUtils::formatEmojis($sourceText);
+        if (null != $sourceText)
+        {
+            $sourceText = mb_substr(
+                string: $sourceText,
+                start: $textStart,
+                length: $textEnd - $textStart
+            );
+        
+            // TODO: Better function:
+            $this->fullText = ParsingUtils::formatEmojis($sourceText);
+        }
 
         $this->author = new MTweetAuthor($parser->getAuthorParser());
         $this->lang = $parser->getLang() ?? "en";
