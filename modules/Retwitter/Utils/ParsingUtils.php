@@ -64,6 +64,28 @@ class ParsingUtils
     }
 
     /**
+     * Converts a formatted string to a plaintext string.
+     * 
+     * This is a minimal version of the Rehike ParsingUtils::getText() without
+     * all the cruft to handle InnerTube's various cases. It only has what
+     * Retwitter internally uses.
+     */
+    public static function getText(\stdClass|FormattedString $formattedString): string
+    {
+        $response = "";
+
+        // Don't pass any old stdClass. It must be compatible with FormattedString.
+        assert(isset($formattedString->runs));
+
+        foreach ($formattedString->runs as $run)
+        {
+            $response .= $run->text;
+        }
+
+        return $response;
+    }
+
+    /**
      * Formats a string containing emojis into a formatted string containing
      * links to those emojis' Twemoji variants.
      */
@@ -122,5 +144,41 @@ class ParsingUtils
         }
 
         return $builder->build();
+    }
+
+    /**
+     * Formats a string containing emojis into a formatted string containing
+     * links to those emojis' Twemoji variants.
+     * 
+     * This is a variant of formatEmojis that works on existing formatted string
+     * objects and merges the new emoji formatted strings into the output.
+     */
+    public static function formatEmojisInFormattedString(
+        \stdClass|FormattedString $formattedString
+    ): FormattedString
+    {
+        $fsbOut = FormattedStringBuilder::from($formattedString);
+
+        foreach ($fsbOut->runs as $outerIndex => $outerRun)
+        {
+            $fsbIn = FormattedStringBuilder::from(
+                self::formatEmojis($outerRun?->text ?? "")
+            );
+
+            foreach ($fsbIn->runs as $innerIndex => $runs)
+            {
+                // Merge all the original properties of the outer run into the
+                // split inner runs.
+                foreach ($outerRun as $key => $value)
+                {
+                    $runs->{$key} = $value;
+                }
+            }
+
+            // Replace the original argument in the original array:
+            array_splice($fsbOut->runs, $outerIndex, 1, $fsbIn->runs);
+        }
+
+        return $fsbOut->build();
     }
 }

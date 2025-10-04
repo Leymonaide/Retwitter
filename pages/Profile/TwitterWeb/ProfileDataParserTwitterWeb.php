@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Profile\TwitterWeb;
 
 use DateTime;
+use Rehike\FormattedString;
 use Retwitter\ApiSource;
 use Retwitter\Page\Profile\CommonProfileUrlParser;
 use Retwitter\Page\Profile\IProfileUrlParser;
@@ -84,9 +85,11 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         return $this->getApiResult()?->avatar?->image_url;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): ?FormattedString
     {
-        return $this->getApiResult()?->legacy?->description;
+        // TODO: This should use a different function that formats a string with
+        // emojis as well as links, but that function doesn't exist yet.
+        return ParsingUtils::formatEmojis($this->getApiResult()?->legacy?->description);
     }
 
     public function getLocation(): ?string

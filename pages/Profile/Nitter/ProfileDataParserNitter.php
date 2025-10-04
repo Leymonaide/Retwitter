@@ -22,6 +22,7 @@ namespace Retwitter\Page\Profile\Nitter;
 
 use DateTime;
 use PHPHtmlParser\Dom;
+use Rehike\FormattedString;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
@@ -225,15 +226,14 @@ class ProfileDataParserNitter implements IProfileDataParser
         return null;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): ?FormattedString
     {
         if ($bioEl = NitterParsingUtils::findFirst(
                 $this->document, ".profile-bio p"))
         {
-            // TODO: Make getDescription() return a formatted string. This would
-            // require the Twemoji parser to be able to operate on formatted
-            // strings. This would also be useful for TwitterWeb.
-            return \Rehike\Util\ParsingUtils::getText(
+            /** @var \PHPHtmlParser\Dom\Node\InnerNode $bioEl Suppress warning. */
+
+            return ParsingUtils::formatEmojisInFormattedString(
                 NitterParsingUtils::htmlToFormattedString($bioEl)
             );
         }

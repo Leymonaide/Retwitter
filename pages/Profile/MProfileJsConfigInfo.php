@@ -55,7 +55,6 @@ class MProfileJsConfigInfo
         $this->screenName = $parser->getDisplayName() ?? $this->name;
         $this->location = $parser->getLocation() ?? "";
         //$this->url = $parser->getUrl(); // TODO.
-        $this->description = $parser->getDescription() ?? "";
         $this->protected = false; // TODO.
         $this->followersCount = $parser->getFollowerCount() ?? 0;
         $this->friendsCount = $parser->getFollowingCount() ?? 0;
@@ -66,6 +65,11 @@ class MProfileJsConfigInfo
         $this->verified = $parser->getVerified();
         
         // I don't know what to do for profile background URL.
+
+        if ($description = $parser->getDescription())
+        {
+            $this->description = ParsingUtils::getText($parser->getDescription());
+        }
 
         if ($avatarUrl = $parser->getAvatarUrl())
         {

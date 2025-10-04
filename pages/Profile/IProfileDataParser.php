@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
 use DateTime;
+use Rehike\FormattedString;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\VerificationType;
 
@@ -36,7 +37,7 @@ interface IProfileDataParser extends IBasicProfileInfoDataParser
     public function getAvatarUrl(): ?string;
     public function getBannerUrl(): ?string;
     public function getCreationTime(): ?DateTime;
-    public function getDescription(): ?string;
+    public function getDescription(): ?FormattedString;
     public function getLocation(): ?string;
     public function getUrlParser(): ?IProfileUrlParser;
     public function getVerified(): bool;

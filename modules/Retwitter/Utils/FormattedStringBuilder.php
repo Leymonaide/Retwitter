@@ -10,6 +10,8 @@ use Retwitter\Utils\FormattedStringBuilder\{
     RunBuilder
 };
 
+use Rehike\Logging\DebugLogger;
+
 /**
  * Builder for formatted strings like InnerTube.
  * 
@@ -25,21 +27,32 @@ class FormattedStringBuilder
     public const RUN_DISPLAY_BOLD   = 0b0010;
     public const RUN_DISPLAY_ITALIC = 0b0100;
     
-    protected array $runs = [];
+    /**
+     * An array of all the runs in the formatted string.
+     */
+    public array $runs = [];
 
     /**
      * Creates a FormattedStringBuilder from an existing formatted string object.
      */
-    public static function from(\stdClass|FormattedString $obj): static
+    public static function from(\stdClass|FormattedString $source): static
     {
         $out = new static();
+
+        DebugLogger::print(__METHOD__.": Input type %s", get_class($source));
+        DebugLogger::print(__METHOD__.": Input object %s", var_export($source, true));
 
         // To make this applicable to all objects, and not just stdClass and
         // FormattedString, reflection would need to be used here to check if
         // the property is public.
-        if (isset($obj->runs))
+        if (isset($source->runs))
         {
-            $out->runs = $obj->runs;
+            $out->runs = [];
+            
+            foreach ($source->runs as $run)
+            {
+                $out->runs[] = ObjectUtils::clone($run);
+            }
         }
 
         return $out;
