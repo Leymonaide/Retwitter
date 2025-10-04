@@ -13,6 +13,8 @@ use Retwitter\Utils\FormattedStringBuilder\{
 /**
  * Builder for formatted strings like InnerTube.
  * 
+ * This class is modified in Retwitter for our own purposes.
+ * 
  * @author Isabella Lulamoon <kawapure@gmail.com>
  * @author The Rehike Maintainers
  */
@@ -24,6 +26,24 @@ class FormattedStringBuilder
     public const RUN_DISPLAY_ITALIC = 0b0100;
     
     protected array $runs = [];
+
+    /**
+     * Creates a FormattedStringBuilder from an existing formatted string object.
+     */
+    public static function from(\stdClass|FormattedString $obj): static
+    {
+        $out = new static();
+
+        // To make this applicable to all objects, and not just stdClass and
+        // FormattedString, reflection would need to be used here to check if
+        // the property is public.
+        if (isset($obj->runs))
+        {
+            $out->runs = $obj->runs;
+        }
+
+        return $out;
+    }
     
     /**
      * Build the formatted string.
@@ -51,26 +71,34 @@ class FormattedStringBuilder
             string $runText, 
             int $runCreationFlags = 0, 
             string $linkText = "", 
-            array $extraData = [] // reserved
+            array $extraData = []
     ): static
     {
         $builder = $this->createRunBuilder();
-        
-        $builder->setText($runText);
+
+        $builder->text = $runText;
         
         if ($runCreationFlags & self::RUN_AS_LINK)
         {
-            $builder->setEndpointFromUrl($linkText);
+            $builder->link = $linkText;
         }
         
         if ($runCreationFlags & self::RUN_DISPLAY_BOLD)
         {
-            $builder->setBold(true);
+            $builder->bold = true;
         }
         
         if ($runCreationFlags & self::RUN_DISPLAY_ITALIC)
         {
-            $builder->setItalic(true);
+            $builder->italic = true;
+        }
+
+        if (!empty($extraData))
+        {
+            foreach ($extraData as $key => $value)
+            {
+                $builder->{$key} = $value;
+            }
         }
         
         $this->addRunFromBuilder($builder);

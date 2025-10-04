@@ -13,10 +13,10 @@ use stdClass;
  */
 class RunBuilder extends stdClass
 {
-    protected string $text = "";
-    protected bool $bold = false;
-    protected bool $italic = false;
-    protected object $navigationEndpoint;
+    public string $text = "";
+    public bool $bold = false;
+    public bool $italic = false;
+    public ?string $link = null;
     
     public function build(): object
     {
@@ -34,9 +34,9 @@ class RunBuilder extends stdClass
             $out->italic = true;
         }
         
-        if (isset($this->navigationEndpoint))
+        if (null != $this->link)
         {
-            $out->navigationEndpoint = $this->navigationEndpoint;
+            $out->link = $this->link;
         }
 
         // TODO(pumpkin): I'm pretty sure the whole reason this class extends
@@ -44,38 +44,38 @@ class RunBuilder extends stdClass
         // Rehike in any case.
         foreach (get_object_vars($this) as $key => $value)
         {
+            if (in_array($key, get_class_vars(static::class)))
+            {
+                continue;
+            }
+
             $out->{$key} = $value;
         }
         
         return (object)$out;
     }
     
+    /**
+     * @deprecated Temporarily kept for compatibility with Rehike.
+     */
     public function setText(string $text): void
     {
         $this->text = $text;
     }
     
+    /**
+     * @deprecated Temporarily kept for compatibility with Rehike.
+     */
     public function setBold(bool $value): void
     {
         $this->bold = $value;
     }
     
+    /**
+     * @deprecated Temporarily kept for compatibility with Rehike.
+     */
     public function setItalic(bool $value): void
     {
         $this->italic = $value;
-    }
-    
-    public function setEndpointFromUrl(string $url): void
-    {
-        $this->navigationEndpoint = (object)[
-            "urlEndpoint" => (object)[
-                "url" => $url
-            ],
-            "commandMetadata" => (object)[
-                "webCommandMetadata" => (object)[
-                    "url" => $url
-                ]
-            ]
-        ];
     }
 }

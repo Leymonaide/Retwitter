@@ -210,7 +210,7 @@ class NitterParsingUtils
         else //if ($node instanceof TextNode)
         {
             $runBuilder = new RunBuilder();
-            $runBuilder->setText($node->text());
+            $runBuilder->text = $node->text();
 
             if ($link)
             {
@@ -218,11 +218,11 @@ class NitterParsingUtils
             }
             else if ($bold)
             {
-                $runBuilder->setBold(true);
+                $runBuilder->bold = true;
             }
             else if ($italic)
             {
-                $runBuilder->setItalic(true);
+                $runBuilder->italic = true;
             }
 
             $runBuilders[] = $runBuilder;
