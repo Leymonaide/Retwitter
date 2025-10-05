@@ -82,7 +82,10 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
                 $this->rootNode, ".tweet-header .tweet-avatar img")
                 ?->getAttribute("src"))
         {
-            return NitterParsingUtils::resolveImageUrl($avatar);
+            return NitterParsingUtils::resolveImageUrl(
+                nitterUrl: $avatar,
+                sourceInfo: $this->sourceInfo,
+            );
         }
 
         return null;
@@ -95,10 +98,6 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
             VerificationType::DataUnavailable,
         ]);
     }
-
-    // TODO: DRY. This function is a copy from ProfileDataParserNitter. The
-    // format of verification badges on Nitter is generalized, so it could be
-    // generalized here too.
     public function getVerificationType(): VerificationType
     {
         $displayName = NitterParsingUtils::findFirst(
@@ -109,26 +108,6 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
             return VerificationType::DataUnavailable;
         }
 
-        if ($verification = $displayName->find(".verified-icon")[0])
-        {
-            // Nitter reports blue, government, and business types.
-            // https://github.com/zedeus/nitter/blob/e40c61a6ae76431c570951cc4925f38523b00a82/src/types.nim#L68-L72
-            $classes = explode(" ", $verification->getAttribute("class") ?? "");
-
-            if (in_array("blue", $classes))
-            {
-                return VerificationType::VerifiedBlue;
-            }
-            else if (in_array("business", $classes))
-            {
-                return VerificationType::VerifiedBusiness;
-            }
-            else if (in_array("government", $classes))
-            {
-                return VerificationType::VerifiedGovernment;
-            }
-        }
-
-        return VerificationType::NotVerified;
+        return NitterParsingUtils::getVerificationType($displayName);
     }
 }

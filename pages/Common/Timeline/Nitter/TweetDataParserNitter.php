@@ -323,7 +323,8 @@ class TweetDataParserNitter implements ITweetDataParser
                 }
                 
                 $previewSource = NitterParsingUtils::resolveImageUrl(
-                    $imgEl->getAttribute("src")
+                    nitterUrl: $imgEl->getAttribute("src"),
+                    sourceInfo: $this->sourceInfo,
                 );
 
                 // The expanded source URL is the preview source URL minus the

@@ -28,6 +28,7 @@ use Retwitter\Page\Profile\IProfileUrlParser;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Profile\IProfileDataParser;
+use Rehike\ConfigManager\Config;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser
 {
@@ -103,11 +104,14 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
 
         if (isset($result->legacy->entities->url->urls[0]))
         {
-            // TODO: Option to disable t.co short link.
+            $disableShortLinks = Config::getConfigProp("behavior.disableTcoShortLinks");
+
             $urlData = $result->legacy->entities->url->urls[0];
             return new CommonProfileUrlParser(
                 displayUrl: $urlData->display_url,
-                targetUrl: $urlData->url,
+                targetUrl: $disableShortLinks
+                    ? $urlData->expanded_url
+                    : $urlData->url,
             );
         }
 

@@ -48,6 +48,7 @@ class ConfigDefinitions
             "experiments" => [
             ],
             "behavior" => [
+                "disableTcoShortLinks" => new BoolProp(false),
                 "nitterSourceProxyMedia" => new EnumProp(
                     defaultValue: NitterSourceProxyMedia::No->value,
                     validValues: [

@@ -61,6 +61,14 @@ class Url implements Stringable
         }
     }
 
+    /**
+     * Checks if the URL is relative (does not have a origin).
+     */
+    public function isRelative(): bool
+    {
+        return empty($this->getOrigin());
+    }
+
     public function __toString(): string
     {
         $origin = $this->getOrigin();

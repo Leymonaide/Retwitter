@@ -27,9 +27,13 @@ use PHPHtmlParser\Dom\Node\InnerNode;
 use PHPHtmlParser\Dom\Node\TextNode;
 use Rehike\ConfigManager\Config;
 use Rehike\FormattedString;
+use Retwitter\NitterSourceInfo;
+use Retwitter\Url;
 use Retwitter\Utils\FormattedStringBuilder;
 use Retwitter\Utils\FormattedStringBuilder\RunBuilder;
 use Retwitter\ConfigDefinitions\NitterSourceProxyMedia;
+use Retwitter\Page\Common\VerificationType;
+use const Retwitter\Constants\DEFAULT_NITTER_HOST;
 
 class NitterParsingUtils
 {
@@ -68,18 +72,26 @@ class NitterParsingUtils
     public static function resolveImageUrl(
         string $nitterUrl,
         string $assumeDomain = "pbs.twimg.com",
+        NitterSourceInfo $sourceInfo = null,
     ): string
     {
-        // TODO: Account for setting to proxy Nitter image URL. This requires
-        // the Nitter host URL to be reported in the NitterSourceInfo because
-        // Nitter's HTML uses relative URLs.
         $shouldProxy = NitterSourceProxyMedia::tryFrom(
             Config::getConfigProp("behavior.nitterSourceProxyMedia")
         ) ?? NitterSourceProxyMedia::No;
 
         if ($shouldProxy)
         {
-            // Above todo.
+            $url = new Url($nitterUrl);
+            $nitterHostUrl = new Url($sourceInfo?->nitterSourceUri ?? DEFAULT_NITTER_HOST);
+
+            if ($url->isRelative())
+            {
+                $url->setProtocol($nitterHostUrl->getProtocol());
+                $url->setHost($nitterHostUrl->getHost());
+                $url->setPort($nitterHostUrl->getPort());
+            }
+
+            return (string)$url;
         }
 
         // Remove "/pic/" from the start of the string.
@@ -227,5 +239,34 @@ class NitterParsingUtils
 
             $runBuilders[] = $runBuilder;
         }
+    }
+
+    /**
+     * Gets the verification type of an account from a Nitter display name
+     * element node.
+     */
+    public static function getVerificationType(AbstractNode $node): VerificationType
+    {
+        if ($verification = $node->find(".verified-icon")[0])
+        {
+            // Nitter reports blue, government, and business types.
+            // https://github.com/zedeus/nitter/blob/e40c61a6ae76431c570951cc4925f38523b00a82/src/types.nim#L68-L72
+            $classes = explode(" ", $verification->getAttribute("class") ?? "");
+
+            if (in_array("blue", $classes))
+            {
+                return VerificationType::VerifiedBlue;
+            }
+            else if (in_array("business", $classes))
+            {
+                return VerificationType::VerifiedBusiness;
+            }
+            else if (in_array("government", $classes))
+            {
+                return VerificationType::VerifiedGovernment;
+            }
+        }
+
+        return VerificationType::NotVerified;
     }
 }

@@ -39,8 +39,8 @@ use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
-const PROFILE_TEST_LOCAL = true;
-const PROFILE_TEST_NITTER = false;
+const PROFILE_TEST_LOCAL = false;
+const PROFILE_TEST_NITTER = true;
 
 class ProfileController
     extends RetwitterPageController
