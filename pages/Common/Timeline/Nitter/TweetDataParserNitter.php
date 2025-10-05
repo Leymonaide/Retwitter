@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline\Nitter;
 
+use Rehike\FormattedString;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
@@ -33,6 +34,7 @@ use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Url;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\Timeline\MTweetMedia;
+use Retwitter\Utils\ParsingUtils;
 
 class TweetDataParserNitter implements ITweetDataParser
 {
@@ -108,15 +110,16 @@ class TweetDataParserNitter implements ITweetDataParser
         return "0";
     }
 
-    public function getFullText(): ?string
+    public function getFullText(): ?FormattedString
     {
-        // TODO: This does not handle a lot of formatting things (newlines, god
-        // forbid styling).
-        // にこめも：あのめちゃデカいBlueユーザーのツイートを例にして
-        if ($fullText = NitterParsingUtils::findFirst(
-                $this->rootNode, ".tweet-content")?->text)
+        if ($fullTextNode = NitterParsingUtils::findFirst(
+                $this->rootNode, ".tweet-content"))
         {
-            return html_entity_decode($fullText);
+            /** @var \PHPHtmlParser\Dom\Node\InnerNode $fullTextNode Suppress warning */
+
+            return ParsingUtils::formatEmojisInFormattedString(
+                NitterParsingUtils::htmlToFormattedString($fullTextNode)
+            );
         }
 
         return null;

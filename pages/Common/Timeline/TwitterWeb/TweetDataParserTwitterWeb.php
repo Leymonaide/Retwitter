@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline\TwitterWeb;
 
+use Rehike\FormattedString;
 use Retwitter\ApiSource;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
@@ -29,6 +30,7 @@ use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Page\Common\Timeline\MTweetMedia;
 use Retwitter\Page\Common\Timeline\TweetMediaType;
 use Retwitter\Page\Common\Timeline\TweetMediaAvailability;
+use Retwitter\Utils\ParsingUtils;
 
 class TweetDataParserTwitterWeb implements ITweetDataParser
 {
@@ -90,9 +92,21 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return $this->getRootData()->legacy->user_id_str;
     }
 
-    public function getFullText(): ?string
+    public function getFullText(): ?FormattedString
     {
-        return $this->getRootData()->legacy?->full_text;
+        $rawText = $this->getRootData()->legacy?->full_text;
+
+        $textStart = $this->getDisplayTextRange()[0] ?? 0;
+        $textEnd = $this->getDisplayTextRange()[1] ?? mb_strlen($rawText);
+
+        $sourceText = mb_substr(
+            string: $rawText,
+            start: $textStart,
+            length: $textEnd - $textStart
+        );
+
+        // TODO: Better function:
+        return ParsingUtils::formatEmojis($sourceText);
     }
 
     public function getDisplayTextRange(): ?array

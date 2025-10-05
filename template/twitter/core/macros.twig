@@ -57,25 +57,28 @@
 
 {# Tweet text is very sensitive to whitespace, so this macro avoids any
    around whitespace the formatted output. #}
-{%- macro tweet_text(text) -%}
-{%- if text.simpleText -%}
-    {{ text.simpleText }}
-{%- elseif text.runs -%}
-    {% for run in text.runs %}
-        {%- if run.emoji -%}
-        <img class="Emoji Emoji--forText" src="{{ run.emoji.url }}" draggable="false" alt="{{ run.emoji.alt }}" title="{{ run.emoji.label }}" aria-label="Emoji: {{ run.emoji.label }}">
-        {%- else -%}
-        {%- if run.url -%}
-        <a href="{{ run.url }}">
-        {%- endif -%}
-            {{ run.text }}
-        {%- if run.url -%}
-        </a>
-        {%- endif -%}
-        {%- endif -%}
-    {%- endfor -%}
-{%- endif -%}
-{%- endmacro -%}
+{% macro tweet_text(text) %}{#
+#}{% if text.simpleText %}{#
+    #}{{ text.simpleText }}{#
+#}{% elseif text.runs %}{#
+    #}{% for run in text.runs %}{#
+        #}{% if run.emoji %}{#
+        #}<img class="Emoji Emoji--forText" src="{{ run.emoji.url }}"
+            draggable="false" alt="{{ run.emoji.alt }}"
+            title="{{ run.emoji.label }}"
+            aria-label="Emoji: {{ run.emoji.label }}">{#
+        #}{% else %}{#
+        #}{% if run.url %}{#
+        #}<a href="{{ run.url }}">{#
+        #}{% endif %}{#
+            #}{{ run.text }}{#
+        #}{% if run.url %}{#
+        #}</a>{#
+        #}{% endif %}{#
+        #}{% endif %}{#
+    #}{% endfor %}{#
+#}{% endif %}{#
+#}{% endmacro %}
 
 {% macro simple_text(text) %}
 {% if text.simpleText %}

@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
+use Rehike\FormattedString;
 use Retwitter\IApiSourceProvider;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 
@@ -32,7 +33,7 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getId(): string;
     public function getConversationId(): string;
     public function getUserId(): string;
-    public function getFullText(): ?string;
+    public function getFullText(): ?FormattedString;
     public function getDisplayTextRange(): ?array;
     public function getAuthorParser(): ?IBasicProfileInfoDataParser;
     public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser;

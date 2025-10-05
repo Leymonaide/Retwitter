@@ -210,7 +210,7 @@ class NitterParsingUtils
         else //if ($node instanceof TextNode)
         {
             $runBuilder = new RunBuilder();
-            $runBuilder->text = $node->text();
+            $runBuilder->text = htmlspecialchars_decode($node->text());
 
             if ($link)
             {

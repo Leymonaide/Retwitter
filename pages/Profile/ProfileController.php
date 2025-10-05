@@ -39,8 +39,8 @@ use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
-const PROFILE_TEST_LOCAL = false;
-const PROFILE_TEST_NITTER = true;
+const PROFILE_TEST_LOCAL = true;
+const PROFILE_TEST_NITTER = false;
 
 class ProfileController
     extends RetwitterPageController
@@ -64,6 +64,15 @@ class ProfileController
                 tab: $tab,
             );
             $this->setPageContext($context);
+
+            // TODO: Move somewhere better.
+            $nitterOptions = new \PHPHtmlParser\Options();
+            $nitterOptions->setPreserveLineBreaks(true);
+            $nitterOptions->setCleanupInput(false);
+            $nitterOptions->setRemoveDoubleSpace(false);
+            $nitterOptions->setRemoveScripts(false);
+            $nitterOptions->setRemoveSmartyScripts(false);
+            $nitterOptions->setRemoveStyles(false);
 
 if (!PROFILE_TEST_NITTER)
 {
@@ -152,6 +161,7 @@ else:
 endif;
 
             $dom = new Dom();
+            $dom->setOptions($nitterOptions);
             $dom->loadStr($rawDocument);
 
 if (!PROFILE_TEST_LOCAL):
