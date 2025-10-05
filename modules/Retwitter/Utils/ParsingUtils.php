@@ -159,24 +159,27 @@ class ParsingUtils
     {
         $fsbOut = FormattedStringBuilder::from($formattedString);
 
-        foreach ($fsbOut->runs as $outerIndex => $outerRun)
+        for ($i = count($fsbOut->runs) - 1; $i >= 0; $i--)
         {
+            $outerRun = $fsbOut->runs[$i];
             $fsbIn = FormattedStringBuilder::from(
                 self::formatEmojis($outerRun?->text ?? "")
             );
-
-            foreach ($fsbIn->runs as $innerIndex => $runs)
+        
+            foreach ($fsbIn->runs as $innerRun)
             {
                 // Merge all the original properties of the outer run into the
                 // split inner runs.
                 foreach ($outerRun as $key => $value)
                 {
-                    $runs->{$key} = $value;
+                    if ($key !== "text")
+                    {
+                        $innerRun->{$key} = $value;
+                    }
                 }
             }
-
-            // Replace the original argument in the original array:
-            array_splice($fsbOut->runs, $outerIndex, 1, $fsbIn->runs);
+        
+            array_splice($fsbOut->runs, $i, 1, $fsbIn->runs);
         }
 
         return $fsbOut->build();
