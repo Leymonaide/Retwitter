@@ -39,6 +39,15 @@ namespace Retwitter\Constants
 
     // Temporary testing constant:
     const CLIENT_TRANSACTION_TEST_STATIC = false;
+
+    const TWITTER_HOST = "x.com";
+    const API_HOST = "https://api.x.com";
+    const API_VERSION = "1.1";
+
+    /**
+     * Specifies the default Nitter host.
+     */
+    const DEFAULT_NITTER_HOST = "nitter.net";
 }
 
 // DO NOT EDIT BELOW THIS LINE!!!

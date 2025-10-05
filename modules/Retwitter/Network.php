@@ -29,14 +29,18 @@ use function Rehike\Async\async;
 use Retwitter\ClientTransaction\ClientTransaction;
 use const Retwitter\Constants\CLIENT_TRANSACTION_TEST_STATIC;
 
+use const Retwitter\Constants\TWITTER_HOST;
+use const Retwitter\Constants\API_HOST;
+use const Retwitter\Constants\API_VERSION;
+
 /**
  * Manages network requests to the Twitter/X.com service.
  */
 class Network
 {
-    public const TWITTER_HOST = "https://x.com";
-    public const API_HOST = "https://api.x.com";
-    public const API_VERSION = "1.1";
+    public const TWITTER_HOST = TWITTER_HOST;
+    public const API_HOST = API_HOST;
+    public const API_VERSION = API_VERSION;
     public const API_AUTH = "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA";
 
     public const DNS_OVERRIDE_HOST = "1.1.1.1";

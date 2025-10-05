@@ -33,6 +33,8 @@ use Rehike\ConfigManager\Properties\{
     StringProp
 };
 
+use const Retwitter\Constants\DEFAULT_NITTER_HOST;
+
 /**
  * Defines Retwitter configuration definitions.
  */
@@ -53,6 +55,7 @@ class ConfigDefinitions
                         NitterSourceProxyMedia::Yes->value,
                     ]
                 ),
+                "nitterApiHost" => new StringProp(DEFAULT_NITTER_HOST),
             ],
             "advanced" => [
                 "enableDebugger" => new BoolProp(false),

@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\RequestEngine;
 
 use Rehike\Async\Promise;
+use Rehike\ConfigManager\Config;
 use Rehike\Network\IResponse;
 use Rehike\Network\NetworkCore;
 use Retwitter\Url;
@@ -34,18 +35,11 @@ class NitterRequest implements IRequestManagerRequest
     private Url $url;
     private IResponse $response;
 
-    /**
-     * Specifies the default Nitter host.
-     * 
-     * TODO: Allow custom Nitter host from configuration.
-     */
-    private const DEFAULT_NITTER_HOST = "nitter.net";
-
     public function __construct(Url $url)
     {
         $this->url = new Url($url);
         $this->url->setProtocol("https");
-        $this->url->setHost(self::DEFAULT_NITTER_HOST);
+        $this->url->setHost(Config::getConfigProp("behavior.nitterApiHost"));
     }
 
     public function try(): Promise/*<bool>*/
