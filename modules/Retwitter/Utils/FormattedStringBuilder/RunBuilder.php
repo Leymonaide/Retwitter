@@ -54,28 +54,4 @@ class RunBuilder extends stdClass
         
         return (object)$out;
     }
-    
-    /**
-     * @deprecated Temporarily kept for compatibility with Rehike.
-     */
-    public function setText(string $text): void
-    {
-        $this->text = $text;
-    }
-    
-    /**
-     * @deprecated Temporarily kept for compatibility with Rehike.
-     */
-    public function setBold(bool $value): void
-    {
-        $this->bold = $value;
-    }
-    
-    /**
-     * @deprecated Temporarily kept for compatibility with Rehike.
-     */
-    public function setItalic(bool $value): void
-    {
-        $this->italic = $value;
-    }
 }

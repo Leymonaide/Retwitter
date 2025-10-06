@@ -28,8 +28,8 @@ interface IRequestManagerRequest
     /**
      * Try sending out this request.
      * 
-     * @return Promise<bool> True if the request should be retried, false
-     *      otherwise.
+     * @return Promise<bool>
+     *      True if the request should be retried, false otherwise.
      */
     public function try(): Promise/*<bool>*/;
 

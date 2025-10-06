@@ -45,6 +45,16 @@ class DotGit
         return trim($branchFile);
     }
 
+    public static function getCommitTime(): ?int
+    {
+        if ($time = `git log -1 --pretty="%ct"`)
+        {
+            return (int)$time;
+        }
+
+        return null;
+    }
+
     /**
      * Return an info array that can be merged with the DotVersion
      * format.
@@ -60,5 +70,6 @@ class DotGit
             $versionInfo->branch = $branch;
         if ($commit = self::getCommit($branch))
             $versionInfo->currentHash = $commit;
+        $versionInfo->time = self::getCommitTime();
     }
 }

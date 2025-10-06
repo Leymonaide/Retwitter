@@ -39,9 +39,10 @@ class Url implements Stringable
     /**
      * An associative array of URL parameters.
      * 
-     * @var ?string[] If the value is an empty string in the associative array,
-     *     then the value will be encoded as "&key=". If the value is null, then
-     *     it will be encoded as "&key".
+     * @var ?string[]
+     *      If the value is an empty string in the associative array, then the
+     *      value will be encoded as "&key=". If the value is null, then it will
+     *      be encoded as "&key".
      */
     private array $params = [];
 

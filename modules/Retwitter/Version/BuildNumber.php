@@ -22,7 +22,7 @@ class BuildNumber
      */
     public static function getBuildNumber(): int
     {
-        $lastUpdateTime = 0/*VersionController::$versionInfo->time*/;
+        $lastUpdateTime = VersionController::$versionInfo->time;
         $diff = $lastUpdateTime - self::BUILDNUM_EPOCH;
         
         $baseNum = floor($diff / (60 * 60 * 24));

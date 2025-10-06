@@ -37,7 +37,7 @@ class MProfileUrl
 
         $fsb = new FormattedStringBuilder();
         $run = $fsb->createRunBuilder();
-        $run->setText($this->displayUrl);
+        $run->text = $this->displayUrl;
         $run->url = $this->url;
         $fsb->addRunFromBuilder($run);
         $this->formattedString = $fsb->build();

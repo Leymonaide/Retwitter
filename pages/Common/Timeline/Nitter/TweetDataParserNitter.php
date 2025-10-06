@@ -299,6 +299,27 @@ class TweetDataParserNitter implements ITweetDataParser
      */
     public function getMedia(): array
     {
+        /*
+         * TODO: A big problem.
+         * 
+         * Media in Twitter's web frontend is cropped by the server using its
+         * aspect ratio. Nitter does not provide this data at all, so it's
+         * impossible to know the dimensions of an image from Nitter alone.
+         * 
+         * There are two options here (I'll probably implement both):
+         * 
+         *    1. Request the image only on the client side and use custom JS to
+         *       adjust parameters for the display. This is less accurate, but
+         *       probably a bit faster.
+         * 
+         *    2. Request the image on both the server (metadata) and
+         *       client (rendering). This is more accurate, but less efficient.
+         * 
+         * Note for option 2: only the aspect ratio is necessary, so a small
+         * thumbnail of the image can be requested. The full image isn't
+         * necessary.
+         */
+
         $result = [];
 
         $attachmentsContainer = NitterParsingUtils::findFirst(
