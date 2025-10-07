@@ -198,12 +198,11 @@
 <link rel="stylesheet" href="{{ rehike.resource.resolveVersioned("rehike/css/www-rebug-retwitter-base.css") }}">
 <link rel="dns-prefretch" href="https://pbs.twimg.com">
 <link rel="dns-prefetch" href="https://t.co">
+{# These modules are always loaded. CONSIDER: Migration to model. #}
 {{ core.preload_js("init") }}
 {{ core.preload_js("commons") }}
 {%- for module in app.page.modules -%}
-{# TODO: Since preload_js is only aware of string module names at the moment,
-   this means that the module path being loaded in PHP is pointless. #}
-{{ core.preload_js(module.moduleName) }}
+    {{ core.preload_js_module(module) }}
 {%- endfor -%}
 <title>{{ app.page.title ?? "Twitter" }}</title>
 <link rel="shortcut icon" href="https://abs.twimg.com/favicons/favicon.ico" type="image/x-icon">

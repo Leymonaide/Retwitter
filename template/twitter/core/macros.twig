@@ -29,6 +29,13 @@
 <link rel="preload" href="https://abs.twimg.com/k/{{ app.lang }}/{{ retwitter.resource.getJsName(name, app.lang) }}.js" as="script">
 {% endmacro %}
 
+{% macro preload_js_module(module) %}
+    {% types {
+        module: "Retwitter\\Page\\Base\\PageJsModule",
+    } %}
+    <link rel="preload" href="{{ module.resolvedModulePath }}" as="script">
+{% endmacro %}
+
 {% macro async_js(name) %}
 <script src="https://abs.twimg.com/k/{{ app.lang }}/{{ retwitter.resource.getJsName(name, app.lang) }}.js" async=""></script>
 {% endmacro %}
