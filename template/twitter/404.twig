@@ -1,0 +1,168 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 lemon-pumpkin-pie.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{# For some reason, every link on this page was originally hardcoded to
+   https://twitter.com instead of using a relative URL. #}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta http-equiv="Content-Language" content="en-us">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ app.i18n.get("404", "page_title") }}</title>
+    <link href="https://abs.twimg.com/favicons/favicon.ico" rel="shortcut icon"
+        type="image/x-icon">
+    <link rel="stylesheet" href="https://abs.twimg.com/errors/fullscreen_errors-4e29aecc89be6d500979e19c3bd72aa2.css">
+</head>
+
+<body>
+    <div class="errorpage-topbar">
+        <div class="errorpage-global-nav">
+            <div class="errorpage-global-nav-inner">
+                <div class="errorpage-container">
+                    <ul class="errorpage-nav">
+                        <li>
+                            <a href="/"><img class="errorpage-bird"
+                                    srcset="https://abs.twimg.com/errors/logo23x19.png 1x, https://abs.twimg.com/errors/logo23x19@2x.png 2x"
+                                    src="https://abs.twimg.com/errors/logo23x19.png" alt="Twitter"></a>
+                        </li>
+                    </ul>
+                    <div class="errorpage-pull-right">
+                        <ul class="errorpage-nav">
+                            <li><a href="/" id="homeLink">{{ 
+                                app.i18n.get("404", "to_home") 
+                            }}</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="errorpage-body-content">
+
+            <h1>{{ app.i18n.get("404", "body_header") }}</h1>
+            {% with %}
+                {% set search_home %}
+                    <a href="/search-home">{{ 
+                        app.i18n.get("404", "body_search_twitter") 
+                    }}</a>
+                {% endset %}
+                {% set return_home %}
+                    <a href="/search-home">{{ 
+                        app.i18n.get("404", "body_return_home") 
+                    }}</a>
+                {% endset %}
+                <p>{{ app.i18n.formatHtml("404", "body_content",
+                        search_home|safeHtml, return_home|safeHtml
+                    ) }}</p>
+            {% endwith %}
+            <form class="search-404" action="/search" method="get">
+                <input id="search_q"
+                    name="q" 
+                    type="text" 
+                    aria-label="{{ app.i18n.get("404", "search_query_label") }}"
+                    placeholder="{{ app.i18n.get("404", "search_placeholder") }}">
+                {# This is actually filled in by JS. #}
+                <input class="errorpage-btn" 
+                    id="search_submit" 
+                    type="submit" 
+                    value="{{ app.i18n.get("404", "search_button_text") }}">
+            </form>
+
+            <div class="errorpage-footer">
+                <ul class="errorpage-languages">
+                    {# Languages here are mapped to RTL. #}
+                    {% with { languages: {
+                        "ar": true,
+                        "bg": false,
+                        "bn": false,
+                        "ca": false,
+                        "cs": false,
+                        "da": false,
+                        "de": false,
+                        "el": false,
+                        "en": false,
+                        "en-gb": false,
+                        "es": false,
+                        "fa": true,
+                        "fi": false,
+                        "fil": false,
+                        "fr": false,
+                        "gu": false,
+                        "he": true,
+                        "hi": false,
+                        "hr": false,
+                        "hu": false,
+                        "id": false,
+                        "it": false,
+                        "ja": false,
+                        "kn": false,
+                        "ko": false,
+                        "mr": false,
+                        "msa": false,
+                        "nl": false,
+                        "no": false,
+                        "pl": false,
+                        "pt": false,
+                        "ro": false,
+                        "ru": false,
+                        "sk": false,
+                        "sr": false,
+                        "sv": false,
+                        "ta": false,
+                        "th": false,
+                        "tr": false,
+                        "uk": false,
+                        "vi": false,
+                        "zh-cn": false,
+                        "zh-tw": false,
+                    } } %}
+                        {% for lang, rtl in languages %}
+                            <li><a data-language="{{ lang }}"
+                                data-dir="{{ rtl ? "rtl" : "ltr" }}"
+                                href="#">{{ 
+                                app.i18n.get("404", 
+                                    "lang_" ~ lang|replace({ "-": "_" })
+                                ) 
+                            }}</a></li>
+                        {% endfor %}
+                    {% endwith %}
+
+                </ul>
+                <ul>
+                    {# This actually is filled in by JS. #}
+                    <li dir="ltr">© Twitter <span id="copyright-year"></span></li>
+                    <li><a href="https://about.twitter.com/">{{ 
+                        app.i18n.get("404", "footer_about") }}</a></li>
+                    <li><a href="https://support.twitter.com/">{{ 
+                        app.i18n.get("404", "footer_support") }}</a></li>
+                    <li><a href="http://status.twitter.com/">{{ 
+                        app.i18n.get("404", "footer_status") }}</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <script src="https://abs.twimg.com/errors/404-174a1f1a41465b8e7b205e9551995267.js"></script>
+
+
+</body>
+
+</html>

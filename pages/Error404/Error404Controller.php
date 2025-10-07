@@ -18,24 +18,30 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page;
+namespace Retwitter\Page\Error404;
 
-use Rehike\ControllerV2\Router;
+use Rehike\ControllerV2\{
+    IGetControllerAsync,
+};
 
-// Funnel = pages that the Retwitter server should not touch:
-Router::funnel([
-]);
+use Rehike\ControllerV2\BaseController;
+use Rehike\Network;
+use Rehike\Async\Promise;
+use Retwitter\Page\Base\RetwitterPageController;
+use function Rehike\Async\async;
 
-Router::redirect([
-]);
+class Error404Controller extends RetwitterPageController
+    implements IGetControllerAsync
+{
+    public function getAsync(): Promise
+    {
+        return async(function()
+        {
+            // This template has no page context. Everything is done in the
+            // template because it's entirely static.
+            $this->setTemplate("404");
 
-Router::get([
-    "/" => Home\HomeController::class,
-    "/404test" => Error404\Error404Controller::class,
-    "/account/suspended" => AccountSuspended\AccountSuspendedController::class,
-    "/rehike/static/*" => rehike\StaticRouter::class,
-    "default" => Profile\ProfileController::class,
-]);
-
-Router::post([
-]);
+            $this->renderPage();
+        });
+    }
+}
