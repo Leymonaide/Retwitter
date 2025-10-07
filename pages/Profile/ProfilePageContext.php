@@ -54,6 +54,9 @@ class ProfilePageContext extends BasePageContext
         // be nonexistent profiles, which get a profile-styled error page.
         // Suffice it to say...
         // TODO: Clean up profile controller, add some room to get the 404 in.
+        // TODO#2: Also, suspended accounts previously redirected to
+        // /account/suspended. They did not maintain the URL, but I think this
+        // is stupid, so I will make it an option.
         if (ProfileError::Success === $parser->getError())
         {
             $this->jsConfig = new MProfileJsConfigInfo($parser);
