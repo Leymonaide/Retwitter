@@ -28,7 +28,9 @@ use Retwitter\Utils\ParsingUtils;
 class MTweetAction
 {
     public string $formattedCount = "";
-    public string $tooltip = "";
+    public string $tooltip = ""; // "Retweet"
+    public string $pastTenseTooltip = ""; // "Retweeted"
+    public string $undoTooltip = ""; // "Undo retweet"
     public string $accessibilityText = "";
 
     public function __construct(
@@ -43,11 +45,28 @@ class MTweetAction
             $this->formattedCount = NumberFormat::shorten($count);
         }
 
+        // TODO: Tense handling for retweet/favorite
         $this->tooltip = match ($actionType)
         {
             TweetAction::Reply => $i18n->get("tweet_action_reply_tooltip"),
             TweetAction::Retweet => $i18n->get("tweet_action_retweet_tooltip"),
             TweetAction::Favorite => $i18n->get("tweet_action_favorite_tooltip"),
+
+            default => ""
+        };
+
+        $this->pastTenseTooltip = match ($actionType)
+        {
+            TweetAction::Retweet => $i18n->get("tweet_action_retweeted_tooltip"),
+            TweetAction::Favorite => $i18n->get("tweet_action_favorited_tooltip"),
+
+            default => $this->tooltip
+        };
+
+        $this->undoTooltip = match ($actionType)
+        {
+            TweetAction::Retweet => $i18n->get("tweet_action_undo_retweet_tooltip"),
+            TweetAction::Favorite => $i18n->get("tweet_action_undo_favorite_tooltip"),
 
             default => ""
         };

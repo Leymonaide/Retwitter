@@ -352,6 +352,9 @@
             'js-actionRetweet',
         ] %}
         {% set action_icon = _self.tweet_action_icon_std("retweet") %}
+
+        {% set has_undo_button = true %}
+        {% set undo_button_classes = action_button_classes %}
     {% elseif tweet_action.actionType == TweetAction.Favorite %}
         {% set action_container_classes = [
             'ProfileTweet-action--favorite',
@@ -362,32 +365,96 @@
             'js-actionFavorite',
         ] %}
         {% set action_icon = _self.tweet_action_icon_favorite() %}
+
+        {% set has_undo_button = true %}
+        {% set undo_button_classes = [
+            'ProfileTweet-action--unfavorite',
+            'u-linkClean',
+            'js-actionButton',
+            'js-actionFavorite',
+        ] %}
     {% endif %}
 
     <div class="{{ [
             'ProfileTweet-action',
             ...action_container_classes,
         ]|join(' ') }}">
-        <button class="{{ [
-                'ProfileTweet-actionButton',
-                ...action_button_classes,
-            ]|join(' ') }}"
-            data-modal="ProfileTweet-{{ action_name }}"
-            type="button"
-            aria-describedby="profile-tweet-action-{{ action_name }}-count-aria-{{ tweet.id }}">
-            <div class="IconContainer js-tooltip" title="{{ tweet_action.tooltip }}">
-                {{ action_icon }}
-                <span class="u-hiddenVisually">{{ tweet_action.tooltip }}</span>
-            </div>{#
-            #}&nbsp;{#
-            #}<span class="ProfileTweet-actionCount"
-                data-tweet-stat-count="{{ tweet_action.count }}">
-                <span class="ProfileTweet-actionCountForPresentation"
-                    aria-hidden="true">{{ tweet_action.formattedCount }}</span>
-            </span>
-        </button>
-        {# TODO: Undo button for retweet & like. #}
+        {{ _self.tweet_action_button_inner(
+            tweet,
+            tweet_action,
+            action_button_classes,
+            action_name,
+            action_icon,
+        ) }}
+        {% if has_undo_button %}
+            {{ _self.tweet_action_button_undo(
+                tweet,
+                tweet_action,
+                undo_button_classes,
+                action_name,
+                action_icon,
+            ) }}
+        {% endif %}
     </div>
+{% endmacro %}
+
+{% macro tweet_action_button_inner(
+    tweet, tweet_action, action_button_classes, action_name, action_icon,
+) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        tweet_action: "Retwitter\\Page\\Common\\Timeline\\MTweetAction",
+        action_button_classes: "string[]",
+        action_name: "string",
+        action_icon: "string",
+    } %}
+    <button class="{{ [
+        'ProfileTweet-actionButton',
+        ...action_button_classes,
+    ]|join(' ') }}"
+    data-modal="ProfileTweet-{{ action_name }}"
+    type="button"
+    aria-describedby="profile-tweet-action-{{ action_name }}-count-aria-{{ tweet.id }}">
+    <div class="IconContainer js-tooltip" title="{{ tweet_action.tooltip }}">
+        {{ action_icon }}
+        <span class="u-hiddenVisually">{{ tweet_action.tooltip }}</span>
+    </div>{#
+    #}&nbsp;{#
+    #}<span class="ProfileTweet-actionCount"
+        data-tweet-stat-count="{{ tweet_action.count }}">
+        <span class="ProfileTweet-actionCountForPresentation"
+            aria-hidden="true">{{ tweet_action.formattedCount }}</span>
+    </span>
+    </button>
+{% endmacro %}
+
+{# It's cleaner to just separate this. Although this is superficially similar to
+   tweet_action_button_inner, it does subtly differ enough to justify
+   distinction. #}
+{% macro tweet_action_button_undo(
+    tweet, tweet_action, action_button_classes, action_name, action_icon,
+) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        tweet_action: "Retwitter\\Page\\Common\\Timeline\\MTweetAction",
+        action_button_classes: "string[]",
+        action_name: "string",
+        action_icon: "string",
+    } %}
+    <button class="{{ [
+        'ProfileTweet-actionButtonUndo',
+        ...action_button_classes,
+    ]|join(' ') }}" type="button">
+    <div class="IconContainer js-tooltip" title="{{ tweet_action.undoTooltip }}">
+        {{ action_icon }}
+        <span class="u-hiddenVisually">{{ tweet_action.pastTenseTooltip }}</span>
+    </div>{#
+    #}&nbsp;{#
+    #}<span class="ProfileTweet-actionCount">
+        <span class="ProfileTweet-actionCountForPresentation"
+            aria-hidden="true">{{ tweet_action.formattedCount }}</span>
+    </span>
+    </button>
 {% endmacro %}
 
 {% macro tweet_action_icon_std(icon_type) %}
