@@ -27,14 +27,14 @@ use Retwitter\Page\Base\MFooter;
 
 class HomePageContext extends BasePageContext
 {
-    //private NamespaceBoundLanguageApi $i18n;
+    private NamespaceBoundLanguageApi $i18n;
     public MFooter $streamFooter;
     
     public function __construct()
     {
         parent::__construct();
-        //$this->i18n = i18n::getNamespace("home");
-        $this->setTitle("Twitter. It's what's happening.");
+        $this->i18n = i18n::getNamespace("static_logged_out_homepage");
+        $this->setTitle($this->i18n->get("page_title"));
         $this->streamFooter = new MFooter(forStream: true);
     }
 }
