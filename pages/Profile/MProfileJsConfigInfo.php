@@ -51,7 +51,7 @@ class MProfileJsConfigInfo
     public function __construct(IProfileDataParser $parser)
     {
         $this->id = $parser->getId() ?? "0";
-        $this->name = $parser->getUsername();
+        $this->name = $parser->getUsername() ?? "";
         $this->screenName = $parser->getDisplayName() ?? $this->name;
         $this->location = $parser->getLocation() ?? "";
         //$this->url = $parser->getUrl(); // TODO.

@@ -304,9 +304,11 @@ wrapper-profile
                     </ul>
                 </div>
             </div>
-            {# TODO: Conditional rendering for timeline. #}
-            {% from "common/timeline.twig" import render_timeline %}
-            {{ render_timeline(app.page.content.timeline) }}
+
+            {% if app.page.content.timeline %}
+                {% from "common/timeline.twig" import render_timeline %}
+                {{ render_timeline(app.page.content.timeline) }}
+            {% endif %}
             {% endblock %}
 
             {% block col_three_content %}

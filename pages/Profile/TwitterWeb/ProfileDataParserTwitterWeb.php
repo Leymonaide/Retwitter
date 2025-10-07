@@ -25,6 +25,7 @@ use Rehike\FormattedString;
 use Retwitter\ApiSource;
 use Retwitter\Page\Profile\CommonProfileUrlParser;
 use Retwitter\Page\Profile\IProfileUrlParser;
+use Retwitter\Page\Profile\ProfileError;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Profile\IProfileDataParser;
@@ -47,6 +48,25 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
     public function getSourceApi(): ApiSource
     {
         return ApiSource::TwitterWeb;
+    }
+
+    public function getError(): ProfileError
+    {
+        if ($this->getApiResult()?->__typename == "UserUnavailable")
+        {
+            return match ($this->getApiResult()->reason)
+            {
+                "Suspended" => ProfileError::Suspended,
+                default => ProfileError::Unknown,
+            };
+        }
+        else if (empty($this->getApiResult()))
+        {
+            // Nonexistent profiles return 200 with an empty JSON object.
+            return ProfileError::Nonexistent;
+        }
+
+        return ProfileError::Success;
     }
 
     public function getUsername(): ?string

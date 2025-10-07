@@ -49,14 +49,28 @@ class ProfilePageContext extends BasePageContext
 
     public function insertUserData(IProfileDataParser $parser): void
     {
-        $this->jsConfig = new MProfileJsConfigInfo($parser);
-        $this->canopy = new MProfileCanopy($parser, $this->tab);
-        $this->info = new MProfileInfo($parser);
-        $this->content = new MProfileContent($parser, $this->tab);
-
-        $this->addJsModule("pages_profile");
-
-        $this->setUpTitle($parser);
+        // Nonexistent profiles did not show a profile error, but the standard
+        // 404 page. On the React frontend, most invalid pages are assumed to
+        // be nonexistent profiles, which get a profile-styled error page.
+        // Suffice it to say...
+        // TODO: Clean up profile controller, add some room to get the 404 in.
+        if (ProfileError::Success === $parser->getError())
+        {
+            $this->jsConfig = new MProfileJsConfigInfo($parser);
+            $this->canopy = new MProfileCanopy($parser, $this->tab);
+            $this->info = new MProfileInfo($parser);
+            $this->content = new MProfileContent($parser, $this->tab);
+            $this->addJsModule("pages_profile");
+            $this->setUpTitle($parser);
+        }
+        else if (ProfileError::Suspended === $parser->getError())
+        {
+            $this->error = new MProfileError(
+                $this->i18n->get("suspended_title"),
+                $this->i18n->get("suspended_message"),
+            );
+            $this->setTitle($this->i18n->get("suspended_page_title"));
+        }
     }
 
     public function insertTimeline(ITimelineDataParser $parser): void

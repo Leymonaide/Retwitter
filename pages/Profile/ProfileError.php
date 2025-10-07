@@ -20,26 +20,28 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
-enum ProfileTab : string
+/**
+ * Enumerates profile errors.
+ */
+enum ProfileError
 {
-    case RecentTweets = "";
-    case WithReplies = "with_replies";
-    case Media = "media";
-    case Likes = "likes";
-    case Followers = "followers";
-    case Following = "following";
-    case Lists = "lists";
+    /**
+     * There is no error.
+     */
+    case Success;
 
     /**
-     * List of valid tweet tab subpage values.
-     * 
-     * These are pages on which the user's timeline will appear.
-     * 
-     * @var ProfileTab[]
+     * The profile does not exist.
      */
-    public const VALID_TWEET_TABS = [
-        ProfileTab::RecentTweets,
-        ProfileTab::WithReplies,
-        ProfileTab::Media,
-    ];
+    case Nonexistent;
+
+    /**
+     * The profile is suspended.
+     */
+    case Suspended;
+
+    /**
+     * An unknown profile error occurred.
+     */
+    case Unknown;
 }

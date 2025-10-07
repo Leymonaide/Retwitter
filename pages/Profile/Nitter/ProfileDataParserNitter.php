@@ -28,6 +28,7 @@ use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Profile\CommonProfileUrlParser;
 use Retwitter\Page\Profile\IProfileUrlParser;
+use Retwitter\Page\Profile\ProfileError;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\VerificationType;
@@ -63,6 +64,31 @@ class ProfileDataParserNitter implements IProfileDataParser
     public function getSourceApi(): ApiSource
     {
         return ApiSource::Nitter;
+    }
+
+    public function getError(): ProfileError
+    {
+        // Nitter will return the same basic 404 page with a different string
+        // distinguishing type.
+        if ($errorText = NitterParsingUtils::findFirst(
+            $this->document,
+            ".error-panel")?->innerText)
+        {
+            if (str_ends_with($errorText, " has been suspended"))
+            {
+                return ProfileError::Suspended;
+            }
+            else if (str_ends_with($errorText, " not found"))
+            {
+                return ProfileError::Nonexistent;
+            }
+            else
+            {
+                return ProfileError::Unknown;
+            }
+        }
+
+        return ProfileError::Success;
     }
 
     public function getUsername(): ?string

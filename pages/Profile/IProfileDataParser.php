@@ -30,6 +30,7 @@ use Retwitter\Page\Common\VerificationType;
  */
 interface IProfileDataParser extends IBasicProfileInfoDataParser
 {
+    public function getError(): ProfileError;
     public function getUsername(): ?string;
     public function getHandle(): ?string;
     public function getId(): ?string;
