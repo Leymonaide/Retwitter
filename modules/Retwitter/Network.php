@@ -103,7 +103,7 @@ else
 {
             $twitterHomepage = file_get_contents($_SERVER["DOCUMENT_ROOT"] ."\\cache\\test_transaction.html");
 }
-            $transaction = new ClientTransaction($twitterHomepage);
+            $transaction = new ClientTransaction((string)$twitterHomepage);
             yield $transaction->init();
 if (!CLIENT_TRANSACTION_TEST_STATIC)
 {

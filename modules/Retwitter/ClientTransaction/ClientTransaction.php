@@ -437,7 +437,7 @@ else
         DebugLogger::print("toColor: { %s }", $buffer);
 
         $fromRotation = [0.0];
-        $toRotation = [$this->solve($frames[6], 60.0, 360.0, true)];
+        $toRotation = [$this->solve($frames[6], (int)60.0, (int)360.0, true)];
 
         $remainingFrames = array_slice($frames, 7);
 
@@ -445,7 +445,7 @@ else
 
         foreach ($remainingFrames as $i => $item)
         {
-            $curves[] = $this->solve($item, $i % 2 ? -1.0 : 0.0, 1.0, false);
+            $curves[] = $this->solve($item, (int)($i % 2 ? -1.0 : 0.0), (int)1.0, false);
         }
 
         $cubic = new CubicBezierInterpolation($curves);
@@ -459,7 +459,7 @@ else
 
         // Convert color and matrix values to hex string:
         $strArr = array_map(
-            fn($value) => dechex(round($value)),
+            fn($value) => dechex((int)round($value)),
             array_slice($color, 0, -1),
         );
 

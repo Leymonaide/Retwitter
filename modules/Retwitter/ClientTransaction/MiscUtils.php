@@ -28,14 +28,14 @@ class MiscUtils
     public static function floatToHex(float $x): string
     {
         $result = "";
-        $quotient = floor($x);
+        $quotient = (int)floor($x);
         $fraction = $x - $quotient;
 
         // Convert integer part to hex:
         while ($quotient > 0)
         {
-            $quotient = floor($x / 16);
-            $remainder = floor($x - $quotient * 16);
+            $quotient = (int)floor($x / 16);
+            $remainder = (int)floor($x - $quotient * 16);
 
             if ($remainder > 9)
             {
@@ -61,7 +61,7 @@ class MiscUtils
         while ($fraction > 0)
         {
             $fraction *= 16;
-            $integer = floor($fraction);
+            $integer = (int)floor($fraction);
             $fraction -= $integer;
 
             if ($integer > 9)
