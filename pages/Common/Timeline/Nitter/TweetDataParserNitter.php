@@ -246,11 +246,15 @@ class TweetDataParserNitter implements ITweetDataParser
             $day = (int)trim($tokens[$T_DAY], ",");
             $year = (int)$tokens[$T_YEAR];
 
-            if ("PM" == $T_MERIDIAN)
+            if ("PM" == $tokens[$T_MERIDIAN])
             {
                 $hours += 12;
             }
-            
+            else if ("AM" == $tokens[$T_MERIDIAN] && 12 == $hours)
+            {
+                $hours = "0";
+            }
+
             return new DateTime("$year-$month-{$day}T$hours:$minutes:00+00:00");
         }
 
