@@ -63,6 +63,8 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         else if (empty($this->getApiResult()))
         {
             // Nonexistent profiles return 200 with an empty JSON object.
+            // CONSIDER: This condition currently does not work because this
+            // object is constructed with the user data path already in mind.
             return ProfileError::Nonexistent;
         }
 

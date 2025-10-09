@@ -31,6 +31,7 @@ use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
+use Retwitter\Page\Error404\Error404Controller;
 use Retwitter\RequestEngine\GraphQlRequest;
 use Retwitter\RequestEngine\GraphQlRequestTest;
 use Retwitter\RequestEngine\IRequestManagerRequest;
@@ -132,13 +133,34 @@ class ProfileController
             {
                 $jsonData = $userRequest->getResponse()->getJson();
 
+                if (!isset($jsonData->data->user))
+                {
+                    // This is the exact same case as ProfileError::Nonexistent,
+                    // but there's a problem with how the TwitterWeb profile
+                    // data parser works (at the moment?) that prevents the
+                    // getError() method from working in this case.
+                    $this->forwardTo404Controller();
+                    return;
+                }
+
                 $profileDataParser = new ProfileDataParserTwitterWeb(
                     $jsonData->data->user->result
                 );
             }
 
+            // CONSIDER: Invert this condition. Everything after this point in
+            // this function is dependent on this condition being met. You can't
+            // have a timeline only profile, after all. This can probably be
+            // done just fine once infrastructure for request failure error
+            // reporting is built.
             if (isset($profileDataParser))
             {
+                if (ProfileError::Nonexistent == $profileDataParser->getError())
+                {
+                    $this->forwardTo404Controller();
+                    return;
+                }
+
                 $context->insertUserData($profileDataParser);
             }
 
@@ -229,5 +251,15 @@ if (PROFILE_TEST_LOCAL):
 endif;
 
         return new NitterRequest(new Url("/$username"));
+    }
+
+    private function forwardTo404Controller(): Promise
+    {
+        return async(function () {
+            $controller = new Error404Controller();
+            $controller->initializeController($this->getRequest());
+            yield $controller->getAsync();
+            return;
+        });
     }
 }
