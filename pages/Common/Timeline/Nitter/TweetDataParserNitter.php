@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline\Nitter;
 
+use DateTime;
 use Rehike\FormattedString;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
@@ -166,7 +167,7 @@ class TweetDataParserNitter implements ITweetDataParser
      * Of course, it can't be easy and just give a timestamp, so we must parse
      * the string it gives us.
      */
-    public function getCreatedAt(): ?string
+    public function getCreatedAt(): ?DateTime
     {
         if ($time = NitterParsingUtils::findFirst(
                 $this->rootNode, ".tweet-date a")
@@ -241,6 +242,7 @@ class TweetDataParserNitter implements ITweetDataParser
             $hours = (int)$timeParts[$T_TIME_H];
             $minutes = (int)$timeParts[$T_TIME_M];
             $month = NitterParsingUtils::DATE_SHORT_MONTHS[$tokens[$T_MONTH]];
+            $monthText = $tokens[$T_MONTH];
             $day = (int)trim($tokens[$T_DAY], ",");
             $year = (int)$tokens[$T_YEAR];
 
@@ -248,8 +250,8 @@ class TweetDataParserNitter implements ITweetDataParser
             {
                 $hours += 12;
             }
-
-            return "$year-$month-{$day}T$hours:$minutes:00+00:00";
+            
+            return new DateTime("$year-$month-{$day}T$hours:$minutes:00+00:00");
         }
 
         return null;

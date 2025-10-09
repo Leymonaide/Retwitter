@@ -60,8 +60,8 @@ class MTweet
 
         $this->author = new MTweetAuthor($parser->getAuthorParser());
         $this->lang = $parser->getLang() ?? "en";
-        $this->createdAtStr = $parser->getCreatedAt() ?? "";
-        $this->createdAt = new DateTime($this->createdAtStr);
+        $this->createdAt = $parser->getCreatedAt() ?? new DateTime();
+        $this->createdAtStr =  $this->formatTimeString($this->createdAt);
 
         $this->media = $parser->getMedia();
 
@@ -89,23 +89,40 @@ class MTweet
         $absoluteTime = $this->createdAt;
         $relativeTime = $currentTime->diff($this->createdAt);
 
-        if ($relativeTime->y > 1) // Month, day, and year.
+        \Rehike\Logging\DebugLogger::print("%s", var_export($relativeTime, true));
+
+        if (0 == $relativeTime->invert)
+        {
+            // This case occurs if the user's clock is behind the server.
+            // Without this condition, you get negative time reported
+            // positively, i.e. 1 hour in the future = "1h".
+            // 
+            // Because this looks odd, just always report 0 seconds. In a real
+            // case, the user's clock will fall behind the server by a matter of
+            // seconds, so it's not a problem, and it's better than time
+            // starting at like "15s", decrementing to "0s", then incrementing
+            // back up to positive time.
+            $template = $i18n->get("dt_s_template");
+            return sprintf($template, 0);
+        }
+
+        if ($relativeTime->y >= 1) // Month, day, and year.
         {
             return $absoluteTime->format($i18n->get("dt_ymd"));
         }
-        else if ($relativeTime->d > 1) // Month and day without year
+        else if ($relativeTime->d >= 1) // Month and day without year
         {
             return $absoluteTime->format($i18n->get("dt_ym"));
         }
-        else if ($relativeTime->h > 1) // Hours (up to 24 days)
+        else if ($relativeTime->h >= 1) // Hours (up to 24 days)
         {
             $template = $i18n->get("dt_h_template");
             return sprintf($template, $relativeTime->h);
         }
-        else if ($relativeTime->m > 1) // Minutes (up to 59 minutes)
+        else if ($relativeTime->i >= 1) // Minutes (up to 59 minutes)
         {
             $template = $i18n->get("dt_m_template");
-            return sprintf($template, $relativeTime->m);
+            return sprintf($template, $relativeTime->i);
         }
         else // Seconds (down to 0 seconds)
         {
@@ -148,5 +165,14 @@ class MTweet
         }
 
         return $sum == 0;
+    }
+
+    /**
+     * Formats a DateTime object into a string like
+     * "Sun Oct 29 04:00:30 +0000 2023".
+     */
+    private function formatTimeString(DateTime $dt): string
+    {
+        return $dt->format("D M d H:i:s O Y");
     }
 }

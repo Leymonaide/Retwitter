@@ -38,7 +38,7 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getAuthorParser(): ?IBasicProfileInfoDataParser;
     public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser;
     public function getLang(): ?string;
-    public function getCreatedAt(): ?string;
+    public function getCreatedAt(): ?DateTime;
     public function getFavoritesCount(): ?int;
     public function getReplyCount(): ?int;
     public function getRetweetCount(): ?int;

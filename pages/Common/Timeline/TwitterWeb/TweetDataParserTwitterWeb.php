@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline\TwitterWeb;
 
+use DateTime;
 use Rehike\FormattedString;
 use Retwitter\ApiSource;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
@@ -139,9 +140,9 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return $this->getRootData()->legacy?->lang;
     }
 
-    public function getCreatedAt(): ?string
+    public function getCreatedAt(): ?DateTime
     {
-        return $this->getRootData()->legacy?->created_at;
+        return new DateTime($this->getRootData()->legacy?->created_at ?? "now");
     }
 
     public function getFavoritesCount(): ?int
