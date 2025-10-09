@@ -36,9 +36,19 @@ class RequestManager
      */
     private array $requests = [];
 
-    public function add(IRequestManagerRequest $request): void
+    public function add(
+        IRequestManagerRequest $request,
+        ?string $tag = null,
+    ): void
     {
-        $this->requests[] = $request;
+        if (null != $tag)
+        {
+            $this->requests[$tag] = $request;
+        }
+        else
+        {
+            $this->requests[] = $request;
+        }
     }
 
     public function runAll(): Promise
@@ -61,5 +71,31 @@ class RequestManager
 
             yield Promise::all(...$promises);
         });
-    } 
+    }
+
+    /**
+     * Gets all requests in this request manager.
+     * 
+     * @return IRequestManagerRequest[]
+     */
+    public function getRequests(): array
+    {
+        return $this->requests;
+    }
+
+    /**
+     * Finds a request by its tag.
+     * 
+     * @return ?IRequestManagerRequest
+     *         The request or null if it was not found.
+     */
+    public function getRequestByTag(string $tag): ?IRequestManagerRequest
+    {
+        if (isset($this->requests[$tag]))
+        {
+            return $this->requests[$tag];
+        }
+
+        return null;
+    }
 }

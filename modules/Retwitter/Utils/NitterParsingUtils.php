@@ -67,12 +67,28 @@ class NitterParsingUtils
     ];
 
     /**
+     * Gets the default options for the HTML parser.
+     */
+    public static function getDefaultParserOptions(): \PHPHtmlParser\Options
+    {
+        $opts = new \PHPHtmlParser\Options();
+        $opts->setPreserveLineBreaks(true);
+        $opts->setCleanupInput(false);
+        $opts->setRemoveDoubleSpace(false);
+        $opts->setRemoveScripts(false);
+        $opts->setRemoveSmartyScripts(false);
+        $opts->setRemoveStyles(false);
+
+        return $opts;
+    }
+
+    /**
      * Resolves the Nitter image URL matching the user's settings.
      */
     public static function resolveImageUrl(
         string $nitterUrl,
         string $assumeDomain = "pbs.twimg.com",
-        NitterSourceInfo $sourceInfo = null,
+        ?NitterSourceInfo $sourceInfo = null,
     ): string
     {
         $shouldProxy = NitterSourceProxyMedia::tryFrom(
