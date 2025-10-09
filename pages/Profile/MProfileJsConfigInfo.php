@@ -60,7 +60,9 @@ class MProfileJsConfigInfo
         $this->friendsCount = $parser->getFollowingCount() ?? 0;
         $this->listedCount = $parser->getListCount() ?? 0;
         // Tue Mar 21 20:50:14 +0000 2006
-        //$this->createdAt = $parser->getCreationTime()->format() // TODO.
+        $this->createdAt = $this->formatTimeString(
+            $parser->getCreationTime() ?? new \DateTime("now")
+        );
         $this->favouritesCount = $parser->getFavoritesCount() ?? 0;
         $this->verified = $parser->getVerified();
         
@@ -85,5 +87,14 @@ class MProfileJsConfigInfo
         {
             $this->profileBannerUrl = new Url($bannerUrl);
         }
+    }
+
+    /**
+     * Formats a DateTime object into a string like
+     * "Sun Oct 29 04:00:30 +0000 2023".
+     */
+    private function formatTimeString(\DateTime $dt): string
+    {
+        return $dt->format("D M d H:i:s O Y");
     }
 }

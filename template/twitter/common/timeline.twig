@@ -159,7 +159,7 @@
                     &nbsp;
                     <a class="tweet-timestamp js-permalink js-nav js-tooltip"
                         href="{{ tweet.getUrl() }}"
-                        title="{# Formatted tweet time in format "5:06 PM - 9 May 2019" #}"
+                        title="{{ tweet.getTimeTooltipForPresentation() }}"
                         data-conversation-id="{{ tweet.conversationId }}">
                         <span class="_timestamp js-short-timestamp"
                             data-aria-label-part="last"

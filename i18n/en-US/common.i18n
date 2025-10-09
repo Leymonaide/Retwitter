@@ -22,6 +22,7 @@ dt_ym: "M j" # Year and month shown, i.e. "May 9"
 dt_h_template: "%sh" # Up to "23h"
 dt_m_template: "%sm" # Up to "59m"
 dt_s_template: "%ss" # Up to "59s"
+dt_hm: "g:i A" # Hours and minutes shown, i.e. "5:06 PM"
 
 verified_tooltip: "Verified account"
 
@@ -44,6 +45,7 @@ tweet_a11y_retweet_count_singular: "%s retweet"
 tweet_a11y_retweet_count_plural: "%s retweets"
 tweet_a11y_favorite_count_singular: "%s like"
 tweet_a11y_favorite_count_plural: "%s likes"
+tweet_time_tooltip: "%s - %s" # "5:06 PM - 9 May 2019"
 
 # Gallery messages:
 gallery_close: "Close"

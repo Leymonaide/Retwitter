@@ -131,6 +131,27 @@ class MTweet
         }
     }
 
+    public function getTimeTooltipForPresentation(): string
+    {
+        if (null == $this->createdAt)
+        {
+            return "";
+        }
+        
+        $i18n = i18n::getNamespace("common");
+
+        $timeTemplate = $i18n->get("dt_hm");
+        $dateTemplate = $i18n->get("dt_ymd");
+
+        $timeStr = $this->createdAt->format($timeTemplate);
+        $dateStr = $this->createdAt->format($dateTemplate);
+
+        return $i18n->format(
+            "tweet_time_tooltip",
+            $timeStr, $dateStr,
+        );
+    }
+
     public function getTimeSeconds(): int
     {
         if (null == $this->createdAt)

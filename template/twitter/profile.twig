@@ -41,7 +41,7 @@
         "followers_count": {{ c.followersCount|json_encode|raw }},
         "friends_count": {{ c.friendsCount|json_encode|raw }},
         "listed_count": {{ c.listedCount|json_encode|raw }},
-        "created_at": "Tue Mar 21 20:50:14 +0000 2006", {# TODO in MProfileJsConfigInfo #}
+        "created_at": {{ c.createdAt|json_encode|raw }},
         "favourites_count": {{ c.favouritesCount|json_encode|raw }},
         "utc_offset": null,
         "time_zone": null,
