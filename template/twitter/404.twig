@@ -30,6 +30,8 @@
     <link href="https://abs.twimg.com/favicons/favicon.ico" rel="shortcut icon"
         type="image/x-icon">
     <link rel="stylesheet" href="https://abs.twimg.com/errors/fullscreen_errors-4e29aecc89be6d500979e19c3bd72aa2.css">
+    {# For Rebug: #}
+    <link rel="stylesheet" href="{{ rehike.resource.resolveVersioned("rehike/css/www-rebug-retwitter-base.css") }}">
 </head>
 
 <body>
@@ -161,6 +163,7 @@
         </div>
     </div>
     <script src="https://abs.twimg.com/errors/404-174a1f1a41465b8e7b205e9551995267.js"></script>
+    {% include "@rehike/rehike/debugger/main.twig" %}
 
 
 </body>
