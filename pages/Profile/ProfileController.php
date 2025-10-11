@@ -124,10 +124,16 @@ class ProfileController
 
                 $nitterSourceInfo->setProfileData($profileDataParser);
 
-                $timelineParser = new TimelineDataParserNitter(
-                    $nitterSourceInfo,
-                    $dom,
-                );
+                // Nitter can't access the timelines of protected profiles under
+                // any circumstances, so the timeline parser is only made if the
+                // profile is public.
+                if (!$profileDataParser->getProtected())
+                {
+                    $timelineParser = new TimelineDataParserNitter(
+                        $nitterSourceInfo,
+                        $dom,
+                    );
+                }
             }
             else if ($userRequest instanceof GraphQlRequest)
             {
