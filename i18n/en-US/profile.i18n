@@ -40,6 +40,11 @@ tab_active: "%s, current page."
 suspended_title: "Account suspended"
 suspended_message: "This account has been suspended."
 
+protected_title: "This account's Tweets are protected."
+protected_explanation: >
+    Only confirmed followers have access to %s's Tweets and complete profile.
+    Click the "Follow" button to send a follow request.
+
 signup_promo_header: "New to Twitter?"
 signup_promo_message: "Sign up now to get your own personalized timeline!"
 signup_promo_action: "Sign up"

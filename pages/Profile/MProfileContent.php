@@ -28,12 +28,25 @@ class MProfileContent
 {
     public MProfileHeading $heading;
     public ?MTimeline $timeline = null;
+    public ?MProtectedTimeline $protectedTimeline = null;
 
     public function __construct(IProfileDataParser $parser, ProfileTab $tab)
     {
         $i18n = i18n::getNamespace("profile");
         $username = $parser->getUsername();
 
+        if ($parser->getProtected())
+        {
+            // A protected timeline will be constructed by default for protected
+            // accounts, however it will be discarded if a timeline is supplied
+            // later.
+            $this->protectedTimeline = new MProtectedTimeline($username);
+        }
+
+        // The implementation details are that, for right now, the profile
+        // heading is always created. It is, however, only shown if the profile
+        // has a timeline in the current view. If the timeline is unavailable,
+        // then its heading will be discarded from the view.
         $this->heading = new MProfileHeading($i18n->get("tab_tweets"));
 
         $this->heading->addTab(new MProfileHeadingTab(
@@ -63,6 +76,14 @@ class MProfileContent
 
     public function setTimeline(ITimelineDataParser $timelineParser): void
     {
+        if (null !== $this->protectedTimeline)
+        {
+            // Throw out the protected timeline if one was already set, since we
+            // got supplied a timeline anyways. This will be the case for
+            // protected accounts that the user is actually following.
+            $this->protectedTimeline = null;
+        }
+
         $this->timeline = new MTimeline($timelineParser);
     }
 }

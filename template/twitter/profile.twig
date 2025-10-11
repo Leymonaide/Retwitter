@@ -230,8 +230,12 @@ wrapper-profile
                                                     </span>
                                                 </a>
                                             {% endif %}
-                                            {# TODO: Find a proper archive of protected profile page and compare. #}
                                             {% if badges.protected %}
+                                                <a href="//support.twitter.com/articles/14016-about-public-and-protected-tweets"
+                                                    target="_blank"
+                                                    data-placement="right"
+                                                    rel="noopener"
+                                                    title="{{ app.i18n.get('common', 'protected_tooltip') }}"></a>
                                                 <span class="Icon Icon--protected">
                                                     <span class="u-hiddenVisually">{{ 
                                                         app.i18n.get('common', 'protected_tooltip') }}</span>
@@ -283,35 +287,44 @@ wrapper-profile
                 </div>
             {% endblock %}
 
-            {% block col_two_content %}
-            {% set heading = app.page.content.heading %}
-            <div class="ProfileHeading">
-                <div class="ProfileHeading-spacer"></div>
-                <div class="ProfileHeading-content">
-                    <h2 id="content-main-heading" class="ProfileHeading-title {{ heading.tabs|length > 0 ? "u-hiddenVisually" }}">
-                        {{ heading.title }}
-                    </h2>
-                    <ul class="ProfileHeading-toggle">
-                        {% for tab in heading.tabs %}
-                        <li class="ProfileHeading-toggleItem {{ tab.active ? "is-active" : "u-textUserColor" }}" data-element-term="{{ tab.tab }}_toggle">
-                            {% if tab.active %}
-                            <span aria-hidden="true">{{ tab.label }}</span>
-                            <span class="u-hiddenVisually">{{ tab.activeLabel }}</span>
-                            {% else %}
-                            <a href="{{ tab.url }}" class="ProfileHeading-toggleLink {{ tab.openSignup ? "js-openSignupDialog js-nonNavigable" }}" data-nav="{{ tab.tab }}_toggle">
-                                {{ tab.label }}
-                            </a>
-                            {% endif %}
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
+            {% block col_two_extra_attributes %}
+                {% if app.page.content.protectedTimeline %}
+                    data-test-selector="ProfileTimeline"
+                {% endif %}
+            {% endblock %}
 
-            {% if app.page.content.timeline %}
-                {% from "common/timeline.twig" import render_timeline %}
-                {{ render_timeline(app.page.content.timeline) }}
-            {% endif %}
+            {% block col_two_content %}
+                {% if app.page.content.protectedTimeline %}
+                    {{ _self.protected_timeline(app.page.content.protectedTimeline) }}
+                {% elseif app.page.content.timeline %}
+                    {% set heading = app.page.content.heading %}
+
+                    <div class="ProfileHeading">
+                        <div class="ProfileHeading-spacer"></div>
+                        <div class="ProfileHeading-content">
+                            <h2 id="content-main-heading" class="ProfileHeading-title {{ heading.tabs|length > 0 ? "u-hiddenVisually" }}">
+                                {{ heading.title }}
+                            </h2>
+                            <ul class="ProfileHeading-toggle">
+                                {% for tab in heading.tabs %}
+                                <li class="ProfileHeading-toggleItem {{ tab.active ? "is-active" : "u-textUserColor" }}" data-element-term="{{ tab.tab }}_toggle">
+                                    {% if tab.active %}
+                                    <span aria-hidden="true">{{ tab.label }}</span>
+                                    <span class="u-hiddenVisually">{{ tab.activeLabel }}</span>
+                                    {% else %}
+                                    <a href="{{ tab.url }}" class="ProfileHeading-toggleLink {{ tab.openSignup ? "js-openSignupDialog js-nonNavigable" }}" data-nav="{{ tab.tab }}_toggle">
+                                        {{ tab.label }}
+                                    </a>
+                                    {% endif %}
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    {% from "common/timeline.twig" import render_timeline %}
+                    {{ render_timeline(app.page.content.timeline) }}
+                {% endif %}
             {% endblock %}
 
             {% block col_three_content %}
@@ -348,6 +361,36 @@ wrapper-profile
                 </div>
             </div>
             {% endblock %}
+
+            {% macro protected_timeline(data) %}
+                {% types {
+                    data: "Retwitter\\Page\\Profile\\MProtectedTimeline"
+                } %}
+                <div class=" ">
+                    <div class="ProtectedTimeline">
+                        <h2 id="content-main-heading" class="ProtectedTimeline-heading">{{
+                            app.i18n.get("profile", "protected_title")
+                        }}</h2>
+                        <p class="ProtectedTimeline-explanation">
+                            {% with %}
+                                {% set username_html %}
+                                    <span class="{{ [
+                                        'username',
+                                        'u-dir',
+                                        'u-textTruncate',
+                                    ]|join(' ') }}" dir="ltr">@<b>{{ data.username }}</b></span>
+                                {% endset %}
+                                {{ app.i18n.formatHtml(
+                                    "profile",
+                                    "protected_explanation",
+                                    username_html|trim|safeHtml,
+                                ) }}
+                            {% endwith %}
+                        </p>
+                    </div>
+                </div>
+            {% endmacro %}
         {% endembed %}
     {% endif %}
 {% endblock %}
+
