@@ -24,4 +24,12 @@ class MUserBadges
 {
     public bool $verified = false;
     public bool $protected = false;
+
+    public function __construct(
+        ?IBasicProfileInfoDataParser $parser = null,
+    )
+    {
+        $this->verified = $parser->getVerified();
+        $this->protected = $parser->getProtected();
+    }
 }

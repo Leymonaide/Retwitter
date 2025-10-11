@@ -98,6 +98,13 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
             VerificationType::DataUnavailable,
         ]);
     }
+
+    public function getProtected(): bool
+    {
+        // It is impossible to view a private account's tweets via Nitter.
+        return false;
+    }
+
     public function getVerificationType(): VerificationType
     {
         $displayName = NitterParsingUtils::findFirst(

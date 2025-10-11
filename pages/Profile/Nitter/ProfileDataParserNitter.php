@@ -348,6 +348,19 @@ class ProfileDataParserNitter implements IProfileDataParser
         return NitterParsingUtils::getVerificationType(node: $displayName);
     }
 
+    public function getProtected(): bool
+    {
+        $displayName = NitterParsingUtils::findFirst(
+            $this->document, ".profile-card-fullname");
+
+        if ($displayName->find(".icon-lock")[0])
+        {
+            return true;
+        }
+
+        return false;
+    }
+
     public function getTweetCount(): ?int
     {
         return NitterParsingUtils::parseNumber(number: 

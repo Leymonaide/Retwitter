@@ -36,8 +36,7 @@ class MTweetAuthor
     {
         $this->name = ParsingUtils::formatEmojis($parser->getDisplayName());
         $this->screenName = $parser->getUsername();
-        $this->badges = new MUserBadges();
+        $this->badges = new MUserBadges($parser);
         $this->avatarUrl = $parser->getAvatarUrl();
-        $this->badges->verified = $parser->getVerified();
     }
 }

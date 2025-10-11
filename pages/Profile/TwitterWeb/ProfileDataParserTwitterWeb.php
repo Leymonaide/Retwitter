@@ -166,6 +166,11 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         return VerificationType::NotVerified;
     }
 
+    public function getProtected(): bool
+    {
+        return true == $this->getApiResult()?->privacy?->protected;
+    }
+
     public function getTweetCount(): ?int
     {
         return $this->getApiResult()?->legacy->statuses_count;

@@ -36,4 +36,5 @@ interface IBasicProfileInfoDataParser extends IApiSourceProvider
     public function getAvatarUrl(): ?string;
     public function getVerified(): bool;
     public function getVerificationType(): VerificationType;
+    public function getProtected(): bool;
 }

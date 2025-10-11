@@ -38,7 +38,6 @@ class MProfileCanopyCard
         $this->displayName = ParsingUtils::formatEmojis(
             $parser->getDisplayName() ?? $this->screenName
         );
-        $this->badges = new MUserBadges();
-        $this->badges->verified = $parser->getVerified();
+        $this->badges = new MUserBadges($parser);
     }
 }

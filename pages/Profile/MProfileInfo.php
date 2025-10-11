@@ -48,8 +48,7 @@ class MProfileInfo
 
         $this->name = ParsingUtils::formatEmojis($displayName);
         
-        $this->badges = new MUserBadges();
-        $this->badges->verified = $parser->getVerified();
+        $this->badges = new MUserBadges($parser);
 
         if ($bio = $parser->getDescription())
         {
