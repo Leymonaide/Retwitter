@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
+use Rehike\ConfigManager\Config;
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Page\Base\BasePageContext;
@@ -90,8 +91,15 @@ class ProfilePageContext extends BasePageContext
         {
             return;
         }
+        
+        $titleTemplate = "page_title";
+        
+        if (Config::getConfigProp("appearance.oldProfileTitle"))
+        {
+            $titleTemplate = "page_title_old";
+        }
 
-        $title = $this->i18n->format("page_title", $displayName, $screenName);
+        $title = $this->i18n->format($titleTemplate, $displayName, $screenName);
 
         $this->setTitle($title);
     }

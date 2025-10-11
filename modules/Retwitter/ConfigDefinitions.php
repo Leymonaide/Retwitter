@@ -44,6 +44,7 @@ class ConfigDefinitions
     {
         return [
             "appearance" => [
+                "oldProfileTitle" => new BoolProp(false),
             ],
             "experiments" => [
             ],

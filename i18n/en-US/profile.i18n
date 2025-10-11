@@ -16,6 +16,7 @@
 
 # Title of profile page:
 page_title: "%s (@%s) | Twitter"
+page_title_old: "%s (@%s) on Twitter"
 suspended_page_title: "Twitter / Account suspended"
 
 bio_join_date: "Joined %s"
