@@ -95,7 +95,6 @@
             {% if tweet.socialContext.type == TweetSocialContext.Retweet %}
                 <div class="tweet-context with-icn ">
                     <span class="Icon Icon--small Icon--retweeted"></span>
-                    &nbsp;
                     <span class="js-retweet-text">
                         {% with %}
                             {%- set profile_link -%}
@@ -113,7 +112,6 @@
             {% elseif tweet.socialContext.type == TweetSocialContext.Pin %}
                 <div class="tweet-context with-icn pinned">
                     <span class="Icon Icon--small Icon--pinned u-TextUserColor"></span>
-                    &nbsp;
                     <span class="js-pinned-text" data-aria-label-part="">
                         {{ app.i18n.get("common", "tweet_social_context_pinned") }}
                     </span>
