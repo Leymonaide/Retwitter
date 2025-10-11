@@ -30,6 +30,7 @@ class MTweetMedia
         public string $mediaUrl,
         public ?string $shortUrl = null,
         public ?string $displayUrl = null,
+        public ?float $aspectRatio = null,
     )
     {
         if (null == $shortUrl)
@@ -41,5 +42,34 @@ class MTweetMedia
         {
             $this->displayUrl = $expandedUrl;
         }
+    }
+
+    public function getAspectRatioForCss(): float
+    {
+        return $this->aspectRatio ?? 1.0;
+    }
+
+    public function getYOffsetForCss(): string
+    {
+        // Twitter originally cropped the image to a key point, but they decided
+        // to abandon this approach after it was found to bias white people.
+        // This is a completely different approach from what Twitter originally
+        // did here, but it crops the image to the center perfectly without even
+        // needing to know the dimensions of the runtime container (unlike
+        // Twitter's original approach), so I think it's better.
+        return $this->aspectRatio > 1.0
+            // Image is taller:
+            ? "width: 100%; top: calc(50% - (($this->aspectRatio * 100%) / 2));"
+            // Image is wider:
+            : "width: 100%; top: -0px;";
+    }
+
+    public function getXOffsetForCss(): string
+    {
+        return $this->aspectRatio < 1.0
+            // Image is wider:
+            ? "height: 100%; left: calc(50% - ((100% / $this->aspectRatio) / 2));"
+            // Image is taller:
+            : "height: 100%; left: -0px";
     }
 }

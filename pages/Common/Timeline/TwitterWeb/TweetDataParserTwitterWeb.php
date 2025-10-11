@@ -197,6 +197,8 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
                 mediaUrl: $media->media_url_https,
                 shortUrl: $media->url,
                 displayUrl: $media->display_url,
+                aspectRatio: $media->original_info->height
+                    / $media->original_info->width,
             );
         }
 
