@@ -55,7 +55,7 @@ class MProfileJsConfigInfo
         $this->screenName = $parser->getDisplayName() ?? $this->name;
         $this->location = $parser->getLocation() ?? "";
         //$this->url = $parser->getUrl(); // TODO.
-        $this->protected = false; // TODO.
+        $this->protected = $parser->getProtected();
         $this->followersCount = $parser->getFollowerCount() ?? 0;
         $this->friendsCount = $parser->getFollowingCount() ?? 0;
         $this->listedCount = $parser->getListCount() ?? 0;
