@@ -44,7 +44,7 @@ use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
 const PROFILE_TEST_LOCAL = false;
-const PROFILE_TEST_NITTER = false;
+const PROFILE_TEST_NITTER = true;
 
 enum ProfileControllerRequestTags : string
 {

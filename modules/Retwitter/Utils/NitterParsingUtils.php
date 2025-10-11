@@ -95,7 +95,7 @@ class NitterParsingUtils
             Config::getConfigProp("behavior.nitterSourceProxyMedia")
         ) ?? NitterSourceProxyMedia::No;
 
-        if ($shouldProxy)
+        if (NitterSourceProxyMedia::Yes == $shouldProxy)
         {
             $url = new Url($nitterUrl);
             $nitterHostUrl = new Url($sourceInfo?->nitterSourceUri ?? DEFAULT_NITTER_HOST);
