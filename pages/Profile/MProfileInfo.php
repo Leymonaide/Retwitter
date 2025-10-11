@@ -22,6 +22,7 @@ namespace Retwitter\Page\Profile;
 
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
+use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Utils\ImageUtils;
 use Retwitter\Utils\ParsingUtils;
 
@@ -29,7 +30,7 @@ class MProfileInfo
 {
     public FormattedString $name;
     public string $screenName;
-    public bool $verified = false;
+    public MUserBadges $badges;
     public ?FormattedString $bio = null;
     public ?FormattedString $location = null;
     
@@ -46,7 +47,9 @@ class MProfileInfo
         $displayName = $parser->getDisplayName() ?? $this->screenName;
 
         $this->name = ParsingUtils::formatEmojis($displayName);
-        $this->verified = $parser->getVerified();
+        
+        $this->badges = new MUserBadges();
+        $this->badges->verified = $parser->getVerified();
 
         if ($bio = $parser->getDescription())
         {

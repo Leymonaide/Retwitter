@@ -139,15 +139,7 @@
                             data-aria-label-part="">
                             {{ core.text(tweet.author.name) }}
                         </strong>
-                        <span class="UserBadges">
-                            {% if tweet.author.verified %}
-                                <span class="Icon Icon--verified">
-                                    <span class="u-hiddenVisually">
-                                        {{ app.i18n.get("common", "verified_tooltip") }}
-                                    </span>
-                                </span>
-                            {% endif %}
-                        </span>
+                        {{ core.user_badges(tweet.author.badges) }}
                         <span class="UserNameBreak">&nbsp;</span>
                     </span>
                     <span class="username u-dir u-textTruncate" dir="ltr"

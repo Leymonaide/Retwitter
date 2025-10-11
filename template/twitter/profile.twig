@@ -151,13 +151,7 @@ wrapper-profile
                                                 {{ core.text(canopy.card.displayName) }}
                                             </a>
                                         </div>
-                                        {% if canopy.card.verified %}
-                                        <span class="UserBadges">
-                                            <span class="Icon Icon--verified">
-                                                <span class="u-hiddenVisually">{{ app.i18n.get('common', 'verified_tooltip') }}</span>
-                                            </span>
-                                        </span>
-                                        {% endif %}
+                                        {{ core.user_badges(canopy.card.badges) }}
                                     </div>
                                     <div class="ProfileCardMini-screenname">
                                         <a href="/{{ canopy.card.screenName }}" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">
@@ -227,15 +221,24 @@ wrapper-profile
                                 {% apply spaceless %}
                                 <h1 class="ProfileHeaderCard-name">
                                     <a href="/{{ info.screenName }}" class="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{{ core.text(info.name) }}</a>
-                                    {% if info.verified %}
-                                    <span class="ProfileHeaderCard-badges">
-                                        <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.page.i18n.get('verified_tooltip') }}">
-                                            <span class="Icon Icon--verified">
-                                                <span class="u-hiddenVisually">{{ app.i18n.get('common', 'verified_tooltip') }}</span>
-                                            </span>
-                                        </a>
-                                    </span>
-                                    {% endif %}
+                                    {% with { badges: info.badges } %}
+                                        <span class="ProfileHeaderCard-badges">
+                                            {% if badges.verified %}
+                                                <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.page.i18n.get('verified_tooltip') }}">
+                                                    <span class="Icon Icon--verified">
+                                                        <span class="u-hiddenVisually">{{ app.i18n.get('common', 'verified_tooltip') }}</span>
+                                                    </span>
+                                                </a>
+                                            {% endif %}
+                                            {# TODO: Find a proper archive of protected profile page and compare. #}
+                                            {% if badges.protected %}
+                                                <span class="Icon Icon--protected">
+                                                    <span class="u-hiddenVisually">{{ 
+                                                        app.i18n.get('common', 'protected_tooltip') }}</span>
+                                                </span>
+                                            {% endif %}
+                                        </span>
+                                    {% endwith %}
                                 </h1>
                                 {% endapply %}
                                 <h2 class="ProfileHeaderCard-screenname u-inlineBlock u-dir" dir="ltr">

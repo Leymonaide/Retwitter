@@ -22,20 +22,22 @@ namespace Retwitter\Page\Common\Timeline;
 
 use Rehike\FormattedString;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Utils\ParsingUtils;
 
 class MTweetAuthor
 {
     public FormattedString $name;
     public string $screenName;
-    public bool $verified = false;
+    public MUserBadges $badges;
     public string $avatarUrl;
 
     public function __construct(IBasicProfileInfoDataParser $parser)
     {
         $this->name = ParsingUtils::formatEmojis($parser->getDisplayName());
         $this->screenName = $parser->getUsername();
-        $this->verified = $parser->getVerified();
+        $this->badges = new MUserBadges();
         $this->avatarUrl = $parser->getAvatarUrl();
+        $this->badges->verified = $parser->getVerified();
     }
 }

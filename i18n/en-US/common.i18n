@@ -25,6 +25,7 @@ dt_s_template: "%ss" # Up to "59s"
 dt_hm: "g:i A" # Hours and minutes shown, i.e. "5:06 PM"
 
 verified_tooltip: "Verified account"
+protected_tooltip: "Protected Tweets"
 
 more_tooltip: "More"
 

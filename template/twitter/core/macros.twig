@@ -100,3 +100,23 @@
     {% endfor %}
 {% endif %}
 {% endmacro %}
+
+{% macro user_badges(badges) %}
+    {% types {
+        badges: "Retwitter\\Page\\Common\\MUserBadges",
+    } %}
+    <span class="UserBadges">
+        {% if badges.verified %}
+            <span class="Icon Icon--verified">
+                <span class="u-hiddenVisually">{{ 
+                    app.i18n.get('common', 'verified_tooltip') }}</span>
+            </span>
+        {% endif %}
+        {% if badges.protected %}
+            <span class="Icon Icon--protected">
+                <span class="u-hiddenVisually">{{ 
+                    app.i18n.get('common', 'protected_tooltip') }}</span>
+            </span>
+        {% endif %}
+    </span>
+{% endmacro %}

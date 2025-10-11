@@ -18,27 +18,10 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common;
 
-use Rehike\FormattedString;
-use Retwitter\Page\Common\MUserBadges;
-use Retwitter\Utils\ParsingUtils;
-
-class MProfileCanopyCard
+class MUserBadges
 {
-    public string $avatarUrl;
-    public FormattedString $displayName;
-    public string $screenName;
-    public MUserBadges $badges;
-
-    public function __construct(IProfileDataParser $parser)
-    {
-        $this->avatarUrl = $parser->getAvatarUrl() ?? "";
-        $this->screenName = $parser->getUsername() ?? "";
-        $this->displayName = ParsingUtils::formatEmojis(
-            $parser->getDisplayName() ?? $this->screenName
-        );
-        $this->badges = new MUserBadges();
-        $this->badges->verified = $parser->getVerified();
-    }
+    public bool $verified = false;
+    public bool $protected = false;
 }
