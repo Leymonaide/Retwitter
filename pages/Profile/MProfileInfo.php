@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
+use Rehike\ConfigManager\Config;
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
 use Retwitter\Page\Common\MUserBadges;
@@ -69,7 +70,13 @@ class MProfileInfo
         if (null !== $joinDate)
         {
             $i18n = i18n::getNamespace("profile");
-            $formattedJoinDate = $joinDate->format("F Y");
+            // TODO: localize date formats?
+            $dateFormat = "F Y";
+            if (Config::getConfigProp("appearance.fullJoinDates"))
+            {
+                $dateFormat = "F j, Y";
+            }
+            $formattedJoinDate = $joinDate->format($dateFormat);
             $formattedJoinDate = $i18n->format("bio_join_date", $formattedJoinDate);
 
             $this->joinDate = (object)[
