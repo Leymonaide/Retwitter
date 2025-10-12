@@ -39,6 +39,9 @@
         <div id="doc" data-at-shortcutkeys="{{ app.shortcutKeys|json_encode }}" class="">
             {% block doc_root_content %}
                 <div class="topbar js-topbar">
+                    {% if app.loggedIn %}
+                        <div class="ProfilePage-editingOverlay"></div>
+                    {% endif %}
                     {% include "common/pageframe/topbar.twig" %}
                 </div>
                 <div id="page-outer">

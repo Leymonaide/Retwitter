@@ -221,69 +221,79 @@
                 'dropdown-toggle',
                 'js-dropdown-toggle',
             ]|join(' ') }}"
-            href="{# User profile URL #}"
+            href="/settings"
             data-placement="bottom"
+            rel="noopener"
             role="button"
             aria-haspopup="true"
             title="Profile and settings">
-            <img class="avatar size32" src="{# User avatar #}"
-                data-user-id="{# User ID #}">
+            <img class="Avatar Avatar--size32" src="{# User avatar #}"
+                data-user-id="{# User ID #}" alt="Profile and settings">
         </a>
-        <div class="dropdown-menu">
-            <div class="dropdown-caret">
-                <span class="caret-outer"></span>
-                <span class="caret-inner"></span>
-            </div>
-            {# TODO: This list is quite a bit different from 2019 Twitter. I
-               copied the HTML from a 2016 archive, as I couldn't for the life
-               of me hunt down a logged-in document after Edge redesign. #}
+        <div class="{{ [
+                "DashUserDropdown",
+                "dropdown-menu",
+                "dropdown-menu--rightAlign",
+                "is-forceRight",
+                "is-autoCentered",
+            ]|join(" ") }}">
+            <div class="dropdown-caret"></div>
             <ul>
-                <li class="current-user" data-name="profile">
-                    <a class="{{ [
-                            'account-summary',
-                            'account-summary-small',
-                            'js-nav',
-                        ]|join(' ') }}"
-                        href="{# User profile URL #}"
-                        data-nav="view_profile">
-                        <div class="content">
-                            <div class="{{ [
-                                    'account-group',
-                                    'js-mini-current-user',
-                                ]|join(' ') }}"
-                                data-user-id="{# Current user ID #}"
-                                data-screen-name="{# Current user username #}">
-                                <b class="fullname">{# Display name #}</b>
-                                <span class="screen-name hidden" dir="ltr">
-                                    {# @username #}
-                                </span>
-                                <small class="metadata">View profile</small>
-                            </div>
-                        </div>
+                <li class="DashUserDropdown-userInfo" data-name="user-info">
+                    <a class="DashUserDropdown-userInfoLink js-nav"
+                       href="{# User profile URL #}"
+                       data-nav="view_profile">
+                        <b class="fullname">{# Display name #}</b>
+                        <p class="name">
+                            <span class="username u-dir u-textTruncate" dir="ltr">
+                                @<b>{# Username #}</b>
+                            </span>
+                        </p>
                     </a>
                 </li>
-                <li class="dropdown-divider"></li>
-                <li data-name="lists">
-                    <a href="{# twitter.com/me/lists #}" data-nav="all_lists">Lists</a>
+                <li class="current-user" data-name="profile">
+                    <a class="js-nav"
+                        href="{# User profile URL #}"
+                        data-nav="view_profile">Profile</a>
                 </li>
-                <li class="dropdown-divider"></li>
+                <li data-name="lists">
+                    <a class="js-nav" href="{# twitter.com/me/lists #}" data-nav="all_lists">Lists</a>
+                </li>
+                {# <li data-name="moments">
+                    <a class="js-nav" href=" twitter.com/me/moments " data-nav="all_moments">Moments</a>
+                </li> #}
                 <li>
-                    <a href="//support.twitter.com" data-nav="help_center">Help</a>
+                    <a href="//ads.twitter.com/start?ref=gl-tw-tw-twitter-ads"
+                        target="_blank"
+                        data-nav="ads"
+                        rel="noopener">Twitter Ads</a>
+                </li>
+                <li>
+                    <a class="user-dropdown-analytics"
+                       href="//analytics.twitter.com/"
+                       target="_blank"
+                       data-nav="user_dropdown_analytics"
+                       rel="noopener">Analytics</a>
+                </li>
+                <li>
+                    <a class="js-nav" href="/settings" data-nav="settings"
+                       rel="noopener">Settings and privacy</a>
+                </li>
+                <li>
+                    <a href="//support.twitter.com" data-nav="help_center" rel="noopener">Help Center</a>
                 </li>
                 <li class="js-keyboard-shortcut-trigger" data-nav="shortcuts">
                     <button class="dropdown-link" type="button">Keyboard shortcuts</button>
                 </li>
-                <li>
-                    <a href="//ads.twitter.com/start?ref=gl-tw-tw-twitter-ads"
-                        target="_blank"
-                        data-nav="ads">Twitter Ads</a>
-                </li>
-                <li class="dropdown-divider"></li>
-                <li>
-                    <a class="js-nav" href="/settings/account" data-nav="settings">Settings</a>
-                </li>
                 <li id="signout-button" class="js-signout-button" data-nav="logout">
-                    <button class="dropdown-link" type="button">Log out</button>
+                    <button class="dropdown-link" type="button">
+                        Log out
+                        <span class="username u-dir u-textTruncate" dir="ltr">
+                            @<b>{# Username #}</b>
+                        </span>
+                    </button>
+                    {# TODO(izzy): This form isn't there anymore in our Edge archive. This might just
+                                   be an issue with how it was saved, though.
                     <form id="signout-form" action="/logout" method="POST"
                         class="t1-form dropdown-link-form signout-form">
                         <input type="hidden" value="05cea5600404fe895dd10aae504129a5b55458b2" 
@@ -291,7 +301,17 @@
                         <input type="hidden" name="reliability_event" class="js-reliability-event">
                         <input type="hidden" name="scribe_log">
                     </form>
+                    #}
                 </li>
+                <li class="current-user nightmode-toggle" data-name="profile">
+                    <a class="js-nav" data-nav="view_profile">
+                        <span class="js-nightmode-label">Dark mode</span>
+                    </a>
+                </li>
+                {# XXX(izzy): Just for completeness.
+                <li>
+                    <button class="dropdown-link enable-rweb-link" type="button">Try the new Twitter</button>
+                </li> #}
             </ul>
         </div>
     </li>
