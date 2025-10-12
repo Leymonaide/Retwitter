@@ -4,6 +4,7 @@
     use Rehike\ErrorHandler\ErrorHandler;
     use Rehike\ErrorHandler\ErrorPage\FailedToWriteConfigPage;
     use Rehike\ErrorHandler\ErrorPage\UncaughtExceptionPage;
+    use Rehike\ErrorHandler\ErrorPage\PromiseAllExceptionPage;
     use Rehike\ErrorHandler\ErrorPage\InnertubeFailedRequestPage;
     use Rehike\ErrorHandler\ErrorPage\FatalErrorPage;
 
@@ -108,6 +109,13 @@
                 <?php endif ?>
 
                 <?php if ($page instanceof UncaughtExceptionPage): ?>
+                    <?php if ($page instanceof PromiseAllExceptionPage): ?>
+                        <h2>Inner exception:</h2>
+                        <pre class="inner-exception-log exception-log"><?=
+                            simpleFormattedStringToHtml($page->getInnerExceptionLog())
+                        ?></pre>
+                        <h2>Outer exception:</h2>
+                    <?php endif ?>
                     <pre class="exception-log"><?= 
                         simpleFormattedStringToHtml($page->getExceptionLog())
                     ?></pre>
