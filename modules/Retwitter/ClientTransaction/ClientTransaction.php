@@ -52,11 +52,29 @@ class ClientTransaction
     private string $keyword = self::DEFAULT_KEYWORD;
     private int $additionalRandomNumber = self::DEFAULT_ADDITIONAL_RANDOM_NUMBER;
 
-    public function __construct(string $twitterDocument)
+    public function __construct(string $twitterDocument, ?Dom $dom = null)
+    {
+        $this->rawDocument = $twitterDocument;
+        
+        if ($dom)
+        {
+            $this->initializeFromDom($dom);
+        }
+        else
+        {
+            $this->initializeFromString($twitterDocument);
+        }
+    }
+    
+    private function initializeFromDom(Dom $doc): void
+    {
+        $this->twitterDocument = $doc;
+    }
+    
+    private function initializeFromString(string $twitterDocument): void
     {
         $this->twitterDocument = new Dom();
         $this->twitterDocument->loadStr($twitterDocument);
-        $this->rawDocument = $twitterDocument;
     }
 
     public function setKeyword(string $keyword): static

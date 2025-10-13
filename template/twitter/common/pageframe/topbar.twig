@@ -16,6 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
 {% from "common/edge_button.twig" import render as edge_button %}
+{% import "core/macros.twig" as core %}
 {% with { topbar: app.page.getTopbar() } %}
 <div class="{{ [
         'global-nav',
@@ -212,6 +213,9 @@
 {% endmacro %}
 
 {% macro session_logged_in(user_dropdown) %}
+    {% types {
+        user_dropdown: "Retwitter\\Page\\Base\\MHeaderUserDropdown",
+    } %}
     <li id="user-dropdown" class="me dropdown session js-session"
         data-global-action="t1me">
         <a id="user-dropdown-toggle" class="{{ [
@@ -227,8 +231,8 @@
             role="button"
             aria-haspopup="true"
             title="Profile and settings">
-            <img class="Avatar Avatar--size32" src="{# User avatar #}"
-                data-user-id="{# User ID #}" alt="Profile and settings">
+            <img class="Avatar Avatar--size32" src="{{ user_dropdown.userAvatarUrl }}"
+                data-user-id="{{ user_dropdown.userId }}" alt="Profile and settings">
         </a>
         <div class="{{ [
                 "DashUserDropdown",
@@ -241,19 +245,19 @@
             <ul>
                 <li class="DashUserDropdown-userInfo" data-name="user-info">
                     <a class="DashUserDropdown-userInfoLink js-nav"
-                       href="{# User profile URL #}"
+                       href="/{{ user_dropdown.username }}"
                        data-nav="view_profile">
-                        <b class="fullname">{# Display name #}</b>
+                        <b class="fullname">{{ core.text(user_dropdown.userDisplayName) }}</b>
                         <p class="name">
                             <span class="username u-dir u-textTruncate" dir="ltr">
-                                @<b>{# Username #}</b>
+                                @<b>{{ user_dropdown.username }}</b>
                             </span>
                         </p>
                     </a>
                 </li>
                 <li class="current-user" data-name="profile">
                     <a class="js-nav"
-                        href="{# User profile URL #}"
+                        href="/{{ user_dropdown.username }}"
                         data-nav="view_profile">Profile</a>
                 </li>
                 <li data-name="lists">
@@ -289,7 +293,7 @@
                     <button class="dropdown-link" type="button">
                         Log out
                         <span class="username u-dir u-textTruncate" dir="ltr">
-                            @<b>{# Username #}</b>
+                            @<b>{{ user_dropdown.username }}</b>
                         </span>
                     </button>
                     {# TODO(izzy): This form isn't there anymore in our Edge archive. This might just

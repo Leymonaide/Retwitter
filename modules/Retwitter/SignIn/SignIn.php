@@ -18,34 +18,35 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\SignIn;
 
-use Rehike\i18n\i18n;
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\SignIn\SignIn;
+use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 
-class MTopbar
+use const Retwitter\Constants\TEST_SIGNIN;
+
+/**
+ * Public API for sign in.
+ */
+class SignIn
 {
-    public NamespaceBoundLanguageApi $strings;
-
-    public MHeaderNav $nav;
-    public MHeaderSearchbox $searchbox;
-    public ?MHeaderSigninLink $signinLink = null;
-    public ?MHeaderUserDropdown $userDropdown = null;
-
-    public function __construct()
+    public static function isSignedIn(): bool
     {
-        $this->strings = i18n::getNamespace("topbar");
-        $this->nav = new MHeaderNav($this->strings);
-        $this->searchbox = new MHeaderSearchbox($this->strings);
+        if (TEST_SIGNIN)
+        {
+            if (AuthManager::getInstance()->isInitialized())
+            {
+                return true;
+            }
+            
+            return false;
+        }
         
-        if (SignIn::isSignedIn())
-        {
-            $this->userDropdown = new MHeaderUserDropdown($this->strings);
-        }
-        else
-        {
-            $this->signinLink = new MHeaderSigninLink($this->strings);
-        }
+        return false;
+    }
+    
+    public static function getActiveProfileParser(): IBasicProfileInfoDataParser
+    {
+        $authManager = AuthManager::getInstance();
+        return $authManager->getInitialStateParser()->getActiveUserParser();
     }
 }

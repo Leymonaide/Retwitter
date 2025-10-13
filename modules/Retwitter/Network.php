@@ -82,28 +82,19 @@ class Network
             // temporary testing code at the moment.
 if (!CLIENT_TRANSACTION_TEST_STATIC)
 {
-            $twitterHomepage = yield NetworkCore::request("https://x.com", [
-                "headers" => [
-                    "User-Agent" => $_SERVER["HTTP_USER_AGENT"],
-                    "Accept" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-                    "Accept-Language" => "en",
-                    "Cache-Control" => "no-cache",
-                    "Pragma" => "no-cache",
-                    "Priority" => "u=0, i",
-                    "Sec-Fetch-Mode" => "navigate",
-                    "Sec-Fetch-Dest" => "document",
-                    "Sec-Fetch-Site" => "none",
-                    "Sec-Fetch-User" => "?1",
-                    "Upgrade-Insecure-Requests" => "1",
-                ],
-                "dnsOverride" => self::DNS_OVERRIDE_HOST,
-            ]);
+            $initialDoc = TwitterInitialDocument::getInstance();
+            yield $initialDoc->ensure();
+            $twitterHomepage = $initialDoc->getRawDocument();
+            $parsedTwitterHomepageDom = $initialDoc->getDom();
 }
 else
 {
             $twitterHomepage = file_get_contents($_SERVER["DOCUMENT_ROOT"] ."\\cache\\test_transaction.html");
 }
-            $transaction = new ClientTransaction((string)$twitterHomepage);
+            $transaction = new ClientTransaction(
+                (string)$twitterHomepage,
+                $parsedTwitterHomepageDom ?? null,
+            );
             yield $transaction->init();
 if (!CLIENT_TRANSACTION_TEST_STATIC)
 {

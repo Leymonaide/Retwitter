@@ -39,6 +39,9 @@ namespace Retwitter\Constants
 
     // Temporary testing constant:
     const CLIENT_TRANSACTION_TEST_STATIC = false;
+    
+    // Temporary testing constant:
+    const TEST_SIGNIN = true;
 
     const TWITTER_HOST = "x.com";
     const API_HOST = "https://api.x.com";

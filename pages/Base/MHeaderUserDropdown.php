@@ -20,32 +20,25 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Base;
 
-use Rehike\i18n\i18n;
+use Rehike\FormattedString;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\SignIn\SignIn;
+use Retwitter\Utils\ParsingUtils;
 
-class MTopbar
+class MHeaderUserDropdown
 {
-    public NamespaceBoundLanguageApi $strings;
-
-    public MHeaderNav $nav;
-    public MHeaderSearchbox $searchbox;
-    public ?MHeaderSigninLink $signinLink = null;
-    public ?MHeaderUserDropdown $userDropdown = null;
-
-    public function __construct()
+    public FormattedString $userDisplayName;
+    public string $userId;
+    public string $username;
+    public string $userAvatarUrl;
+    
+    public function __construct(NamespaceBoundLanguageApi $strings)
     {
-        $this->strings = i18n::getNamespace("topbar");
-        $this->nav = new MHeaderNav($this->strings);
-        $this->searchbox = new MHeaderSearchbox($this->strings);
+        $userParser = SignIn::getActiveProfileParser();
         
-        if (SignIn::isSignedIn())
-        {
-            $this->userDropdown = new MHeaderUserDropdown($this->strings);
-        }
-        else
-        {
-            $this->signinLink = new MHeaderSigninLink($this->strings);
-        }
+        $this->userDisplayName = ParsingUtils::formatEmojis($userParser->getDisplayName());
+        $this->userId = $userParser->getId();
+        $this->username = $userParser->getUsername();
+        $this->userAvatarUrl = $userParser->getAvatarUrl();
     }
 }

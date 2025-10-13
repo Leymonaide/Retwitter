@@ -18,34 +18,38 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\SignIn;
 
-use Rehike\i18n\i18n;
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\SignIn\SignIn;
-
-class MTopbar
+/**
+ * Parses information from the __INITIAL_STATE__ object from a Twitter
+ * response.
+ */
+class InitialStateParser
 {
-    public NamespaceBoundLanguageApi $strings;
-
-    public MHeaderNav $nav;
-    public MHeaderSearchbox $searchbox;
-    public ?MHeaderSigninLink $signinLink = null;
-    public ?MHeaderUserDropdown $userDropdown = null;
-
-    public function __construct()
+    public function __construct(private object $data)
     {
-        $this->strings = i18n::getNamespace("topbar");
-        $this->nav = new MHeaderNav($this->strings);
-        $this->searchbox = new MHeaderSearchbox($this->strings);
+    }
+    
+    public function getActiveUserId(): ?string
+    {
+        if (isset($this->data->session->user_id))
+        {
+            return $this->data->session->user_id;
+        }
         
-        if (SignIn::isSignedIn())
+        return null;
+    }
+    
+    public function getActiveUserParser(): ?InitialStateProfileParser
+    {
+        $userId = $this->getActiveUserId();
+        
+        if (isset($this->data->entities->users->entities->{$userId}))
         {
-            $this->userDropdown = new MHeaderUserDropdown($this->strings);
+            $root = $this->data->entities->users->entities->{$userId};
+            return new InitialStateProfileParser($root);
         }
-        else
-        {
-            $this->signinLink = new MHeaderSigninLink($this->strings);
-        }
+        
+        return null;
     }
 }
