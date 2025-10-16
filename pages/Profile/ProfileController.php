@@ -44,8 +44,10 @@ use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
+use const Retwitter\Constants\TEST_SIGNIN;
+
 const PROFILE_TEST_LOCAL = false;
-const PROFILE_TEST_NITTER = false;
+const PROFILE_TEST_NITTER = !TEST_SIGNIN;
 
 enum ProfileControllerRequestTags : string
 {
@@ -62,7 +64,12 @@ class ProfileController
         return async(function () {
             $this->setTemplate("profile");
             
+// Remove once signin is finalized and we're not using test documents
+// that may or may not exist on a developer's local copy of Retwitter.
+if (TEST_SIGNIN)
+{
             yield SignIn::setup();
+}
 
             $username = $this->getRequest()->path[0];
             $username = ParsingUtils::getUsernameAsTextOnly($username);
