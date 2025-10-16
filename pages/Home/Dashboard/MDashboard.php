@@ -18,11 +18,21 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Home\Dashboard;
 
-enum TweetMediaType : string
+class MDashboard
 {
-    case Photo = "photo";
-    case Video = "video";
-    case AnimatedGif = "animated_gif";
+    /**
+     * Modules that appear on the left side of the dashboard.
+     * 
+     * @var IDashboardModule[]
+     */
+    public array $leftModules = [];
+    
+    /**
+     * Modules that appear on the right side of the dashboard.
+     * 
+     * @var IDashboardModule[]
+     */
+    public array $rightModules = [];
 }

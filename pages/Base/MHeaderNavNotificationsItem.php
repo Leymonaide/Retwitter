@@ -28,6 +28,7 @@ class MHeaderNavNotificationsItem extends MHeaderNavItem
     public function __construct(
         NamespaceBoundLanguageApi $strings,
         public string $count,
+        bool $active = false,
         bool $activeIcon = false,
     )
     {
@@ -37,6 +38,7 @@ class MHeaderNavNotificationsItem extends MHeaderNavItem
             icon: "notifications",
             label: $strings->get("tab_notifications"),
             url: "/i/notifications",
+            active: $active,
             activeIcon: $activeIcon,
         );
     }

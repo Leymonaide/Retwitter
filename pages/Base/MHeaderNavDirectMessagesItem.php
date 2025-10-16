@@ -37,6 +37,7 @@ class MHeaderNavDirectMessagesItem extends MHeaderNavItem
             icon: "dm",
             label: $strings->get("tab_messages"),
             url: "#", // Not applicable.
+            active: false, // Not applicable.
             activeIcon: $activeIcon,
         );
     }

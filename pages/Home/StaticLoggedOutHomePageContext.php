@@ -18,11 +18,23 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Home;
 
-enum TweetMediaType : string
+use Rehike\i18n\i18n;
+use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+use Retwitter\Page\Base\BasePageContext;
+use Retwitter\Page\Base\MFooter;
+
+class StaticLoggedOutHomePageContext extends BasePageContext
 {
-    case Photo = "photo";
-    case Video = "video";
-    case AnimatedGif = "animated_gif";
+    private NamespaceBoundLanguageApi $i18n;
+    public MFooter $streamFooter;
+    
+    public function __construct()
+    {
+        parent::__construct();
+        $this->i18n = i18n::getNamespace("static_logged_out_homepage");
+        $this->setTitle($this->i18n->get("page_title"));
+        $this->streamFooter = new MFooter(forStream: true);
+    }
 }

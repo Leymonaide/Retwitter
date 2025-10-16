@@ -18,177 +18,178 @@
 
 {% extends "core/core.twig" %}
 
+{% set retwitter_g_js_page_name = "home" %}
+{% set retwitter_g_js_page_context = null %}
+{% set retwitter_g_boot_module = "app/pages/home" %}
+{% set retwitter_g_page_section = "home" %}
+
+{% import "core/macros.twig" as core %}
+
 {% block body_class %}
-static-logged-out-home-page
+{{ parent() }}
+enhanced-mini-profile
+no-nav-banners
+supports-drag-and-drop
+profile-field-editing
 {% endblock %}
 
-{% block doc_root_content %}
-<div class="StaticLoggedOutHomePage">
-    <div class="StaticLoggedOutHomePage-content">
-        <div class="{{ [
-                'StaticLoggedOutHomePage-cell',
-                'StaticLoggedOutHomePage-utilityBlock',
-            ]|join(' ') }}">
-            <div class="StaticLoggedOutHomePage-login">
-                <form class="LoginForm js-front-signin"
-                    action="/sessions" method="post" data-element="form"
-                    data-component="login_callout">
-                    <div class="LoginForm-input LoginForm-username">
-                        <input type="text" class="{{ [
-                                'text-input',
-                                'email-input',
-                                'js-signin-email',
-                            ]|join(' ') }}" name="session[username_or_email]"
-                            autocomplete="username" 
-                            placeholder="{{ app.i18n.get(
-                                "static_logged_out_homepage",
-                                "login_form_username_placeholder") }}">
-                    </div>
-                    
-                    <div class="LoginForm-input LoginForm-password">
-                    <input type="password" class="text-input"
-                        name="session[password]" placeholder="{{ app.i18n.get(
-                                "static_logged_out_homepage",
-                                "login_form_password_placeholder") }}" 
-                        autocomplete="current-password">
-                        <div class="LoginForm-staticForgot">
-                            <a class="forgot"
-                                href="/account/begin_password_reset"
-                                rel="noopener">{{ app.i18n.get(
-                                    "static_logged_out_homepage",
-                                    "login_form_password_forgot") }}</a>
-                        </div>
-                    </div>
+{% block page_class %}
+wrapper
+wrapper-home
+{% endblock %}
 
-                    <input type="submit" class="{{ [
-                            'EdgeButton',
-                            'EdgeButton--secondary',
-                            'EdgeButton--medium',
-                            'submit',
-                            'js-submit',
-                        ]|join(' ') }}" value="{{ app.i18n.get(
-                                    "static_logged_out_homepage",
-                                    "login_form_button_login") }}">
+{% block content %}
+    {% import "common/timeline.twig" as timeline %}
+    <div class="dashboard dashboard-left">
+        {% for module in app.page.dashboard.leftModules %}
+            {{ _self.dashboard_render_module(module) }}
+        {% endfor %}
+    </div>
+    {{ timeline.render_timeline(app.page.timeline, {
+        timelineClasses: [
+            "content-main",
+            "top-timeline-tweetbox",
+        ]
+    }) }}
+    <div class="dashboard dashboard-right">
+        
+    </div>
+{% endblock %}
 
-                    <input type="hidden" name="return_to_ssl" value="true">
-                    <input type="hidden" name="scribe_log">
-                    <input type="hidden" name="redirect_after_login" value="/">
-                    <input type="hidden"
-                        value="ad9c3a381d7f14c5432642a8e51d85ba85c07b99"
-                        name="authenticity_token">
-                    <input type="hidden" name="ui_metrics" autocomplete="off"
-                        value="{&quot;rf&quot;:{&quot;af38faabe5f79bd5fdee07a4714cd58c135b47f548dd738a9d3d6e0a4c2eb34b&quot;:-1,&quot;a576d1984bb4bd4bd4a543eb7253c9d3ed7fe4c72755ff0209f66491edc6c110&quot;:0,&quot;cc87cfe1f67def32aaf20cd00356239ed4490ef0afe16239f619e686c82f6f91&quot;:-18,&quot;e3063dd03e750f8bc0cf636b10594fc60960ae8c002e6d2a80425c3e581f5be6&quot;:-25},&quot;s&quot;:&quot;zc6V1hZyJ32zLOW9pPefXWf5nwyAZswvZFyyPC_n73VvAXcvgmVbSJmknj9NH9AYg932gItwW1dqmjHwMMsg_4FUcY-aNbX83z97jCvObBHl9pxYT-lpI9-W-OVPO1OFn-sAya3_XAXBrSG_jnMZxqftmHLzw8qK-emQk3VI_VaCdYG_KnM_1uPOJXNzoAdGaQBi_Ri5zEqWp1fBHd2R_GQ6AQXPAZj95VYaWLdooX46TEOhCEsZWDlNKK3lgZdNJcRdxfVzcefTjRFJrT9yAbXMFxB_jvo6xJfkJAsbhF6S6Oaq3-1l0ec_SuKSr-hgWeqy5bw4k0r-T5sCLwFmvQAAAWqjvrLL&quot;}">
-                    <script src="/i/js_inst?c_name=ui_metrics" async=""></script>
-                </form>
-            </div>
-            <div class="StaticLoggedOutHomePage-signupBlock">
-                <div class="StaticLoggedOutHomePage-signupHeader">
-                    <span class="Icon Icon--bird"></span>
+{% macro dashboard_render_module(module) %}
+    {% if module.getModuleType() == "ProfileCard" %}
+        {{ _self.dashboard_render_profile_card_module(module) }}
+    {% endif %}
+{% endmacro %}
+
+{% macro dashboard_render_profile_card_module(module) %}
+    {% set m = "DashboardProfileCard" %}
+    <div class="{{ m }} module">
+        <a class="{{ m }}-bg u-bgUserColor u-block"
+           href="/{{ module.username }}"
+           tabindex="-1"
+           aria-hidden="true"
+           rel="noopener"
+           {% if module.bannerUrl %} {# This is probably not how it was actually done, but this is easy. #}
+                style="background-image: url({{ module.bannerUrl }})"
+           {% endif %}></a>
+        <div class="{{ m }}-content">
+            <div class="{{ m }}-avatarContainer">
+                <div id="choose-photo" class="{{ [
+                        "controls",
+                        "avatar-settings",
+                        "inline-upload-avatar",
+                        "dropdown",
+                        "center",
+                     ]|join(" ") }}">
                     <a class="{{ [
-                            'StaticLoggedOutHomePage-input',
-                            'StaticLoggedOutHomePage-narrowLoginButton',
-                            'EdgeButton',
-                            'EdgeButton--secondary',
-                            'EdgeButton--small',
-                            'u-floatRight',
-                        ]|join(' ') }}" href="/login">{{ app.i18n.get(
-                            "static_logged_out_homepage",
-                            "login_form_button_login") }}</a>
-                </div>
-                <h1 class="StaticLoggedOutHomePage-signupTitle">
-                    {{ app.i18n.get(
-                        "static_logged_out_homepage",
-                        "signup_title") }}
-                </h1>
-                <div class="StaticLoggedOutHomePage-noSignupForm">
-                    <h2 class="StaticLoggedOutHomePage-signupSubtitle">
-                        {{ app.i18n.get(
-                            "static_logged_out_homepage",
-                            "signup_subtitle") }}
-                    </h2>
-                    <div class="StaticLoggedOutHomePage-buttons">
-                        <a class="{{ [
-                                'js-nav',
-                                'EdgeButton',
-                                'EdgeButton--medium',
-                                'EdgeButton--primary',
-                                'StaticLoggedOutHomePage-buttonSignup',
-                            ]|join(' ') }}"
-                            href="/signup">{{ app.i18n.get(
-                                "static_logged_out_homepage",
-                                "login_form_button_signup") }}</a>
-                        <a class="{{ [
-                                'js-nav',
-                                'EdgeButton',
-                                'EdgeButton--medium',
-                                'EdgeButton--secondary',
-                                'StaticLoggedOutHomePage-buttonLogin',
-                            ]|join(' ') }}"
-                            href="/login">{{ app.i18n.get(
-                                "static_logged_out_homepage",
-                                "login_form_button_login") }}</a>
+                            m~"-avatarLink",
+                            "ProfileAvatar-placeholder",
+                            "u-inlineBlock",
+                            "js-nav",
+                            "js-tooltip",
+                            "profile-picture",
+                            "js-dropdown-toggle",
+                       ]|join(" ") }}"
+                       href="/{{ module.username }}"
+                       tabindex="-1"
+                       aria-hidden="true"
+                       data-placement="top"
+                       data-scribe-element="profile_avatar"
+                       role="button"
+                       aria-haspopup="true"
+                       title="Add a profile photo">
+                        <div class="{{ [
+                                m~"-avatarImage",
+                                "u-borderUserColorLightHover",
+                                "u-bgUserColor",
+                             ]|join(" ") }}"
+                             data-avatar-placeholder="true"></div>
+                        <img class="{{ [
+                                m~"-avatarImage",
+                                "js-action-profile-avatar",
+                             ]|join(" ") }}"
+                             src="{{ module.avatarUrl }}"
+                             style="display:none">
+                    </a>
+                    <div class="uploader-image uploader-avatar clearfix">
+                        {# TODO(kawapure): <div class="dropdown-menu">
+                        <div class="dropdown-caret"></div>
+                        <ul>
+                            <li id="photo-choose-existing" class="photo-choose-existing upload-photo">
+                            <button type="button" class="dropdown-link">Upload photo</button>
+                            <div class="photo-selector">
+                                <button class="btn" type="button">Change photo</button> <span class="photo-file-name">No file selected</span>
+                                <div class="image-selector">
+                                <input type="hidden" name="media_file_name" class="file-name"> <input type="hidden" name="media_data_empty" class="file-data"> <label class="t1-label"><span class="u-hiddenVisually">Add Photo</span> <input type="file" name="media[]" class="file-input" tabindex="-1" title="Add Photo" accept="image/gif,image/jpeg,image/jpg,image/png"></label>
+                                </div>
+                            </div>
+                            </li>
+                            <li id="photo-choose-webcam" class="u-hidden"><button type="button" class="dropdown-link">Take photo</button></li>
+                            <li id="photo-delete-image" class="u-hidden"><button type="button" class="dropdown-link">Remove</button></li>
+                            <li class="cancel-options"><button type="button" class="dropdown-link">Cancel</button></li>
+                        </ul>
+                        </div>#}
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="StaticLoggedOutHomePage-cell StaticLoggedOutHomePage-communicationBlock">
-            <!--?xml version="1.0" encoding="UTF-8"?-->
-            <svg class="twitterIcon-bird" viewBox="0 0 1208 982" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-                <!-- Generator: Sketch 45.2 (43514) - http://www.bohemiancoding.com/sketch -->
-                <title>bird</title>
-                <desc>Created with Sketch.</desc>
-                <defs></defs>
-                <g id="Final-Horizon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                    <g id="Artboard" transform="translate(-286.000000, -117.000000)" fill-rule="nonzero" fill="#1B95E0">
-                        <path d="M1493.75308,233.195911 C1449.31783,252.922544 1401.56126,266.207828 1351.43951,272.19627 C1402.61804,241.549536 1441.92034,192.987798 1460.3889,135.116296 C1412.53168,163.498493 1359.49119,184.130942 1303.02874,195.252335 C1257.88897,147.093181 1193.42514,117 1122.16771,117 C962.190754,117 844.636121,266.258151 880.768067,421.202806 C674.896491,410.886582 492.324484,312.253414 370.089808,162.341063 C305.17308,273.705962 336.423691,419.391176 446.731805,493.16476 C406.171431,491.856361 367.925917,480.734968 334.561738,462.165765 C331.844294,576.95263 414.122472,684.342008 533.287442,708.245454 C498.413572,717.706186 460.218381,719.9204 421.368991,712.47259 C452.871217,810.904465 544.358512,882.514158 652.854997,884.52708 C548.686294,966.201382 417.443793,1002.68559 286,987.186091 C395.653915,1057.48739 525.940278,1098.50067 665.838342,1098.50067 C1125.89162,1098.50067 1385.81015,709.956437 1370.10936,361.469352 C1418.52012,326.494836 1460.53987,282.864756 1493.75308,233.195911 Z" id="bird"></path>
-                    </g>
-                </g>
-            </svg>
-            <div class="StaticLoggedOutHomePage-communicationContent">
-                <div class="StaticLoggedOutHomePage-communicationItem">
-                    <span class="Icon Icon--search"></span> {{ app.i18n.get(
-                        "static_logged_out_homepage",
-                        "communication_search") }}
+            <div class="{{ m }}-userFields account-group">
+                <div class="{{ m }}-name u-textTruncate">
+                    <a class="u-textInheritColor js-nav"
+                       href="/{{ module.username }}">{{ 
+                        core.text(module.displayName) 
+                    }}</a>
                 </div>
-                <div class="StaticLoggedOutHomePage-communicationItem">
-                    <span class="Icon Icon--people"></span> {{ app.i18n.get(
-                        "static_logged_out_homepage",
-                        "communication_people") }}
-                </div>
-                <div class="StaticLoggedOutHomePage-communicationItem">
-                    <span class="Icon Icon--reply"></span> {{ app.i18n.get(
-                        "static_logged_out_homepage",
-                        "communication_reply") }}
+                <div class="{{ m }}-screenname u-inlineBlock u-dir" dir="ltr">
+                    <a class="{{ [
+                            m~"-screennameLink",
+                            "u-linkComplex",
+                            "u-linkClean",
+                            "js-nav"
+                       ]|join(" ") }}"
+                       href="/{{ module.username }}"
+                       rel="noopener">
+                        <span class="username u-dir" dir="ltr">
+                            @<b class="u-linkComplex-target">{{ module.username }}</b>
+                        </span>
+                    </a>
                 </div>
             </div>
+            {{ _self.dashboard_render_profile_card_stats(module.stats) }}
+            <div id="dashboard-profile-prompt"></div>
         </div>
     </div>
-    <noscript>
-        <div class="front-warning">
-            <h3>{{ app.i18n.get(
-                "static_logged_out_homepage",
-                "js_warn_heading") }}</h3>
-            {% with %}
-                {% set link_html %}
-                    <a href="//m.twitter.com/" rel="noopener">{{ app.i18n.get(
-                        "static_logged_out_homepage",
-                        "js_warn_body_link") }}</a>
-                {% endset %}
-                <p>{{ app.i18n.formatHtml(
-                    "static_logged_out_homepage",
-                    "js_warn_body", link_html|safeHtml) }}</p>
-            {% endwith %}
-        </div>
-    </noscript>
-    <div class="front-warning" id="front-no-cookies-warn">
-        <h3>{{ app.i18n.get(
-            "static_logged_out_homepage",
-            "cookie_warn_heading") }}</h3>
-        <p>{{ app.i18n.get(
-            "static_logged_out_homepage",
-            "cookie_warn_body") }}</p>
+{% endmacro %}
+
+{% macro dashboard_render_profile_card_stats(stats) %}
+    {% set m = "ProfileCardStats" %}
+    <div class="{{ m }}">
+        <ul class="{{ [
+                m~"-statList",
+                "Arrange",
+                "Arrange--bottom",
+                "Arrange--equal",
+            ]|join(" ") }}">
+            {% for stat in stats %}
+                <li class="{{ m }}-stat Arrange-sizeFit">
+                    <a class="{{ [
+                            m~"-statLink",
+                            "u-textUserColor",
+                            "u-linkClean",
+                            "u-block",
+                            "js-nav",
+                            "js-tooltip",
+                    ]|join(" ") }}"
+                    href="{{ stat.url }}"
+                    data-element-term="{{ stat.id }}"
+                    title="{{ stat.tooltip }}">
+                        <span class="{{ m }}-statLabel u-block">{{ stat.label }}</span>
+                        <span class="{{ m }}-statValue"
+                            data-count="{{ stat.count }}"
+                            data-is-compact="false{# TODO #}">{{ stat.value }}</span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
     </div>
-    {% import  "common/pageframe/streams_footer.twig" as streams_footer %}
-    {{ streams_footer.render(app.page.streamFooter) }}
-</div>
-{% endblock %}
+{% endmacro %}

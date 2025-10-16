@@ -353,7 +353,7 @@ class ProfileDataParserNitter implements IProfileDataParser
         $displayName = NitterParsingUtils::findFirst(
             $this->document, ".profile-card-fullname");
 
-        if ($displayName->find(".icon-lock")[0])
+        if ($displayName?->find(".icon-lock")[0])
         {
             return true;
         }

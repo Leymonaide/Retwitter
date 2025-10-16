@@ -18,11 +18,9 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Home\Dashboard;
 
-enum TweetMediaType : string
+interface IDashboardModule
 {
-    case Photo = "photo";
-    case Video = "video";
-    case AnimatedGif = "animated_gif";
+    public function getModuleType(): string;
 }

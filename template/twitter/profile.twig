@@ -21,6 +21,7 @@
 
 {% set retwitter_g_js_page_name = "profile" %}
 {% set retwitter_g_js_page_context = "profile" %}
+{% set retwitter_g_boot_module = "app/pages/profile/highline_landing" %}
 
 {%- set retwitter_g_js_page_config -%}
     {%- autoescape "js" -%}
@@ -88,6 +89,7 @@ no-nav-banners
 {% endblock %}
 
 {% block page_class %}
+{{ parent() }}
 {% if app.page.error %}
 wrapper
 wrapper-profile
@@ -323,7 +325,11 @@ wrapper-profile
                     </div>
 
                     {% from "common/timeline.twig" import render_timeline %}
-                    {{ render_timeline(app.page.content.timeline) }}
+                    {{ render_timeline(app.page.content.timeline, {
+                        timelineClasses: [
+                            "ProfileTimeline",
+                        ],
+                    }) }}
                 {% endif %}
             {% endblock %}
 

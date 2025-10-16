@@ -38,16 +38,14 @@ use Retwitter\RequestEngine\IRequestManagerRequest;
 use Retwitter\RequestEngine\NitterRequest;
 use Retwitter\RequestEngine\NitterRequestTest;
 use Retwitter\RequestEngine\RequestManager;
-use Retwitter\SignIn\AuthManager;
+use Retwitter\SignIn\SignIn;
 use Retwitter\Url;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
 use function Rehike\Async\async;
 
-use const Retwitter\Constants\TEST_SIGNIN;
-
 const PROFILE_TEST_LOCAL = false;
-const PROFILE_TEST_NITTER = true;
+const PROFILE_TEST_NITTER = false;
 
 enum ProfileControllerRequestTags : string
 {
@@ -64,11 +62,7 @@ class ProfileController
         return async(function () {
             $this->setTemplate("profile");
             
-            if (TEST_SIGNIN)
-            {
-                // TODO(isabella): Proper method to set up authentication.
-                yield AuthManager::getInstance()->ensure();
-            }
+            yield SignIn::setup();
 
             $username = $this->getRequest()->path[0];
             $username = ParsingUtils::getUsernameAsTextOnly($username);

@@ -72,6 +72,11 @@ class InitialStateProfileParser implements IBasicProfileInfoDataParser
     {
         return $this->getApiResult()?->name;
     }
+    
+    public function getBannerUrl(): ?string
+    {
+        return $this->getApiResult()?->profile_banner_url;
+    }
 
     public function getCreationTime(): ?DateTime
     {

@@ -22,13 +22,10 @@ namespace Retwitter\Page\Common\Timeline;
 
 class MTimeline
 {
-    /**
-     * @var MTweet[]
-     */
-    public array $tweets;
+    public readonly MStream $stream;
 
     public function __construct(ITimelineDataParser $parser)
     {
-        $this->tweets = $parser->parseAll();
+        $this->stream = new MStream($parser);
     }
 }

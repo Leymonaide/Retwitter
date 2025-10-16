@@ -35,7 +35,7 @@ use Retwitter\Utils\ParsingUtils;
 
 class TweetDataParserTwitterWeb implements ITweetDataParser
 {
-    private object $data;
+    public object $data;
     private ?MTweetSocialContext $socialContext = null;
 
     public function __construct(object $data)
@@ -69,13 +69,35 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
     private function getData(): object
     {
         return $this->getIsRetweet()
-            ? $this->getRootData()->legacy->retweeted_status_result->result
+            ? $this->resolveTweetRootData($this->getRootData()->legacy->retweeted_status_result->result)
             : $this->getRootData();
+    }
+    
+    /**
+     * Resolves Tweet root data from a tweet object.
+     * 
+     * The Twitter API can return multiple types of Tweets with slight differences
+     * in their structure.
+     */
+    private function resolveTweetRootData(object $data): object
+    {
+        if ($this->isTweetWithVisibilityResults($data))
+        {
+            return $data->tweet;
+        }
+        
+        // Default: Assume that the tweet is a flat structure.
+        return $data;
+    }
+    
+    private function isTweetWithVisibilityResults(object $data): bool
+    {
+        return isset($data->__typename) && $data->__typename == "TweetWithVisibilityResults";
     }
 
     private function getRootData(): object
     {
-        return $this->data;
+        return $this->resolveTweetRootData($this->data);
     }
 
     public function getId(): string
@@ -188,6 +210,7 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
                 type: match ($media->type) {
                     "photo" => TweetMediaType::Photo,
                     "video" => TweetMediaType::Video,
+                    "animated_gif", => TweetMediaType::AnimatedGif,
                 },
                 availability: match ($media->ext_media_availability->status) {
                     "Available" => TweetMediaAvailability::Available,

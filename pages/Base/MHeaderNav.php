@@ -22,6 +22,7 @@ namespace Retwitter\Page\Base;
 
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Context\AppContext;
+use Retwitter\SignIn\SignIn;
 
 class MHeaderNav
 {
@@ -35,18 +36,20 @@ class MHeaderNav
         $this->items[] = new MHeaderNavItem(
             strings: $strings,
             id: "home",
-            icon: AppContext::getInstance()->loggedIn ? "home" : "bird",
+            icon: SignIn::isSignedIn() ? "home" : "bird",
             label: $strings->get("tab_home"),
             url: "/",
-            activeIcon: false,
+            active: false,
+            activeIcon: true,
         );
 
-        if (AppContext::getInstance()->loggedIn)
+        if (SignIn::isSignedIn())
         {
             $this->items[] = new MHeaderNavNotificationsItem(
                 strings: $strings,
                 count: "0",
-                activeIcon: false,
+                active: false,
+                activeIcon: true,
             );
 
             $this->items[] = new MHeaderNavDirectMessagesItem(
@@ -54,6 +57,17 @@ class MHeaderNav
                 count: "0",
                 activeIcon: false,
             );
+        }
+    }
+    
+    public function setActive(string $id): void
+    {
+        foreach ($this->items as $item)
+        {
+            if ($item->id == $id)
+            {
+                $item->active = true;
+            }
         }
     }
 }

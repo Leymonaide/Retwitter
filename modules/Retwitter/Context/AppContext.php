@@ -22,6 +22,7 @@ namespace Retwitter\Context;
 
 use Rehike\TemplateUtilsDelegate\RehikeUtilsI18nDelegate;
 use Retwitter\Page\Base\BasePageContext;
+use Retwitter\SignIn\SignIn;
 
 final class AppContext
 {
@@ -51,8 +52,13 @@ final class AppContext
     public BasePageContext $page;
 
     public RehikeUtilsI18nDelegate $i18n;
-
-    public bool $loggedIn = false;
+    
+    public function isLoggedIn(): bool
+    {
+        // This is a useful function for the templates, since the SignIn class
+        // isn't provided to Twig.
+        return SignIn::isSignedIn();
+    }
 
     /**
      * The current language ID of the application.

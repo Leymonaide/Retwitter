@@ -18,11 +18,24 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Home\Dashboard;
 
-enum TweetMediaType : string
+use Retwitter\Utils\NumberFormat;
+
+class MProfileCardStat
 {
-    case Photo = "photo";
-    case Video = "video";
-    case AnimatedGif = "animated_gif";
+    public string $value;
+    public string $tooltip;
+
+    public function __construct(
+        public string $id,
+        public string $label,
+        public int $count,
+               string $tooltip,
+        public string $url,
+    )
+    {
+        $this->value = NumberFormat::shorten($this->count);
+        $this->tooltip = sprintf($tooltip, number_format($this->count));
+    }
 }

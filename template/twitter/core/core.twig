@@ -39,7 +39,7 @@
         <div id="doc" data-at-shortcutkeys="{{ app.shortcutKeys|json_encode }}" class="">
             {% block doc_root_content %}
                 <div class="topbar js-topbar">
-                    {% if app.loggedIn %}
+                    {% if app.isLoggedIn() %}
                         <div class="ProfilePage-editingOverlay"></div>
                     {% endif %}
                     {% include "common/pageframe/topbar.twig" %}
@@ -91,7 +91,7 @@
         </div>
         <div class="modal-overlay"></div>
         {% include "@rehike/rehike/debugger/main.twig" %}
-        <input type="hidden" class="swift-boot-module" value="app/pages/profile/highline_landing">
+        <input type="hidden" class="swift-boot-module" value="{{ retwitter_g_boot_module }}">
         <input type="hidden" id="swift-module-path" value="https://abs.twimg.com/k/swift/en">
         {{ core.async_js("init") }}
         <div class="hidden" id="hidden-content">

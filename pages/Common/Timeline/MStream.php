@@ -20,9 +20,15 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
-enum TweetMediaType : string
+class MStream
 {
-    case Photo = "photo";
-    case Video = "video";
-    case AnimatedGif = "animated_gif";
+    /**
+     * @var MTweet[]
+     */
+    public array $tweets;
+
+    public function __construct(ITimelineDataParser $parser)
+    {
+        $this->tweets = $parser->parseAll();
+    }
 }

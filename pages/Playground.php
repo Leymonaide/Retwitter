@@ -29,7 +29,6 @@ use Rehike\Network;
 use Rehike\Async\Promise;
 use Retwitter\Page\Base\BasePageContext;
 use Retwitter\Page\Base\RetwitterPageController;
-use Retwitter\SignIn\AuthManager;
 use Retwitter\SignIn\SignIn;
 
 use function Rehike\Async\async;
@@ -44,8 +43,7 @@ class Playground extends RetwitterPageController
     {
         return async(function()
         {
-            // TODO(isabella): Proper method to set up authentication.
-            yield AuthManager::getInstance()->ensure();
+            yield SignIn::setup();
             
             $this->setTemplate("profile");
             $this->setPageContext(new class extends BasePageContext {

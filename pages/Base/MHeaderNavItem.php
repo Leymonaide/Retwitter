@@ -32,6 +32,7 @@ class MHeaderNavItem
         public string $icon,
         public string $label,
         public string $url,
+        public bool $active,
         public bool $activeIcon,
     )
     {

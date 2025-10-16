@@ -20,11 +20,11 @@
 {% with { topbar: app.page.getTopbar() } %}
 <div class="{{ [
         'global-nav',
-        not app.loggedIn ? 'global-nav--newLoggedOut',
+        not app.isLoggedIn() ? 'global-nav--newLoggedOut',
     ]|join(' ') }}" data-section-term="top_nav">
     <div class="global-nav-inner">
         <div class="container">
-            {% if app.loggedIn %}
+            {% if app.isLoggedIn() %}
                 <h1 class="Icon Icon--bird bird-topbar-etched" 
                     style="display: inline-block; width: 24px; height: 21px;">
                     <span class="visuallyhidden">Twitter</span>
@@ -51,7 +51,7 @@
                         </span>
                     </form>
                 </div>
-                {% if app.loggedIn %}
+                {% if app.isLoggedIn() %}
                     <ul id="session" class="nav right-actions">
                         {{ _self.session_logged_in(topbar.userDropdown) }}
                     </ul>
@@ -74,7 +74,11 @@
     {# All navigation tabs have different wrappers for each type. #}
     {% if item.id == "connect" %}
         {# Notifications #}
-        <li class="people notifications" data-global-action="{{ item.id }}">
+        <li class="{{ [
+                "people",
+                "notifications",
+                item.active ? "active",
+            ]|join(" ") }}" data-global-action="{{ item.id }}">
             {% set notifications_foot %}
                 <span class="count">
                     <span class="count-inner">0{# TODO: Get notifications count. #}</span>
@@ -87,14 +91,17 @@
         <li class="dm-nav">
             {{ _self.nav_tab_inner_dm(item) }}
         </li>
-    {% elseif item.id == "moments" and app.loggedIn %}
+    {% elseif item.id == "moments" and app.isLoggedIn() %}
         {# Moments only has JS metadata when logged in. #}
-        <li class="moments js-moments tab " data-global-action="{{ item.id }}">
+        <li class="moments js-moments tab {{ item.active ? "active" }}" data-global-action="{{ item.id }}">
             {{ _self.nav_tab_inner_std(item) }}
         </li>
     {% else %}
         {# All other tabs (Home, logged out Moments) #}
-        <li id="global-nav-{{ item.id }}" class="{{ item.id }}" 
+        <li id="global-nav-{{ item.id }}" class="{{ [
+                item.id,
+                item.active ? "active",
+            ]|join(" ") }}" 
             data-global-action="{{ item.id }}">
             {{ _self.nav_tab_inner_std(item) }}
         </li>
@@ -108,7 +115,8 @@
 
     <span class="Icon Icon--{{ item.icon }} Icon--large"></span>
     {%- if item.activeIcon -%}
-    <span class="Icon Icon--{{ item.icon }}Filled Icon--large"></span>
+        {# u-textUserColor added with Edge style. #}
+        <span class="Icon Icon--{{ item.icon }}Filled Icon--large u-textUserColor"></span>
     {%- endif -%}
 {% endmacro %}
 

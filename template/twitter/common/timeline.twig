@@ -16,34 +16,96 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
 
-{% macro render_timeline(timeline) %}
+{% macro render_timeline(timeline, extra) %}
     {% types {
         timeline: "Retwitter\\Page\\Common\\Timeline\\MTimeline",
+        extra: "object",
     } %}
-    <div id="timeline" class="{# Obviously not this class for all cases. #}{{ [
-            'ProfileTimeline',
+    <div id="timeline" class="{{ [
+            ...extra.timelineClasses,
         ]|join(' ') }}">
-        <div class="stream-container "
+        <div class="stream-container {# Home classes: #}{{ [
+                null ? "conversations-enabled",
+                null ? "js-request-more-stream-items",
+            ]|join(" ") }}"
+            {# XXX(isabella): These position attributes are not on the home timeline. #}
             data-max-position=""
             data-min-position="" {# TODO: Figure positions out. #}>
-            <div class="stream-item js-new-items-bar-container">
-            </div>
-            <ol id="stream-items-id" class="{{ [
-                    'stream-items',
-                    'js-navigable-stream',
-                ]|join(' ') }}">
-                {% for tweet in timeline.tweets %}
-                    <li id="stream-item-tweet-{{ tweet.id }}" class="{{ [
-                            'js-stream-item',
-                            'stream-item',
-                            tweet.isUserPinned ? 'js-pinned',
-                        ]|join(' ') }}" data-item-id="{{ tweet.id }}"
-                        data-item-type="tweet" data-suggestion-json="{# TODO #}">
-                        {{ _self.render_tweet(tweet) }}
-                    </li>
-                {% endfor %}
-            </ol>
+            <div class="stream-item js-new-items-bar-container"></div>
+            {% if not extra.streamFooter %}
+                {% set streamFooter %}
+                    <div class="stream-footer ">
+                        <div class="timeline-end has-items has-more-items">
+                            <div class="stream-end">
+                                <div class="stream-end-inner">
+                                    <span class="Icon Icon--large Icon--logo"></span>
+
+                                    <p class="empty-text">
+                                        @USERNAME non ha ancora twittato.
+                                    </p>
+
+                                    <p><button type="button" class="btn-link back-to-top hidden">Torna su ↑</button></p>
+                                </div>
+                            </div>
+                            <div class="stream-loading">
+                                <div class="stream-end-inner">
+                                    <span class="spinner" title="Caricamento in corso..."></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endset %}
+            {% endif %}
+            {{ _self.render_stream(timeline.stream, {
+                streamFooter: extra.streamFooter ?? streamFooter,
+            }) }}
         </div>
+    </div>
+{% endmacro %}
+
+{% macro render_stream(stream, extra) %}
+    {% types {
+        stream: "Retwitter\\Page\\Common\\Timeline\\MStream",
+        extra: "object",
+    } %}
+    <div class="stream">
+        <ol id="stream-items-id" class="{{ [
+                'stream-items',
+                'js-navigable-stream',
+            ]|join(' ') }}">
+            {% for tweet in stream.tweets %}
+                <li id="stream-item-tweet-{{ tweet.id }}" class="{{ [
+                        'js-stream-item',
+                        'stream-item',
+                        tweet.isUserPinned ? 'js-pinned',
+                    ]|join(' ') }}" data-item-id="{{ tweet.id }}"
+                    data-item-type="tweet" data-suggestion-json="{# TODO #}">
+                    {{ _self.render_tweet(tweet) }}
+                </li>
+            {% endfor %}
+        </ol>
+        {% if extra.streamFooter %}
+            {{ extra.streamFooter }}
+        {% endif %}
+        <div class="stream-fail-container">
+            <div class="{{ [
+                    "js-stream-whale-end",
+                    "stream-whale-end",
+                    "stream-placeholder",
+                    "centered-placeholder",
+                 ]|join(" ") }}">
+                <div class="stream-end-inner">
+                    <h2 class="title">Loading seems to be taking a while.</h2>
+                    <p>
+                        Twitter may be over capacity or experiencing a momentary hiccup.
+                        <a role="button" href="https://twitter.com/#" class="try-again-after-whale">Try again</a>
+                        or visit <a target="_blank" href="http://status.twitter.com/" rel="noopener">Twitter Status</a>
+                        for more information.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <ol class="hidden-replies-container"></ol>
     </div>
 {% endmacro %}
 

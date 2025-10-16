@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline\TwitterWeb;
 
 use DateTime;
+use Exception;
 use Retwitter\ApiSource;
 use Retwitter\Page\Profile\IProfileDataParser;
 use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;

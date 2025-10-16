@@ -28,6 +28,14 @@ use Rehike\ControllerV2\BaseController;
 use Rehike\Network;
 use Rehike\Async\Promise;
 use Retwitter\Page\Base\RetwitterPageController;
+use Retwitter\Page\Common\Timeline\MTimeline;
+use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
+use Retwitter\Page\Home\Dashboard\MProfileCard;
+use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
+use Retwitter\RequestEngine\NitterRequestTest;
+use Retwitter\RequestEngine\RequestManager;
+use Retwitter\SignIn\SignIn;
+
 use function Rehike\Async\async;
 
 class HomeController extends RetwitterPageController implements IGetControllerAsync
@@ -36,8 +44,37 @@ class HomeController extends RetwitterPageController implements IGetControllerAs
     {
         return async(function()
         {
+            yield SignIn::setup();
+            
+            if (!SignIn::isSignedIn())
+            {
+                // If the user isn't logged in, then the static logged out homepage
+                // will be rendered, and no additional work will need to be done.
+                $this->setTemplate("static_logged_out_home");
+                $this->setPageContext(new StaticLoggedOutHomePageContext());
+                
+                $this->renderPage();
+                return;
+            }
+            
             $this->setTemplate("home");
-            $this->setPageContext(new HomePageContext());
+            
+            $requestManager = new RequestManager();
+            
+            $timelineRequest = new NitterRequestTest("cache/test_home_timeline.json");
+            
+            $requestManager->add($timelineRequest);
+            yield $requestManager->runAll();
+            
+            $timelineResponse = $timelineRequest->getResponse();
+            $timelineJson = $timelineResponse->getJson();
+            
+            $pageContext = new HomePageContext();
+            
+            $pageContext->setTimeline(new MTimeline(new TimelineDataParserTwitterWeb($timelineJson->data->home->home_timeline_urt)));
+            $pageContext->insertProfileCard(SignIn::getActiveProfileParser());
+            
+            $this->setPageContext($pageContext);
 
             $this->renderPage();
         });

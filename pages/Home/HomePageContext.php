@@ -20,21 +20,35 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Home;
 
-use Rehike\i18n\i18n;
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Page\Base\BasePageContext;
-use Retwitter\Page\Base\MFooter;
+use Retwitter\Page\Common\Timeline\MTimeline;
+use Retwitter\Page\Home\Dashboard\MDashboard;
+use Retwitter\Page\Home\Dashboard\MProfileCard;
+use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\SignIn\InitialStateProfileParser;
 
 class HomePageContext extends BasePageContext
 {
-    private NamespaceBoundLanguageApi $i18n;
-    public MFooter $streamFooter;
+    public MDashboard $dashboard;
+    public MTimeline $timeline;
     
     public function __construct()
     {
         parent::__construct();
-        $this->i18n = i18n::getNamespace("static_logged_out_homepage");
-        $this->setTitle($this->i18n->get("page_title"));
-        $this->streamFooter = new MFooter(forStream: true);
+        $this->dashboard = new MDashboard();
+        
+        $this->getTopbar()->nav->setActive("home");
+    }
+    
+    public function setTimeline(MTimeline $timeline): void
+    {
+        $this->timeline = $timeline;
+    }
+    
+    public function insertProfileCard(InitialStateProfileParser $profileParser): void
+    {
+        array_splice($this->dashboard->leftModules, 0, 0, [
+            new MProfileCard($profileParser),
+        ]);
     }
 }

@@ -49,7 +49,13 @@ class MTweet
 
     public function __construct(ITweetDataParser $parser)
     {
+        try {
         $this->id = $parser->getId();
+        }
+        catch (\Throwable $e)
+        {
+            throw new \Exception(json_encode($parser->data), previous: $e);
+        }
         $this->conversationId = $parser->getConversationId();
         $this->userId = $parser->getUserId();
 
