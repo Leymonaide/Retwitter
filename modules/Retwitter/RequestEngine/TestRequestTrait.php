@@ -52,7 +52,17 @@ trait TestRequestTrait
                 throw new \Exception("Test file path is not set.");
             }
 
-            $this->content = file_get_contents($this->testFilePath);
+            $content = file_get_contents($this->testFilePath);
+            if ($content === false)
+            {
+                trigger_error(
+                    "Test file at path \"" . $this->testFilePath . "\" does not exist.",
+                    E_USER_WARNING);
+            }
+            else
+            {
+                $this->content = $content;
+            }
         });
     }
 
