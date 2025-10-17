@@ -103,14 +103,15 @@ wrapper-home
                                 m~"-avatarImage",
                                 "u-borderUserColorLightHover",
                                 "u-bgUserColor",
+                                "u-hidden",
                              ]|join(" ") }}"
                              data-avatar-placeholder="true"></div>
                         <img class="{{ [
                                 m~"-avatarImage",
+                                "u-borderUserColorLightHover",
                                 "js-action-profile-avatar",
                              ]|join(" ") }}"
-                             src="{{ module.avatarUrl }}"
-                             style="display:none">
+                             src="{{ module.avatarUrl }}">
                     </a>
                     <div class="uploader-image uploader-avatar clearfix">
                         {# TODO(kawapure): <div class="dropdown-menu">

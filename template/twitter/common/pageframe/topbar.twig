@@ -263,30 +263,48 @@
                         </p>
                     </a>
                 </li>
+                <li class="dropdown-divider"></li>
                 <li class="current-user" data-name="profile">
                     <a class="js-nav"
                         href="/{{ user_dropdown.username }}"
-                        data-nav="view_profile">Profile</a>
+                        data-nav="view_profile">
+                        <span class="Icon Icon--person Icon--large"></span>
+                        Profile
+                    </a>
                 </li>
                 <li data-name="lists">
-                    <a class="js-nav" href="{# twitter.com/me/lists #}" data-nav="all_lists">Lists</a>
+                    <a class="js-nav" href="{# twitter.com/me/lists #}" data-nav="all_lists">
+                        <span class="Icon Icon--list Icon--large"></span>
+                        Lists
+                    </a>
                 </li>
                 {# <li data-name="moments">
-                    <a class="js-nav" href=" twitter.com/me/moments " data-nav="all_moments">Moments</a>
+                    <a class="js-nav" href=" twitter.com/me/moments " data-nav="all_moments">
+                        <span class="Icon Icon--lightning Icon--large"></span>
+                        Moments
+                    </a>
                 </li> #}
+                <li class="dropdown-divider"></li>
                 <li>
                     <a href="//ads.twitter.com/start?ref=gl-tw-tw-twitter-ads"
                         target="_blank"
                         data-nav="ads"
-                        rel="noopener">Twitter Ads</a>
+                        rel="noopener">
+                        <span class="Icon Icon--promotedStroked Icon--large"></span>
+                        Twitter Ads
+                    </a>
                 </li>
                 <li>
                     <a class="user-dropdown-analytics"
                        href="//analytics.twitter.com/"
                        target="_blank"
                        data-nav="user_dropdown_analytics"
-                       rel="noopener">Analytics</a>
+                       rel="noopener">
+                       <span class="Icon Icon--analytics Icon--large"></span>
+                       Analytics
+                    </a>
                 </li>
+                <li class="dropdown-divider"></li>
                 <li>
                     <a class="js-nav" href="/settings" data-nav="settings"
                        rel="noopener">Settings and privacy</a>
@@ -300,6 +318,8 @@
                 <li id="signout-button" class="js-signout-button" data-nav="logout">
                     <button class="dropdown-link" type="button">
                         Log out
+                        {# TODO(isabella): There's one experiment (I guess) in which this username
+                           element could have been left out.  #}
                         <span class="username u-dir u-textTruncate" dir="ltr">
                             @<b>{{ user_dropdown.username }}</b>
                         </span>
@@ -315,9 +335,14 @@
                     </form>
                     #}
                 </li>
+                <li class="dropdown-divider"></li>
                 <li class="current-user nightmode-toggle" data-name="profile">
                     <a class="js-nav" data-nav="view_profile">
-                        <span class="js-nightmode-label">Dark mode</span>
+                        {# TODO(isabella): The filled variant was probably not always used. #}
+                        <span class="js-nightmode-label">
+                            <span class="Icon Icon--crescent Icon--large js-nightmode-icon"></span>
+                            Dark mode
+                        </span>
                     </a>
                 </li>
                 {# XXX(izzy): Just for completeness.

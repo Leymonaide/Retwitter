@@ -40,7 +40,12 @@ class MHeaderNav
             label: $strings->get("tab_home"),
             url: "/",
             active: false,
-            activeIcon: true,
+            
+            // The home item doesn't have an active state when the user is
+            // logged out. Specifying this flag in such cases would cause
+            // a gap to be present because the CSS doesn't account for this
+            // particular state for some reason.
+            activeIcon: SignIn::isSignedIn(),
         );
 
         if (SignIn::isSignedIn())
