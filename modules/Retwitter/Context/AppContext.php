@@ -22,6 +22,7 @@ namespace Retwitter\Context;
 
 use Rehike\TemplateUtilsDelegate\RehikeUtilsI18nDelegate;
 use Retwitter\Page\Base\BasePageContext;
+use Retwitter\RequestOs;
 use Retwitter\SignIn\SignIn;
 
 final class AppContext
@@ -37,6 +38,14 @@ final class AppContext
     {
         $this->i18n = new RehikeUtilsI18nDelegate();
         $this->requestUrl = $_SERVER["REQUEST_URI"];
+        
+        // This is a pretty lazy way to determine the operating system from the
+        // user agent string, but it works.
+        $userAgent = $_SERVER["HTTP_USER_AGENT"];
+        if (false !== strpos($userAgent, "Windows NT "))
+        {
+            $this->requestOperatingSystem = RequestOs::Windows;
+        }
     }
     
     public static function getInstance(): AppContext
@@ -59,6 +68,8 @@ final class AppContext
         // isn't provided to Twig.
         return SignIn::isSignedIn();
     }
+
+    public RequestOs $requestOperatingSystem = RequestOs::Other;
 
     /**
      * The current language ID of the application.

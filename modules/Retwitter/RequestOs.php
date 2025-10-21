@@ -1,4 +1,5 @@
-{#
+<?php
+/* 
  * This file is part of the Retwitter project.
  * Copyright (c) 2025 lemon-pumpkin-pie.
  * 
@@ -14,14 +15,23 @@
  *
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-#}
-{% if threeCol %}
-three-col
-{% endif %}
-{% set RequestOs = enum("Retwitter\\RequestOs") %}
-{% if app.requestOperatingSystem == RequestOs.Windows %}
-ms-windows
-{% endif %}
-{{ app.isLoggedIn() ? "logged-in" : "logged-out" }}
-{# Testing: #}
-user-style-kawaipure
+ */
+
+declare(strict_types=1);
+namespace Retwitter;
+
+/**
+ * Operating system of the requesting user, derived from the user agent string.
+ */
+enum RequestOs
+{
+    /**
+     * Any unknown operating system.
+     */
+    case Other;
+
+    /**
+     * Microsoft "Windows" and "Windows NT" operating systems.
+     */
+    case Windows;
+}
