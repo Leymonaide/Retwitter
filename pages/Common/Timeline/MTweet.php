@@ -29,6 +29,7 @@ use Retwitter\Utils\ParsingUtils;
 class MTweet
 {
     public string $id;
+    public ?string $retweetId = null;
     public string $conversationId;
     public string $userId;
     public FormattedString $fullText;
@@ -38,7 +39,9 @@ class MTweet
     public DateTime $createdAt;
     public bool $isQuoteTweet = false;
     public ?MTweet $quotedTweet = null;
-    public bool $isUserPinned = true;
+    public bool $isUserPinned = false;
+    public bool $isRetweet = false;
+    public ?string $retweeterUsername = null;
     public ?MTweetSocialContext $socialContext = null;
 
     /**
@@ -83,6 +86,15 @@ class MTweet
         $this->socialContext = $parser->getSocialContext();
         $this->isUserPinned = ($this?->socialContext?->type
             == TweetSocialContext::Pin) ?? false;
+        $this->isRetweet = ($this?->socialContext?->type
+            == TweetSocialContext::Retweet) ?? false;
+
+        if ($this->isRetweet)
+        {
+            $this->retweetId = $parser->getRetweetId();
+            $retweeter = $parser->getRetweetAuthorParser();
+            $this->retweeterUsername = $retweeter->getUsername();
+        }
     }
 
     public function getUrl(): string

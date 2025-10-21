@@ -139,6 +139,12 @@
         {% if not tweet.areAllStatsEmpty() %}
             data-tweet-stat-initialized="true"
         {% endif %}
+        {% if tweet.retweetId %}
+            data-retweet-id="{{ tweet.retweetId }}"
+        {% endif %}
+        {% if tweet.isRetweet %}
+            data-retweeter="{{ tweet.retweeterUsername }}"
+        {% endif %}
         data-screen-name="{{ tweet.author.screenName }}"
         data-name="{{ core.simple_text(tweet.author.name) }}"
         data-user-id="{{ tweet.userId }}"

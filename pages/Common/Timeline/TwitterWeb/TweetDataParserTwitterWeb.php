@@ -102,22 +102,29 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
 
     public function getId(): string
     {
-        return $this->getRootData()->legacy->id_str;
+        return $this->getData()->legacy->id_str;
+    }
+
+    public function getRetweetId(): ?string
+    {
+        if ($this->getIsRetweet())
+            return $this->getRootData()->legacy->id_str;
+        return null;
     }
 
     public function getConversationId(): string
     {
-        return $this->getRootData()->legacy->conversation_id_str;
+        return $this->getData()->legacy->conversation_id_str;
     }
 
     public function getUserId(): string
     {
-        return $this->getRootData()->legacy->user_id_str;
+        return $this->getData()->legacy->user_id_str;
     }
 
     public function getFullText(): ?FormattedString
     {
-        $rawText = $this->getRootData()->legacy?->full_text;
+        $rawText = $this->getData()->legacy?->full_text;
 
         $textStart = $this->getDisplayTextRange()[0] ?? 0;
         $textEnd = $this->getDisplayTextRange()[1] ?? mb_strlen($rawText);
@@ -134,7 +141,7 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
 
     public function getDisplayTextRange(): ?array
     {
-        return $this->getRootData()->legacy?->display_text_range;
+        return $this->getData()->legacy?->display_text_range;
     }
 
     private function createAuthorParser(object $dataRoot): ?IBasicProfileInfoDataParser
@@ -159,37 +166,37 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
 
     public function getLang(): ?string
     {
-        return $this->getRootData()->legacy?->lang;
+        return $this->getData()->legacy?->lang;
     }
 
     public function getCreatedAt(): ?DateTime
     {
-        return new DateTime($this->getRootData()->legacy?->created_at ?? "now");
+        return new DateTime($this->getData()->legacy?->created_at ?? "now");
     }
 
     public function getFavoritesCount(): ?int
     {
-        return $this->getRootData()->legacy?->favorite_count;
+        return $this->getData()->legacy?->favorite_count;
     }
 
     public function getReplyCount(): ?int
     {
-        return $this->getRootData()->legacy?->reply_count;
+        return $this->getData()->legacy?->reply_count;
     }
 
     public function getRetweetCount(): ?int
     {
-        return $this->getRootData()->legacy?->retweet_count;
+        return $this->getData()->legacy?->retweet_count;
     }
 
     public function getQuoteTweetCount(): ?int
     {
-        return $this->getRootData()->legacy?->quote_count;
+        return $this->getData()->legacy?->quote_count;
     }
 
     public function getQuotedTweetParser(): ?ITweetDataParser
     {
-        $data = $this->getRootData();
+        $data = $this->getData();
         if (isset($data->quoted_status_result->result))
         {
             return new TweetDataParserTwitterWeb($data->quoted_status_result->result);
@@ -207,14 +214,14 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
      */
     public function getMedia(): array
     {
-        if (!isset($this->getRootData()->legacy->entities->media))
+        if (!isset($this->getData()->legacy->entities->media))
         {
             return [];
         }
 
         $result = [];
 
-        foreach ($this->getRootData()->legacy->entities->media as $media)
+        foreach ($this->getData()->legacy->entities->media as $media)
         {
             $result[] = new MTweetMedia(
                 type: match ($media->type) {
