@@ -37,6 +37,7 @@ class MTweet
     public string $createdAtStr;
     public DateTime $createdAt;
     public bool $isQuoteTweet = false;
+    public ?MTweet $quotedTweet = null;
     public bool $isUserPinned = true;
     public ?MTweetSocialContext $socialContext = null;
 
@@ -47,7 +48,7 @@ class MTweet
 
     public ?MTweetActions $actionStrip = null;
 
-    public function __construct(ITweetDataParser $parser)
+    public function __construct(ITweetDataParser $parser, bool $isQuoteTweet = false)
     {
         try {
         $this->id = $parser->getId();
@@ -62,6 +63,12 @@ class MTweet
         if ($sourceText = $parser->getFullText())
         {
             $this->fullText = $sourceText;
+        }
+
+        $this->isQuoteTweet = $isQuoteTweet;
+        if (!$isQuoteTweet && $quotedTweet = $parser->getQuotedTweetParser())
+        {
+            $this->quotedTweet = new MTweet($quotedTweet, true);
         }
 
         $this->author = new MTweetAuthor($parser->getAuthorParser());
@@ -80,7 +87,7 @@ class MTweet
 
     public function getUrl(): string
     {
-        return "/" . $this->author?->screenName ?? "i" . "/" . $this->conversationId;
+        return "/" . ($this->author?->screenName ?? "i") . "/status/" . $this->conversationId;
     }
 
     public function getTimeForPresentation(): string

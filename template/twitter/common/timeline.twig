@@ -278,6 +278,54 @@
                     {{ _self.tweet_adaptive_media(media) }}
                 {% endfor %}
             {% endif %}
+            {% if tweet.quotedTweet %}
+            <div class="QuoteTweet u-block js-tweet-details-fixer">
+                <div class="QuoteTweet-container">
+                    <a href="{{ tweet.quotedTweet.getUrl() }}"
+                       class="QuoteTweet-link js-nav"
+                       aria-hidden="true">
+                    </a>
+                    <div class="QuoteTweet-innerContainer u-cf js-permalink js-media-container"
+                         data-item-id="{{ tweet.quotedTweet.id }}"
+                         data-item-type="tweet"
+                         data-screen-name="{{ tweet.quotedTweet.author.screenName }}"
+                         data-user-id="{{ tweet.quotedTweet.author.id }}"
+                         href="{{ tweet.quotedTweet.getUrl() }}"
+                         data-conversation-id="{{ tweet.quotedTweet.id }}">
+                        <div class="tweet-content">
+                            {# Someone do this, I don't feel like finding archives of all the quote media types. #}
+                            {# <div class="QuoteMedia">
+      <div class="QuoteMedia-container js-quote-media-container">
+          <div class="QuoteMedia-singlePhoto">
+    <div class="QuoteMedia-photoContainer js-quote-photo" data-image-url="http://web.archive.org/web/20170730125454im_/https://pbs.twimg.com/media/DFv806DWsAAfizW.jpg" data-element-context="platform_photo_card" style="background-color:rgba(46,53,64,1.0);" data-dominant-color="[46,53,64]">
+  <img data-aria-label-part="" src="http://web.archive.org/web/20170730125454im_/https://pbs.twimg.com/media/DFv806DWsAAfizW.jpg" alt="" style="height: 100%; left: -23px;">
+</div>
+
+</div>
+
+
+      </div>
+  </div> #}
+                            <div class="QuoteTweet-authorAndText u-alignTop">
+                                <div class="QuoteTweet-originalAuthor u-cf u-textTruncate stream-item-header account-group js-user-profile-link">
+                                    <b class="QuoteTweet-fullname u-linkComplex-target">
+                                        {{ core.text(tweet.quotedTweet.author.name) }}
+                                    </b>
+                                    {{ core.user_badges(tweet.author.badges) }}
+                                    <span class="UserNameBreak">&nbsp;</span>
+                                    <span class="username u-dir" dir="ltr">
+                                        @<b>{{ tweet.quotedTweet.author.screenName }}</b>
+                                    </span>
+                                </div>
+                                <div class="QuoteTweet-text tweet-text u-dir" dir="ltr">
+                                    {{- core.tweet_text(tweet.quotedTweet.fullText) }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
             {#}
             <div class="card2 js-media-container" data-card2-name="audio">
                 TODO: What is this element, exactly? Does not exist on all

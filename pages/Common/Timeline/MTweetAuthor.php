@@ -27,6 +27,7 @@ use Retwitter\Utils\ParsingUtils;
 
 class MTweetAuthor
 {
+    public string $id;
     public FormattedString $name;
     public string $screenName;
     public MUserBadges $badges;
@@ -34,6 +35,7 @@ class MTweetAuthor
 
     public function __construct(IBasicProfileInfoDataParser $parser)
     {
+        $this->id = $parser->getId();
         $this->name = ParsingUtils::formatEmojis($parser->getDisplayName());
         $this->screenName = $parser->getUsername();
         $this->badges = new MUserBadges($parser);

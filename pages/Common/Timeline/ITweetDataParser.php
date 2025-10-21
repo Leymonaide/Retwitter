@@ -43,6 +43,7 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getReplyCount(): ?int;
     public function getRetweetCount(): ?int;
     public function getQuoteTweetCount(): ?int;
+    public function getQuotedTweetParser(): ?ITweetDataParser;
     public function getIsRetweet(): bool;
 
     /**

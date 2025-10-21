@@ -187,6 +187,16 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return $this->getRootData()->legacy?->quote_count;
     }
 
+    public function getQuotedTweetParser(): ?ITweetDataParser
+    {
+        $data = $this->getRootData();
+        if (isset($data->quoted_status_result->result))
+        {
+            return new TweetDataParserTwitterWeb($data->quoted_status_result->result);
+        }
+        return null;
+    }
+
     public function getIsRetweet(): bool
     {
         return isset($this->getRootData()->legacy->retweeted_status_result);
