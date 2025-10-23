@@ -269,9 +269,16 @@ class ProfileDataParserNitter implements IProfileDataParser
         {
             /** @var \PHPHtmlParser\Dom\Node\InnerNode $bioEl Suppress warning. */
 
-            return ParsingUtils::formatEmojisInFormattedString(
+            $formattedStr = ParsingUtils::formatEmojisInFormattedString(
                 NitterParsingUtils::htmlToFormattedString($bioEl)
             );
+
+            NitterParsingUtils::replaceNitterLinkText(
+                $this->sourceInfo,
+                $formattedStr
+            );
+
+            return $formattedStr;
         }
 
         return null;

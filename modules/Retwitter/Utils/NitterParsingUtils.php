@@ -176,6 +176,31 @@ class NitterParsingUtils
     }
 
     /**
+     * Replaces Nitter link strings with "twitter.com"
+     */
+    public static function replaceNitterLinkText(
+        NitterSourceInfo $sourceInfo,
+        FormattedString $string,
+    ): void
+    {
+        foreach ($string->runs as &$run)
+        {
+            if (str_starts_with(
+                    $run->text, 
+                    $sourceInfo->nitterSourceUri->getHost()
+                )
+            )
+            {
+                $run->text = str_replace(
+                    $sourceInfo->nitterSourceUri->getHost(),
+                    "twitter.com",
+                    $run->text
+                );
+            }
+        }
+    }
+
+    /**
      * Converts HTML to a formatted string.
      */
     public static function htmlToFormattedString(InnerNode $node): FormattedString
