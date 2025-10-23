@@ -196,6 +196,19 @@ class NitterParsingUtils
                     "twitter.com",
                     $run->text
                 );
+
+                if (isset($run->url))
+                {
+                    /**
+                     * @var object $run
+                     *      Suppress IDE wrong type error.
+                     */
+                    $url = new Url($run->url);
+                    $url->setProtocol(null);
+                    $url->setPort(null);
+                    $url->setHost(null);
+                    $run->url = (string)$url;
+                }
             }
         }
     }
