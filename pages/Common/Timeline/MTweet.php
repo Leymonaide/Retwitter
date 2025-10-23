@@ -23,17 +23,18 @@ namespace Retwitter\Page\Common\Timeline;
 use DateTime;
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
+use Retwitter\ApiSource;
 use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
 
 class MTweet
 {
-    public string $id;
+    public ?string $id = null;
     public ?string $retweetId = null;
     public string $conversationId;
     public string $userId;
     public FormattedString $fullText;
-    public MTweetAuthor $author;
+    public ?MTweetAuthor $author = null;
     public string $lang;
     public string $createdAtStr;
     public DateTime $createdAt;
@@ -53,13 +54,19 @@ class MTweet
 
     public function __construct(ITweetDataParser $parser, bool $isQuoteTweet = false)
     {
-        try {
-        $this->id = $parser->getId();
-        }
-        catch (\Throwable $e)
+        if (ApiSource::TwitterWeb == $parser->getSourceApi()
+            && $parser->getIsTombstoneTemporaryImplementation())
         {
-            throw new \Exception(json_encode($parser->data), previous: $e);
+            $this->conversationId = "0";
+            $this->userId = "0";
+            $this->fullText = FormattedString::fromTemplate("TOMBSTONE PLACEHOLDER");
+            $this->lang = "";
+            $this->createdAtStr = "";
+            $this->createdAt = new DateTime();
+            return;
         }
+
+        $this->id = $parser->getId();
         $this->conversationId = $parser->getConversationId();
         $this->userId = $parser->getUserId();
 

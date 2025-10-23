@@ -280,57 +280,10 @@
                 #}</p>
             </div>
             {% if tweet.media is not empty %}
-                {% for media in tweet.media %}
-                    {{ _self.tweet_adaptive_media(media) }}
-                {% endfor %}
+                {{ _self.tweet_adaptive_media(tweet.media) }}
             {% endif %}
             {% if tweet.quotedTweet %}
-            <div class="QuoteTweet u-block js-tweet-details-fixer">
-                <div class="QuoteTweet-container">
-                    <a href="{{ tweet.quotedTweet.getUrl() }}"
-                       class="QuoteTweet-link js-nav"
-                       aria-hidden="true">
-                    </a>
-                    <div class="QuoteTweet-innerContainer u-cf js-permalink js-media-container"
-                         data-item-id="{{ tweet.quotedTweet.id }}"
-                         data-item-type="tweet"
-                         data-screen-name="{{ tweet.quotedTweet.author.screenName }}"
-                         data-user-id="{{ tweet.quotedTweet.author.id }}"
-                         href="{{ tweet.quotedTweet.getUrl() }}"
-                         data-conversation-id="{{ tweet.quotedTweet.id }}">
-                        <div class="tweet-content">
-                            {# Someone do this, I don't feel like finding archives of all the quote media types. #}
-                            {# <div class="QuoteMedia">
-      <div class="QuoteMedia-container js-quote-media-container">
-          <div class="QuoteMedia-singlePhoto">
-    <div class="QuoteMedia-photoContainer js-quote-photo" data-image-url="http://web.archive.org/web/20170730125454im_/https://pbs.twimg.com/media/DFv806DWsAAfizW.jpg" data-element-context="platform_photo_card" style="background-color:rgba(46,53,64,1.0);" data-dominant-color="[46,53,64]">
-  <img data-aria-label-part="" src="http://web.archive.org/web/20170730125454im_/https://pbs.twimg.com/media/DFv806DWsAAfizW.jpg" alt="" style="height: 100%; left: -23px;">
-</div>
-
-</div>
-
-
-      </div>
-  </div> #}
-                            <div class="QuoteTweet-authorAndText u-alignTop">
-                                <div class="QuoteTweet-originalAuthor u-cf u-textTruncate stream-item-header account-group js-user-profile-link">
-                                    <b class="QuoteTweet-fullname u-linkComplex-target">
-                                        {{ core.text(tweet.quotedTweet.author.name) }}
-                                    </b>
-                                    {{ core.user_badges(tweet.author.badges) }}
-                                    <span class="UserNameBreak">&nbsp;</span>
-                                    <span class="username u-dir" dir="ltr">
-                                        @<b>{{ tweet.quotedTweet.author.screenName }}</b>
-                                    </span>
-                                </div>
-                                <div class="QuoteTweet-text tweet-text u-dir" dir="ltr">
-                                    {{- core.tweet_text(tweet.quotedTweet.fullText) }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                {{ _self.quoted_tweet(tweet.quotedTweet) }}
             {% endif %}
             {#}
             <div class="card2 js-media-container" data-card2-name="audio">
@@ -355,43 +308,285 @@
     </div>
 {% endmacro %}
 
-{% macro tweet_adaptive_media(tweet_media) %}
+{% macro tweet_adaptive_media(tweet_media_arr) %}
     {% types {
-        tweet_media: "Retwitter\\Page\\Common\\Timeline\\MTweetMedia",
+        tweet_media: "array<Retwitter\\Page\\Common\\Timeline\\MTweetMedia>",
     } %}
-
+    
     <div class="AdaptiveMediaOuterContainer">
+        {# The "is-square" class appears to be used exactly under the condition
+           down there. I don't know why it's called that, but whatever. #}
         <div class="{{ [
                 'AdaptiveMedia',
-                'is-square',
+                tweet_media_arr|length == 1 ? 'is-square',
             ]|join(' ') }}">
             <div class="AdaptiveMediaContainer">
-                {# TODO: Discern. #}
-                <div class="AdaptiveMedia-singlePhoto"
-                    {# Style here controls the entire height of the media embed.
-                       Of course, this also needs to be calculated dynamically. #}
-                    style="padding-top: calc({{ tweet_media.getAspectRatioForCss() }} * 100% - 0.5px);">
-                    <div class="{{ [
-                            'AdaptiveMedia-photoContainer',
-                            'js-adaptive-photo',
-                        ]|join(' ') }}"
-                        data-image-url="{{ tweet_media.mediaUrl }}"
-                        data-element-context="platform_photo_card"
-                        {# CONSIDER: The dominant color does not seem to be
-                           report by Twitter's API anymore, so this will
-                           probably have to be worked around in some way. #}
-                        style="background-color:rgba(48,39,32,1.0);"
-                        data-dominant-color="[48,39,32]">
-                        <img data-aria-label-part=""
-                            src="{{ tweet_media.mediaUrl }}"
-                            alt=""
-                            style="{{ tweet_media.getYOffsetForCss() }}">
+                {% if tweet_media_arr|length == 1 %}
+                    <div class="AdaptiveMedia-singlePhoto"
+                        {# Style here controls the entire height of the media
+                           embed. Of course, this also needs to be calculated
+                           dynamically. #}
+                        {{"style"}}="padding-top: calc({{ 
+                            tweet_media_arr[0].getAspectRatioForCss() 
+                            }} * 100% - 0.5px);">
+                        {{ _self.adaptive_media_photo_container(
+                            tweet_media_arr[0],
+                            vertical: true,
+                        ) }}
+                    </div>
+                {% elseif tweet_media_arr|length == 2 %}
+                    <div class="AdaptiveMedia-doublePhoto">
+                        <div class="AdaptiveMedia-halfWidthPhoto">
+                            {{ _self.adaptive_media_photo_container(
+                                tweet_media_arr[0],
+                                vertical: false,
+                            ) }}
+                        </div>
+                        <div class="AdaptiveMedia-halfWidthPhoto">
+                            {{ _self.adaptive_media_photo_container(
+                                tweet_media_arr[1],
+                                vertical: false,
+                            ) }}
+                        </div>
+                    </div>
+                {% elseif tweet_media_arr|length == 3 %}
+                    <div class="AdaptiveMedia-triplePhoto">
+                        <div class="AdaptiveMedia-twoThirdsWidthPhoto">
+                            {{ _self.adaptive_media_photo_container(
+                                tweet_media_arr[0],
+                                vertical: false,
+                            ) }}
+                        </div>
+                        <div class="AdaptiveMedia-halfHeightPhotoContainer">
+                            <div class="AdaptiveMedia-halfHeightPhoto">
+                                {{ _self.adaptive_media_photo_container(
+                                    tweet_media_arr[1],
+                                    vertical: true,
+                                ) }}
+                            </div>
+                            <div class="AdaptiveMedia-halfHeightPhoto">
+                                {{ _self.adaptive_media_photo_container(
+                                    tweet_media_arr[2],
+                                    vertical: true,
+                                ) }}
+                            </div>
+                        </div>
+                    </div>
+                {% elseif tweet_media_arr|length == 4 %}
+                    <div class="AdaptiveMedia-quadPhoto">
+                        <div class="AdaptiveMedia-threeQuartersWidthPhoto">
+                            {{ _self.adaptive_media_photo_container(
+                                tweet_media_arr[0],
+                                vertical: tweet_media_arr[0].aspectRatio > 1.0,
+                            ) }}
+                        </div>
+                        <div class="AdaptiveMedia-thirdHeightPhotoContainer">
+                            <div class="AdaptiveMedia-thirdHeightPhoto">
+                                {{ _self.adaptive_media_photo_container(
+                                    tweet_media_arr[1],
+                                    vertical: tweet_media_arr[1].aspectRatio > 1.0,
+                                ) }}
+                            </div>
+                            <div class="AdaptiveMedia-thirdHeightPhoto">
+                                {{ _self.adaptive_media_photo_container(
+                                    tweet_media_arr[2],
+                                    vertical: tweet_media_arr[2].aspectRatio > 1.0,
+                                ) }}
+                            </div>
+                            <div class="AdaptiveMedia-thirdHeightPhoto">
+                                {{ _self.adaptive_media_photo_container(
+                                    tweet_media_arr[3],
+                                    vertical: tweet_media_arr[3].aspectRatio > 1.0,
+                                ) }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro adaptive_media_photo_container(tweet_media, vertical = true) %}
+    <div class="{{ [
+          'AdaptiveMedia-photoContainer',
+           'js-adaptive-photo',
+        ]|join(' ') }}"
+        data-image-url="{{ tweet_media.mediaUrl }}"
+        data-element-context="platform_photo_card"
+        data-temp-aspect="{{tweet_media.getAspectRatio()}}"
+        {# CONSIDER: The dominant color does not seem to be report by Twitter's
+           API anymore, so this will probably have to be worked around in some
+           way. #}
+        style="background-color:rgba(46,53,64,1.0);"
+        data-dominant-color="[46,53,64]">
+        <img data-aria-label-part=""
+          src="{{ tweet_media.mediaUrl }}"
+          alt=""
+          {# The printing here is to avoid IDE static analysis false positives. #}
+          {{"style"}}="{{ vertical
+                        ? tweet_media.getYOffsetForCss()
+                        : tweet_media.getXOffsetForCss() }}">
+    </div>
+{% endmacro %}
+
+{% macro quoted_tweet(tweet) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+    } %}
+    {% import "core/macros.twig" as core %}
+    <div class="QuoteTweet u-block js-tweet-details-fixer">
+        <div class="QuoteTweet-container">
+            <a href="{{ tweet.getUrl() }}"
+            class="QuoteTweet-link js-nav"
+            aria-hidden="true">
+            </a>
+            <div class="{{ [
+                    'QuoteTweet-innerContainer',
+                    'u-cf',
+                    'js-permalink',
+                    'js-media-container',
+                ]|join(' ') }}"
+                data-item-id="{{ tweet.id }}"
+                data-item-type="tweet"
+                data-screen-name="{{ tweet.author.screenName }}"
+                data-user-id="{{ tweet.author.id }}"
+                href="{{ tweet.getUrl() }}"
+                data-conversation-id="{{ tweet.id }}">
+                <div class="tweet-content">
+                    {% if tweet.media|length > 0 %}
+                        {{ _self.quote_media(tweet.media) }}
+                    {% endif %}
+                    <div class="QuoteTweet-authorAndText u-alignTop">
+                        <div class="{{ [
+                                'QuoteTweet-originalAuthor',
+                                'u-cf',
+                                'u-textTruncate',
+                                'stream-item-header',
+                                'account-group',
+                                'js-user-profile-link',
+                            ]|join(' ') }}">
+                            <b class="QuoteTweet-fullname u-linkComplex-target">
+                                {{ core.text(tweet.author.name) }}
+                            </b>
+                            {{ core.user_badges(tweet.author.badges) }}
+                            <span class="UserNameBreak">&nbsp;</span>
+                            <span class="username u-dir" dir="ltr">
+                                @<b>{{ tweet.author.screenName }}</b>
+                            </span>
+                        </div>
+                        <div class="QuoteTweet-text tweet-text u-dir" dir="ltr">
+                            {{- core.tweet_text(tweet.fullText) }}
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 {% endmacro %}
+
+{% macro quote_media(tweet_media_arr) %}
+    {% types {
+        tweet_media_arr: "array<Retwitter\\Page\\Common\\Timeline\\MTweetMedia>",
+    } %}
+
+    <div class="QuoteMedia">
+        <div class="QuoteMedia-container js-quote-media-container">
+            {% if tweet_media_arr|length == 1 %}
+                <div class="QuoteMedia-singlePhoto">
+                    {{ _self.quote_media_photo_container(
+                        tweet_media_arr[0],
+                        vertical: tweet_media_arr[0].aspectRatio > 1.0,
+                    ) }}
+                </div>
+            {% elseif tweet_media_arr|length == 2 %}
+                <div class="QuoteMedia-doublePhoto">
+                    <div class="QuoteMedia-halfPhoto">
+                        {{ _self.quote_media_photo_container(
+                            tweet_media_arr[0],
+                            vertical: tweet_media_arr[0].aspectRatio < 1.0,
+                        ) }}
+                    </div>
+                    <div class="QuoteMedia-halfPhoto">
+                        {{ _self.quote_media_photo_container(
+                            tweet_media_arr[1],
+                            vertical: tweet_media_arr[1].aspectRatio < 1.0,
+                        ) }}
+                    </div>
+                </div>
+            {% elseif tweet_media_arr|length == 3 %}
+                <div class="QuoteMedia-triplePhoto">
+                    <div class="QuoteMedia-halfPhoto">
+                        {{ _self.quote_media_photo_container(
+                            tweet_media_arr[0],
+                            vertical: tweet_media_arr[0].aspectRatio > 1.0,
+                        ) }}
+                    </div>
+                    <div class="QuoteMedia-quarterPhotoContainer">
+                        <div class="QuoteMedia-quarterPhoto">
+                            {{ _self.quote_media_photo_container(
+                                tweet_media_arr[1],
+                                vertical: tweet_media_arr[1].aspectRatio > 1.0,
+                            ) }}
+                        </div>
+                        <div class="QuoteMedia-quarterPhoto">
+                            {{ _self.quote_media_photo_container(
+                                tweet_media_arr[2],
+                                vertical: tweet_media_arr[2].aspectRatio > 1.0,
+                            ) }}
+                        </div>
+                    </div>
+                </div>
+            {% elseif tweet_media_arr|length == 4 %}
+                <div class="QuoteMedia-quadPhoto">
+                    <div class="QuoteMedia-quarterPhoto">
+                        {{ _self.quote_media_photo_container(
+                            tweet_media_arr[0],
+                            vertical: tweet_media_arr[0].aspectRatio > 1.0,
+                        ) }}
+                    </div>
+                    <div class="QuoteMedia-quarterPhoto">
+                        {{ _self.quote_media_photo_container(
+                            tweet_media_arr[1],
+                            vertical: tweet_media_arr[1].aspectRatio > 1.0,
+                        ) }}
+                    </div>
+                    <div class="QuoteMedia-quarterPhoto">
+                        {{ _self.quote_media_photo_container(
+                            tweet_media_arr[2],
+                            vertical: tweet_media_arr[2].aspectRatio > 1.0,
+                        ) }}
+                    </div>
+                    <div class="QuoteMedia-quarterPhoto">
+                        {{ _self.quote_media_photo_container(
+                            tweet_media_arr[3],
+                            vertical: tweet_media_arr[3].aspectRatio > 1.0,
+                        ) }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro quote_media_photo_container(tweet_media, vertical = true) %}
+    {% types {
+        tweet_media: "Retwitter\\Page\\Common\\Timeline\\MTweetMedia",
+    } %}
+
+    <div class="QuoteMedia-photoContainer js-quote-photo"
+        data-image-url="{{ tweet_media.mediaUrl }}"
+        data-element-context="platform_photo_card"
+        style="background-color:rgba(46,53,64,1.0);"
+        data-dominant-color="[46,53,64]">
+        <img data-aria-label-part=""
+            src="{{ tweet_media.mediaUrl }}"
+            alt=""
+            {{"style"}}="{{ vertical
+                        ? tweet_media.getYOffsetForCss()
+                        : tweet_media.getXOffsetForCss() }}">
+    </div>
+{% endmacro %} 
 
 {%- macro get_tweet_action_name(tweet_action) -%}
     {% types {

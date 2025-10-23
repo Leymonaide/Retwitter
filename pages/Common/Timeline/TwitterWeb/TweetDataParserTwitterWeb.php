@@ -254,4 +254,10 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
     {
         $this->socialContext = $value;
     }
+
+    public function getIsTombstoneTemporaryImplementation(): bool
+    {
+        $data = $this->data;
+        return isset($data->__typename) && $data->__typename == "TweetTombstone";
+    }
 }

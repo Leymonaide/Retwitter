@@ -32,29 +32,20 @@ class MTweetActions
 
     public function __construct(ITweetDataParser $parser)
     {
-        if ($count = $parser->getReplyCount())
-        {
-            $this->addAction(new MTweetAction(
-                actionType: TweetAction::Reply,
-                count: $count,
-            ));
-        }
+        $this->addAction(new MTweetAction(
+            actionType: TweetAction::Reply,
+            count: $parser->getReplyCount() ?? 0,
+        ));
 
-        if ($count = $parser->getRetweetCount())
-        {
-            $this->addAction(new MTweetAction(
-                actionType: TweetAction::Retweet,
-                count: $count,
-            ));
-        }
+        $this->addAction(new MTweetAction(
+            actionType: TweetAction::Retweet,
+            count: $parser->getRetweetCount() ?? 0,
+        ));
 
-        if ($count = $parser->getFavoritesCount())
-        {
-            $this->addAction(new MTweetAction(
-                actionType: TweetAction::Favorite,
-                count: $count,
-            ));
-        }
+        $this->addAction(new MTweetAction(
+            actionType: TweetAction::Favorite,
+            count: $parser->getFavoritesCount() ?? 0,
+        ));
     }
 
     public function addAction(MTweetAction $action): void
