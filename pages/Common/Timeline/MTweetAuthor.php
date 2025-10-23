@@ -31,7 +31,7 @@ class MTweetAuthor
     public FormattedString $name;
     public string $screenName;
     public MUserBadges $badges;
-    public string $avatarUrl;
+    public ?string $avatarUrl;
 
     public function __construct(IBasicProfileInfoDataParser $parser)
     {

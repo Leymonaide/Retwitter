@@ -27,34 +27,21 @@ use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use PHPHtmlParser\Dom\Node\AbstractNode;
-use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
 
-class TweetDataParserNitter implements ITweetDataParser
+/**
+ * Data parser for quote tweets from Nitter.
+ */
+class QuoteTweetDataParserNitter implements ITweetDataParser
 {
     use NitterTweetParserCommon;
-
-    private ?MTweetSocialContext $socialContext = null;
 
     public function __construct(
         private NitterSourceInfo $sourceInfo,
         private AbstractNode $rootNode,
     )
     {
-        if ($this->getIsRetweet() && null != $sourceInfo->profileData)
-        {
-            $this->setSocialContext(new MTweetSocialContext(
-                type: TweetSocialContext::Retweet,
-                retweeterProfile: $sourceInfo->profileData,
-            ));
-        }
-        else if ($this->isPinned())
-        {
-            $this->setSocialContext(new MTweetSocialContext(
-                TweetSocialContext::Pin,
-            ));
-        }
     }
 
     public function getSourceApi(): ApiSource
@@ -69,7 +56,7 @@ class TweetDataParserNitter implements ITweetDataParser
          */
         $tweetLinkNode = NitterParsingUtils::findFirst(
             $this->rootNode,
-            ".tweet-link"
+            ".quote-link"
         );
 
         if (null === $tweetLinkNode)
@@ -95,7 +82,7 @@ class TweetDataParserNitter implements ITweetDataParser
     public function getFullText(): ?FormattedString
     {
         if ($fullTextNode = NitterParsingUtils::findFirst(
-                $this->rootNode, ".tweet-content"))
+                $this->rootNode, ".quote-text"))
         {
             /** @var \PHPHtmlParser\Dom\Node\InnerNode $fullTextNode Suppress warning */
 
@@ -120,28 +107,16 @@ class TweetDataParserNitter implements ITweetDataParser
 
     public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser
     {
-        // Since retweets can only happen in a profile context, we'll just
-        // return the profile information.
-        return $this->sourceInfo->profileData;
-    }
-
-    public function getRetweetId(): ?string
-    {
-        // I don't think Nitter reports this information.
-        return $this->getId();
+        return null;
     }
 
     public function getQuotedTweetParser(): ?ITweetDataParser
     {
-        if ($quoteTweetNode = NitterParsingUtils::findFirst(
-                $this->rootNode, ".quote"))
-        {
-            return new QuoteTweetDataParserNitter(
-                sourceInfo: $this->sourceInfo,
-                rootNode: $quoteTweetNode
-            );
-        }
+        return null;
+    }
 
+    public function getRetweetId(): ?string
+    {
         return null;
     }
 
@@ -154,58 +129,42 @@ class TweetDataParserNitter implements ITweetDataParser
         return null;
     }
 
-    private function getAndParseStat(string $selector): ?int
-    {
-        if ($statNode = NitterParsingUtils::findFirst(
-                $this->rootNode, $selector))
-        {
-            $countText = $statNode->getParent()->text;
-
-            return NitterParsingUtils::parseNumber($countText) ?? 0;
-        }
-
-        return null;
-    }
-
     public function getFavoritesCount(): ?int
     {
-        return $this->getAndParseStat(".tweet-stat .icon-heart");
+        return null;
     }
 
     public function getReplyCount(): ?int
     {
-        return $this->getAndParseStat(".tweet-stat .icon-comment");
+        return null;
     }
 
     public function getRetweetCount(): ?int
     {
-        return $this->getAndParseStat(".tweet-stat .icon-retweet");
+        return null;
     }
 
     public function getQuoteTweetCount(): ?int
     {
-        return $this->getAndParseStat(".tweet-stat .icon-retweet");
+        return null;
     }
 
     public function getIsRetweet(): bool
     {
-        return null != NitterParsingUtils::findFirst(
-            $this->rootNode, ".retweet-header");
+        return false;
     }
 
     private function isPinned(): bool
     {
-        return NitterParsingUtils::findFirst(
-            $this->rootNode, ".pinned .icon-pin") != null;
+        return false;
     }
 
     public function getSocialContext(): ?MTweetSocialContext
     {
-        return $this?->socialContext ?? null;
+        return null;
     }
 
     public function setSocialContext(?MTweetSocialContext $value): void
     {
-        $this->socialContext = $value;
     }
 }

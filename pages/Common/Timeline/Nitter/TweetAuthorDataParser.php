@@ -62,7 +62,7 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
     {
         // Nitter does not provide this information, surprisingly.
         // It's not that useful anyways.
-        return null;
+        return "0";
     }
 
     public function getDisplayName(): ?string
@@ -80,6 +80,15 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
     {
         if ($avatar = NitterParsingUtils::findFirst(
                 $this->rootNode, ".tweet-header .tweet-avatar img")
+                ?->getAttribute("src"))
+        {
+            return NitterParsingUtils::resolveImageUrl(
+                nitterUrl: $avatar,
+                sourceInfo: $this->sourceInfo,
+            );
+        }
+        else if ($avatar = NitterParsingUtils::findFirst(
+                $this->rootNode, ".fullname-and-username img.avatar")
                 ?->getAttribute("src"))
         {
             return NitterParsingUtils::resolveImageUrl(
