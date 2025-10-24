@@ -18,6 +18,7 @@ use Rehike\Boot\{
 
 use Rehike\Async\Promise\PromiseStatus;
 use Rehike\ConfigManager\Config;
+use Retwitter\RecentlyViewedCache\RecentlyViewedCache;
 
 /**
  * Main bootstrapper insertion point for Retwitter.
@@ -163,6 +164,7 @@ final class Bootloader
         self::finishRequest();
 
         LogFileManager::pruneLogFiles();
+        RecentlyViewedCache::pruneOldCache();
         ShutdownEvents::runAllEvents();
 
         exit;

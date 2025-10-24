@@ -124,6 +124,7 @@
             'js-original-tweet',
             tweet.socialContext ? 'tweet-has-context',
             tweet.isUserPinned ? 'user-pinned',
+            tweet.invertedColors ? "Tweet--invertedColors",
         ]|join(' ') }}"
         data-tweet-id="{{ tweet.id }}"
         data-item-id="{{ tweet.id }}"

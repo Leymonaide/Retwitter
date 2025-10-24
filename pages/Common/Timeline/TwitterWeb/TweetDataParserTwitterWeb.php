@@ -31,17 +31,27 @@ use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Page\Common\Timeline\MTweetMedia;
 use Retwitter\Page\Common\Timeline\TweetMediaType;
 use Retwitter\Page\Common\Timeline\TweetMediaAvailability;
+use Retwitter\RecentlyViewedCache\CachedObjectType;
+use Retwitter\RecentlyViewedCache\RecentlyViewedCache;
+use Retwitter\RecentlyViewedCache\TwitterApiCache;
 use Retwitter\Utils\ParsingUtils;
 
 class TweetDataParserTwitterWeb implements ITweetDataParser
 {
-    public object $data;
     private ?MTweetSocialContext $socialContext = null;
 
-    public function __construct(object $data)
+    /**
+     * @param object $data
+     *        Source data (in JSON) from the Twitter API.
+     * 
+     * @param bool $enableWriteToCache
+     *        Enables caching information from this tweet as recently viewed.
+     */
+    public function __construct(
+        private object $data,
+        private bool $enableWriteToCache = false,
+    )
     {
-        $this->data = $data;
-
         // A social context will be constructed for retweets by default, as
         // their social context is technically only a client-side representation
         // and not actually reported in the stream data returned by the Twitter
@@ -51,6 +61,15 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
             $this->socialContext = new MTweetSocialContext(
                 type: TweetSocialContext::Retweet,
                 retweeterProfile: $this->getRetweetAuthorParser(),
+            );
+        }
+
+        if ($this->enableWriteToCache && ($tweetId = $this->getId()))
+        {
+            RecentlyViewedCache::writeCache(
+                pageType: CachedObjectType::Tweet,
+                id: $tweetId,
+                cacheData: new TwitterApiCache($data)
             );
         }
     }

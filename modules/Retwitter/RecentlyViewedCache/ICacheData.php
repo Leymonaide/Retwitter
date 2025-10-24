@@ -18,25 +18,13 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page;
+namespace Retwitter\RecentlyViewedCache;
 
-use Rehike\ControllerV2\Router;
+use JsonSerializable;
 
-// Funnel = pages that the Retwitter server should not touch:
-Router::funnel([
-]);
+interface ICacheData extends JsonSerializable
+{
+    public function getData(): object;
 
-Router::redirect([
-]);
-
-Router::get([
-    "/" => Home\HomeController::class,
-    "/i/tweet/stickersHtml" => TweetStickers\TweetStickers::class,
-    "/playground" => Playground::class,
-    "/account/suspended" => AccountSuspended\AccountSuspendedController::class,
-    "/rehike/static/*" => rehike\StaticRouter::class,
-    "default" => Profile\ProfileController::class,
-]);
-
-Router::post([
-]);
+    public static function fromJson(string $json): static;
+}

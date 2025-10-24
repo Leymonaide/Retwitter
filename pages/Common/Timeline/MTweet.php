@@ -42,6 +42,7 @@ class MTweet
     public ?MTweet $quotedTweet = null;
     public bool $isUserPinned = false;
     public bool $isRetweet = false;
+    public bool $invertedColors = false;
     public ?string $retweeterUsername = null;
     public ?MTweetSocialContext $socialContext = null;
 
@@ -102,6 +103,11 @@ class MTweet
             $retweeter = $parser->getRetweetAuthorParser();
             $this->retweeterUsername = $retweeter->getUsername();
         }
+    }
+
+    public function setInvertedColors(bool $value): void
+    {
+        $this->invertedColors = $value;
     }
 
     public function getUrl(): string

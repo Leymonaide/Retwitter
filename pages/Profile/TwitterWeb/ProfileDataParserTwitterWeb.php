@@ -33,11 +33,18 @@ use Rehike\ConfigManager\Config;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser
 {
-    private object $data;
-
-    public function __construct(object $data)
+    /**
+     * @param object $data
+     *        Source data (in JSON) from the Twitter API.
+     * 
+     * @param bool $enableWriteToCache
+     *        Enables caching information from this profile as recently viewed.
+     */
+    public function __construct(
+        private object $data,
+        private bool $enableWriteToCache = false,
+    )
     {
-        $this->data = $data;
     }
 
     private function getApiResult(): ?object

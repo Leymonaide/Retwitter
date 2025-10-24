@@ -162,7 +162,8 @@ if (TEST_SIGNIN)
                 }
 
                 $profileDataParser = new ProfileDataParserTwitterWeb(
-                    $jsonData->data->user->result
+                    data: $jsonData->data->user->result,
+                    enableWriteToCache: true,
                 );
             }
 
@@ -191,7 +192,8 @@ if (TEST_SIGNIN)
                 $jsonData = $timelineRequest->getResponse()->getJson();
 
                 $timelineParser = new TimelineDataParserTwitterWeb(
-                    $jsonData->data->user->result->timeline->timeline
+                    data: $jsonData->data->user->result->timeline->timeline,
+                    enableWriteToCache: true
                 );
             }
             // Nitter timeline parser is created alongside the profile parser,

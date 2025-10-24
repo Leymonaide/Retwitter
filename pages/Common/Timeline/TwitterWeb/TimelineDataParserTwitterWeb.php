@@ -33,11 +33,18 @@ use Retwitter\Page\Common\Timeline\TweetSocialContext;
 
 class TimelineDataParserTwitterWeb implements ITimelineDataParser
 {
-    private object $data;
-
-    public function __construct(object $data)
+    /**
+     * @param object $data
+     *        Source data (in JSON) from the Twitter API.
+     * 
+     * @param bool $enableWriteToCache
+     *        Enables caching information from this timeline as recently viewed.
+     */
+    public function __construct(
+        private object $data,
+        private bool $enableWriteToCache = false,
+    )
     {
-        $this->data = $data;
     }
 
     public function getSourceApi(): ApiSource
@@ -61,7 +68,8 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
             if ("TimelineTweet" == $entryContent->itemType)
             {
                 $tweetParser = new TweetDataParserTwitterWeb(
-                    $entryContent->tweet_results->result
+                    data: $entryContent->tweet_results->result,
+                    enableWriteToCache: $this->enableWriteToCache,
                 );
                 
                 if (isset($entryContent->socialContext->contextType)
