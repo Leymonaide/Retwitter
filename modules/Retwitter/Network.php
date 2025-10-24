@@ -121,7 +121,10 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
                         "Authorization" => self::API_AUTH,
                         "X-Twitter-Active-User" => "Yes",
                         "X-Twitter-Client-Language" => "en", // TODO: i18n
+
+                        // Required for unauthenticated requests.
                         "X-Guest-Token" => $guestToken,
+
                         "X-Client-Transaction-ID" => $transactionStr,
                     ],
                     "onError" => "ignore",
@@ -131,5 +134,24 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
 
             return $response;
         });
+    }
+
+    /**
+     * Convert the PHP cookie array to a HTTP header string.
+     */
+    public static function getCurrentRequestCookie(): string
+    {
+        if (empty($_COOKIE)) return "";
+        
+        $cookies = "";
+        
+        // Stringify cookies into HTTP format.
+
+        foreach ($_COOKIE as $cookie => $value)
+        {
+            $cookies .= $cookie . '=' . $value . '; ';
+        }
+        
+        return $cookies;
     }
 }

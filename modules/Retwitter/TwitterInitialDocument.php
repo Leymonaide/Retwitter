@@ -26,6 +26,7 @@ use Rehike\Network\NetworkCore;
 use Retwitter\Utils\NitterParsingUtils;
 
 use function Rehike\Async\async;
+use const Retwitter\Constants\TEST_SIGNIN;
 
 /**
  * Manages the initial document from the Twitter server.
@@ -54,28 +55,30 @@ class TwitterInitialDocument
     {
         return async(function()
         {
-            // $response = yield NetworkCore::request("https://x.com", [
-            //     "headers" => [
-            //         "User-Agent" => $_SERVER["HTTP_USER_AGENT"],
-            //         // Pass all user cookies in order to get their logged in __INITIAL_STATE__
-            //         "Cookies" => $_SERVER["COOKIE"],
-            //         "Accept" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
-            //         "Accept-Language" => "en",
-            //         "Cache-Control" => "no-cache",
-            //         "Pragma" => "no-cache",
-            //         "Priority" => "u=0, i",
-            //         "Sec-Fetch-Mode" => "navigate",
-            //         "Sec-Fetch-Dest" => "document",
-            //         "Sec-Fetch-Site" => "none",
-            //         "Sec-Fetch-User" => "?1",
-            //         "Upgrade-Insecure-Requests" => "1",
-            //     ],
-            //     "dnsOverride" => Network::DNS_OVERRIDE_HOST,
-            // ]);
+if (!TEST_SIGNIN):
+            $response = yield NetworkCore::request("https://x.com", [
+                "headers" => [
+                    "User-Agent" => $_SERVER["HTTP_USER_AGENT"],
+                    // Pass all user cookies in order to get their logged in __INITIAL_STATE__
+                    "Cookies" => Network::getCurrentRequestCookie(),
+                    "Accept" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+                    "Accept-Language" => "en",
+                    "Cache-Control" => "no-cache",
+                    "Pragma" => "no-cache",
+                    "Priority" => "u=0, i",
+                    "Sec-Fetch-Mode" => "navigate",
+                    "Sec-Fetch-Dest" => "document",
+                    "Sec-Fetch-Site" => "none",
+                    "Sec-Fetch-User" => "?1",
+                    "Upgrade-Insecure-Requests" => "1",
+                ],
+                "dnsOverride" => Network::DNS_OVERRIDE_HOST,
+            ]);
             
-            // $this->document = $response->getText();
-            
-           $this->document = file_get_contents("cache/test_initialdoc.html");
+            $this->document = $response->getText();
+else:
+            $this->document = file_get_contents("cache/test_initialdoc.html");
+endif;
         });
     }
     
