@@ -46,6 +46,7 @@ class ConfigDefinitions
             "appearance" => [
                 "oldProfileTitle" => new BoolProp(false),
                 "fullJoinDates" => new BoolProp(false),
+                "fullCounts" => new BoolProp(false),
             ],
             "experiments" => [
             ],

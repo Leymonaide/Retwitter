@@ -22,6 +22,7 @@ namespace Retwitter\Utils;
 
 use Stillat\Numeral\Languages\LanguageManager;
 use Stillat\Numeral\Numeral;
+use Rehike\ConfigManager\Config;
 
 // Taken verbatim from Titter.
 class NumberFormat
@@ -38,7 +39,7 @@ class NumberFormat
 
     public static function shorten(int $number)
     {
-        if ($number < 10000)
+        if ($number < 10000 || Config::getConfigProp("appearance.fullCounts"))
         {
             return self::$formatter->format($number, "0,0");
         }
