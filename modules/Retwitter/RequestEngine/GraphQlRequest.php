@@ -26,6 +26,8 @@ use function Rehike\Async\async;
 
 use Retwitter\Network;
 use Retwitter\GraphQlRequestParams;
+use Retwitter\SignIn\SignIn;
+use Retwitter\TwitterGuestToken;
 
 class GraphQlRequest implements IRequestManagerRequest
 {
@@ -51,6 +53,20 @@ class GraphQlRequest implements IRequestManagerRequest
         return async(function() {
             $this->response =
                 yield Network::graphqlRequestParam($this->requestParams);
+
+            if (
+                !($this->tryPaths & GraphQlRequestTryPaths::RegeneratedGuestToken->value)
+                && !SignIn::isSignedIn()
+            )
+            {
+                TwitterGuestToken::getNewGuestToken();
+
+                $this->tryPaths |= GraphQlRequestTryPaths::RegeneratedGuestToken->value;
+                return true;
+            }
+
+            // TODO: Brute force feature flags.
+            
             return false;
         });
     }

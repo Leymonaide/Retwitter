@@ -29,6 +29,8 @@ use function Rehike\Async\async;
  */
 class TwitterGuestToken
 {
+    private static ?string $sessionCookie = null;
+
     public static function __initStatic(): void
     {
         if (isset($_COOKIE["gt"]))
@@ -44,7 +46,11 @@ class TwitterGuestToken
     public static function getGuestToken(): Promise/*<string>*/
     {
         return async(function() {
-            if (isset($_COOKIE["gt"]))
+            if (null != self::$sessionCookie)
+            {
+                return self::$sessionCookie;
+            }
+            else if (isset($_COOKIE["gt"]))
             {
                 return $_COOKIE["gt"];
             }
@@ -124,6 +130,7 @@ class TwitterGuestToken
             $activate = $activate->getJson();
             
             setcookie("gt", $activate->guest_token, time() + (60 * 60 * 24));
+            self::$sessionCookie = $activate->guest_token;
             return $activate->guest_token;
         });
     }
