@@ -1,22 +1,19 @@
 # Strings related to the soft-disable feature:
 
 # Shows in configuration settings:
-disableRehike: "Disable Rehike"
-rhSettingsEnableRehike: "Enable Rehike"
-
-# Shows in the account menu in Polymer:
-enableRehike: "Return to Rehike"
+disableRehike: "Disable Retwitter"
+rhSettingsEnableRehike: "Enable Retwitter"
 
 # Disabled message:
 currentlyDisabledMessage: >
-    You currently have Rehike disabled. Functionality may be limited.
+    You currently have Retwitter disabled. Functionality may be limited.
 
 # Dialog box strings:
 disableRehikeInfoHeader: "Are you sure?"
 disableRehikeInfoDescription: >
-    This will disable Rehike until you enable it again. You can enable Rehike
-    in the account menu in the new YouTube interface, or by the URL parameter:
-    ?enable_rehike=1
+    This will disable Retwitter until you enable it again. You can enable
+    Retwitter in the account menu in the new YouTube interface, or by the URL
+    parameter: ?enable_retwitter=1
 
 # Dialog buttons:
 disableRehikeInfoCancel: "Cancel"

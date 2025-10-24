@@ -192,6 +192,5 @@ final class Bootloader
     {
         Tasks::setupTemplateManager();
         Tasks::setupI18n();
-        Tasks::setupControllerV2();
     }
 }

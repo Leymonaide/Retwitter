@@ -1,3 +1,0 @@
-CSS_BUILD_FILES = {
-    "main.scss": "static/rehike/css/www-rehike-config.css"
-}

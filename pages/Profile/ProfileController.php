@@ -46,8 +46,8 @@ use function Rehike\Async\async;
 
 use const Retwitter\Constants\TEST_SIGNIN;
 
-const PROFILE_TEST_LOCAL = false;
-const PROFILE_TEST_NITTER = !TEST_SIGNIN;
+const PROFILE_TEST_LOCAL = true;
+const PROFILE_TEST_NITTER = false &&!TEST_SIGNIN;
 
 enum ProfileControllerRequestTags : string
 {
@@ -257,7 +257,7 @@ endif;
     ): IRequestManagerRequest
     {
         // TODO: Request for real.
-        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_tweets.json");
+        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_tweets_aubymori.json");
     }
 
     private function requestProfileNitter(

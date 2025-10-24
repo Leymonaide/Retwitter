@@ -115,11 +115,4 @@ final class Tasks
         // i18n v2
         i18nBoot::boot();
     }
-
-    public static function setupControllerV2(): void
-    {
-        ControllerV2::setRedirectHandler(
-            require "includes/spf_redirect_handler.php"
-        );
-    }
 }
