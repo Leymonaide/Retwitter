@@ -21,7 +21,7 @@
     <head>
         {% include "core/head.twig" %}
         {# For Rebug: #}
-        <script>{% include "@rehike/rehike/debugger/js/xhook.js" %}</script>
+        <{{"script"}}>{% include "@rehike/rehike/debugger/js/xhook.js" %}</{{"script"}}>
     </head>
     <body class="{% include "core/body_class.twig" %} {% block body_class %}{% endblock %}" data-fouc-class-names="swift-loading {% block swift_class_names %}{% endblock %}" dir="{{ app.dir }}">
         <script id="swift_loading_indicator">
@@ -94,6 +94,9 @@
         <input type="hidden" class="swift-boot-module" value="{{ retwitter_g_boot_module }}">
         <input type="hidden" id="swift-module-path" value="https://abs.twimg.com/k/swift/en">
         {{ core.async_js("init") }}
+        {% if rehike.config.behavior.enableClientFixes %}
+            <script src="{{ rehike.resource.resolveVersioned('rehike/js/t1_js_fixes.js') }}"></script>
+        {% endif %}
         <div class="hidden" id="hidden-content">
             <iframe aria-hidden="true" class="tweet-post-iframe" name="tweet-post-iframe"></iframe>
             <iframe aria-hidden="true" class="dm-post-iframe" name="dm-post-iframe"></iframe>

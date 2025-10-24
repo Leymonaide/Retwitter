@@ -59,6 +59,7 @@ class ConfigDefinitions
                     ]
                 ),
                 "nitterApiHost" => new StringProp(DEFAULT_NITTER_HOST),
+                "enableClientFixes" => new BoolProp(true),
             ],
             "advanced" => [
                 "enableDebugger" => new BoolProp(false),
