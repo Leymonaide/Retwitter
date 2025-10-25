@@ -79,6 +79,12 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return ApiSource::TwitterWeb;
     }
 
+    public function getIsTombstone(): bool
+    {
+        return isset($this->data->__typename)
+            && $this->data->__typename == "TweetTombstone";
+    }
+
     /**
      * Gets the best API result for the tweet.
      * 
@@ -272,11 +278,5 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
     public function setSocialContext(?MTweetSocialContext $value): void
     {
         $this->socialContext = $value;
-    }
-
-    public function getIsTombstoneTemporaryImplementation(): bool
-    {
-        $data = $this->data;
-        return isset($data->__typename) && $data->__typename == "TweetTombstone";
     }
 }

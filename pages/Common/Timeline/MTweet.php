@@ -39,7 +39,7 @@ class MTweet
     public string $createdAtStr;
     public DateTime $createdAt;
     public bool $isQuoteTweet = false;
-    public ?MTweet $quotedTweet = null;
+    public ?MTweetUnion $quotedTweet = null;
     public bool $isUserPinned = false;
     public bool $isRetweet = false;
     public bool $invertedColors = false;
@@ -55,18 +55,6 @@ class MTweet
 
     public function __construct(ITweetDataParser $parser, bool $isQuoteTweet = false)
     {
-        if (ApiSource::TwitterWeb == $parser->getSourceApi()
-            && $parser->getIsTombstoneTemporaryImplementation())
-        {
-            $this->conversationId = "0";
-            $this->userId = "0";
-            $this->fullText = FormattedString::fromTemplate("TOMBSTONE PLACEHOLDER");
-            $this->lang = "";
-            $this->createdAtStr = "";
-            $this->createdAt = new DateTime();
-            return;
-        }
-
         $this->id = $parser->getId();
         $this->conversationId = $parser->getConversationId();
         $this->userId = $parser->getUserId();
@@ -79,7 +67,18 @@ class MTweet
         $this->isQuoteTweet = $isQuoteTweet;
         if (!$isQuoteTweet && $quotedTweet = $parser->getQuotedTweetParser())
         {
-            $this->quotedTweet = new MTweet($quotedTweet, true);
+            if ($quotedTweet->getIsTombstone())
+            {
+                $this->quotedTweet = new MTweetUnion(
+                    tombstone: new MTweetTombstone(),
+                );
+            }
+            else
+            {
+                $this->quotedTweet = new MTweetUnion(
+                    tweet: new MTweet($quotedTweet, true),
+                );
+            }
         }
 
         $this->author = new MTweetAuthor($parser->getAuthorParser());

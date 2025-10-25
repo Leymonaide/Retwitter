@@ -283,8 +283,14 @@
             {% if tweet.media is not empty %}
                 {{ _self.tweet_adaptive_media(tweet.media) }}
             {% endif %}
-            {% if tweet.quotedTweet %}
-                {{ _self.quoted_tweet(tweet.quotedTweet) }}
+            {% if tweet.quotedTweet.tweet %}
+                {{ _self.quoted_tweet(tweet.quotedTweet.tweet) }}
+            {% elseif tweet.quotedTweet.tombstone %}
+                <div class="Tombstone">
+                    <span class="Tombstone-label">
+                        {{ tweet.quotedTweet.tombstone.message }}
+                    </span>
+                </div>
             {% endif %}
             {#}
             <div class="card2 js-media-container" data-card2-name="audio">

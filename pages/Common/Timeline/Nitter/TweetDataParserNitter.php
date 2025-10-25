@@ -62,6 +62,12 @@ class TweetDataParserNitter implements ITweetDataParser
         return ApiSource::Nitter;
     }
 
+    public function getIsTombstone(): bool
+    {
+        // TODO.
+        return false;
+    }
+
     public function getId(): string
     {
         /**
