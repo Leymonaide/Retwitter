@@ -20,15 +20,12 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
-class MStream
+class MTimelineItemUnion
 {
-    /**
-     * @var MTimelineItemUnion[]
-     */
-    public array $items;
-
-    public function __construct(ITimelineDataParser $parser)
+    public function __construct(
+        public ?MTweetUnion $tweetUnion = null,
+        public ?MConversation $conversation = null,
+    )
     {
-        $this->items = $parser->parseAll();
     }
 }

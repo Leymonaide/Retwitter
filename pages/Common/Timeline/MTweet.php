@@ -38,7 +38,6 @@ class MTweet
     public string $lang;
     public string $createdAtStr;
     public DateTime $createdAt;
-    public bool $isQuoteTweet = false;
     public ?MTweetUnion $quotedTweet = null;
     public bool $isUserPinned = false;
     public bool $isRetweet = false;
@@ -53,7 +52,11 @@ class MTweet
 
     public ?MTweetActions $actionStrip = null;
 
-    public function __construct(ITweetDataParser $parser, bool $isQuoteTweet = false)
+    public function __construct(
+        ITweetDataParser $parser,
+        public bool $isQuoteTweet = false,
+        public bool $isSticker = false,
+    )
     {
         $this->id = $parser->getId();
         $this->conversationId = $parser->getConversationId();
@@ -64,8 +67,8 @@ class MTweet
             $this->fullText = $sourceText;
         }
 
-        $this->isQuoteTweet = $isQuoteTweet;
-        if (!$isQuoteTweet && $quotedTweet = $parser->getQuotedTweetParser())
+        $shouldShowQT = !$isQuoteTweet && !$isSticker;
+        if ($shouldShowQT && $quotedTweet = $parser->getQuotedTweetParser())
         {
             if ($quotedTweet->getIsTombstone())
             {
@@ -78,7 +81,7 @@ class MTweet
             else
             {
                 $this->quotedTweet = new MTweetUnion(
-                    tweet: new MTweet($quotedTweet, true),
+                    tweet: new MTweet(parser: $quotedTweet, isQuoteTweet: true),
                 );
             }
         }

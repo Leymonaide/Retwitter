@@ -73,16 +73,17 @@
                 'stream-items',
                 'js-navigable-stream',
             ]|join(' ') }}">
-            {% for item in stream.tweets %}
-                {% if item.tweet %}
-                    <li id="stream-item-tweet-{{ item.tweet.id }}" class="{{ [
-                            'js-stream-item',
-                            'stream-item',
-                            item.tweet.isUserPinned ? 'js-pinned',
-                        ]|join(' ') }}" data-item-id="{{ item.tweet.id }}"
-                        data-item-type="tweet" data-suggestion-json="{# TODO #}">
-                        {{ _self.render_tweet(item.tweet) }}
-                    </li>
+            {% for item in stream.items %}
+                {% if item.tweetUnion %}
+                    {{ _self.render_stream_item_tweet(item.tweetUnion) }}
+                {% elseif item.conversation %}
+                    {% for tweetUnion in item.conversation.items %}
+                        <div class="ThreadedConversation-tweet">
+                            {{ _self.render_stream_item_tweet(tweetUnion, {
+                                componentContext: "conversation"
+                            }) }}
+                        </div>
+                    {% endfor %}
                 {# TODO: Handle other types, such as tombstones. #}
                 {% endif %}
             {% endfor %}
@@ -112,7 +113,21 @@
     </div>
 {% endmacro %}
 
-{% macro render_tweet(tweet) %}
+{% macro render_stream_item_tweet(tweetUnion, template_context = {}) %}
+    {% types {
+        tweetUnion: "Retwitter\\Page\\Common\\Timeline\\MTweetUnion",
+    } %}
+    <li id="stream-item-tweet-{{ tweetUnion.tweet.id }}" class="{{ [
+            'js-stream-item',
+            'stream-item',
+            tweetUnion.tweet.isUserPinned ? 'js-pinned',
+        ]|join(' ') }}" data-item-id="{{ tweetUnion.tweet.id }}"
+        data-item-type="tweet" data-suggestion-json="{# TODO #}">
+        {{ _self.render_tweet(tweetUnion.tweet) }}
+    </li>
+{% endmacro %}
+
+{% macro render_tweet(tweet, template_context = {}) %}
     {% types {
         tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
     } %}
@@ -157,6 +172,9 @@
         data-you-block="false"
         data-reply-to-users-json="{# TODO. #}"
         data-disclosure-type=""
+        {% if template_context.componentContext %}
+            data-component-context="{{ template_context.componentContext }}"
+        {% endif %}
         {# The following don't seem to be there for most tweets, just the one I
            happened to start copying from.
         data-card2-type="audio"

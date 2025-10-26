@@ -28,6 +28,8 @@ use Retwitter\Page\Profile\IProfileDataParser;
 use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
+use Retwitter\Page\Common\Timeline\MConversation;
+use Retwitter\Page\Common\Timeline\MTimelineItemUnion;
 use Retwitter\Page\Common\Timeline\MTweet;
 use Retwitter\Page\Common\Timeline\MTweetUnion;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
@@ -63,47 +65,49 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
         $entries = $this->executeInstructions();
 
         foreach ($entries as $entry)
-        if (isset($entry->content->itemContent))
+        if (isset($entry->content))
         {
-            $entryContent = $entry->content->itemContent;
+            $entryContent = $entry->content;
 
-            if ("TimelineTweet" == $entryContent->itemType)
+            if ("TimelineTweet" == @$entryContent->itemContent->itemType)
             {
-                $tweetParser = new TweetDataParserTwitterWeb(
-                    data: $entryContent->tweet_results->result,
-                    enableWriteToCache: $this->enableWriteToCache,
-                );
-
-                if ($tweetParser->getIsTombstone())
-                {
-                    $result[] = new MTweetUnion(
-                        tombstone: new MTweetTombstone(
-                            $tweetParser->getTombstoneMessage(),
-                        ),
-                    );
-                    continue;
-                }
-                
-                if (isset($entryContent->socialContext->contextType)
-                    && "Pin" == $entryContent->socialContext->contextType)
-                {
-                    $tweetParser->setSocialContext(
-                        new MTweetSocialContext(TweetSocialContext::Pin)
-                    );
-                }
-
-                $result[] = new MTweetUnion(
-                    tweet: new MTweet($tweetParser),
+                $itemContent = $entryContent->itemContent;
+                $result[] = new MTimelineItemUnion(
+                    tweetUnion: $this->parseTimelineTweet($itemContent),
                 );
             }
-            else if ("TimelineTombstone" == $entryContent->itemType)
+            else if ("TimelineTombstone" == @$entryContent->itemContent->itemType)
             {
                 // TODO: Figure out how timeline tombstones differ from tweet
                 // tombstones. Timelines can contain a wider array of content
                 // than just tweets, so it might be worth restructuring this
                 // further.
-                $result[] = new MTweetUnion(
-                    tombstone: new MTweetTombstone(),
+                $result[] = new MTimelineItemUnion(
+                    tweetUnion: new MTweetUnion(
+                        tombstone: new MTweetTombstone(),
+                    )
+                );
+            }
+            else if ("TimelineTimelineModule" == $entryContent->entryType
+                && "VerticalConversation" == @$entryContent->displayType)
+            {
+                $conversation = new MConversation();
+
+                // Get all tweets in the conversation:
+                foreach ($entryContent->items as $itemEntry)
+                {
+                    $content = $itemEntry->item->itemContent;
+                    if (isset($content->itemType) &&
+                        "TimelineTweet" == $content->itemType)
+                    {
+                        $conversation->insertItem(
+                            $this->parseTimelineTweet($content)
+                        );
+                    }
+                }
+
+                $result[] = new MTimelineItemUnion(
+                    conversation: $conversation,
                 );
             }
         }
@@ -148,5 +152,37 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
         }
 
         return $result;
+    }
+
+    /**
+     * Parses a TimelineTweet object into an MTweetUnion.
+     */
+    private function parseTimelineTweet(object $entryContent): MTweetUnion
+    {
+        $tweetParser = new TweetDataParserTwitterWeb(
+            data: $entryContent->tweet_results->result,
+            enableWriteToCache: $this->enableWriteToCache,
+        );
+
+        if ($tweetParser->getIsTombstone())
+        {
+            return new MTweetUnion(
+                tombstone: new MTweetTombstone(
+                    $tweetParser->getTombstoneMessage(),
+                ),
+            );
+        }
+        
+        if (isset($entryContent->socialContext->contextType)
+            && "Pin" == $entryContent->socialContext->contextType)
+        {
+            $tweetParser->setSocialContext(
+                new MTweetSocialContext(TweetSocialContext::Pin)
+            );
+        }
+
+        return new MTweetUnion(
+            tweet: new MTweet($tweetParser),
+        );
     }
 }
