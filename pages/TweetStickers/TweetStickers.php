@@ -83,6 +83,7 @@ class TweetStickers extends RetwitterPageController
         );
 
         $tweetParser = new TweetDataParserTwitterWeb($cache->getData());
+        $tweetParser->setSocialContext(null);
 
         return new MTweet($tweetParser);
     }
