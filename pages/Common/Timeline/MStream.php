@@ -23,7 +23,7 @@ namespace Retwitter\Page\Common\Timeline;
 class MStream
 {
     /**
-     * @var MTweet[]
+     * @var MTweetUnion[]
      */
     public array $tweets;
 

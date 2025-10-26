@@ -73,15 +73,18 @@
                 'stream-items',
                 'js-navigable-stream',
             ]|join(' ') }}">
-            {% for tweet in stream.tweets %}
-                <li id="stream-item-tweet-{{ tweet.id }}" class="{{ [
-                        'js-stream-item',
-                        'stream-item',
-                        tweet.isUserPinned ? 'js-pinned',
-                    ]|join(' ') }}" data-item-id="{{ tweet.id }}"
-                    data-item-type="tweet" data-suggestion-json="{# TODO #}">
-                    {{ _self.render_tweet(tweet) }}
-                </li>
+            {% for item in stream.tweets %}
+                {% if item.tweet %}
+                    <li id="stream-item-tweet-{{ item.tweet.id }}" class="{{ [
+                            'js-stream-item',
+                            'stream-item',
+                            item.tweet.isUserPinned ? 'js-pinned',
+                        ]|join(' ') }}" data-item-id="{{ item.tweet.id }}"
+                        data-item-type="tweet" data-suggestion-json="{# TODO #}">
+                        {{ _self.render_tweet(item.tweet) }}
+                    </li>
+                {# TODO: Handle other types, such as tombstones. #}
+                {% endif %}
             {% endfor %}
         </ol>
         {% if extra.streamFooter %}

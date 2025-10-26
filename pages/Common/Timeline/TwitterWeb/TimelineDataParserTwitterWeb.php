@@ -23,11 +23,13 @@ namespace Retwitter\Page\Common\Timeline\TwitterWeb;
 use DateTime;
 use Exception;
 use Retwitter\ApiSource;
+use Retwitter\Page\Common\Timeline\MTweetTombstone;
 use Retwitter\Page\Profile\IProfileDataParser;
 use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MTweet;
+use Retwitter\Page\Common\Timeline\MTweetUnion;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use Retwitter\Page\Common\Timeline\TweetSocialContext;
 
@@ -53,7 +55,7 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
     }
 
     /**
-     * @return MTweet[]
+     * @return MTweetUnion[]
      */
     public function parseAll(): array
     {
@@ -71,6 +73,14 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                     data: $entryContent->tweet_results->result,
                     enableWriteToCache: $this->enableWriteToCache,
                 );
+
+                if ($tweetParser->getIsTombstone())
+                {
+                    $result[] = new MTweetUnion(
+                        tombstone: new MTweetTombstone(),
+                    );
+                    continue;
+                }
                 
                 if (isset($entryContent->socialContext->contextType)
                     && "Pin" == $entryContent->socialContext->contextType)
@@ -80,7 +90,19 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                     );
                 }
 
-                $result[] = new MTweet($tweetParser);
+                $result[] = new MTweetUnion(
+                    tweet: new MTweet($tweetParser),
+                );
+            }
+            else if ("TimelineTombstone" == $entryContent->itemType)
+            {
+                // TODO: Figure out how timeline tombstones differ from tweet
+                // tombstones. Timelines can contain a wider array of content
+                // than just tweets, so it might be worth restructuring this
+                // further.
+                $result[] = new MTweetUnion(
+                    tombstone: new MTweetTombstone(),
+                );
             }
         }
 

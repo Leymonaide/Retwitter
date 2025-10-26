@@ -30,7 +30,7 @@ use Retwitter\Page\Profile\IProfileDataParser;
 interface ITimelineDataParser extends IApiSourceProvider
 {
     /**
-     * @return MTweet[]
+     * @return MTweetUnion[]
      */
     public function parseAll(): array;
 }

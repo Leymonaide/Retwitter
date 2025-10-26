@@ -23,6 +23,7 @@ namespace Retwitter\Page\Common\Timeline\Nitter;
 use Retwitter\ApiSource;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MTweet;
+use Retwitter\Page\Common\Timeline\MTweetUnion;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\NitterSourceInfo;
 use PHPHtmlParser\Dom;
@@ -44,7 +45,7 @@ class TimelineDataParserNitter implements ITimelineDataParser
     }
 
     /**
-     * @return MTweet[]
+     * @return MTweetUnion[]
      */
     public function parseAll(): array
     {
@@ -78,7 +79,9 @@ class TimelineDataParserNitter implements ITimelineDataParser
                 rootNode: $child
             );
 
-            $result[] = new MTweet($tweetParser);
+            $result[] = new MTweetUnion(
+                tweet: new MTweet($tweetParser),
+            );
         }
 
         return $result;
