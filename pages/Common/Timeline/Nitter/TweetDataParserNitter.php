@@ -68,6 +68,12 @@ class TweetDataParserNitter implements ITweetDataParser
         return false;
     }
 
+    public function getTombstoneMessage(): ?FormattedString
+    {
+        // TODO.
+        return null;
+    }
+
     public function getId(): string
     {
         /**

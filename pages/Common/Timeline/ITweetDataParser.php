@@ -30,10 +30,8 @@ use Retwitter\Page\Common\IBasicProfileInfoDataParser;
  */
 interface ITweetDataParser extends IApiSourceProvider
 {
-    // TODO: Tombstone parser. Either here or its own parser class. This
-    // architecture could also be reconsidered (maybe it should be checked
-    // outside of this class)
     public function getIsTombstone(): bool;
+    public function getTombstoneMessage(): ?FormattedString;
 
     public function getId(): string;
     public function getRetweetId(): ?string;

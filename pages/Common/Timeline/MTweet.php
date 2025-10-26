@@ -70,7 +70,9 @@ class MTweet
             if ($quotedTweet->getIsTombstone())
             {
                 $this->quotedTweet = new MTweetUnion(
-                    tombstone: new MTweetTombstone(),
+                    tombstone: new MTweetTombstone(
+                        $quotedTweet->getTombstoneMessage(),
+                    ),
                 );
             }
             else

@@ -34,6 +34,7 @@ use Retwitter\Page\Common\Timeline\TweetMediaAvailability;
 use Retwitter\RecentlyViewedCache\CachedObjectType;
 use Retwitter\RecentlyViewedCache\RecentlyViewedCache;
 use Retwitter\RecentlyViewedCache\TwitterApiCache;
+use Retwitter\Utils\FormattedStringBuilder;
 use Retwitter\Utils\ParsingUtils;
 
 class TweetDataParserTwitterWeb implements ITweetDataParser
@@ -82,7 +83,27 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
     public function getIsTombstone(): bool
     {
         return isset($this->data->__typename)
-            && $this->data->__typename == "TweetTombstone";
+            && $this->data->__typename == "TweetTombstone"
+            || $this->data->__typename == "TweetUnavailable";
+    }
+
+    public function getTombstoneMessage(): ?FormattedString
+    {
+        if (!$this->getIsTombstone())
+        {
+            return null;
+        }
+
+        // TODO: Parse Twitter API entities into a formatted string.
+        // Example: https://github.com/reductoai/remembrall/blob/b9537f7f057fc92ec0a2844286ad53ce96ec46bc/src/app/(home)/tweets.json#L1180-L1199
+        if (isset($this->data->tombstone->text->text))
+        {
+            return (new FormattedStringBuilder())->createAndAddRun(
+                $this->data->tombstone->text->text
+            )->build();
+        }
+
+        return null;
     }
 
     /**

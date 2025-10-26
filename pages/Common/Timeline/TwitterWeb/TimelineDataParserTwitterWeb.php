@@ -77,7 +77,9 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                 if ($tweetParser->getIsTombstone())
                 {
                     $result[] = new MTweetUnion(
-                        tombstone: new MTweetTombstone(),
+                        tombstone: new MTweetTombstone(
+                            $tweetParser->getTombstoneMessage(),
+                        ),
                     );
                     continue;
                 }

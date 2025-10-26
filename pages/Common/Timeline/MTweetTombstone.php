@@ -21,24 +21,39 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
 use Rehike\i18n\i18n;
+use Rehike\FormattedString;
+use Retwitter\Utils\FormattedStringBuilder;
 
 /**
  * Renderer for timeline tweet errors such as "this tweet is not available"
  */
 class MTweetTombstone
 {
-    public string $message;
+    public FormattedString $message;
 
-    public function __construct(?string $message = null)
+    public function __construct(FormattedString|string|null $message = null)
     {
         if (null != $message)
         {
-            $this->message = $message;
+            if (is_string($message))
+            {
+                $fsb = new FormattedStringBuilder();
+                $fsb->createAndAddRun($message);
+                $this->message = $fsb->build();
+            }
+            else
+            {
+                $this->message = $message;
+            }
         }
         else
         {
             $i18n = i18n::getNamespace("common");
-            $this->message = $i18n->get("tweet_tombstone_unavailable");
+            $fsb = new FormattedStringBuilder();
+            $fsb->createAndAddRun(
+                $i18n->get("tweet_tombstone_unavailable")
+            );
+            $this->message = $fsb->build();
         }
     }
 }

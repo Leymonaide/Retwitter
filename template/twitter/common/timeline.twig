@@ -291,7 +291,7 @@
             {% elseif tweet.quotedTweet.tombstone %}
                 <div class="Tombstone">
                     <span class="Tombstone-label">
-                        {{ tweet.quotedTweet.tombstone.message }}
+                        {{ core.text(tweet.quotedTweet.tombstone.message) }}
                     </span>
                 </div>
             {% endif %}
