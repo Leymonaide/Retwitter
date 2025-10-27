@@ -40,7 +40,7 @@
 <script src="https://abs.twimg.com/k/{{ app.lang }}/{{ retwitter.resource.getJsName(name, app.lang) }}.js" async=""></script>
 {% endmacro %}
 
-{% macro text(text) %}
+{% macro text(text, nl2br = false) %}
 {% apply spaceless %}
 {% if text.simpleText %}
     {{ text.simpleText }}
@@ -52,7 +52,11 @@
         {% if run.url %}
         <a href="{{ run.url }}">
         {% endif %}
+            {% if nl2br %}
+            {{ run.text|nl2br }}
+            {% else %}
             {{ run.text }}
+            {% endif %}
         {% if run.url %}
         </a>
         {% endif %}
