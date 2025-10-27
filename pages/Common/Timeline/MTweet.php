@@ -44,6 +44,8 @@ class MTweet
     public bool $invertedColors = false;
     public ?string $retweeterUsername = null;
     public ?MTweetSocialContext $socialContext = null;
+    public bool $isFavorited = false;
+    public bool $isRetweeted = false;
 
     /**
      * @var MTweetMedia[]
@@ -107,6 +109,9 @@ class MTweet
             $retweeter = $parser->getRetweetAuthorParser();
             $this->retweeterUsername = $retweeter->getUsername();
         }
+
+        $this->isFavorited = $parser->getIsFavorited();
+        $this->isRetweeted = $parser->getIsRetweeted();
     }
 
     public function setInvertedColors(bool $value): void

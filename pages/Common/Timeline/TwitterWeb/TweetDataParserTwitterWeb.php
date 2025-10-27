@@ -255,6 +255,21 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return isset($this->getRootData()->legacy->retweeted_status_result);
     }
 
+    public function getIsFavorited(): bool
+    {
+        return $this->getData()->legacy?->favorited ?? false;
+    }
+
+    public function getIsRetweeted(): bool
+    {
+        return $this->getData()->legacy?->retweeted ?? false;
+    }
+
+    public function getIsBookmarked(): bool
+    {
+        return $this->getData()->legacy?->bookmarked ?? false;
+    }
+
     /**
      * @return MTweetMedia[]
      */

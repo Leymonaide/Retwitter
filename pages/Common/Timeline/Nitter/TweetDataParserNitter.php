@@ -205,6 +205,23 @@ class TweetDataParserNitter implements ITweetDataParser
             $this->rootNode, ".retweet-header");
     }
 
+    /* Always signed out. */
+    
+    public function getIsFavorited(): bool
+    {
+        return false;
+    }
+
+    public function getIsRetweeted(): bool
+    {
+        return false;
+    }
+
+    public function getIsBookmarked(): bool
+    {
+        return false;
+    }
+
     private function isPinned(): bool
     {
         return NitterParsingUtils::findFirst(

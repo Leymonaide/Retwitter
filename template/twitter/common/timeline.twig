@@ -149,6 +149,8 @@
             tweet.socialContext ? 'tweet-has-context',
             tweet.isUserPinned ? 'user-pinned',
             tweet.invertedColors ? "Tweet--invertedColors",
+            tweet.isFavorited ? "favorited",
+            tweet.isRetweeted ? "retweeted"
         ]|join(' ') }}"
         data-tweet-id="{{ tweet.id }}"
         data-item-id="{{ tweet.id }}"

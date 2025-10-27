@@ -49,6 +49,9 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getQuoteTweetCount(): ?int;
     public function getQuotedTweetParser(): ?ITweetDataParser;
     public function getIsRetweet(): bool;
+    public function getIsFavorited(): bool;
+    public function getIsRetweeted(): bool;
+    public function getIsBookmarked(): bool;
 
     /**
      * @return MTweetMedia[]
