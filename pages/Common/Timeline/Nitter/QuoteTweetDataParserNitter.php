@@ -49,6 +49,18 @@ class QuoteTweetDataParserNitter implements ITweetDataParser
         return ApiSource::Nitter;
     }
 
+    public function getIsTombstone(): bool
+    {
+        // TODO.
+        return false;
+    }
+
+    public function getTombstoneMessage(): ?FormattedString
+    {
+        // TODO.
+        return null;
+    }
+
     public function getId(): string
     {
         /**
