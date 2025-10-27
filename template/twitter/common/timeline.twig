@@ -77,13 +77,19 @@
                 {% if item.tweetUnion %}
                     {{ _self.render_stream_item_tweet(item.tweetUnion) }}
                 {% elseif item.conversation %}
-                    {% for tweetUnion in item.conversation.items %}
-                        <div class="ThreadedConversation-tweet">
-                            {{ _self.render_stream_item_tweet(tweetUnion, {
-                                componentContext: "conversation"
-                            }) }}
-                        </div>
-                    {% endfor %}
+                    <li class="ThreadedConversation">
+                    <ol class="stream-items">
+                        {% for tweetUnion in item.conversation.items %}
+                            {# `not-permalink` is a custom class to identify non-permalink Tweets for
+                               the conversation styling. See template/twitter/core/head.twig for more details. #}
+                            <div class="ThreadedConversation-tweet not-permalink {{ loop.last ? "last" }}">
+                                {{ _self.render_stream_item_tweet(tweetUnion, {
+                                    componentContext: "conversation"
+                                }) }}
+                            </div>
+                        {% endfor %}
+                    </ol>
+                    </li>
                 {# TODO: Handle other types, such as tombstones. #}
                 {% endif %}
             {% endfor %}
