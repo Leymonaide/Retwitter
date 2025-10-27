@@ -38,7 +38,7 @@
     Twitter's templates use, so they work. In the future, a macro to map enum
     to a CSS class name, etc. may be required.
 #}
-{% macro class(data, class) %}
+{% macro class(data, classes) %}
 EdgeButton EdgeButton--{{ data.style.value }} EdgeButton--{{ data.size.value }} {{ classes|join(' ') }}
 {% endmacro %}
 

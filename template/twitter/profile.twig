@@ -334,34 +334,12 @@ wrapper-profile
             {% endblock %}
 
             {% block col_three_content %}
-            {% from "common/edge_button.twig" import render as edge_button %}
-            {% from "common/pageframe/footer.twig" import render as footer %}
             {% set sidebar = app.page.sidebar %}
             <div class="Grid Grid--withGutter">
                 <div class="Grid-cell">
                     <div class="ProfileSidebar ProfileSidebar--withRightAlignment">
                         <div class="MoveableModule">
-                            <div class="SidebarCommonModules">
-                                {% if sidebar.signupPromo %}
-                                <div class="SignupCallOut module js-signup-call-out">
-                                    <div class="SignupCallOut-header">
-                                        <h3 class="SignupCallOut-title u-textBreak">
-                                            {{ sidebar.signupPromo.header }}
-                                        </h3>
-                                    </div>
-                                    <div class="SignupCallOut-subheader">
-                                        {{ sidebar.signupPromo.message }}
-                                    </div>
-                                    <div class="signup SignupForm">
-                                        {{ edge_button(sidebar.signupPromo.button) }}
-                                    </div>
-                                </div>
-                                {% endif %}
-                                {{ footer(app.page.footer, {
-                                    slim: true,
-                                    blankBackground: true
-                                }) }}
-                            </div>
+                            {% include "common/sidebar_modules.twig" %}
                         </div>
                     </div>
                 </div>

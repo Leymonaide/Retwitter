@@ -54,3 +54,8 @@ tweet_tombstone_unavailable: "This Tweet is unavailable."
 gallery_close: "Close"
 gallery_previous: "Previous"
 gallery_next: "Next"
+
+# Signup promo (multiple pages)
+signup_callout_header: "New to Twitter?"
+signup_callout_message: "Sign up now to get your own personalized timeline!"
+signup_callout_action: "Sign up"

@@ -1,0 +1,38 @@
+{% from "common/edge_button.twig" import render as edge_button %}
+{% from "common/pageframe/footer.twig" import render as footer %}
+<div class="SidebarCommonModules">
+    {% if not app.isLoggedIn() %}
+    <div class="SignupCallOut module js-signup-call-out">
+        <div class="SignupCallOut-header">
+            <h3 class="SignupCallOut-title u-textBreak">
+                {{ app.i18n.get("common", "signup_callout_header") }}
+            </h3>
+        </div>
+        <div class="SignupCallOut-subheader">
+            {{ app.i18n.get("common", "signup_callout_message") }}
+        </div>
+        <div class="signup SignupForm">
+            {% set EdgeButtonStyle = enum("Retwitter\\Page\\Common\\EdgeButtonStyle") %}
+            {% set EdgeButtonSize  = enum("Retwitter\\Page\\Common\\EdgeButtonSize") %}
+            {{ edge_button(
+                data: {
+                    url: "/signup",
+                    style: EdgeButtonStyle.Primary,
+                    size: EdgeButtonSize.Large,
+                    label: app.i18n.get("common", "signup_callout_action")
+                },
+                classes: [ "SignupForm-submit", "u-block", "js-signup" ],
+                attributes: {
+                    component: "signup_callout",
+                    element: "form"
+                }
+            ) }}
+        </div>
+    </div>
+    {% endif %}
+    {# TODO(aubymori): Trends #}
+    {{ footer(app.page.footer, {
+        slim: true,
+        blankBackground: true
+    }) }}
+</div>
