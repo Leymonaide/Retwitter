@@ -124,3 +124,13 @@
         {% endif %}
     </span>
 {% endmacro %}
+
+{% macro username(name_text, direction = "ltr") %}
+    {% types {
+        name_text: "string",
+        direction: "string",
+    } %}
+    <span class="username u-dir u-textTruncate" dir="{{ direction }}">
+        @<b>{{ name_text }}</b>
+    </span>
+{% endmacro %}
