@@ -20,23 +20,12 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
-/**
- * Represents threaded conversations.
- */
-class MConversation
+class MConversationItemUnion
 {
-    /**
-     * @var MConversationItemUnion[]
-     */
-    public array $items;
-
-    public function __construct(public string $id)
+    public function __construct(
+        public ?MTweetUnion $tweetUnion = null,
+        public ?MMissingTweetsBar $missingTweetsBar = null,
+    )
     {
-
-    }
-
-    public function insertItem(MConversationItemUnion $item): void
-    {
-        $this->items[] = $item;
     }
 }

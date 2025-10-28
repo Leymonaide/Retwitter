@@ -158,6 +158,11 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return null;
     }
 
+    public function getInReplyToId(): ?string
+    {
+        return @$this->getData()->legacy?->in_reply_to_status_id_str;
+    }
+
     public function getConversationId(): string
     {
         return $this->getData()->legacy->conversation_id_str;

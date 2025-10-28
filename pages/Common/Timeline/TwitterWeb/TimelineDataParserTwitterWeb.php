@@ -22,6 +22,7 @@ namespace Retwitter\Page\Common\Timeline\TwitterWeb;
 
 use DateTime;
 use Exception;
+use Rehike\i18n\i18n;
 use Retwitter\ApiSource;
 use Retwitter\Page\Common\Timeline\MTweetTombstone;
 use Retwitter\Page\Profile\IProfileDataParser;
@@ -29,6 +30,8 @@ use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MConversation;
+use Retwitter\Page\Common\Timeline\MConversationItemUnion;
+use Retwitter\Page\Common\Timeline\MMissingTweetsBar;
 use Retwitter\Page\Common\Timeline\MTimelineItemUnion;
 use Retwitter\Page\Common\Timeline\MTweet;
 use Retwitter\Page\Common\Timeline\MTweetUnion;
@@ -63,6 +66,7 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
     {
         $result = [];
         $entries = $this->executeInstructions();
+        $i18n = i18n::getNamespace("common");
 
         foreach ($entries as $entry)
         if (isset($entry->content))
@@ -91,8 +95,12 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
             else if ("TimelineTimelineModule" == $entryContent->entryType
                 && "VerticalConversation" == @$entryContent->displayType)
             {
-                $conversation = new MConversation();
+                // Sort index seems to be the conversation ID.
+                $conversationId = $entry->sortIndex;
+                $conversation = new MConversation($conversationId);
+                $tweetIds = $entryContent->metadata->conversationMetadata->allTweetIds;
 
+                $previousTweetId = null;
                 // Get all tweets in the conversation:
                 foreach ($entryContent->items as $itemEntry)
                 {
@@ -100,9 +108,60 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                     if (isset($content->itemType) &&
                         "TimelineTweet" == $content->itemType)
                     {
+                        $tweetId = null;
+                        $inReplyToId = null;
+                        $tweetUnion = $this->parseTimelineTweet($content);
+                        if (null != $tweetUnion->tweet)
+                        {
+                            $tweetId = $tweetUnion->tweet->id;
+                            $inReplyToId = $tweetUnion->tweet->inReplyToId;
+                        }
+                        else
+                        {
+                            $tweetId = $tweetUnion->tombstone->id;
+                        }
+
+                        if (null != $inReplyToId && $inReplyToId != $previousTweetId)
+                        {
+                            /* Get indices for previous and in reply to Tweet
+                               to calculate difference (amount of replies) */
+                            $previousIndex = array_search($previousTweetId, $tweetIds);
+                            $inReplyToIndex = array_search($inReplyToId, $tweetIds);
+                            
+                            // Hopefully this shouldn't ever fail.
+                            if ($previousIndex !== false && $inReplyToIndex !== false)
+                            {
+                                $replyCount = $inReplyToIndex - $previousIndex;
+                                if ($replyCount == 1)
+                                {
+                                    $label = $i18n->get("tweet_missing_replies_singular");
+                                }
+                                else
+                                {
+                                    $label = $i18n->format(
+                                        "tweet_missing_replies_plural",
+                                        $i18n->formatNumber($replyCount)
+                                    );
+                                }
+
+                                $conversation->insertItem(
+                                    new MConversationItemUnion(
+                                        missingTweetsBar: new MMissingTweetsBar(
+                                            // Even rweb uses /i/status (no username)
+                                            // here, it's fine.
+                                            url: "/i/status/" . $conversationId,
+                                            label: $label
+                                        )
+                                    )
+                                );
+                            }
+                        }
+
                         $conversation->insertItem(
-                            $this->parseTimelineTweet($content)
+                            new MConversationItemUnion($tweetUnion)
                         );
+                        
+                        $previousTweetId = $tweetId;
                     }
                 }
 
@@ -168,7 +227,7 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
         {
             return new MTweetUnion(
                 tombstone: new MTweetTombstone(
-                    $tweetParser->getTombstoneMessage(),
+                    $tweetParser->getTombstoneMessage(), $tweetParser->getId()
                 ),
             );
         }

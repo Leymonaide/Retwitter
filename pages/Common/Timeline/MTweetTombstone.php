@@ -30,9 +30,15 @@ use Retwitter\Utils\FormattedStringBuilder;
 class MTweetTombstone
 {
     public FormattedString $message;
+    public string $id;
 
-    public function __construct(FormattedString|string|null $message = null)
+    public function __construct(FormattedString|string|null $message = null, ?string $id = null)
     {
+        if (null != $id)
+        {
+            $this->id = $id;
+        }
+
         if (null != $message)
         {
             if (is_string($message))

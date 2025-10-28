@@ -21,22 +21,29 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
 /**
- * Represents threaded conversations.
+ * Represents the missing Tweets bar (x more replies, Show thread).
  */
-class MConversation
+class MMissingTweetsBar
 {
-    /**
-     * @var MConversationItemUnion[]
-     */
-    public array $items;
+    public function __construct(
+        /**
+         * For non-AJAX, the URL this missing Tweets bar should navigate.
+         * For AJAX, the URL that should be requested (data-expansion-url).
+         */
+        public string $url = "",
 
-    public function __construct(public string $id)
+        /**
+         * If set, AJAX will be used to request the missing Tweets.
+         * If unset, link will lead to the thread.
+         */
+        public bool $ajax = false,
+
+        /**
+         * Display text.
+         */
+        public string $label = "",
+    )
     {
 
-    }
-
-    public function insertItem(MConversationItemUnion $item): void
-    {
-        $this->items[] = $item;
     }
 }

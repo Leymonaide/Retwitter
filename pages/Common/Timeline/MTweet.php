@@ -31,6 +31,7 @@ class MTweet
 {
     public ?string $id = null;
     public ?string $retweetId = null;
+    public ?string $inReplyToId = null;
     public string $conversationId;
     public string $userId;
     public FormattedString $fullText;
@@ -109,6 +110,8 @@ class MTweet
             $retweeter = $parser->getRetweetAuthorParser();
             $this->retweeterUsername = $retweeter->getUsername();
         }
+        
+        $this->inReplyToId = $parser->getInReplyToId();
 
         $this->isFavorited = $parser->getIsFavorited();
         $this->isRetweeted = $parser->getIsRetweeted();

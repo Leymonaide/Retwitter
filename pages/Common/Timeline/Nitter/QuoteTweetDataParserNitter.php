@@ -132,6 +132,11 @@ class QuoteTweetDataParserNitter implements ITweetDataParser
         return null;
     }
 
+    public function getInReplyToId(): ?string
+    {
+        return null;
+    }
+
     public function getLang(): ?string
     {
         // Nitter doesn't report the language of a tweet. Now I could query an

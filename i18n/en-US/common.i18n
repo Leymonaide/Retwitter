@@ -48,6 +48,9 @@ tweet_a11y_favorite_count_singular: "%s like"
 tweet_a11y_favorite_count_plural: "%s likes"
 tweet_time_tooltip: "%s - %s" # "5:06 PM - 9 May 2019"
 
+tweet_missing_replies_singular: "1 more reply"
+tweet_missing_replies_plural: "%s more replies"
+
 tweet_tombstone_unavailable: "This Tweet is unavailable."
 
 # Gallery messages:

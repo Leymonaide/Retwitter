@@ -143,6 +143,12 @@ class TweetDataParserNitter implements ITweetDataParser
         return $this->getId();
     }
 
+    public function getInReplyToId(): ?string
+    {
+        // TODO(aubymori)
+        return null;
+    }
+
     public function getQuotedTweetParser(): ?ITweetDataParser
     {
         if ($quoteTweetNode = NitterParsingUtils::findFirst(

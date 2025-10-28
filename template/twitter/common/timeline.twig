@@ -133,7 +133,7 @@
             {# Temporary handling for data-ancestors (this is better to do in PHP): #}
             {% set temp_ancestors %}{% for tweetUnion in conversation.items %}{% if (not loop.last) and tweetUnion.tweet %}{{ tweetUnion.tweet.id ~ ',' }}{% endif %}{% endfor %}{% endset %}
             data-ancestors="{{ temp_ancestors|trim(',') }}">
-            {% for tweetUnion in conversation.items %}
+            {% for item in conversation.items %}
                 {# This seems to be functionally separated into:
                     
                     - A string of conversation tweets. This is every tweet until
@@ -145,21 +145,32 @@
                       conversation module, even though it's logically a child of
                       the element. This is always the last tweet in the
                       conversation model. #}
-                <li class="{{ [
-                        loop.first  
-                            ? 'conversation-root'
-                            : 'conversation-ancestor',
-                        loop.first ? 'root',
-                        loop.last
-                            ? 'original-tweet-item'
-                            : 'conversation-tweet-item',
-                    ]|join(' ') }}">
-                    {{ _self.render_tweet(tweetUnion.tweet, {
-                        componentContext: "conversation",
-                        isConversationTweet: not loop.last,
-                        hasConversationModule: loop.last,
-                    }) }}
-                </li>
+                {% if item.tweetUnion %}
+                    <li class="{{ [
+                            loop.first  
+                                ? 'conversation-root'
+                                : 'conversation-ancestor',
+                            loop.first ? 'root',
+                            loop.last
+                                ? 'original-tweet-item'
+                                : 'conversation-tweet-item',
+                        ]|join(' ') }}">
+                        {{ _self.render_tweet(item.tweetUnion.tweet, {
+                            componentContext: "conversation",
+                            isConversationTweet: not loop.last,
+                            hasConversationModule: loop.last,
+                        }) }}
+                    </li>
+                {% elseif item.missingTweetsBar %}
+                    <li class="missing-tweets-bar">
+                        <div class="content">
+                            <a href="{{ item.missingTweetsBar.url }}" class="missing-tweets-link">
+                                {{ item.missingTweetsBar.label }}
+                            </a>
+                            <span class="vellip"></span>
+                        </div>
+                    </li>
+                {% endif %}
             {% endfor %}
         </ol>
     </li>
@@ -178,12 +189,14 @@
     } %}
     <li class="ThreadedConversation">
         <ol class="stream-items">
-            {% for tweetUnion in conversation.items %}
-                <div class="ThreadedConversation-tweet {{ loop.last ? "last" }}">
-                    {{ _self.render_stream_item_tweet(tweetUnion, {
-                        componentContext: "conversation"
-                    }) }}
-                </div>
+            {% for item in conversation.items %}
+                {% if item.tweetUnion %}
+                    <div class="ThreadedConversation-tweet {{ loop.last ? "last" }}">
+                        {{ _self.render_stream_item_tweet(item.tweetUnion, {
+                            componentContext: "conversation"
+                        }) }}
+                    </div>
+                {% endif %}
             {% endfor %}
         </ol>
     </li>

@@ -35,6 +35,7 @@ interface ITweetDataParser extends IApiSourceProvider
 
     public function getId(): string;
     public function getRetweetId(): ?string;
+    public function getInReplyToId(): ?string;
     public function getConversationId(): string;
     public function getUserId(): string;
     public function getFullText(): ?FormattedString;
