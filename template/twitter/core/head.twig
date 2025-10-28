@@ -214,17 +214,3 @@
         {% include "common/user_style.twig" %}
     </style>
 {% endif %}
-<style>
-    /* Threaded conversations fix. Before rweb, they were never
-       shown outside of the Tweet modal (permalink replies).
-       As such, the vellip (the blue line) shows up at the wrong
-       position. */
-    .ThreadedConversation-tweet:not(.is-hiddenAncestor) ~ .ThreadedConversation-tweet.not-permalink:before,
-    .ThreadedConversation-tweet.not-permalink:after,
-    .ThreadedConversation-moreReplies.not-permalink:before,
-    .ThreadedConversation-unavailableTweet.not-permalink:before,
-    .ThreadedConversation-unavailableTweet.not-permalink:after
-    {
-        left: 35px;
-    }
-</style>
