@@ -131,7 +131,7 @@
         data-item-type="tweet" {# This is correct, as I've seen in Swift JS. #}>
         <ol class="conversation-module stream-items"
             {# Temporary handling for data-ancestors (this is better to do in PHP): #}
-            {% set temp_ancestors %}{% for tweetUnion in conversation.items %}{% if (not loop.last) and tweetUnion.tweet %}{{ tweetUnion.tweet.id ~ ',' }}{% endif %}{% endfor %}{% endset %}
+            {% set temp_ancestors %}{% for item in conversation.items %}{% if (not loop.last) and item.tweetUnion %}{{ item.tweetUnion.tweet.id ~ ',' }}{% endif %}{% endfor %}{% endset %}
             data-ancestors="{{ temp_ancestors|trim(',') }}">
             {% for item in conversation.items %}
                 {# This seems to be functionally separated into:
