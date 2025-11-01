@@ -1,5 +1,0 @@
-JS_BUILD_FILES = [
-    "main.js"
-]
-
-JS_OUTPUT_BUNDLE = "static/rehike/js/t1_js_fixes.js"

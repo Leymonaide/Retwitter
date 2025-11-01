@@ -1,5 +1,5 @@
 /**
- * @fileoverview Fixes for T1 official JS errors.
+ * @fileoverview Fixes for Swift official JS errors.
  */
 
 (function(){

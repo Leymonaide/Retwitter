@@ -95,7 +95,7 @@
         <input type="hidden" id="swift-module-path" value="https://abs.twimg.com/k/swift/en">
         {{ core.async_js("init") }}
         {% if rehike.config.behavior.enableClientFixes %}
-            <script src="{{ rehike.resource.resolveVersioned('rehike/js/t1_js_fixes.js') }}"></script>
+            <script src="{{ rehike.resource.resolveVersioned('rehike/js/swift_js_fixes.js') }}"></script>
         {% endif %}
         <div class="hidden" id="hidden-content">
             <iframe aria-hidden="true" class="tweet-post-iframe" name="tweet-post-iframe"></iframe>
