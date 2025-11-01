@@ -114,25 +114,17 @@
     {% types {
         conversation: "Retwitter\\Page\\Common\\Timeline\\MConversation",
     } %}
-    {# TODO(pumpkin): The more I think about this, the more I question if this
-       stream item would actually have the info of the original tweet (which is
-       actually considered the owner of the conversation module) rather than its
-       own information here.
-       
-       I will just go with that assumption, but I will save that work for a
-       later commit so this guesswork can be saved. #}
-    <li id="stream-item-conversation-{{ conversation.id ?? '0' }}"
+    <li id="stream-item-tweet-{{ conversation.getOwnerTweetId() }}"
         class="{{ [
             'stream-item',
+            'js-stream-item',
             'js-has-stream-item',
             'js-has-navigable-stream',
         ]|join(' ') }}"
-        data-item-id="{{ conversation.id ?? '0' }}"
-        data-item-type="tweet" {# This is correct, as I've seen in Swift JS. #}>
+        data-item-id="{{ conversation.getOwnerTweetId() }}"
+        data-item-type="tweet" {# This is correct, as can be seen in Swift JS. #}>
         <ol class="conversation-module stream-items"
-            {# Temporary handling for data-ancestors (this is better to do in PHP): #}
-            {% set temp_ancestors %}{% for item in conversation.items %}{% if (not loop.last) and item.tweetUnion %}{{ item.tweetUnion.tweet.id ~ ',' }}{% endif %}{% endfor %}{% endset %}
-            data-ancestors="{{ temp_ancestors|trim(',') }}">
+            data-ancestors="{{ conversation.getAncestors()|join(',') }}">
             {% for item in conversation.items %}
                 {# This seems to be functionally separated into:
                     

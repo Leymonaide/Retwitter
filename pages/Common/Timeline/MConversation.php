@@ -39,4 +39,46 @@ class MConversation
     {
         $this->items[] = $item;
     }
+
+    /**
+     * API for the template to get all ancestors of the conversation tweet,
+     * which includes all tweets except for the last one.
+     * 
+     * @return string[]
+     */
+    public function getAncestors(): array
+    {
+        $out = [];
+
+        for ($i = 0; $i < count($this->items) - 1; $i++)
+        {
+            $item = $this->items[$i];
+
+            if (null !== $item->tweetUnion?->tweet)
+            {
+                $out[] = $item->tweetUnion->tweet->id;
+            }
+        }
+
+        return $out;
+    }
+
+    /**
+     * Gets the ID of the tweet which owns the conversation, which is always the
+     * last tweet in the conversation view (as odd as that may seem)
+     */
+    public function getOwnerTweetId(): string
+    {
+        for ($i = count($this->items) - 1; $i > 0; $i--)
+        {
+            $item = $this->items[$i];
+
+            if (null !== $item->tweetUnion?->tweet)
+            {
+                return $item->tweetUnion->tweet->id;
+            }
+        }
+
+        return "0";
+    }
 }
