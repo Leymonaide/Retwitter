@@ -159,7 +159,21 @@
             var t = (e.tagName || "").toLowerCase();
             return "textarea" == t || "input" == t && "text" == e.getAttribute("type") || "true" == e.getAttribute("contenteditable")
         }
-        for (var m, d = (new Date).getTime(), l = 1e4, g = /^([^\.]+\.)*twitter\.com$/, p = /^key/, h = ["click", "keydown", "keypress", "keyup"], v = [], w = null, y = !0, b = {
+
+        /* 
+         * TEMPORARY UX IMPROVEMENT AHEAD.
+         * 
+         * Basically, this whole section of code is responsible for blocking
+         * all keyboard shortcuts until Swift JS loads. During development,
+         * we'll have pages that don't load all the way, and leave keyboard
+         * shortcuts, such as those to switch the tab, refresh the page, or
+         * open developer tools completely disabled.
+         *
+         * I think that this should be refactored as a UX improvement option
+         * in the future. I think it's terrible for the tab switch shortcuts to
+         * be disabled even for the split second during initial page load.
+         */
+        for (var m, d = (new Date).getTime(), l = 1e4, g = /^([^\.]+\.)*twitter\.com$/, p = /^key/, h = ["click"/*, "keydown", "keypress", "keyup"*/], v = [], w = null, y = !0, b = {
                 captured: [],
                 ignored: [],
                 direct: [],
