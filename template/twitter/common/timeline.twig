@@ -123,7 +123,7 @@
         ]|join(' ') }}"
         data-item-id="{{ conversation.getOwnerTweetId() }}"
         data-item-type="tweet" {# This is correct, as can be seen in Swift JS. #}>
-        <ol class="conversation-module stream-items"
+        <ol class="conversation-module stream-items js-navigable-stream"
             data-ancestors="{{ conversation.getAncestors()|join(',') }}">
             {% for item in conversation.items %}
                 {# This seems to be functionally separated into:
