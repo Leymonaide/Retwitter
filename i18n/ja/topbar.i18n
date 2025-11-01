@@ -1,0 +1,48 @@
+# This file is part of the Retwitter project.
+# Copyright (c) 2025 lemon-pumpkin-pie.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+tab_home: "ホーム"
+tab_notifications: "通知"
+tab_messages: "メッセージ"
+tab_active: "%s、現在のページ。"
+
+search_placeholder: "キーワード検索"
+search_a11y_label: "Search query"
+
+signin_promo: "アカウントをお持ちの場合"
+signin_promo_action: "ログイン"
+username_placeholder: "Phone, email, or username"
+password_placeholder: "Password"
+remember_me_label: "Remember me"
+forgot_password_label: "Forgot password?"
+sign_up_header: "New to Twitter?"
+sign_up_button: "Sign up"
+
+new_tweet_button: "ツイート"
+
+user_dropdown_title: "Profile and settings"
+user_dropdown_profile: "Profile"
+user_dropdown_lists: "Lists"
+user_dropdown_moments: "Moments"
+user_dropdown_ads: "Twitter Ads"
+user_dropdown_analytics: "Analytics"
+user_dropdown_settings: "Settings and privacy"
+user_dropdown_help: "Help Center"
+user_dropdown_shortcuts: "Keyboard shortcuts"
+user_dropdown_logout: "Log out"
+user_dropdown_logout_template: "Log out %s"
+user_dropdown_nightmode: "Dark mode"
+user_dropdown_enable_rweb: "Try the new Twitter"

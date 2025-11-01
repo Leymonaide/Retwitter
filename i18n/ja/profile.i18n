@@ -1,0 +1,47 @@
+# This file is part of the Retwitter project.
+# Copyright (c) 2025 lemon-pumpkin-pie.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# Title of profile page:
+page_title: "%s (@%s) | Twitter"
+page_title_old: "%s (@%s) on Twitter"
+suspended_page_title: "Twitter / Account suspended"
+
+bio_join_date: "%sに登録"
+bio_birthday: "誕生日: %s"
+
+stat_tweets: "ツイート"
+stat_tweets_tip: "%sツイート"
+stat_following: "フォロー"
+stat_following_tip: "%s人をフォロー中"
+stat_followers: "フォロワー"
+stat_followers_tip: "%s人のフォロワー"
+stat_likes: "いいね"
+stat_likes_tip: "%sいいね"
+stat_lists: "リスト"
+stat_lists_tip: "%s件のリスト"
+
+tab_tweets: "ツイート"
+tab_with_replies: "ツイートと返信"
+tab_media: "メディア"
+tab_active: "%s、現在のページ。"
+
+suspended_title: "Account suspended"
+suspended_message: "This account has been suspended."
+
+protected_title: "This account's Tweets are protected."
+protected_explanation: >
+    Only confirmed followers have access to %s's Tweets and complete profile.
+    Click the "Follow" button to send a follow request.

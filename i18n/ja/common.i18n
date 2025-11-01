@@ -1,0 +1,62 @@
+# This file is part of the Retwitter project.
+# Copyright (c) 2025 lemon-pumpkin-pie.
+# 
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but 
+# WITHOUT ANY WARRANTY; without even the implied warranty of 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License 
+# along with this program. If not, see <http://www.gnu.org/licenses/>.
+
+# Date/Time localization constants:
+dt_ymd: "Y年m月j日" # Year, month, and day all shown, i.e. "1 Mar 2018".
+dt_ym: "m月j日" # Year and month shown, i.e. "May 9"
+dt_h_template: "%sh時間" # Up to "23h"
+dt_m_template: "%sm分" # Up to "59m"
+dt_s_template: "%ss秒" # Up to "59s"
+dt_hm: "g:i A" # Hours and minutes shown, i.e. "5:06 PM". TODO.
+
+verified_tooltip: "認証済みアカウント"
+protected_tooltip: "Protected Tweets"
+
+more_tooltip: "その他"
+
+tweet_social_context_retweeted: "%sさんがリツイート"
+tweet_social_context_pinned: "固定されたツイート"
+tweet_menu_copy_link: "Copy link to Tweet"
+tweet_menu_embed: "Embed Tweet"
+tweet_action_reply_tooltip: "Reply"
+tweet_action_retweet_tooltip: "Retweet"
+tweet_action_retweeted_tooltip: "Retweeted"
+tweet_action_undo_retweet_tooltip: "Undo retweet"
+tweet_action_favorite_tooltip: "Like"
+tweet_action_favorited_tooltip: "Liked"
+tweet_action_undo_favorite_tooltip: "Undo like"
+tweet_a11y_reply_count_singular: "%s reply"
+tweet_a11y_reply_count_plural: "%s replies"
+tweet_a11y_retweet_count_singular: "%s retweet"
+tweet_a11y_retweet_count_plural: "%s retweets"
+tweet_a11y_favorite_count_singular: "%s like"
+tweet_a11y_favorite_count_plural: "%s likes"
+tweet_time_tooltip: "%s - %s" # "5:06 PM - 9 May 2019"
+
+tweet_missing_replies_singular: "1 more reply"
+tweet_missing_replies_plural: "%s more replies"
+
+tweet_tombstone_unavailable: "このツイートを表示できません。"
+
+# Gallery messages:
+gallery_close: "Close"
+gallery_previous: "Previous"
+gallery_next: "Next"
+
+# Signup promo (multiple pages)
+signup_callout_header: "Twitterを使ってみよう"
+signup_callout_message: "登録してあなただけのタイムラインを作りましょう"
+signup_callout_action: "アカウント作成"
