@@ -10,7 +10,7 @@ It can be used to restore the old layout and feel of Twitter.
 
 ## Installation
 
-***Retwitter is very early in development. You should not expect a perfect user experience, should you choose to use it.*** If you encounter any problems while using Retwitter, [please make an issue](//github.com/lemon-pumpkin-pie/Retwitter/issues) so that we can track them easily.
+***Retwitter is very early in development. You should not expect a perfect user experience, should you choose to use it.*** If you encounter any problems while using Retwitter, [please make an issue](//github.com/Leymonaide/Retwitter/issues) so that we can track them easily.
 
 We currently do not support an automated install. If you wish to use Retwitter, you must set it up manually. Fortunately, that isn't too hard!
 

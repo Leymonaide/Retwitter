@@ -1,7 +1,7 @@
 <?php
 /* 
  * This file is part of the Retwitter project.
- * Copyright (c) 2025 lemon-pumpkin-pie.
+ * Copyright (c) 2025 Leymonaide.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -131,7 +131,7 @@ class MFooter
 
         $this->links[] = new MFooterLink(
             label: $i18n->get("link_retwitter"),
-            url: "//github.com/lemon-pumpkin-pie/Retwitter",
+            url: "//github.com/Leymonaide/Retwitter",
         );
     }
 }

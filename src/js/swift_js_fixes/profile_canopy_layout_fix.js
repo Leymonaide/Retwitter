@@ -2,7 +2,7 @@
  * @fileoverview Fix for canopy layout reflow not acknowledging CSS animation
  *               events.
  * 
- * @see https://github.com/lemon-pumpkin-pie/Retwitter/issues/2
+ * @see https://github.com/Leymonaide/Retwitter/issues/2
  */
 
 (function(){

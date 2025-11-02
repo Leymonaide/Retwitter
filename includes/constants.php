@@ -25,7 +25,7 @@ namespace Retwitter\Constants
      * 
      * @var string
      */
-    const GH_REPO = "lemon-pumpkin-pie/Retwitter";
+    const GH_REPO = "Leymonaide/Retwitter";
 
     /** 
      * The current version of Retwitter.

@@ -8,7 +8,7 @@
 // If you wish to contribute, please see CONTRIBUTING.md.
 //
 // And check out some of the cool people that brought it to you!
-//    - Pumpkin (https://github.com/lemon-pumpkin-pie)
+//    - Pumpkin (https://github.com/Leymonaide)
 //
 // Authors of the Rehike project this is based on:
 //    - Aubrey Pankow (@aubymori on Twitter and YouTube)
