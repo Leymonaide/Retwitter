@@ -52,13 +52,18 @@ wrapper-home
         ]
     }) }}
     <div class="dashboard dashboard-right">
-        
+        {% for module in app.page.dashboard.rightModules %}
+            {{ _self.dashboard_render_module(module) }}
+        {% endfor %}
     </div>
 {% endblock %}
 
 {% macro dashboard_render_module(module) %}
+    {% import "common/sidebar_modules.twig" as sidebar_modules %}
     {% if module.getModuleType() == "ProfileCard" %}
         {{ _self.dashboard_render_profile_card_module(module) }}
+    {% elseif module.getModuleType() == "WhoToFollow" %}
+        {{ sidebar_modules.render_who_to_follow_module(module) }}
     {% endif %}
 {% endmacro %}
 

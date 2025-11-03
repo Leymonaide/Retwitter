@@ -1,0 +1,59 @@
+{% macro render_item(user) %}
+{% import "core/macros.twig" as core %}
+    {% types {
+        user: "Retwitter\\Page\\Common\\UserSmallList\\UserSmallListItem"
+    } %}
+    <div class="{{ [
+            'UserSmallListItem',
+            'js-account-summary',
+            'account-summary',
+            'js-actionable-user',
+        ]|join(' ') }}"
+        data-user-id="{{ user.userId }}"
+        data-feedback-token="{# Empty in my result. #}"
+        data-impression-id="{# Empty in my result. #}">
+        <div class="UserSmallListItem-context">
+            {# This presumably includes context, such as the shared followers
+               message. Will need more research. #}
+        </div>
+        {% if app.isLoggedIn() %}
+            {# I presume that this only shows up if the user is logged in, but
+               it may also just be unique to the home page's "who to follow"
+               module. #}
+            <div class="dismiss js-action-dismiss"></div>
+        {% endif %}
+        <div class="content">
+            <a class="{{ [
+                    'account-group',
+                    'js-recommend-link',
+                    'js-user-profile-link',
+                    'user-thumb',
+                ]|join(' ') }}"
+                href="/{{ user.username }}"
+                data-user-id="{{ user.userId }}"
+                rel="noopener">
+                <img class="avatar js-action-profile-avatar "
+                    src="{{ user.avatarUrl }}"
+                    alt="{# Avatar accessibility text #}">
+                <span class="account-group-inner" data-user-id="{{ user.userId }}">
+                    <strong class="fullname">{{ core.text(user.name) }}</strong>
+                    {{ core.user_badges(user.badges) }}
+                    <span class="UserNameBreak">
+                    </span>
+                    {{ core.username(user.username) }}
+                </span>
+            </a>
+            {% if user.actions %}
+                <div class="{{ [
+                        'user-actions',
+                        'not-following',
+                        'not-muting',
+                    ]|join(' ') }}"
+                    data-screen-name="{{ user.username }}"
+                    data-user-id="{{ user.userId }}">
+                    {# Follow button here. #}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endmacro %}

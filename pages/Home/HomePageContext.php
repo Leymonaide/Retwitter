@@ -24,6 +24,7 @@ use Retwitter\Page\Base\BasePageContext;
 use Retwitter\Page\Common\Timeline\MTimeline;
 use Retwitter\Page\Home\Dashboard\MDashboard;
 use Retwitter\Page\Home\Dashboard\MProfileCard;
+use Retwitter\Page\Home\Dashboard\MWhoToFollowModule;
 use Retwitter\Page\Profile\IProfileDataParser;
 use Retwitter\SignIn\InitialStateProfileParser;
 
@@ -49,6 +50,15 @@ class HomePageContext extends BasePageContext
     {
         array_splice($this->dashboard->leftModules, 0, 0, [
             new MProfileCard($profileParser),
+        ]);
+    }
+
+    public function insertUserRecommendations(
+        ISidebarUserRecommendationsParser $parser
+    ): void
+    {
+        array_splice($this->dashboard->rightModules, 0, 0, [
+            new MWhoToFollowModule($parser),
         ]);
     }
 }

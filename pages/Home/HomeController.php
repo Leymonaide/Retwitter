@@ -31,7 +31,10 @@ use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\MTimeline;
 use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 use Retwitter\Page\Home\Dashboard\MProfileCard;
+use Retwitter\Page\Home\TwitterWeb\SidebarUserRecommendationsParserTwitterWeb;
 use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
+use Retwitter\RequestEngine\GraphQlRequest;
+use Retwitter\RequestEngine\GraphQlRequestTest;
 use Retwitter\RequestEngine\NitterRequestTest;
 use Retwitter\RequestEngine\RequestManager;
 use Retwitter\SignIn\SignIn;
@@ -61,18 +64,24 @@ class HomeController extends RetwitterPageController implements IGetControllerAs
             
             $requestManager = new RequestManager();
             
-            $timelineRequest = new NitterRequestTest("cache/test_home_timeline.json");
+            $timelineRequest = new GraphQlRequestTest("cache/test_home_timeline.json");
+            $userRecomsRequest = new GraphQlRequestTest("cache/test_sidebar_user_recommendations.json");
             
             $requestManager->add($timelineRequest);
+            $requestManager->add($userRecomsRequest);
             yield $requestManager->runAll();
             
             $timelineResponse = $timelineRequest->getResponse();
             $timelineJson = $timelineResponse->getJson();
+
+            $userRecomsResponse = $userRecomsRequest->getResponse();
+            $userRecomsJson = $userRecomsResponse->getJson();
             
             $pageContext = new HomePageContext();
             
             $pageContext->setTimeline(new MTimeline(new TimelineDataParserTwitterWeb($timelineJson->data->home->home_timeline_urt)));
             $pageContext->insertProfileCard(SignIn::getActiveProfileParser());
+            $pageContext->insertUserRecommendations(new SidebarUserRecommendationsParserTwitterWeb($userRecomsJson));
             
             $this->setPageContext($pageContext);
 

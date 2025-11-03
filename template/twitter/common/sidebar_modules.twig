@@ -1,3 +1,4 @@
+{% import "core/macros.twig" as core %}
 {% from "common/edge_button.twig" import render as edge_button %}
 {% from "common/pageframe/footer.twig" import render as footer %}
 <div class="SidebarCommonModules">
@@ -36,3 +37,59 @@
         blankBackground: true
     }) }}
 </div>
+
+{# Who to follow module. I think this is unique to the home page. #}
+{% macro render_who_to_follow_module(module) %}
+    {% types {
+        module: "Retwitter\\Page\\Home\\Dashboard\\MWhoToFollowModule",
+    } %}
+    {% import "common/user_small_list.twig" as user_small_list %}
+    <div class="{{ [
+            'module',
+            'wtf-module',
+            'js-wtf-module',
+            'roaming-module',
+            'has-content',
+        ]|join(' ') }}">
+        <div class="flex-module">
+            <div class="flex-module-header">
+                <h3>Who to follow</h3>
+                <small>·</small>
+                <button type="button" class="btn-link js-refresh-suggestions">
+                    <small>Refresh</small>
+                </button>
+                <small class="view-all">
+                    ·
+                    <a class="js-view-all-link js-nav"
+                        href="/who_to_follow/suggestions"
+                        data-element-term="view_all_link">View all</a>
+                </small>
+            </div>
+            <div class="{{ [
+                    'js-recommended-followers',
+                    'dashboard-user-recommendations',
+                    'flex-module-inner',
+                ]|join(' ') }}"
+                data-section-id="wtf"
+                style="opacity: 1"{# <- Probably a runtime effect. #}>
+                {% for user in module.users %}
+                    {{ user_small_list.render_item(user) }}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{# Related users module used on profile pages. #}
+{% macro render_related_users_module() %}
+    {% import "common/user_small_list.twig" as user_small_list %}
+    <div class="RelatedUsers module">
+        <div class="RelatedUsers-header">
+            <h3 class="RelatedUsers-title">こちらもおすすめです</h3> ·
+            <button class="btn-link js-refresh-related-users" type="button">更新</button>
+        </div>
+        <div class="RelatedUsers-users">
+            {# For each user, render user small list item. #}
+        </div>
+    </div>
+{% endmacro %}
