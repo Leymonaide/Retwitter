@@ -93,3 +93,87 @@
         </div>
     </div>
 {% endmacro %}
+
+{% macro render_trends_module(module) %}
+    {% types {
+        module: "Retwitter\\Page\\Common\\Trends\\MTrendsModule",
+    } %}
+    <div class="module Trends trends">
+        <div class="trends-inner">
+            <div class="{{ [
+                    'flex-module',
+                    'trends-container',
+                    'context-trends-container',
+                ]|join(' ') }}">
+                <div class="flex-module-header">
+                    <h3>
+                        <span class="trend-location js-trend-location">
+                            Trends for you
+                        </span>
+                        {# This is conditional, either only on the homepage
+                           or only when logged in. #}
+                        {% if app.isLoggedIn() %}
+                            <span class="middot" aria-hidden="true">·</span>
+                            <a role="button"
+                               href="#"
+                               data-modal="change-trends"
+                               class="{{ [
+                                    'btn-link',
+                                    'change-trends',
+                                    'js-trend-toggle',
+                               ]|join(' ') }}">
+                                {# Display text: #}
+                                <span aria-hidden="true">Change</span>
+                                {# Accessibility text: #}
+                                <span class="u-hiddenVisually">
+                                    Change trend settings
+                                </span>
+                            </a>
+                        {% endif %}
+                    </h3>
+                </div>
+                <div class="flex-module-inner">
+                    <ul class="trend-items js-trends">
+                        {% for trend in module.trends %}
+                            {{ _self.render_trend_item(trend) }}
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_trend_item(trend) %}
+    {% types {
+        trend: "Retwitter\\Page\\Common\\Timeline\\MTrend",
+    } %}
+    <li class="{{ [
+            'trend-item',
+            'js-trend-item',
+            false ? 'promoted-trend',
+            'context-trend-item',
+        ]|join(' ') }}"
+        data-trend-name="{{ trend.name }}"
+        data-trends-id="{{ trend.id }}"
+        {# The trend token here seems constant: #}
+        data-trend-token=":location_request:entity_trend:taxi_country_source:">
+        <a class="pretty-link js-nav js-tooltip u-linkComplex"
+           href="{{ trend.url }}"
+           data-query-source="trend_click"
+           title="">
+            <span class="u-linkComplex-target trend-name" dir="ltr">{{ 
+                trend.name
+            }}</span>
+            <div class="js-nav trend-item-context">{{ trend.context }}</div>
+            <div class="js-nav trend-item-stats">
+                {{ trend.description }}
+            </div>
+            {% if false %}
+                <span class="with-icn js-disclosure js-tooltip" title="">
+                    <b class="promoted-text">Promoted by Comicstaan</b>
+                </span>
+            {% endif %}
+        </a>
+    </li>
+{% endmacro %}

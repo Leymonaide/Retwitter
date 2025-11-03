@@ -22,6 +22,8 @@ namespace Retwitter\Page\Home;
 
 use Retwitter\Page\Base\BasePageContext;
 use Retwitter\Page\Common\Timeline\MTimeline;
+use Retwitter\Page\Common\Timeline\MTrend;
+use Retwitter\Page\Home\Dashboard\MTrendsModule;
 use Retwitter\Page\Home\Dashboard\MDashboard;
 use Retwitter\Page\Home\Dashboard\MProfileCard;
 use Retwitter\Page\Home\Dashboard\MWhoToFollowModule;
@@ -60,5 +62,14 @@ class HomePageContext extends BasePageContext
         array_splice($this->dashboard->rightModules, 0, 0, [
             new MWhoToFollowModule($parser),
         ]);
+    }
+
+    /**
+     * @param MTrend[] $trends
+     *        An array of trends.
+     */
+    public function insertTrends(array $trends): void
+    {
+        $this->dashboard->leftModules[] = new MTrendsModule($trends);
     }
 }

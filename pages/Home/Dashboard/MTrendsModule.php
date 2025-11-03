@@ -18,16 +18,29 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Timeline;
+namespace Retwitter\Page\Home\Dashboard;
 
-class MTimelineItemUnion
+use Retwitter\Page\Home\Dashboard\IDashboardModule;
+use Retwitter\Page\Common\Timeline\MTrend;
+
+class MTrendsModule implements IDashboardModule
 {
-    public function __construct(
-        public ?MTweetUnion $tweetUnion = null,
-        public ?MConversation $conversation = null,
-        public ?MTrend $trend = null,
-        public ?MTimelineModule $module = null,
-    )
+    /**
+     * @var MTrend[]
+     */
+    public array $trends = [];
+
+    public function getModuleType(): string
     {
+        return "Trends";
+    }
+
+    /**
+     * @param MTrend[] $trends
+     *        An array of trends.
+     */
+    public function __construct(array $trends)
+    {
+        $this->trends = $trends;
     }
 }

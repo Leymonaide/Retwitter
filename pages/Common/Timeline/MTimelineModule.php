@@ -20,14 +20,19 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
-class MTimelineItemUnion
+/**
+ * A timeline module is a component of the timeline that can a set of timeline
+ * items.
+ */
+class MTimelineModule
 {
-    public function __construct(
-        public ?MTweetUnion $tweetUnion = null,
-        public ?MConversation $conversation = null,
-        public ?MTrend $trend = null,
-        public ?MTimelineModule $module = null,
-    )
+    /**
+     * @var MTimelineItemUnion[]
+     */
+    public array $items = [];
+
+    public function add(MTimelineItemUnion $item): void
     {
+        $this->items[] = $item;
     }
 }

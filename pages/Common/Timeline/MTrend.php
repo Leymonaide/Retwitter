@@ -20,14 +20,24 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
-class MTimelineItemUnion
+use Retwitter\Page\Common\Timeline\ITrendParser;
+
+class MTrend
 {
-    public function __construct(
-        public ?MTweetUnion $tweetUnion = null,
-        public ?MConversation $conversation = null,
-        public ?MTrend $trend = null,
-        public ?MTimelineModule $module = null,
-    )
+    // TODO: Hashflags. Maybe some other things.
+
+    public string $id;
+    public string $name;
+    public string $url;
+    public ?string $context = null;
+    public ?string $description = null;
+
+    public function __construct(ITrendParser $parser)
     {
+        $this->id = $parser->getId();
+        $this->name = $parser->getName();
+        $this->url = $parser->getUrl();
+        $this->context = $parser->getContext();
+        $this->description = $parser->getDescription();
     }
 }

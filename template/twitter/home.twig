@@ -64,6 +64,8 @@ wrapper-home
         {{ _self.dashboard_render_profile_card_module(module) }}
     {% elseif module.getModuleType() == "WhoToFollow" %}
         {{ sidebar_modules.render_who_to_follow_module(module) }}
+    {% elseif module.getModuleType() == "Trends" %}
+        {{ sidebar_modules.render_trends_module(module) }}
     {% endif %}
 {% endmacro %}
 
