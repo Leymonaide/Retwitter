@@ -117,9 +117,17 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
 
     public function getDescription(): ?FormattedString
     {
-        // TODO: This should use a different function that formats a string with
-        // emojis as well as links, but that function doesn't exist yet.
-        return ParsingUtils::formatEmojis($this->getApiResult()?->legacy?->description);
+        $text = $this->getApiResult()?->legacy?->description;
+        $entities = @$this->getApiResult()?->legacy?->entities?->description ?? null;
+
+        return ParsingUtils::formatEmojisInFormattedString(
+            ParsingUtils::formatTwitterLinksInFormattedString(
+                ParsingUtils::formatTwitterEntities(
+                    string: $text,
+                    entities: $entities,
+                ),
+            ),
+        );
     }
 
     public function getLocation(): ?string

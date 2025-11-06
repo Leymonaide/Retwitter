@@ -176,6 +176,7 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
     public function getFullText(): ?FormattedString
     {
         $rawText = $this->getData()->legacy?->full_text;
+        $entities = $this->getData()->legacy?->entities ?? null;
 
         $textStart = $this->getDisplayTextRange()[0] ?? 0;
         $textEnd = $this->getDisplayTextRange()[1] ?? mb_strlen($rawText);
@@ -186,8 +187,15 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
             length: $textEnd - $textStart
         );
 
-        // TODO: Better function:
-        return ParsingUtils::formatEmojis($sourceText);
+        return ParsingUtils::formatEmojisInFormattedString(
+            ParsingUtils::formatTwitterLinksInFormattedString(
+                ParsingUtils::formatTwitterEntities(
+                    string: $sourceText,
+                    entities: $entities,
+                    clippedLeft: $textStart,
+                ),
+            ),
+        );
     }
 
     public function getDisplayTextRange(): ?array
