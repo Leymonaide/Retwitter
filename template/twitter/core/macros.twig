@@ -125,12 +125,25 @@
     </span>
 {% endmacro %}
 
-{% macro username(name_text, direction = "ltr") %}
+{% macro username(
+    name_text, 
+    direction = "ltr",
+    truncate_text = false,
+    handle_class = null,
+) %}
     {% types {
         name_text: "string",
         direction: "string",
+        truncate_text: "bool",
+        handle_class: "string[]|null",
     } %}
-    <span class="username u-dir u-textTruncate" dir="{{ direction }}">
-        @<b>{{ name_text }}</b>
+    <span class="{{ [
+            'username',
+            'u-dir',
+            truncate_text ? 'u-textTruncate',
+        ]|join(' ') }}" dir="{{ direction }}">
+        @<b{{ handle_class ? " class=" ~ handle_class|join(' ')|e("html_attr") }}>{{ 
+            name_text
+        }}</b>
     </span>
 {% endmacro %}

@@ -157,9 +157,12 @@ wrapper-profile
                                     </div>
                                     <div class="ProfileCardMini-screenname">
                                         <a href="/{{ canopy.card.screenName }}" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">
-                                            <span class="username u-dir" dir="ltr">
-                                                @<b class="u-linkComplex-target">{{ canopy.card.screenName }}</b>
-                                            </span>
+                                            {{ core.username(
+                                                canopy.card.screenName,
+                                                handle_class: [
+                                                    "u-linkComplex-target",
+                                                ],
+                                            ) }}
                                         </a>
                                     </div>
                                 </div>
@@ -187,7 +190,8 @@ wrapper-profile
                                             'ProfileNav-item--more',
                                             'dropdown',
                                             'is-hidden',
-                                        ]|join(' ') }}" style="">
+                                        ]|join(' ') }}"
+                                        {{"style"}}="">
                                         {# TODO: Used for overflow. The current implementation is to get
                                            JS loaded at all. #}
                                     </li>
