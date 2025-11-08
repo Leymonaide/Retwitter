@@ -30,6 +30,7 @@ use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Profile\IProfileDataParser;
 use Rehike\ConfigManager\Config;
+use Retwitter\Pipeline;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser
 {
@@ -120,13 +121,13 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         $text = $this->getApiResult()?->legacy?->description;
         $entities = @$this->getApiResult()?->legacy?->entities?->description ?? null;
 
-        return ParsingUtils::formatEmojisInFormattedString(
-            ParsingUtils::formatTwitterLinksInFormattedString(
-                ParsingUtils::formatTwitterEntities(
-                    string: $text,
-                    entities: $entities,
-                ),
+        return Pipeline::pipeline(
+            fn($that) => ParsingUtils::formatTwitterEntities(
+                string: $text,
+                entities: $entities,
             ),
+            fn($that) => ParsingUtils::formatTwitterLinksInFormattedString($that),
+            fn($that) => ParsingUtils::formatEmojisInFormattedString($that),
         );
     }
 

@@ -31,6 +31,7 @@ use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Page\Common\Timeline\MTweetMedia;
 use Retwitter\Page\Common\Timeline\TweetMediaType;
 use Retwitter\Page\Common\Timeline\TweetMediaAvailability;
+use Retwitter\Pipeline;
 use Retwitter\RecentlyViewedCache\CachedObjectType;
 use Retwitter\RecentlyViewedCache\RecentlyViewedCache;
 use Retwitter\RecentlyViewedCache\TwitterApiCache;
@@ -187,14 +188,14 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
             length: $textEnd - $textStart
         );
 
-        return ParsingUtils::formatEmojisInFormattedString(
-            ParsingUtils::formatTwitterLinksInFormattedString(
-                ParsingUtils::formatTwitterEntities(
-                    string: $sourceText,
-                    entities: $entities,
-                    clippedLeft: $textStart,
-                ),
+        return Pipeline::pipeline(
+            fn($that) => ParsingUtils::formatTwitterEntities(
+                string: $sourceText,
+                entities: $entities,
+                clippedLeft: $textStart,
             ),
+            fn($that) => ParsingUtils::formatTwitterLinksInFormattedString($that),
+            fn($that) => ParsingUtils::formatEmojisInFormattedString($that),
         );
     }
 
