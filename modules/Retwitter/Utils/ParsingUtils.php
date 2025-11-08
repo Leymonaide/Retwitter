@@ -135,7 +135,7 @@ class ParsingUtils
             if ($cursor < $start)
             {
                 $fsb->createAndAddRun(
-                    substr($string, $cursor, $start - $cursor),
+                    mb_substr($string, $cursor, $start - $cursor),
                 );
             }
 
@@ -150,10 +150,10 @@ class ParsingUtils
         }
 
         // Add trailing text after last entity
-        if ($cursor < strlen($string))
+        if ($cursor < mb_strlen($string))
         {
             $fsb->createAndAddRun(
-                substr($string, $cursor),
+                mb_substr($string, $cursor),
             );
         }
 
