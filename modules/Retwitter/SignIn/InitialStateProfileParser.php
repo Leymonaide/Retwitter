@@ -30,6 +30,7 @@ use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Rehike\ConfigManager\Config;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Pipeline;
 
 // This is a flatter version of the profile data structure used by tweets and profiles.
 class InitialStateProfileParser implements IBasicProfileInfoDataParser
@@ -90,9 +91,17 @@ class InitialStateProfileParser implements IBasicProfileInfoDataParser
 
     public function getDescription(): ?FormattedString
     {
-        // TODO: This should use a different function that formats a string with
-        // emojis as well as links, but that function doesn't exist yet.
-        return ParsingUtils::formatEmojis($this->getApiResult()?->description);
+        $text = $this->getApiResult()?->description;
+        $entities = @$this->getApiResult()?->entities?->description ?? null;
+
+        return Pipeline::pipeline(
+            fn($that) => ParsingUtils::formatTwitterEntities(
+                string: $text,
+                entities: $entities,
+            ),
+            fn($that) => ParsingUtils::formatTwitterLinksInFormattedString($that),
+            fn($that) => ParsingUtils::formatEmojisInFormattedString($that),
+        );
     }
 
     public function getLocation(): ?string
