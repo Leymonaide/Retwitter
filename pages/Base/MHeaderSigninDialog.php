@@ -20,10 +20,12 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Base;
 
+use Rehike\FormattedString;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Page\Common\EdgeButtonSize;
 use Retwitter\Page\Common\EdgeButtonStyle;
 use Retwitter\Page\Common\MEdgeButton;
+use Retwitter\Utils\FormattedStringBuilder;
 
 class MHeaderSigninDialog
 {
@@ -32,7 +34,7 @@ class MHeaderSigninDialog
     public string $passwordPlaceholder;
     public string $rememberMeLabel;
     public string $signUpTitle;
-    public object $forgotPasswordLink; // TODO: Formatted string object like this.
+    public FormattedString $forgotPasswordLink;
     public MEdgeButton $loginButton;
     public MEdgeButton $signUpButton;
 
@@ -44,10 +46,13 @@ class MHeaderSigninDialog
         $this->rememberMeLabel = $strings->get("remember_me_label");
         $this->signUpTitle = $strings->get("sign_up_header");
 
-        $this->forgotPasswordLink = (object) [
-            "text" => $strings->get("forgot_password_label"),
-            "url" => "/account/begin_password_reset",
-        ];
+        $this->forgotPasswordLink = (new FormattedStringBuilder())
+            ->createAndAddRun(
+                runText: $strings->get("forgot_password_label"),
+                runCreationFlags: FormattedStringBuilder::RUN_AS_LINK,
+                linkText: "/account/begin_password_reset",
+            )
+            ->build();
 
         $this->loginButton = new MEdgeButton(
             style: EdgeButtonStyle::Primary,

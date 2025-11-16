@@ -201,8 +201,8 @@
                             <span>{{ dialog.rememberMeLabel }}</span>
                         </label>
                         <span class="separator">&middot;</span>
-                        <a href="{{ dialog.forgotPasswordLink.url }}" class="forgot" rel="noopener">
-                            {{ dialog.forgotPasswordLink.text }}
+                        <a href="{{ dialog.forgotPasswordLink.runs.0.url }}" class="forgot" rel="noopener">
+                            {{ dialog.forgotPasswordLink.runs.0.text }}
                         </a>
                     </div>
                     {{ edge_button(dialog.loginButton) }}
