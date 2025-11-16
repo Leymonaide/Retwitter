@@ -45,7 +45,6 @@ class MTweetAction
             $this->formattedCount = NumberFormat::shorten($count);
         }
 
-        // TODO: Tense handling for retweet/favorite
         $this->tooltip = match ($actionType)
         {
             TweetAction::Reply => $i18n->get("tweet_action_reply_tooltip"),
