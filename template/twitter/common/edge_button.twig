@@ -28,7 +28,16 @@
         {% if data.url %}href="{{ data.url }}"{% endif %}
         class="{{ _self.class(data, classes) }}"
         {{ _self.attributes(data, attributes) }}>
+        {% if data.icon %}
+        <span class="Icon Icon--{{ data.icon }}"></span>
+        {# Buttons with labels have their labels wrapped in a span,
+           along with an intentional whitespace between the icon and label. #}
+        <span>
+        {% endif %}
         {{ data.label }}
+        {% if data.icon %}
+        </span>
+        {% endif %}
     </{{ tag }}>
 {%- endif -%}
 {% endmacro %}

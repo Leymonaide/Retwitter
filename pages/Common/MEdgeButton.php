@@ -28,6 +28,7 @@ class MEdgeButton
         public string $label,
         public ?string $url = null,
         public bool $asInput = false, // TODO: Consider migration to template.
+        public ?string $icon = null,
     )
     {
     }

@@ -18,17 +18,22 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common;
+namespace Retwitter\Page\Common\UserActions;
 
-/**
- * The style of a button.
- * 
- * The backing scalar string is the default template name.
- */
-enum EdgeButtonStyle : string
+use Retwitter\Page\Profile\IProfileDataParser;
+
+class MUserActions
 {
-    case Primary = "primary";
-    case Secondary = "secondary";
-    case Danger = "danger";
-    case InvertedDanger = "invertedDanger";
+    public ?string $userId;
+    public ?string $screenName;
+    public ?string $name;
+    public MFollowButton $followButton;
+
+    public function __construct(IProfileDataParser $parser)
+    {
+        $this->userId = $parser->getId();
+        $this->screenName = $parser->getUsername();
+        $this->name = $parser->getDisplayName();
+        $this->followButton = new MFollowButton;
+    }
 }

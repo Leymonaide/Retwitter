@@ -1,0 +1,60 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 Leymonaide.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{% macro render(data) %}
+{% from "common/edge_button.twig" import render as edge_button %}
+{# TODO(aubymori): Following state (to replace not-following class) #}
+<div class="user-actions btn-group not-following"
+     data-user-id="{{ data.userId }}"
+     data-screen-name="{{ data.screenName }}"
+     data-name="{{ data.name }}">
+    {# 
+     * TODO(aubymori): More actions, which includes Mute and Unmute and is optional (shows up
+     * on profile but not Tweet permalink view).
+     *
+     * These actually seem to use the old pre-Edge "btn" markup. Worth making into a model?
+    #}
+    {#
+    <span class="UserActions-moreActions u-inlineBlock">
+        <button type="button" class="js-tooltip unmute-button btn small plain-btn" title="Unmute @jack" data-placement="top">
+            <span class="Icon Icon--muted Icon--medium">
+                <span class="visuallyhidden">
+                    Unmute <span class="username u-dir" dir="ltr">@<b>jack</b></span>
+                </span>
+            </span>
+        </button>
+        <button type="button" class="first-load js-tooltip mute-button btn small plain-btn" title="Mute @jack" data-placement="top">
+            <span class="Icon Icon--unmuted Icon--medium">
+                <span class="visuallyhidden">
+                    Mute <span class="username u-dir" dir="ltr">@<b>jack</b></span>
+                </span>
+            </span>
+        </button>
+    </span>
+    #}
+    <span class="user-actions-follow-button js-follow-btn follow-button">
+        {{ edge_button(data.followButton.followButton,       ["follow-text", "button-text"]) }}
+        {{ edge_button(data.followButton.followingButton, ["following-text", "button-text"]) }}
+        {{ edge_button(data.followButton.unfollowButton,   ["unfollow-text", "button-text"]) }}
+        {{ edge_button(data.followButton.blockedButton,     ["blocked-text", "button-text"]) }}
+        {{ edge_button(data.followButton.unblockButton,     ["unblock-text", "button-text"]) }}
+        {{ edge_button(data.followButton.pendingButton,     ["pending-text", "button-text"]) }}
+        {{ edge_button(data.followButton.cancelButton,       ["cancel-text", "button-text"]) }}
+    </span>
+</div>
+{% endmacro %}

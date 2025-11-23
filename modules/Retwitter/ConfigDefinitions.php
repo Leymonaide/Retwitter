@@ -47,6 +47,7 @@ class ConfigDefinitions
                 "oldProfileTitle" => new BoolProp(false),
                 "fullJoinDates" => new BoolProp(false),
                 "fullCounts" => new BoolProp(false),
+                "followButtonIcon" => new BoolProp(false),
             ],
             "experiments" => [
             ],

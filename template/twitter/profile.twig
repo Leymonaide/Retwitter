@@ -190,10 +190,21 @@ wrapper-profile
                                             'ProfileNav-item--more',
                                             'dropdown',
                                             'is-hidden',
-                                        ]|join(' ') }}"
-                                        {{"style"}}="">
+                                        ]|join(' ') }}">
                                         {# TODO: Used for overflow. The current implementation is to get
                                            JS loaded at all. #}
+                                    </li>
+                                    <li class="{{ [
+                                            'ProfileNav-item',
+                                            'ProfileNav-item--userActions',
+                                            'u-floatRight',
+                                            'u-textRight',
+                                            'with-rightCaret',
+                                        ]|join(' ') }}">
+                                        <div class="UserActions u-textLeft">
+                                            {% from "common/user_actions.twig" import render as user_actions %}
+                                            {{ user_actions(canopy.userActions) }}
+                                        </div>
                                     </li>
                                 </ul>
                             </div>

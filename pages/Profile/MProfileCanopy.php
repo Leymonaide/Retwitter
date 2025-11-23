@@ -21,12 +21,14 @@ declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
 use Rehike\i18n\i18n;
+use Retwitter\Page\Common\UserActions\MUserActions;
 
 class MProfileCanopy
 {
     public ?string $banner = null;
     public MProfileAvatar $avatar;
     public MProfileCanopyCard $card;
+    public MUserActions $userActions;
 
     /**
      * @var MProfileCanopyStat[]
@@ -38,6 +40,7 @@ class MProfileCanopy
         $this->banner = $parser->getBannerUrl();
         $this->avatar = new MProfileAvatar($parser);
         $this->card = new MProfileCanopyCard($parser);
+        $this->userActions = new MUserActions($parser);
 
         $i18n = i18n::getNamespace("profile");
         $name = $parser->getUsername();
