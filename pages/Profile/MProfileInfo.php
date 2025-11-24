@@ -31,6 +31,7 @@ class MProfileInfo
 {
     public FormattedString $name;
     public string $screenName;
+    public bool $followsYou;
     public MUserBadges $badges;
     public ?FormattedString $bio = null;
     public ?FormattedString $location = null;
@@ -45,6 +46,7 @@ class MProfileInfo
     public function __construct(IProfileDataParser $parser)
     {
         $this->screenName = $parser->getUsername();
+        $this->followsYou = $parser->getFollowsYou();
         $displayName = $parser->getDisplayName() ?? $this->screenName;
 
         $this->name = ParsingUtils::formatEmojis($displayName);

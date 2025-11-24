@@ -70,3 +70,5 @@ follow_button_blocked: "Blocked"
 follow_button_unblock: "Unblock"
 follow_button_pending: "Pending"
 follow_button_cancel: "Cancel"
+
+user_follows_you: "Follows you"

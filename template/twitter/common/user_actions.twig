@@ -18,8 +18,7 @@
 
 {% macro render(data) %}
 {% from "common/edge_button.twig" import render as edge_button %}
-{# TODO(aubymori): Following state (to replace not-following class) #}
-<div class="user-actions btn-group not-following"
+<div class="user-actions btn-group {{ data.followState.value }}"
      data-user-id="{{ data.userId }}"
      data-screen-name="{{ data.screenName }}"
      data-name="{{ data.name }}">

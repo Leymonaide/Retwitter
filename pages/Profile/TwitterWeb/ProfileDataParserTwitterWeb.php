@@ -30,6 +30,7 @@ use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Profile\IProfileDataParser;
 use Rehike\ConfigManager\Config;
+use Retwitter\Page\Profile\FollowState;
 use Retwitter\Pipeline;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser
@@ -210,5 +211,28 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
     public function getListCount(): ?int
     {
         return $this->getApiResult()?->legacy->listed_count;
+    }
+
+    public function getFollowState(): FollowState
+    {
+        $apiResult = $this->getApiResult();
+        if ($apiResult?->relationship_perspectives->following)
+        {
+            return FollowState::Following;
+        }
+        if ($apiResult?->follow_request_sent)
+        {
+            return FollowState::Pending;
+        }
+        if ($apiResult?->relationship_perspectives->blocking)
+        {
+            return FollowState::Blocked;
+        }
+        return FollowState::NotFollowing;
+    }
+
+    public function getFollowsYou(): bool
+    {
+        return $this->getApiResult()?->relationship_perspectives->followed_by ?? false;
     }
 }

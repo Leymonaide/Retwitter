@@ -48,4 +48,6 @@ interface IProfileDataParser extends IBasicProfileInfoDataParser
     public function getFollowerCount(): ?int;
     public function getFavoritesCount(): ?int;
     public function getListCount(): ?int;
+    public function getFollowState(): FollowState;
+    public function getFollowsYou(): bool;
 }

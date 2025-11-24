@@ -268,6 +268,9 @@ wrapper-profile
                                             @<b class="u-linkComplex-target">{{ info.screenName }}</b>
                                         </span>
                                     </a>
+                                    {%- if info.followsYou -%}
+                                    <span class="FollowStatus">{{ app.i18n.get("common", "user_follows_you") }}</span>
+                                    {%- endif -%}
                                 </h2>
                                 <p class="ProfileHeaderCard-bio u-dir" dir="ltr">{{ core.text(info.bio, true) }}</p>
                                 <div class="ProfileHeaderCard-location {{ not info.location ? "u-hidden" }}">

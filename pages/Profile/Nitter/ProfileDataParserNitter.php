@@ -32,6 +32,7 @@ use Retwitter\Page\Profile\ProfileError;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\VerificationType;
+use Retwitter\Page\Profile\FollowState;
 use Retwitter\Page\Profile\IProfileDataParser;
 
 /**
@@ -408,5 +409,17 @@ class ProfileDataParserNitter implements IProfileDataParser
     {
         // Not reported by Nitter, or so it seems.
         return null;
+    }
+
+    public function getFollowState(): FollowState
+    {
+        // Always logged out
+        return FollowState::NotFollowing;
+    }
+
+    public function getFollowsYou(): bool
+    {
+        // Always logged out
+        return false;
     }
 }

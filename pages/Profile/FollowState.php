@@ -18,24 +18,15 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\UserActions;
+namespace Retwitter\Page\Profile;
 
-use Retwitter\Page\Profile\FollowState;
-use Retwitter\Page\Profile\IProfileDataParser;
-class MUserActions
+/**
+ * The following state of a profile.
+ */
+enum FollowState : string
 {
-    public ?string $userId;
-    public ?string $screenName;
-    public ?string $name;
-    public MFollowButton $followButton;
-    public FollowState $followState;
-
-    public function __construct(IProfileDataParser $parser)
-    {
-        $this->userId = $parser->getId();
-        $this->screenName = $parser->getUsername();
-        $this->name = $parser->getDisplayName();
-        $this->followButton = new MFollowButton;
-        $this->followState = $parser->getFollowState();
-    }
+    case NotFollowing = "not-following";
+    case Following = "following";
+    case Blocked = "blocked";
+    case Pending = "pending";
 }
