@@ -213,6 +213,7 @@ if (TEST_SIGNIN)
     ): IRequestManagerRequest
     {
 if (PROFILE_TEST_LOCAL):
+        // UserByScreenName
         return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_main.json");
 endif;
 
@@ -259,6 +260,7 @@ endif;
     ): IRequestManagerRequest
     {
         // TODO: Request for real.
+        // UserTweets
         return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_tweets_aubymori.json");
     }
 

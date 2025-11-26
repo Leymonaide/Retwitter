@@ -65,8 +65,11 @@ class HomeController extends RetwitterPageController implements IGetControllerAs
             
             $requestManager = new RequestManager();
             
+            // HomeTimeline
             $timelineRequest = new GraphQlRequestTest("cache/test_home_timeline.json");
+            // SidebarUserRecommendations
             $userRecomsRequest = new GraphQlRequestTest("cache/test_sidebar_user_recommendations.json");
+            // ExploreSidebar
             $exploreSidebarRequest = new GraphQlRequestTest("cache/test_explore_sidebar.json");
             
             $requestManager->add($timelineRequest);
