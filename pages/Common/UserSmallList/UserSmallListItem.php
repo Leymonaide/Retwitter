@@ -21,8 +21,11 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\UserSmallList;
 
 use Rehike\FormattedString;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\MUserBadges;
+use Retwitter\Page\Common\Profile\FollowState;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Page\Common\UserActions\MFollowButton;
+use Retwitter\Page\Common\UserActions\MUserActions;
 use Retwitter\Utils\ParsingUtils;
 
 class UserSmallListItem
@@ -32,13 +35,15 @@ class UserSmallListItem
     public string $username;
     public MUserBadges $badges;
     public ?string $avatarUrl = null;
+    public MUserActions $actions;
 
-    public function __construct(IBasicProfileInfoDataParser $parser)
+    public function __construct(IProfileDataParser $parser)
     {
         $this->userId = $parser->getId() ?? "0";
         $this->name = ParsingUtils::formatEmojis($parser->getDisplayName() ?? "");
         $this->username = $parser->getUsername() ?? "";
         $this->badges = new MUserBadges($parser);
         $this->avatarUrl = $parser->getAvatarUrl();
+        $this->actions = new MUserActions($parser);
     }
 }

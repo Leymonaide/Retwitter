@@ -21,14 +21,14 @@ declare(strict_types=1);
 namespace Retwitter\Page\Home;
 
 use Retwitter\IApiSourceProvider;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 
 interface ISidebarUserRecommendationsParser extends IApiSourceProvider
 {
     /**
      * Returns an array of profile 
      * 
-     * @return IBasicProfileInfoDataParser[]
+     * @return IProfileDataParser[]
      */
     public function getUsers(): array;
 }
