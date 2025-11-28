@@ -27,6 +27,7 @@ namespace Retwitter\Page\Common;
  */
 enum EdgeButtonSize : string
 {
+    case Small = "small";
     case Medium = "medium";
     case Large = "large";
 }

@@ -44,45 +44,45 @@ class MFollowButton
     /* "Cancel" (hovered "Pending") button. */
     public MEdgeButton $cancelButton;
 
-    public function __construct()
+    public function __construct(EdgeButtonSize $size = EdgeButtonSize::Medium)
     {
         $i18n = i18n::getNamespace("common");
         $useIcon = Config::getConfigProp("appearance.followButtonIcon");
 
         $this->followButton = new MEdgeButton(
             EdgeButtonStyle::Secondary,
-            EdgeButtonSize::Medium,
+            $size,
             $i18n->get("follow_button_follow"),
             icon: $useIcon ? "follow" : null
         );
         $this->followingButton = new MEdgeButton(
             EdgeButtonStyle::Primary,
-            EdgeButtonSize::Medium,
+            $size,
             $i18n->get("follow_button_following")
         );
         $this->unfollowButton = new MEdgeButton(
             EdgeButtonStyle::Danger,
-            EdgeButtonSize::Medium,
+            $size,
             $i18n->get("follow_button_unfollow")
         );
         $this->blockedButton = new MEdgeButton(
             EdgeButtonStyle::InvertedDanger,
-            EdgeButtonSize::Medium,
+            $size,
             $i18n->get("follow_button_blocked")
         );
         $this->unblockButton = new MEdgeButton(
             EdgeButtonStyle::Danger,
-            EdgeButtonSize::Medium,
+            $size,
             $i18n->get("follow_button_unblock")
         );
         $this->pendingButton = new MEdgeButton(
             EdgeButtonStyle::Secondary,
-            EdgeButtonSize::Medium,
+            $size,
             $i18n->get("follow_button_pending")
         );
         $this->cancelButton = new MEdgeButton(
             EdgeButtonStyle::Secondary,
-            EdgeButtonSize::Medium,
+            $size,
             $i18n->get("follow_button_cancel")
         );
     }

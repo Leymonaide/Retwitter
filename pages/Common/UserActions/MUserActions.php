@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\UserActions;
 
+use Retwitter\Page\Common\EdgeButtonSize;
 use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 class MUserActions
@@ -30,12 +31,15 @@ class MUserActions
     public MFollowButton $followButton;
     public FollowState $followState;
 
-    public function __construct(IProfileDataParser $parser)
+    public function __construct(
+        IProfileDataParser $parser,
+        EdgeButtonSize $buttonSize = EdgeButtonSize::Medium,
+    )
     {
         $this->userId = $parser->getId();
         $this->screenName = $parser->getUsername();
         $this->name = $parser->getDisplayName();
-        $this->followButton = new MFollowButton;
+        $this->followButton = new MFollowButton($buttonSize);
         $this->followState = $parser->getFollowState();
     }
 }
