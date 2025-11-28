@@ -27,7 +27,7 @@ use Retwitter\Page\Home\Dashboard\MTrendsModule;
 use Retwitter\Page\Home\Dashboard\MDashboard;
 use Retwitter\Page\Home\Dashboard\MProfileCard;
 use Retwitter\Page\Home\Dashboard\MWhoToFollowModule;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Profile\Common\IProfileDataParser;
 use Retwitter\SignIn\InitialStateProfileParser;
 
 class HomePageContext extends BasePageContext

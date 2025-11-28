@@ -24,6 +24,8 @@ use Rehike\i18n\i18n;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MTimeline;
 
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+
 class MProfileContent
 {
     public MProfileHeading $heading;

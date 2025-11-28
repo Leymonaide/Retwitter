@@ -22,7 +22,7 @@ namespace Retwitter\Page\Home\Dashboard;
 
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Profile\Common\IProfileDataParser;
 use Retwitter\SignIn\InitialStateProfileParser;
 use Retwitter\TwimgUrl;
 use Retwitter\Utils\ParsingUtils;

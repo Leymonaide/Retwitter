@@ -20,8 +20,8 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\UserActions;
 
-use Retwitter\Page\Profile\FollowState;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Common\Profile\FollowState;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 class MUserActions
 {
     public ?string $userId;

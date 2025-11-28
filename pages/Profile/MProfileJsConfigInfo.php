@@ -26,6 +26,8 @@ use Retwitter\Url;
 use Retwitter\Utils\ImageUtils;
 use Retwitter\Utils\ParsingUtils;
 
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+
 class MProfileJsConfigInfo
 {
     public string $id;

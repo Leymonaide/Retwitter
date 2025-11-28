@@ -18,30 +18,23 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Profile;
 
-/**
- * Enumerates profile errors.
- */
-enum ProfileError
+interface IProfileUrlParser
 {
     /**
-     * There is no error.
+     * Gets the display URL.
+     * 
+     * This always looks like the actual target, without ever being wrapped in
+     * a short link. It also typically lacks miscellaneous information, such as
+     * the origin (https://).
      */
-    case Success;
+    public function getDisplayUrl(): string;
 
     /**
-     * The profile does not exist.
+     * Gets the navigation target of this profile URL.
+     * 
+     * This may be the original URL, or a t.co shortened redirect link.
      */
-    case Nonexistent;
-
-    /**
-     * The profile is suspended.
-     */
-    case Suspended;
-
-    /**
-     * An unknown profile error occurred.
-     */
-    case Unknown;
+    public function getTargetUrl(): string;
 }

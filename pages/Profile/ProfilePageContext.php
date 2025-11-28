@@ -26,6 +26,9 @@ use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Page\Base\BasePageContext;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Utils\ParsingUtils;
+use Retwitter\Page\Common\Profile\ProfileError;
+
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 
 /**
  * Twitter profile model.

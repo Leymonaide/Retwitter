@@ -18,23 +18,15 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Profile;
 
-interface IProfileUrlParser
+/**
+ * The following state of a profile.
+ */
+enum FollowState : string
 {
-    /**
-     * Gets the display URL.
-     * 
-     * This always looks like the actual target, without ever being wrapped in
-     * a short link. It also typically lacks miscellaneous information, such as
-     * the origin (https://).
-     */
-    public function getDisplayUrl(): string;
-
-    /**
-     * Gets the navigation target of this profile URL.
-     * 
-     * This may be the original URL, or a t.co shortened redirect link.
-     */
-    public function getTargetUrl(): string;
+    case NotFollowing = "not-following";
+    case Following = "following";
+    case Blocked = "blocked";
+    case Pending = "pending";
 }

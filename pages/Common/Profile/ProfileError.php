@@ -18,31 +18,30 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Profile;
 
 /**
- * A common implementation of IProfileUrlParser.
- * 
- * The interface only exists per the convention I seek to set for parsers, but
- * this is such a simple case that a unique implementation of this class will
- * almost certainly never be necessary.
+ * Enumerates profile errors.
  */
-class CommonProfileUrlParser implements IProfileUrlParser
+enum ProfileError
 {
-    public function __construct(
-        private readonly string $displayUrl,
-        private readonly string $targetUrl,
-    )
-    {
-    }
+    /**
+     * There is no error.
+     */
+    case Success;
 
-    public function getDisplayUrl(): string
-    {
-        return $this->displayUrl;
-    }
+    /**
+     * The profile does not exist.
+     */
+    case Nonexistent;
 
-    public function getTargetUrl(): string
-    {
-        return $this->targetUrl;
-    }
+    /**
+     * The profile is suspended.
+     */
+    case Suspended;
+
+    /**
+     * An unknown profile error occurred.
+     */
+    case Unknown;
 }

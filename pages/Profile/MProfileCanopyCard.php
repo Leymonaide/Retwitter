@@ -24,6 +24,8 @@ use Rehike\FormattedString;
 use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Utils\ParsingUtils;
 
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+
 class MProfileCanopyCard
 {
     public string $avatarUrl;

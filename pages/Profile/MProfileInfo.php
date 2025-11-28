@@ -27,6 +27,8 @@ use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Utils\ImageUtils;
 use Retwitter\Utils\ParsingUtils;
 
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+
 class MProfileInfo
 {
     public FormattedString $name;

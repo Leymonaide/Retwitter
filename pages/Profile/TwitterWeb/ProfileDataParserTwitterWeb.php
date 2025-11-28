@@ -23,14 +23,14 @@ namespace Retwitter\Page\Profile\TwitterWeb;
 use DateTime;
 use Rehike\FormattedString;
 use Retwitter\ApiSource;
-use Retwitter\Page\Profile\CommonProfileUrlParser;
-use Retwitter\Page\Profile\IProfileUrlParser;
-use Retwitter\Page\Profile\ProfileError;
+use Retwitter\Page\Common\Profile\CommonProfileUrlParser;
+use Retwitter\Page\Common\Profile\IProfileUrlParser;
+use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Rehike\ConfigManager\Config;
-use Retwitter\Page\Profile\FollowState;
+use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Pipeline;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser

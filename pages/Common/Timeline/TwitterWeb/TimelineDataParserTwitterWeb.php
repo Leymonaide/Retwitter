@@ -27,7 +27,7 @@ use Retwitter\ApiSource;
 use Retwitter\Page\Common\Timeline\MTimelineModule;
 use Retwitter\Page\Common\Timeline\MTrendSet;
 use Retwitter\Page\Common\Timeline\MTweetTombstone;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Profile\Common\IProfileDataParser;
 use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;

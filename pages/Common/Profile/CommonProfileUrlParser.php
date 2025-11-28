@@ -18,15 +18,31 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Profile;
 
 /**
- * The following state of a profile.
+ * A common implementation of IProfileUrlParser.
+ * 
+ * The interface only exists per the convention I seek to set for parsers, but
+ * this is such a simple case that a unique implementation of this class will
+ * almost certainly never be necessary.
  */
-enum FollowState : string
+class CommonProfileUrlParser implements IProfileUrlParser
 {
-    case NotFollowing = "not-following";
-    case Following = "following";
-    case Blocked = "blocked";
-    case Pending = "pending";
+    public function __construct(
+        private readonly string $displayUrl,
+        private readonly string $targetUrl,
+    )
+    {
+    }
+
+    public function getDisplayUrl(): string
+    {
+        return $this->displayUrl;
+    }
+
+    public function getTargetUrl(): string
+    {
+        return $this->targetUrl;
+    }
 }

@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Retwitter\Utils\ImageUtils;
 
 class MProfileAvatar

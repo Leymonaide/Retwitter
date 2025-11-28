@@ -24,6 +24,7 @@ use PHPHtmlParser\Dom;
 use Rehike\ControllerV2\IGetControllerAsync;
 use Retwitter\GraphQlRequestParams;
 use Retwitter\NitterSourceInfo;
+use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Page\Common\Timeline\Nitter\TimelineDataParserNitter;
 use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
 use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;

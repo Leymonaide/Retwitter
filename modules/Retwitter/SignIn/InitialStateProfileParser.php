@@ -25,7 +25,7 @@ use Rehike\FormattedString;
 use Retwitter\ApiSource;
 use Retwitter\Page\Profile\CommonProfileUrlParser;
 use Retwitter\Page\Profile\IProfileUrlParser;
-use Retwitter\Page\Profile\ProfileError;
+use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Rehike\ConfigManager\Config;

@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Page\Common\Profile;
 
 use DateTime;
 use Rehike\FormattedString;

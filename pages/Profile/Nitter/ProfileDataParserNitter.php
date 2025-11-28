@@ -26,14 +26,14 @@ use Rehike\FormattedString;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
-use Retwitter\Page\Profile\CommonProfileUrlParser;
-use Retwitter\Page\Profile\IProfileUrlParser;
-use Retwitter\Page\Profile\ProfileError;
+use Retwitter\Page\Common\Profile\CommonProfileUrlParser;
+use Retwitter\Page\Common\Profile\IProfileUrlParser;
+use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\VerificationType;
-use Retwitter\Page\Profile\FollowState;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Common\Profile\FollowState;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 
 /**
  * Parses main profile data from a Nitter HTML document.

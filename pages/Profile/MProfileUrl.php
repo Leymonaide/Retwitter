@@ -23,6 +23,7 @@ namespace Retwitter\Page\Profile;
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
 use Retwitter\Utils\FormattedStringBuilder;
+use Retwitter\Page\Common\Profile\IProfileUrlParser;
 
 class MProfileUrl
 {

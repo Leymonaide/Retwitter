@@ -22,7 +22,7 @@ namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
 use Retwitter\IApiSourceProvider;
-use Retwitter\Page\Profile\IProfileDataParser;
+use Retwitter\Page\Profile\Common\IProfileDataParser;
 
 /**
  * API-agnostic interface for parsing timeline data.

@@ -22,6 +22,7 @@ namespace Retwitter\Page\Profile;
 
 use Rehike\i18n\i18n;
 use Retwitter\Page\Common\UserActions\MUserActions;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 
 class MProfileCanopy
 {
