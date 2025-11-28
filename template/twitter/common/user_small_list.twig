@@ -44,19 +44,8 @@
                 </span>
             </a>
             {% if user.actions %}
-                {# TODO: This user actions does not have a btn-group. See below
-                   placeholder body: #}
-                {# <div class="{{ [
-                        'user-actions',
-                        'not-following',
-                        'not-muting',
-                    ]|join(' ') }}"
-                    data-screen-name="{{ user.username }}"
-                    data-user-id="{{ user.userId }}">
-                    {# Follow button here. # }
-                </div> #}
                 {% import "common/user_actions.twig" as user_actions %}
-                {{ user_actions.render(user.actions) }}
+                {{ user_actions.render(user.actions, no_group: true) }}
             {% endif %}
         </div>
     </div>

@@ -16,9 +16,17 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
 
-{% macro render(data) %}
+{% macro render(data, no_group = false) %}
+{% types {
+    data: "Retwitter\\Page\\Common\\UserActions\\MUserActions",
+    no_group: "bool",
+} %}
 {% from "common/edge_button.twig" import render as edge_button %}
-<div class="user-actions btn-group {{ data.followState.value }}"
+<div class="{{ [
+        'user-actions',
+        not no_group ? 'btn-group',
+        data.followState.value,
+     ]|join(' ') }}"
      data-user-id="{{ data.userId }}"
      data-screen-name="{{ data.screenName }}"
      data-name="{{ data.name }}">
