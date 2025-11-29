@@ -65,6 +65,9 @@
                      data-user-id="{{ user.id }}"
                      data-feedback-token=""
                      data-impression-id="">
+                    {# TODO(aubymori): On the archive I found (Rosetta design FYI),
+                       the background color seemed to vary between different shades
+                       of blue for each account. Figure out calculation for that? #}
                     <a class="ProfileCard-bg js-nav" href="/{{ user.screenName }}" tabindex="-1" aria-hidden="true"
                        style="
                         background-color: #1DA1F2;
