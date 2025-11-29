@@ -27,11 +27,24 @@ enum ProfileTab : string
     case Media = "media";
     case Likes = "likes";
     case Followers = "followers";
+    case FollowersYouFollow = "followers_you_follow";
     case Following = "following";
     case Lists = "lists";
 
     /**
-     * List of valid tweet tab subpage values.
+     * List of valid followers tab subpage values.
+     * 
+     * These are pages on which the user's followers will appear.
+     * 
+     * @var ProfileTab[]
+     */
+    public const VALID_FOLLOWERS_TABS = [
+        ProfileTab::Followers,
+        ProfileTab::FollowersYouFollow,
+    ];
+
+    /**
+     * List of valid Tweets tab subpage values.
      * 
      * These are pages on which the user's timeline will appear.
      * 

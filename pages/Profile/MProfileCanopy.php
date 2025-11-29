@@ -70,7 +70,7 @@ class MProfileCanopy
             count: $parser->getFollowerCount(),
             tooltip: $i18n->get("stat_followers_tip"),
             url: "/$name/followers",
-            active: ProfileTab::Followers == $tab,
+            active: in_array($tab, ProfileTab::VALID_FOLLOWERS_TABS),
         );
 
         $this->stats[] = new MProfileCanopyStat(
