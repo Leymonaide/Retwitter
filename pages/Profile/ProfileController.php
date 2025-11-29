@@ -101,10 +101,23 @@ if (TEST_SIGNIN)
                     request: $this->requestUserTwitterApi($username),
                     tag: ProfileControllerRequestTags::User->value,
                 );
-                $requestManager->add(
-                    request: $this->requestTweetsTwitterApi($username),
-                    tag: ProfileControllerRequestTags::Timeline->value,
-                );
+
+                // TEMP: All grid timeline tabs use followers data to ensure they have
+                // proper data.
+                if (in_array($tab, ProfileTab::GRID_TIMELINE_TABS))
+                {
+                    $requestManager->add(
+                        request: $this->requestFollowersTwitterApi($username),
+                        tag: ProfileControllerRequestTags::Timeline->value
+                    );
+                }
+                else
+                {
+                    $requestManager->add(
+                        request: $this->requestTweetsTwitterApi($username),
+                        tag: ProfileControllerRequestTags::Timeline->value,
+                    );
+                }
             }
 
             // Run all requests:
@@ -263,6 +276,15 @@ endif;
         // TODO: Request for real.
         // UserTweets
         return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_tweets_aubymori.json");
+    }
+
+    private function requestFollowersTwitterApi(
+        string $username,
+    ): IRequestManagerRequest
+    {
+        // TODO: Request for real.
+        // Followers
+        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_followers.json");
     }
 
     private function requestProfileNitter(

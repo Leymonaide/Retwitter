@@ -1,0 +1,122 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 Leymonaide.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{% macro render_grid_timeline(timeline) %}
+<div class="GridTimeline">
+    <div class="stream-item js-new-items-bar-container"></div>
+    <div class="GridTimeline-items"
+         role="list"
+         data-max-position=""
+         data-min-posiition="" {# TODO: Figure positions out. #}>
+        {% for item in timeline.stream.items %}
+            {% if item.userGrid %}
+                {{ _self.render_user_grid(item.userGrid) }}
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="GridTimeline-end has-more-items has-items-error">
+        <div class="GridTimeline-failure u-hidden">
+            <p>
+                Twitter ಸಾಮರ್ಥ್ಯ ಮೀರಿರಬಹುದು ಅಥವಾ ತಾತ್ಕಾಲಿಕ ತೊಂದರೆ ಅನುಭವಿಸುತ್ತಿರಬಹುದು.
+            </p>
+            <button type="button" class="GridTimeline-retry btn">ಪುನಃ ಪ್ರಯತ್ನಿಸಿ</button>
+            <p>
+                ಹೆಚ್ಚಿನ ಮಾಹಿತಿಗಾಗಿ <a class="u-textUserColor" target="_blank" href="https://web.archive.org/web/20160126113945/http://status.twitter.com/">Twitter ಸ್ಥಿತಿಗತಿಗಳು</a> ಗೆ ಭೇಟಿ ನೀಡಿ.
+            </p>
+        </div>
+        <div class="GridTimeline-footer">
+            <div class="GridTimeline-footerIcon">
+                <span class="spinner"></span>
+                <span class="Icon Icon--large Icon--logo"></span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
+
+{% macro render_user_grid(data) %}
+{% import "core/macros.twig" as core %}
+<div class="Grid Grid--withGutter" data-component-context="user" role="presentation">
+    {% for user in data.items %}
+        <div class="Grid-cell u-size1of2 u-lg-size1of3 u-mb10"\
+             data-test-selector="ProfileTimelineUser"
+             role="presentation">
+            <div class="js-stream-item"
+                 role="listitem"
+                 data-item-id="{{ user.id }}"
+                 data-item-type="user">
+                <div class="ProfileCard js-actionable-user"
+                     data-screen-name="{{ user.screenName }}"
+                     data-user-id="{{ user.id }}"
+                     data-feedback-token=""
+                     data-impression-id="">
+                    <a class="ProfileCard-bg js-nav" href="/{{ user.screenName }}" tabindex="-1" aria-hidden="true"
+                       style="
+                        background-color: #1DA1F2;
+                        {%- if user.bannerUrl -%}
+                        background-image: url({{ user.bannerUrl }});
+                        {%- endif -%}">
+                    </a>
+                    <div class="ProfileCard-content">
+                        <a class="ProfileCard-avatarLink js-nav js-tooltip" href="/{{ user.screenName }}"
+                           title="{{ user.name }}" tabindex="-1" aria-hidden="true">
+                            <img class="ProfileCard-avatarImage js-action-profile-avatar"
+                                 src="{{ user.avatarUrl }}" alt="">
+                        </a>
+                        <div class="ProfileCard-actions">
+                            <div class="ProfileCard-userActions with-rightCaret js-userActions">
+                                <div class="UserActions UserActions--small u-textLeft">
+                                    {% from "common/user_actions.twig" import render as user_actions %}
+                                    {{ user_actions(user.actions) }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ProfileCard-userFields">
+                            {# TODO(aubymori): This needs to be, as the class name implies, truncated.
+                               Otherwise, the display name will exceed the bounds of the card.
+                               Not sure to how many characters though. #}
+                            <div class="ProfileNameTruncated">
+                                <a class="ProfileNameTruncated-link u-textInheritColor js-nav js-action-profile-name"
+                                   href="/{{ user.screenName }}" data-aria-label-part="">
+                                    {{ user.name }}
+                                </a>
+                                {# TODO(aubymori): Protected Tweets badge HTML seems like it doesn't fit here.
+                                   Try to find archive that has it on a profile card. #}
+                                {{ core.user_badges(user.badges, true) }}
+                            </div>
+                            <span class="ProfileCard-screenname u-dir" dir="ltr">
+                                <a href="/{{ user.screenName }}"
+                                   class="ProfileCard-screennameLink u-linkComplex js-nav"
+                                   data-aria-label-part="">
+                                    @<span class="u-linkComplex-Target">{{ user.screenName }}</span>
+                                </a>
+                                {% if user.followsYou %}
+                                <span class="FollowStatus">{{ app.i18n.get("common", "user_follows_you") }}</span>
+                                {% endif %}
+                            </span>
+                            <p class="ProfileCard-bio u-dir" dir="ltr" data-aria-label-part="">
+                                {{ core.text(user.bio) }}
+                            </p>
+                        </div>
+                    </div>
+                </div>    
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endmacro %}

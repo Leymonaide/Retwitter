@@ -28,7 +28,7 @@ use Retwitter\Page\Common\Timeline\MTimelineModule;
 use Retwitter\Page\Common\Timeline\MTrendSet;
 use Retwitter\Page\Common\Timeline\MTweetTombstone;
 use Retwitter\Page\Profile\Common\IProfileDataParser;
-use Retwitter\Page\Profile\ProfileDataParserTwitterWeb;
+use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MConversation;
@@ -39,6 +39,8 @@ use Retwitter\Page\Common\Timeline\MTrend;
 use Retwitter\Page\Common\Timeline\MTweet;
 use Retwitter\Page\Common\Timeline\MTweetUnion;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
+use Retwitter\Page\Common\Timeline\MUserGrid;
+use Retwitter\Page\Common\Timeline\MUserGridItem;
 use Retwitter\Page\Common\Timeline\TweetSocialContext;
 
 class TimelineDataParserTwitterWeb implements ITimelineDataParser
@@ -70,10 +72,30 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
         $result = [];
         $entries = $this->executeInstructions();
 
+        /** 
+          * Vars for parsing user grid items. This is weird since they are split
+          * into grids of 6 items each. 
+          */
+        $currentUserGrid = null;
+        $lastItemWasUser = false;
+
         foreach ($entries as $entry)
         if (isset($entry->content))
         {
             $entryContent = $entry->content;
+            $isUser = ("TimelineUser" == @$entryContent->itemContent->itemType);
+
+            /**
+             * If we just got done parsing a user and the next item is a
+             * non-user, commit the user grid.
+             */
+            if (!$isUser && $lastItemWasUser)
+            {
+                $result[] = new MTimelineItemUnion(
+                    userGrid: $currentUserGrid
+                );
+                $currentUserGrid = null;
+            }
 
             if ("TimelineTweet" == @$entryContent->itemContent->itemType)
             {
@@ -94,6 +116,24 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                     )
                 );
             }
+            else if ("TimelineUser" == @$entryContent->itemContent->itemType)
+            {
+                if (null == $currentUserGrid)
+                {
+                    $currentUserGrid = new MUserGrid;
+                }
+                else if (count($currentUserGrid->items) >= MUserGrid::MAX_ITEMS)
+                {
+                    $result[] = new MTimelineItemUnion(
+                        userGrid: $currentUserGrid
+                    );
+
+                    $currentUserGrid = new MUserGrid;
+                }
+
+                $parser = new ProfileDataParserTwitterWeb($entryContent->itemContent->user_results->result);
+                $currentUserGrid->items[] = new MUserGridItem($parser);
+            }
             else if ("TimelineTimelineModule" == $entryContent->entryType)
             {
                 if ($module = $this->parseTimelineTimelineModule($entry))
@@ -101,6 +141,19 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                     $result[] = $module;
                 }
             }
+
+            $lastItemWasUser = $isUser;
+        }
+
+        /**
+         * If we're done parsing the list of items and we have an incomplete
+         * user grid, commit it.
+         */
+        if ($lastItemWasUser && null != $currentUserGrid)
+        {
+            $result[] = new MTimelineItemUnion(
+                userGrid: $currentUserGrid
+            );
         }
 
         return $result;

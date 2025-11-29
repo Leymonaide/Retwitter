@@ -28,7 +28,7 @@ use Retwitter\Page\Common\Profile\IProfileDataParser;
 
 class MProfileContent
 {
-    public MProfileHeading $heading;
+    public ?MProfileHeading $heading = null;
     public ?MTimeline $timeline = null;
     public ?MProtectedTimeline $protectedTimeline = null;
 
@@ -45,35 +45,71 @@ class MProfileContent
             $this->protectedTimeline = new MProtectedTimeline($username);
         }
 
-        // The implementation details are that, for right now, the profile
-        // heading is always created. It is, however, only shown if the profile
-        // has a timeline in the current view. If the timeline is unavailable,
-        // then its heading will be discarded from the view.
-        $this->heading = new MProfileHeading($i18n->get("tab_tweets"));
+        /* Tweets, Tweets & replies, Media */
+        if (in_array($tab, ProfileTab::VALID_TWEET_TABS))
+        {
+            $str = match ($tab)
+            {
+                ProfileTab::RecentTweets => "tab_tweets",
+                ProfileTab::WithReplies  => "tab_with_replies",
+                ProfileTab::Media        => "tab_media",
+            };
+            $this->heading = new MProfileHeading($i18n->get($str));
 
-        $this->heading->addTab(new MProfileHeadingTab(
-            label: $i18n->get("tab_tweets"),
-            url: "/$username",
-            tab: "tweets",
-            active: ProfileTab::RecentTweets == $tab,
-            openSignup: false,
-        ));
+            $this->heading->addTab(new MProfileHeadingTab(
+                label: $i18n->get("tab_tweets"),
+                url: "/$username",
+                tab: "tweets",
+                active: ProfileTab::RecentTweets == $tab,
+                openSignup: false,
+            ));
+    
+            $this->heading->addTab(new MProfileHeadingTab(
+                label: $i18n->get("tab_with_replies"),
+                url: "/$username/with_replies",
+                tab: "tweets_with_replies",
+                active: ProfileTab::WithReplies == $tab,
+                openSignup: true,
+            ));
+    
+            $this->heading->addTab(new MProfileHeadingTab(
+                label: $i18n->get("tab_media"),
+                url: "/$username/media",
+                tab: "photos_and_videos",
+                active: ProfileTab::Media == $tab,
+                openSignup: true,
+            ));
+        }
+        /* All followers, Followers you know */
+        else if (in_array($tab, ProfileTab::VALID_FOLLOWERS_TABS))
+        {
+            $str = match ($tab)
+            {
+                ProfileTab::Followers          => "tab_followers",
+                ProfileTab::FollowersYouFollow => "tab_followers_you_follow",
+            };
+            $this->heading = new MProfileHeading(
+                title: $i18n->get("tab_followers"),
+                noFill: true,
+            );
 
-        $this->heading->addTab(new MProfileHeadingTab(
-            label: $i18n->get("tab_with_replies"),
-            url: "/$username/with_replies",
-            tab: "tweets_with_replies",
-            active: ProfileTab::WithReplies == $tab,
-            openSignup: true,
-        ));
+            $this->heading->addTab(new MProfileHeadingTab(
+                label: $i18n->get("tab_followers"),
+                url: "/$username/followers",
+                tab: "followers", // Not confirmed, please find archive of this tab.
+                active: ProfileTab::Followers == $tab,
+                openSignup: false,
+            ));
 
-        $this->heading->addTab(new MProfileHeadingTab(
-            label: $i18n->get("tab_media"),
-            url: "/$username/media",
-            tab: "photos_and_videos",
-            active: ProfileTab::Media == $tab,
-            openSignup: true,
-        ));
+            $this->heading->addTab(new MProfileHeadingTab(
+                label: $i18n->get("tab_followers_you_follow"),
+                url: "/$username/followers_you_follow",
+                tab: "followers_you_follow", // Not confirmed, please find archive of this tab.
+                active: ProfileTab::FollowersYouFollow == $tab,
+                openSignup: false,
+            ));
+        }
+        // TODO(aubymori): Lists heading
     }
 
     public function setTimeline(ITimelineDataParser $timelineParser): void

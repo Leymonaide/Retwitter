@@ -105,18 +105,31 @@
 {% endif %}
 {% endmacro %}
 
-{% macro user_badges(badges) %}
+{% macro user_badges(badges, linked = false) %}
     {% types {
         badges: "Retwitter\\Page\\Common\\MUserBadges",
     } %}
     <span class="UserBadges">
         {% if badges.verified %}
-            <span class="Icon Icon--verified">
-                <span class="u-hiddenVisually">{{ 
-                    app.i18n.get('common', 'verified_tooltip') }}</span>
-            </span>
+            {%- if linked -%}
+            <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.page.i18n.get('verified_tooltip') }}">
+            {%- endif -%}
+                <span class="Icon Icon--verified">
+                    <span class="u-hiddenVisually">{{ 
+                        app.i18n.get('common', 'verified_tooltip') }}</span>
+                </span>
+            {%- if linked -%}
+            </a>
+            {%- endif -%}
         {% endif %}
         {% if badges.protected %}
+            {%- if linked -%}
+            <a href="//support.twitter.com/articles/14016-about-public-and-protected-tweets"
+               target="_blank"
+               data-placement="right"
+               rel="noopener"
+               title="{{ app.i18n.get('common', 'protected_tooltip') }}"></a>
+            {%- endif -%}
             <span class="Icon Icon--protected">
                 <span class="u-hiddenVisually">{{ 
                     app.i18n.get('common', 'protected_tooltip') }}</span>

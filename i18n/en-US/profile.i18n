@@ -38,6 +38,10 @@ tab_with_replies: "Tweets & replies"
 tab_media: "Media"
 tab_active: "%s, current page."
 
+# Followers tab sub-tabs
+tab_followers: "All followers"
+tab_followers_you_follow: "Followers you know"
+
 suspended_title: "Account suspended"
 suspended_message: "This account has been suspended."
 

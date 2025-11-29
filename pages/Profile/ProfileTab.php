@@ -44,6 +44,17 @@ enum ProfileTab : string
     ];
 
     /**
+     * List of tabs that should show a grid timeline (users).
+     * 
+     * @var ProfileTab[]
+     */
+    public const GRID_TIMELINE_TABS = [
+        ProfileTab::Followers,
+        ProfileTab::FollowersYouFollow,
+        ProfileTab::Following,
+    ];
+
+    /**
      * List of valid Tweets tab subpage values.
      * 
      * These are pages on which the user's timeline will appear.

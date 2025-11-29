@@ -36,6 +36,7 @@ use Retwitter\Page\Common\Profile\IProfileDataParser;
 class ProfilePageContext extends BasePageContext
 {
     public ProfileTab $tab;
+    public bool $isGridTimeline;
     public ?MProfileError $error = null;
     public ?MProfileJsConfigInfo $jsConfig = null;
     public ?MProfileCanopy $canopy = null;
@@ -49,6 +50,7 @@ class ProfilePageContext extends BasePageContext
         parent::__construct();
         $this->i18n = i18n::getNamespace("profile");
         $this->tab = $tab;
+        $this->isGridTimeline = in_array($tab, ProfileTab::GRID_TIMELINE_TABS);
     }
 
     public function insertUserData(IProfileDataParser $parser): void

@@ -1,5 +1,4 @@
-<?php
-/* 
+{#
  * This file is part of the Retwitter project.
  * Copyright (c) 2025 Leymonaide.
  * 
@@ -15,20 +14,20 @@
  *
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
-
-declare(strict_types=1);
-namespace Retwitter\Page\Common\Timeline;
-
-class MTimelineItemUnion
-{
-    public function __construct(
-        public ?MTweetUnion $tweetUnion = null,
-        public ?MConversation $conversation = null,
-        public ?MTrend $trend = null,
-        public ?MTimelineModule $module = null,
-        public ?MUserGrid $userGrid = null,
-    )
-    {
-    }
-}
+#}
+<div class="AppContainer">
+    <div class="AppContent-main content-main u-cf" role="main" aria-labelledby="content-main-heading">
+        <div class="Grid Grid--withGutter">
+            <div class="Grid-cell u-size1of3 u-lg-size1of4">
+                {% block col_one_content %}{% endblock %}
+            </div>
+            <div class="Grid-cell u-size2of3 u-lg-size3of4">
+                <div class="Grid Grid--withGutter">
+                    <div class="Grid-cell u-size2of2 u-lg-size3of3"{% block col_two_extra_attributes %}{% endblock %}>
+                        {% block col_two_content %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

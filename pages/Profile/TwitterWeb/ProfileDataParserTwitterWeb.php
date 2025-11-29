@@ -104,7 +104,7 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
 
     public function getBannerUrl(): ?string
     {
-        return $this->getApiResult()?->legacy?->profile_banner_url;
+        return @$this->getApiResult()?->legacy?->profile_banner_url;
     }
 
     public function getCreationTime(): ?DateTime
@@ -224,7 +224,7 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         {
             return FollowState::Pending;
         }
-        if ($apiResult?->relationship_perspectives->blocking)
+        if (@$apiResult?->relationship_perspectives->blocking)
         {
             return FollowState::Blocked;
         }

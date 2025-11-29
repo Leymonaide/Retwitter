@@ -20,15 +20,20 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
-class MTimelineItemUnion
+/**
+ * An object representing a grid of user grid items.
+ */
+class MUserGrid
 {
-    public function __construct(
-        public ?MTweetUnion $tweetUnion = null,
-        public ?MConversation $conversation = null,
-        public ?MTrend $trend = null,
-        public ?MTimelineModule $module = null,
-        public ?MUserGrid $userGrid = null,
-    )
-    {
-    }
+    /**
+     * Maximum amount of items for each grid.
+     */
+    public const MAX_ITEMS = 6;
+
+    /**
+     * The user grid items.
+     * 
+     * @var MUserGridItem[]
+     */
+    public array $items = [];
 }

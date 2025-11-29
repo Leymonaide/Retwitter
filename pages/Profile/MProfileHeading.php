@@ -29,6 +29,7 @@ class MProfileHeading
 
     public function __construct(
         public string $title,
+        public bool   $noFill = false,
     )
     {
     }
