@@ -262,9 +262,14 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
             }
         }
 
-        return new MTimelineItemUnion(
-            module: $timelineModule,
-        );
+        /* Only return the module if it actually has items. */
+        if (count($timelineModule->items) > 0)
+        {
+            return new MTimelineItemUnion(
+                module: $timelineModule,
+            );
+        }
+        return null;
     }
 
     private function parseConversationModule(object $entry): ?MTimelineItemUnion

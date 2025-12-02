@@ -45,6 +45,9 @@ tab_followers_you_follow: "Followers you know"
 suspended_title: "Account suspended"
 suspended_message: "This account has been suspended."
 
+empty_no_tweets_header: "%s hasn't Tweeted"
+empty_no_tweets_body: "When they do, their Tweets will show up here."
+
 protected_title: "This account's Tweets are protected."
 protected_explanation: >
     Only confirmed followers have access to %s's Tweets and complete profile.

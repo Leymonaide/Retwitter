@@ -31,11 +31,13 @@ class MProfileContent
     public ?MProfileHeading $heading = null;
     public ?MTimeline $timeline = null;
     public ?MProtectedTimeline $protectedTimeline = null;
+    public ?MProfileEmptyModule $emptyModule = null;
 
     public function __construct(IProfileDataParser $parser, ProfileTab $tab)
     {
         $i18n = i18n::getNamespace("profile");
         $username = $parser->getUsername();
+        $tweetCount = $parser->getTweetCount();
 
         if ($parser->getProtected())
         {
@@ -56,29 +58,40 @@ class MProfileContent
             };
             $this->heading = new MProfileHeading($i18n->get($str));
 
-            $this->heading->addTab(new MProfileHeadingTab(
-                label: $i18n->get("tab_tweets"),
-                url: "/$username",
-                tab: "tweets",
-                active: ProfileTab::RecentTweets == $tab,
-                openSignup: false,
-            ));
-    
-            $this->heading->addTab(new MProfileHeadingTab(
-                label: $i18n->get("tab_with_replies"),
-                url: "/$username/with_replies",
-                tab: "tweets_with_replies",
-                active: ProfileTab::WithReplies == $tab,
-                openSignup: true,
-            ));
-    
-            $this->heading->addTab(new MProfileHeadingTab(
-                label: $i18n->get("tab_media"),
-                url: "/$username/media",
-                tab: "photos_and_videos",
-                active: ProfileTab::Media == $tab,
-                openSignup: true,
-            ));
+            if ($tweetCount != 0)
+            {
+                $this->heading->addTab(new MProfileHeadingTab(
+                    label: $i18n->get("tab_tweets"),
+                    url: "/$username",
+                    tab: "tweets",
+                    active: ProfileTab::RecentTweets == $tab,
+                    openSignup: false,
+                ));
+        
+                $this->heading->addTab(new MProfileHeadingTab(
+                    label: $i18n->get("tab_with_replies"),
+                    url: "/$username/with_replies",
+                    tab: "tweets_with_replies",
+                    active: ProfileTab::WithReplies == $tab,
+                    openSignup: true,
+                ));
+        
+                $this->heading->addTab(new MProfileHeadingTab(
+                    label: $i18n->get("tab_media"),
+                    url: "/$username/media",
+                    tab: "photos_and_videos",
+                    active: ProfileTab::Media == $tab,
+                    openSignup: true,
+                ));
+            }
+            else
+            {
+                $this->emptyModule = new MProfileEmptyModule(
+                    username:       $username,
+                    headerStringId: "empty_no_tweets_header",
+                    bodyStringId:   "empty_no_tweets_body",
+                );
+            }
         }
         /* All followers, Followers you know */
         else if (in_array($tab, ProfileTab::VALID_FOLLOWERS_TABS))

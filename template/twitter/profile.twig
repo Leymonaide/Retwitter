@@ -194,9 +194,10 @@ wrapper-profile
 <div class="ProfileHeading">
     <div class="ProfileHeading-spacer"></div>
     <div class="ProfileHeading-content {{ data.noFill ? "ProfileHeading-content--noFill" }}">
-        <h2 id="content-main-heading" class="ProfileHeading-title {{ data.tabs|length > 0 ? "u-hiddenVisually" }}">
+        <h2 id="content-main-heading" class="ProfileHeading-title u-hiddenVisually">
             {{ data.title }}
         </h2>
+        {% if data.tabs|length > 0 %}
         <ul class="ProfileHeading-toggle">
             {% for tab in data.tabs %}
             <li class="ProfileHeading-toggleItem {{ tab.active ? "is-active" : "u-textUserColor" }}" data-element-term="{{ tab.tab }}_toggle">
@@ -211,7 +212,30 @@ wrapper-profile
             </li>
             {% endfor %}
         </ul>
+        {% endif %}
     </div>
+</div>
+{% endmacro %}
+
+{% macro empty_module(data) %}
+{% import "core/macros.twig" as core %}
+<div class="ProfilePage-emptyModule">
+    {% set username_html %}
+    {{ core.username(
+        name_text: data.username,
+        truncate_text: true
+    ) }}
+    {% endset %}
+    <h3 class="ProfilePage-emptyModuleHeader">
+        {{ app.i18n.formatHtml(
+            "profile",
+            data.headerStringId,
+            username_html|trim|safeHtml
+        ) }}
+    </h3>
+    <p class="ProfilePage-emptyModuleBody">
+        {{ app.i18n.get("profile", data.bodyStringId) }}
+    </p>
 </div>
 {% endmacro %}
 
@@ -373,7 +397,11 @@ wrapper-profile
                         {{ heading(app.page.content.heading) }}
                     {% endif %}
 
-                    {# {{ app.page.content.timeline|json_encode }} #}
+                    {% if app.page.content.emptyModule %}
+                        {% from "profile.twig" import empty_module %}
+                        {{ empty_module(app.page.content.emptyModule) }}
+                    {% endif %}
+
                     {% from "common/grid_timeline.twig" import render_grid_timeline %}
                     {{ render_grid_timeline(app.page.content.timeline) }}
                 {% endif %}
@@ -402,6 +430,11 @@ wrapper-profile
                         {# Embed tags have janky scoping. #}
                         {% from "profile.twig" import heading %}
                         {{ heading(app.page.content.heading) }}
+                    {% endif %}
+
+                    {% if app.page.content.emptyModule %}
+                        {% from "profile.twig" import empty_module %}
+                        {{ empty_module(app.page.content.emptyModule) }}
                     {% endif %}
 
                     {% from "common/timeline.twig" import render_timeline %}

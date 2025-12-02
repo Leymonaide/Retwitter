@@ -47,11 +47,16 @@
                                     <p><button type="button" class="btn-link back-to-top hidden">Torna su ↑</button></p>
                                 </div>
                             </div>
+                            {# TODO(aubymori): Make this only show up if there's actually a continuation?
+                               Not sure how those even work in Twitter... Anyways, this 0 check is just
+                               to make it look good with the profile empty module. #}
+                            {% if timeline.stream.items|length > 0 %}
                             <div class="stream-loading">
                                 <div class="stream-end-inner">
                                     <span class="spinner" title="Caricamento in corso..."></span>
                                 </div>
                             </div>
+                            {% endif %}
                         </div>
                     </div>
                 {% endset %}
