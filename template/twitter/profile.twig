@@ -346,14 +346,6 @@ wrapper-profile
                     {# {{ app.page.content.timeline|json_encode }} #}
                     {% from "common/grid_timeline.twig" import render_grid_timeline %}
                     {{ render_grid_timeline(app.page.content.timeline) }}
-                    {#
-                    {% from "common/timeline.twig" import render_timeline %}
-                    {{ render_timeline(app.page.content.timeline, {
-                        timelineClasses: [
-                            "ProfileTimeline",
-                        ],
-                    }) }}
-                    #}
                 {% endif %}
             {% endblock %}
         {% endembed %}
