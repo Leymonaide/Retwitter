@@ -29,19 +29,39 @@ use Retwitter\Page\Common\ButtonSize;
 
 class MFollowButton
 {
-    /* "Follow" button. */
+    /**
+     * "Follow" button.
+     */
     public MEdgeButton $followButton;
-    /* "Following" button. */
+
+    /**
+     * "Following" button.
+     */
     public MEdgeButton $followingButton;
-    /* "Unfollow" (hovered "Following") button. */
+
+    /**
+     * "Unfollow" (hovered "Following") button.
+     */
     public MEdgeButton $unfollowButton;
-    /* "Blocked" button. */
+
+    /**
+     * "Blocked" button.
+     */
     public MEdgeButton $blockedButton;
-    /* "Unblock" (hovered "Unblock") button. */
+
+    /**
+     * "Unblock" (hovered "Unblock") button.
+     */
     public MEdgeButton $unblockButton;
-    /* "Pending" (private account follow request) button. */
+
+    /**
+     * "Pending" (private account follow request) button.
+     */
     public MEdgeButton $pendingButton;
-    /* "Cancel" (hovered "Pending") button. */
+
+    /**
+     * "Cancel" (hovered "Pending") button.
+     */
     public MEdgeButton $cancelButton;
 
     public function __construct(ButtonSize $size = ButtonSize::Medium)
