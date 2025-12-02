@@ -39,7 +39,7 @@ class Url implements Stringable
     /**
      * An associative array of URL parameters.
      * 
-     * @var ?string[]
+     * @var array<string, string>|null
      *      If the value is an empty string in the associative array, then the
      *      value will be encoded as "&key=". If the value is null, then it will
      *      be encoded as "&key".
@@ -52,7 +52,7 @@ class Url implements Stringable
         string|Url $source
     )
     {
-        if (is_string($source))
+        if (\is_string($source))
         {
             $this->parseFromString($source);
         }
