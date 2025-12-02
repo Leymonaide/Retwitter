@@ -161,6 +161,35 @@ wrapper-profile
     </div>
 {% endmacro %}
 
+{% macro protected_timeline(data) %}
+    {% types {
+        data: "Retwitter\\Page\\Profile\\MProtectedTimeline"
+    } %}
+    <div class=" ">
+        <div class="ProtectedTimeline">
+            <h2 id="content-main-heading" class="ProtectedTimeline-heading">{{
+                app.i18n.get("profile", "protected_title")
+            }}</h2>
+            <p class="ProtectedTimeline-explanation">
+                {% with %}
+                    {% set username_html %}
+                        <span class="{{ [
+                            'username',
+                            'u-dir',
+                            'u-textTruncate',
+                        ]|join(' ') }}" dir="ltr">@<b>{{ data.username }}</b></span>
+                    {% endset %}
+                    {{ app.i18n.formatHtml(
+                        "profile",
+                        "protected_explanation",
+                        username_html|trim|safeHtml,
+                    ) }}
+                {% endwith %}
+            </p>
+        </div>
+    </div>
+{% endmacro %}
+
 {% macro heading(data) %}
 <div class="ProfileHeading">
     <div class="ProfileHeading-spacer"></div>
@@ -335,7 +364,8 @@ wrapper-profile
 
             {% block col_two_content %}
                 {% if app.page.content.protectedTimeline %}
-                    {{ _self.protected_timeline(app.page.content.protectedTimeline) }}
+                    {% from "profile.twig" import protected_timeline %}
+                    {{ protected_timeline(app.page.content.protectedTimeline) }}
                 {% elseif app.page.content.timeline %}
                     {% if app.page.content.heading %}
                         {# Embed tags have janky scoping. #}
@@ -365,7 +395,8 @@ wrapper-profile
 
             {% block col_two_content %}
                 {% if app.page.content.protectedTimeline %}
-                    {{ _self.protected_timeline(app.page.content.protectedTimeline) }}
+                    {% from "profile.twig" import protected_timeline %}
+                    {{ protected_timeline(app.page.content.protectedTimeline) }}
                 {% elseif app.page.content.timeline %}
                     {% if app.page.content.heading %}
                         {# Embed tags have janky scoping. #}
@@ -394,35 +425,6 @@ wrapper-profile
                 </div>
             </div>
             {% endblock %}
-
-            {% macro protected_timeline(data) %}
-                {% types {
-                    data: "Retwitter\\Page\\Profile\\MProtectedTimeline"
-                } %}
-                <div class=" ">
-                    <div class="ProtectedTimeline">
-                        <h2 id="content-main-heading" class="ProtectedTimeline-heading">{{
-                            app.i18n.get("profile", "protected_title")
-                        }}</h2>
-                        <p class="ProtectedTimeline-explanation">
-                            {% with %}
-                                {% set username_html %}
-                                    <span class="{{ [
-                                        'username',
-                                        'u-dir',
-                                        'u-textTruncate',
-                                    ]|join(' ') }}" dir="ltr">@<b>{{ data.username }}</b></span>
-                                {% endset %}
-                                {{ app.i18n.formatHtml(
-                                    "profile",
-                                    "protected_explanation",
-                                    username_html|trim|safeHtml,
-                                ) }}
-                            {% endwith %}
-                        </p>
-                    </div>
-                </div>
-            {% endmacro %}
         {% endembed %}
     {% endif %}
 {% endblock %}
