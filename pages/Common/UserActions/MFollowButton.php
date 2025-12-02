@@ -24,8 +24,8 @@ use Rehike\ConfigManager\Config;
 use Rehike\i18n\i18n;
 
 use Retwitter\Page\Common\MEdgeButton;
-use Retwitter\Page\Common\EdgeButtonStyle;
-use Retwitter\Page\Common\EdgeButtonSize;
+use Retwitter\Page\Common\ButtonStyle;
+use Retwitter\Page\Common\ButtonSize;
 
 class MFollowButton
 {
@@ -44,44 +44,44 @@ class MFollowButton
     /* "Cancel" (hovered "Pending") button. */
     public MEdgeButton $cancelButton;
 
-    public function __construct(EdgeButtonSize $size = EdgeButtonSize::Medium)
+    public function __construct(ButtonSize $size = ButtonSize::Medium)
     {
         $i18n = i18n::getNamespace("common");
         $useIcon = Config::getConfigProp("appearance.followButtonIcon");
 
         $this->followButton = new MEdgeButton(
-            EdgeButtonStyle::Secondary,
+            ButtonStyle::Secondary,
             $size,
             $i18n->get("follow_button_follow"),
             icon: $useIcon ? "follow" : null
         );
         $this->followingButton = new MEdgeButton(
-            EdgeButtonStyle::Primary,
+            ButtonStyle::Primary,
             $size,
             $i18n->get("follow_button_following")
         );
         $this->unfollowButton = new MEdgeButton(
-            EdgeButtonStyle::Danger,
+            ButtonStyle::Danger,
             $size,
             $i18n->get("follow_button_unfollow")
         );
         $this->blockedButton = new MEdgeButton(
-            EdgeButtonStyle::InvertedDanger,
+            ButtonStyle::InvertedDanger,
             $size,
             $i18n->get("follow_button_blocked")
         );
         $this->unblockButton = new MEdgeButton(
-            EdgeButtonStyle::Danger,
+            ButtonStyle::Danger,
             $size,
             $i18n->get("follow_button_unblock")
         );
         $this->pendingButton = new MEdgeButton(
-            EdgeButtonStyle::Secondary,
+            ButtonStyle::Secondary,
             $size,
             $i18n->get("follow_button_pending")
         );
         $this->cancelButton = new MEdgeButton(
-            EdgeButtonStyle::Secondary,
+            ButtonStyle::Secondary,
             $size,
             $i18n->get("follow_button_cancel")
         );

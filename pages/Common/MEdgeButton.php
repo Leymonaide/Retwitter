@@ -23,8 +23,8 @@ namespace Retwitter\Page\Common;
 class MEdgeButton
 {
     public function __construct(
-        public EdgeButtonStyle $style,
-        public EdgeButtonSize $size,
+        public ButtonStyle $style,
+        public ButtonSize $size,
         public string $label,
         public ?string $url = null,
         public bool $asInput = false, // TODO: Consider migration to template.

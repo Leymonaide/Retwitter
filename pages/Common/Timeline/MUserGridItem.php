@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
 use Rehike\FormattedString;
-use Retwitter\Page\Common\EdgeButtonSize;
+use Retwitter\Page\Common\ButtonSize;
 use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Retwitter\Page\Common\UserActions\MUserActions;
@@ -53,7 +53,7 @@ class MUserGridItem
         $this->badges = new MUserBadges($parser);
         $this->actions = new MUserActions(
             parser: $parser,
-            buttonSize: EdgeButtonSize::Small,
+            buttonSize: ButtonSize::Small,
         );
     }
 }

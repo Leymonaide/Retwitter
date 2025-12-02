@@ -21,14 +21,13 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common;
 
 /**
- * The style of a button.
+ * The size of a button.
  * 
  * The backing scalar string is the default template name.
  */
-enum EdgeButtonStyle : string
+enum ButtonSize : string
 {
-    case Primary = "primary";
-    case Secondary = "secondary";
-    case Danger = "danger";
-    case InvertedDanger = "invertedDanger";
+    case Small = "small";
+    case Medium = "medium";
+    case Large = "large";
 }

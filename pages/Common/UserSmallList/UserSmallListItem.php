@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\UserSmallList;
 
 use Rehike\FormattedString;
-use Retwitter\Page\Common\EdgeButtonSize;
+use Retwitter\Page\Common\ButtonSize;
 use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
@@ -47,7 +47,7 @@ class UserSmallListItem
         $this->avatarUrl = $parser->getAvatarUrl();
         $this->actions = new MUserActions(
             parser: $parser,
-            buttonSize: EdgeButtonSize::Small
+            buttonSize: ButtonSize::Small
         );
     }
 }

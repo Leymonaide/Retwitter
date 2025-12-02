@@ -22,8 +22,8 @@ namespace Retwitter\Page\Base;
 
 use Rehike\FormattedString;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\Page\Common\EdgeButtonSize;
-use Retwitter\Page\Common\EdgeButtonStyle;
+use Retwitter\Page\Common\ButtonSize;
+use Retwitter\Page\Common\ButtonStyle;
 use Retwitter\Page\Common\MEdgeButton;
 use Retwitter\Utils\FormattedStringBuilder;
 
@@ -55,14 +55,14 @@ class MHeaderSigninDialog
             ->build();
 
         $this->loginButton = new MEdgeButton(
-            style: EdgeButtonStyle::Primary,
-            size: EdgeButtonSize::Medium,
+            style: ButtonStyle::Primary,
+            size: ButtonSize::Medium,
             label: $strings->get("signin_promo_action"),
             asInput: true
         );
         $this->signUpButton = new MEdgeButton(
-            style: EdgeButtonStyle::Secondary,
-            size: EdgeButtonSize::Medium,
+            style: ButtonStyle::Secondary,
+            size: ButtonSize::Medium,
             label: $strings->get("sign_up_button"),
             url: "/signup",
         );

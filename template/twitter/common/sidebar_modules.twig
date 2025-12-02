@@ -31,13 +31,13 @@
             {{ app.i18n.get("common", "signup_callout_message") }}
         </div>
         <div class="signup SignupForm">
-            {% set EdgeButtonStyle = enum("Retwitter\\Page\\Common\\EdgeButtonStyle") %}
-            {% set EdgeButtonSize  = enum("Retwitter\\Page\\Common\\EdgeButtonSize") %}
+            {% set ButtonStyle = enum("Retwitter\\Page\\Common\\ButtonStyle") %}
+            {% set ButtonSize  = enum("Retwitter\\Page\\Common\\ButtonSize") %}
             {{ edge_button(
                 data: {
                     url: "/signup",
-                    style: EdgeButtonStyle.Primary,
-                    size: EdgeButtonSize.Large,
+                    style: ButtonStyle.Primary,
+                    size: ButtonSize.Large,
                     label: app.i18n.get("common", "signup_callout_action")
                 },
                 classes: [ "SignupForm-submit", "u-block", "js-signup" ],
