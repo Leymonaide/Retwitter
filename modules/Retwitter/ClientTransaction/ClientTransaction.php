@@ -23,7 +23,6 @@ namespace Retwitter\ClientTransaction;
 use DateTime;
 use PHPHtmlParser\Dom;
 use Rehike\Async\Promise;
-use Rehike\Logging\DebugLogger;
 use Rehike\Network\NetworkCore;
 use Rehike\Util\Base64;
 use Retwitter\Network;
@@ -97,21 +96,10 @@ class ClientTransaction
         return async(function () {
             $this->indices = yield $this->getIndices();
 
-            DebugLogger::print("Index: %d", $this->indices->rowIndex);
-            $byteBuffer = "";
-            foreach ($this->indices->keyBytesIndices as $byte)
-            {
-                if ($byte < -127 || $byte > 256)
-                {
-                    throw new \Exception("What the fuck bro");
-                }
-
-                $precede = "";
-                if (1 == strlen(dechex($byte))) $precede = "0";
-
-                $byteBuffer .= $precede . dechex($byte) . " ";
-            }
-            DebugLogger::print("Indices are: %s", $byteBuffer);
+            Debug::print("Index: %d", $this->indices->rowIndex);
+            Debug::print("Indices are: %s",
+                Debug::splayBytes($this->indices->keyBytesIndices)
+            );
 
             if (null == $this->key = $this->getKey())
             {
@@ -120,24 +108,12 @@ class ClientTransaction
 
             $this->keyBytes = $this->getKeyBytes($this->key);
 
-            $byteBuffer = "";
-            foreach ($this->keyBytes as $byte)
-            {
-                if ($byte < -127 || $byte > 256)
-                {
-                    throw new \Exception("What the fuck bro");
-                }
-
-                $precede = "";
-                if (1 == strlen(dechex($byte))) $precede = "0";
-
-                $byteBuffer .= $precede . dechex($byte) . " ";
-            }
-            DebugLogger::print("Key bytes: %s", $byteBuffer);
+            Debug::print("Key bytes: %s", 
+                Debug::splayBytes($this->keyBytes));
             
             $this->animationKey = $this->getAnimationKey();
 
-            DebugLogger::print("Animation key: %s", $this->animationKey);
+            Debug::print("Animation key: %s", $this->animationKey);
         });
     }
 
@@ -156,14 +132,11 @@ class ClientTransaction
     {
         if (null == $time)
         {
-            if (CLIENT_TRANSACTION_TEST_STATIC)
-            {
+if (CLIENT_TRANSACTION_TEST_STATIC):
                 $time = new DateTime("@1758792848");
-            }
-            else
-            {
+else:
                 $time = new DateTime("now");
-            }
+endif;
         }
 
         $timestamp = $time->getTimestamp() - 1682924400;
@@ -178,69 +151,40 @@ class ClientTransaction
 
         $data = "{$method}!{$path}!{$timestamp}{$keyword}{$this->animationKey}";
 
-        DebugLogger::print("The data: %s", $data);
+        Debug::print("The data: %s", $data);
 
         $hash = hash("sha256", $data, true);
         $hashBytes = array_values(unpack("C*", $hash));
 
-        DebugLogger::print("hash: %s", $hash);
+        Debug::print("hash: %s", $hash);
+        Debug::print("hashBytes is: %s", 
+            Debug::splayBytes($hashBytes));
 
-        $byteBuffer = "";
-        foreach ($hashBytes as $byte)
-        {
-            if ($byte < -127 || $byte > 256)
-            {
-                throw new \Exception("What the fuck bro");
-            }
-
-            $precede = "";
-            if (1 == strlen(dechex($byte))) $precede = "0";
-
-            $byteBuffer .= $precede . dechex($byte) . " ";
-        }
-        DebugLogger::print("hashBytes is: %s", $byteBuffer);
-
-if (!CLIENT_TRANSACTION_TEST_STATIC)
-{
+if (!CLIENT_TRANSACTION_TEST_STATIC):
         $rand = rand(0, 255);
-}
-else
-{
+else:
         $rand = 128; // = Math.floor(0.5 * 256)
-}
+endif;
 
         $bytesArr = [
             ...$this->keyBytes,
             ...$timeBytes,
-            ...array_slice($hashBytes, 0, 16),
+            ...\array_slice($hashBytes, 0, 16),
             $this->additionalRandomNumber,
         ];
 
-        $byteBuffer = "";
-        foreach ($bytesArr as $byte)
-        {
-            if ($byte < -127 || $byte > 256)
-            {
-                throw new \Exception("What the fuck bro");
-            }
-
-            $precede = "";
-            if (1 == strlen(dechex($byte))) $precede = "0";
-
-            $byteBuffer .= $precede . dechex($byte) . " ";
-        }
-        DebugLogger::print("bytesArr is: %s", $byteBuffer);
-
-        DebugLogger::print('count($bytesArr) = %s', count($bytesArr));
-        DebugLogger::print('$bytesArr = %s', Base64::encode(implode("", array_map("chr", $bytesArr))));
+        Debug::print("bytesArr is: %s", 
+            Debug::splayBytes($bytesArr));
+        Debug::print('count($bytesArr) = %s', count($bytesArr));
+        Debug::print('$bytesArr = %s', Base64::encode(implode("", array_map("chr", $bytesArr))));
 
         $out = [
             $rand,
             ...array_map(fn($item) => $item ^ $rand, $bytesArr),
         ];
 
-        DebugLogger::print('count($out) = %s', count($out));
-        DebugLogger::print('$out = %s', Base64::encode( implode("", array_map("chr", $out)) ));
+        Debug::print('count($out) = %s', count($out));
+        Debug::print('$out = %s', Base64::encode( implode("", array_map("chr", $out)) ));
 
         return str_replace("=", "", Base64::encode( implode("", array_map("chr", $out)) ));
     }
@@ -336,7 +280,7 @@ else
 
         if (null == $element)
         {
-            DebugLogger::print(__METHOD__.": Failed to find twitter-site-verification element.");
+            Debug::print(__METHOD__.": Failed to find twitter-site-verification element.");
             return null;
         }
 
@@ -344,7 +288,7 @@ else
 
         if (null == $content)
         {
-            DebugLogger::print(__METHOD__.
+            Debug::print(__METHOD__.
                 ": Failed to get verification key (element exists with body '%s').",
                 $element->outerHtml(),
             );
@@ -435,9 +379,9 @@ else
      */
     private function animate(array $frames, float $targetTime): string
     {
-        $fromColor = array_slice($frames, 0, 3);
+        $fromColor = \array_slice($frames, 0, 3);
         $fromColor[] = 1;
-        $toColor = array_slice($frames, 3, 3);
+        $toColor = \array_slice($frames, 3, 3);
         $toColor[] = 1;
 
         $buffer = "";
@@ -445,19 +389,19 @@ else
         {
             $buffer .= $color . " ";
         }
-        DebugLogger::print("fromColor: { %s }", $buffer);
+        Debug::print("fromColor: { %s }", $buffer);
 
         $buffer = "";
         foreach ($toColor as $color)
         {
             $buffer .= $color . " ";
         }
-        DebugLogger::print("toColor: { %s }", $buffer);
+        Debug::print("toColor: { %s }", $buffer);
 
         $fromRotation = [0.0];
         $toRotation = [$this->solve($frames[6], (int)60.0, (int)360.0, true)];
 
-        $remainingFrames = array_slice($frames, 7);
+        $remainingFrames = \array_slice($frames, 7);
 
         $curves = [];
 
@@ -478,7 +422,7 @@ else
         // Convert color and matrix values to hex string:
         $strArr = array_map(
             fn($value) => dechex((int)round($value)),
-            array_slice($color, 0, -1),
+            \array_slice($color, 0, -1),
         );
 
         foreach ($matrix as $value)
@@ -513,8 +457,8 @@ else
         $keyIndices = &$this->indices->keyBytesIndices;
         $rowIndex = $this->keyBytes[$this->indices->rowIndex] % 16;
 
-        DebugLogger::print("getAnimationKey(): rowIndex without = %d", $this->keyBytes[$this->indices->rowIndex]);
-        DebugLogger::print("getAnimationKey(): rowIndex = %d", $rowIndex);
+        Debug::print("getAnimationKey(): rowIndex without = %d", $this->keyBytes[$this->indices->rowIndex]);
+        Debug::print("getAnimationKey(): rowIndex = %d", $rowIndex);
 
         // Generate frame time using key byte indices:
         $frameTime = array_reduce(
@@ -522,11 +466,11 @@ else
             fn($num1, $num2) => $num1 * ($this->keyBytes[$num2] % 16),
             1,
         );
-        DebugLogger::print("Initial frame time: %f", $frameTime);
+        Debug::print("Initial frame time: %f", $frameTime);
         $frameTime = round($frameTime / 10) * 10;
-        DebugLogger::print("Rounded frame time: %f", $frameTime);
+        Debug::print("Rounded frame time: %f", $frameTime);
 
-        DebugLogger::print("Frame time: %d", $frameTime);
+        Debug::print("Frame time: %d", $frameTime);
 
         $coords = $this->getCoordinateArray();
 
@@ -541,7 +485,7 @@ else
             $byteBuffer .= "]";
         }
         $byteBuffer .= "]";
-        DebugLogger::print("coords is: %s", $byteBuffer);
+        Debug::print("coords is: %s", $byteBuffer);
 
         if (null == $coords || !isset($coords[$rowIndex]))
         {
@@ -552,8 +496,8 @@ else
         $targetTime = $frameTime / $TOTAL_TIME;
         $animationKey = $this->animate($frameRow, $targetTime);
 
-        DebugLogger::print("frameRow: %s", $frameRow);
-        DebugLogger::print("targetTime: %s", $targetTime);
+        Debug::print("frameRow: %s", $frameRow);
+        Debug::print("targetTime: %s", $targetTime);
 
         return $animationKey;
     }
