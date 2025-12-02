@@ -216,11 +216,11 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
     public function getFollowState(): FollowState
     {
         $apiResult = $this->getApiResult();
-        if ($apiResult?->relationship_perspectives->following)
+        if (@$apiResult?->relationship_perspectives->following)
         {
             return FollowState::Following;
         }
-        if ($apiResult?->follow_request_sent)
+        if (@$apiResult?->follow_request_sent)
         {
             return FollowState::Pending;
         }
