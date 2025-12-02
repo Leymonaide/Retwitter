@@ -88,12 +88,12 @@ class TrendDataParserTwitterWeb implements ITrendParser
     public function getDescription(): ?string
     {
         // Description, like "5,596 posts"
-        return $this->data->trend_metadata?->meta_description;
+        return $this->data->trend_metadata?->meta_description ?? null;
     }
 
     public function getContext(): ?string
     {
         // Description, like "5,596 posts"
-        return $this->data->trend_metadata?->domain_context;
+        return $this->data->trend_metadata?->domain_context ?? null;
     }
 }
