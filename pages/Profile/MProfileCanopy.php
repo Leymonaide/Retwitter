@@ -46,50 +46,65 @@ class MProfileCanopy
         $i18n = i18n::getNamespace("profile");
         $name = $parser->getUsername();
 
-        $this->stats[] = new MProfileCanopyStat(
-            id: "tweets",
-            label: $i18n->get("stat_tweets"),
-            count: $parser->getTweetCount(),
-            tooltip: $i18n->get("stat_tweets_tip"),
-            url: "/$name",
-            active: in_array($tab, ProfileTab::VALID_TWEET_TABS),
-        );
+        $tweetCount = $parser->getTweetCount();
+        if (0 != $tweetCount)
+        {
+            $this->stats[] = new MProfileCanopyStat(
+                id: "tweets",
+                label: $i18n->get("stat_tweets"),
+                count: $tweetCount,
+                tooltip: $i18n->get("stat_tweets_tip"),
+                url: "/$name",
+                active: in_array($tab, ProfileTab::VALID_TWEET_TABS),
+            );
+        }
 
-        $this->stats[] = new MProfileCanopyStat(
-            id: "following",
-            label: $i18n->get("stat_following"),
-            count: $parser->getFollowingCount(),
-            tooltip: $i18n->get("stat_following_tip"),
-            url: "/$name/following",
-            active: ProfileTab::Following == $tab,
-        );
+        $followingCount = $parser->getFollowingCount();
+        if (0 != $followingCount)
+        {
+            $this->stats[] = new MProfileCanopyStat(
+                id: "following",
+                label: $i18n->get("stat_following"),
+                count: $parser->getFollowingCount(),
+                tooltip: $i18n->get("stat_following_tip"),
+                url: "/$name/following",
+                active: ProfileTab::Following == $tab,
+            );
+        }
 
-        $this->stats[] = new MProfileCanopyStat(
-            id: "followers",
-            label: $i18n->get("stat_followers"),
-            count: $parser->getFollowerCount(),
-            tooltip: $i18n->get("stat_followers_tip"),
-            url: "/$name/followers",
-            active: in_array($tab, ProfileTab::VALID_FOLLOWERS_TABS),
-        );
+        $followerCount = $parser->getFollowerCount();
+        if (0 != $followerCount)
+        {
+            $this->stats[] = new MProfileCanopyStat(
+                id: "followers",
+                label: $i18n->get("stat_followers"),
+                count: $followerCount,
+                tooltip: $i18n->get("stat_followers_tip"),
+                url: "/$name/followers",
+                active: in_array($tab, ProfileTab::VALID_FOLLOWERS_TABS),
+            );
+        }
 
-        $this->stats[] = new MProfileCanopyStat(
-            id: "likes",
-            label: $i18n->get("stat_likes"),
-            count: $parser->getFavoritesCount(),
-            tooltip: $i18n->get("stat_likes_tip"),
-            url: "/$name/likes",
-            active: ProfileTab::Likes == $tab,
-        );
+        $favoritesCount = $parser->getFavoritesCount();
+        if (0 != $favoritesCount)
+        {
+            $this->stats[] = new MProfileCanopyStat(
+                id: "likes",
+                label: $i18n->get("stat_likes"),
+                count: $favoritesCount,
+                tooltip: $i18n->get("stat_likes_tip"),
+                url: "/$name/likes",
+                active: ProfileTab::Likes == $tab,
+            );
+        }
 
-        // Currently, only the list count is known to actually be null. Perhaps
-        // everything here should be moved to use a null check in the future?
-        if (null !== $parser->getListCount())
+        $listCount = $parser->getListCount();
+        if (0 != $listCount)
         {
             $this->stats[] = new MProfileCanopyStat(
                 id: "lists",
                 label: $i18n->get("stat_lists"),
-                count: $parser->getListCount(),
+                count: $listCount,
                 tooltip: $i18n->get("stat_lists_tip"),
                 url: "/$name/lists",
                 active: ProfileTab::Lists == $tab,
