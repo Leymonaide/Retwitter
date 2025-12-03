@@ -456,13 +456,13 @@
                         <div class="AdaptiveMedia-halfWidthPhoto">
                             {{ _self.adaptive_media_photo_container(
                                 tweet_media_arr[0],
-                                vertical: false,
+                                vertical: tweet_media_arr[0].aspectRatio > 1.0,
                             ) }}
                         </div>
                         <div class="AdaptiveMedia-halfWidthPhoto">
                             {{ _self.adaptive_media_photo_container(
                                 tweet_media_arr[1],
-                                vertical: false,
+                                vertical: tweet_media_arr[1].aspectRatio > 1.0,
                             ) }}
                         </div>
                     </div>
@@ -471,20 +471,20 @@
                         <div class="AdaptiveMedia-twoThirdsWidthPhoto">
                             {{ _self.adaptive_media_photo_container(
                                 tweet_media_arr[0],
-                                vertical: false,
+                                vertical: tweet_media_arr[0].aspectRatio > 1.0,
                             ) }}
                         </div>
                         <div class="AdaptiveMedia-halfHeightPhotoContainer">
                             <div class="AdaptiveMedia-halfHeightPhoto">
                                 {{ _self.adaptive_media_photo_container(
                                     tweet_media_arr[1],
-                                    vertical: true,
+                                    vertical: trutweet_media_arr[1].aspectRatio > 1.0,
                                 ) }}
                             </div>
                             <div class="AdaptiveMedia-halfHeightPhoto">
                                 {{ _self.adaptive_media_photo_container(
                                     tweet_media_arr[2],
-                                    vertical: true,
+                                    vertical: tweet_media_arr[2].aspectRatio > 1.0,
                                 ) }}
                             </div>
                         </div>
