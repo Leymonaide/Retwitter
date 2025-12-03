@@ -17,6 +17,7 @@
 #}
 
 {% macro render_grid_timeline(timeline) %}
+{# {{ timeline|json_encode }} #}
 <div class="GridTimeline">
     <div class="stream-item js-new-items-bar-container"></div>
     <div class="GridTimeline-items"
@@ -26,6 +27,8 @@
         {% for item in timeline.stream.items %}
             {% if item.userGrid %}
                 {{ _self.render_user_grid(item.userGrid) }}
+            {% elseif item.profileListItem %}
+                {{ _self.render_list_item(item.profileListItem) }}
             {% endif %}
         {% endfor %}
     </div>
@@ -121,5 +124,45 @@
             </div>
         </div>
     {% endfor %}
+</div>
+{% endmacro %}
+
+{% macro render_list_item(list) %}
+{% types {
+    list: "Retwitter\\Page\\Common\\Timeline\\MProfileListItem"
+} %}
+<div id="stream-id-list-{{ list.id }}"
+     class="Grid-cell u-size3of3 u-mb10 js-stream-item"
+     data-test-selector="ProfileTimelineList"
+     role="listitem"
+     data-item-id="{{ list.id }}"
+     data-item-type="list">
+    <div class="ProfileListItem u-cf js-list" data-user-id="{{ list.ownerId }}">
+        <a href="/i/lists/{{ list.id }}" class="ProfileListItem-name js-list-link js-nav">
+            {{ list.name }}
+        </a>
+        <a class="ProfileListItem-avatarLink u-textUser u-pullRight"
+           href="/{{ list.ownerScreenName }}"
+           tabindex="-1"
+           aria-hidden="true">
+            <img class="ProfileListItem-avatar" src="{{ list.ownerAvatarUrl }}" alt="">
+        </a>
+        <span class="ProfileListItem-byLine">
+            {% with %}
+                {%- set author_link_html -%}
+                <a class="ProfileListItem-ownerName" href="/{{ list.ownerScreenName }}">
+                    {{ list.ownerName }}
+                </a>
+                {%- endset -%}
+                {{ app.i18n.formatHtml("common", "list_byline_text", author_link_html|safeHtml) }}
+            {% endwith %}
+        </span>
+        <p class="ProfileListItem-bio u-dir" dir="ltr">
+            {{ list.bio }}
+        </p>
+        <p class="ProfileListItem-memberCount">
+            {{ list.memberCountText }}
+        </p>
+    </div>    
 </div>
 {% endmacro %}

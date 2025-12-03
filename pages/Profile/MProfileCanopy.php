@@ -107,7 +107,7 @@ class MProfileCanopy
                 count: $listCount,
                 tooltip: $i18n->get("stat_lists_tip"),
                 url: "/$name/lists",
-                active: ProfileTab::Lists == $tab,
+                active: in_array($tab, ProfileTab::VALID_LISTS_TABS),
             );
         }
     }

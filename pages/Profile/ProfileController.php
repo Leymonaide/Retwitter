@@ -43,6 +43,8 @@ use Retwitter\SignIn\SignIn;
 use Retwitter\Url;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
+use Twig\Profiler\Profile;
+
 use function Rehike\Async\async;
 
 use const Retwitter\Constants\TEST_SIGNIN;
@@ -102,22 +104,28 @@ if (TEST_SIGNIN)
                     tag: ProfileControllerRequestTags::User->value,
                 );
 
-                // TEMP: All grid timeline tabs use followers data to ensure they have
-                // proper data.
-                if (in_array($tab, ProfileTab::GRID_TIMELINE_TABS))
+                // Most of these cases are temporary (e.g. all three user grid tabs using
+                // the same data)
+                switch ($tab)
                 {
-                    $requestManager->add(
-                        request: $this->requestFollowersTwitterApi($username),
-                        tag: ProfileControllerRequestTags::Timeline->value
-                    );
+                    case ProfileTab::Followers:
+                    case ProfileTab::FollowersYouFollow:
+                    case ProfileTab::Following:
+                        $timelineRequest = $this->requestFollowersTwitterApi($username);
+                        break;
+                    case ProfileTab::Lists:
+                    case ProfileTab::Memberships:
+                        $timelineRequest = $this->requestListsTwitterApi($username);
+                        break;
+                    default:
+                        $timelineRequest = $this->requestTweetsTwitterApi($username);
+                        break;
                 }
-                else
-                {
-                    $requestManager->add(
-                        request: $this->requestTweetsTwitterApi($username),
-                        tag: ProfileControllerRequestTags::Timeline->value,
-                    );
-                }
+
+                $requestManager->add(
+                    request: $timelineRequest,
+                    tag: ProfileControllerRequestTags::Timeline->value
+                );
             }
 
             // Run all requests:
@@ -285,6 +293,19 @@ endif;
         // TODO: Request for real.
         // Followers
         return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_followers.json");
+    }
+
+    private function requestListsTwitterApi(
+        string $username
+    ): IRequestManagerRequest
+    {
+        // TODO: Request for real.
+        // CombinedLists
+        //
+        // XXX(aubymori): We will also need to implement custom parsing for the
+        // ListManagementPageTimeline endpoint, as it's differently structured.
+        // IDK how the user's own lists page looked on MS actually. Look into?
+        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_lists.json");
     }
 
     private function requestProfileNitter(

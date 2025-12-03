@@ -30,6 +30,20 @@ enum ProfileTab : string
     case FollowersYouFollow = "followers_you_follow";
     case Following = "following";
     case Lists = "lists";
+    case Memberships = "memberships";
+
+    /**
+     * List of tabs that should show a grid timeline (users or lists).
+     * 
+     * @var ProfileTab[]
+     */
+    public const GRID_TIMELINE_TABS = [
+        ProfileTab::Followers,
+        ProfileTab::FollowersYouFollow,
+        ProfileTab::Following,
+        ProfileTab::Lists,
+        ProfileTab::Memberships,
+    ];
 
     /**
      * List of valid followers tab subpage values.
@@ -44,17 +58,6 @@ enum ProfileTab : string
     ];
 
     /**
-     * List of tabs that should show a grid timeline (users).
-     * 
-     * @var ProfileTab[]
-     */
-    public const GRID_TIMELINE_TABS = [
-        ProfileTab::Followers,
-        ProfileTab::FollowersYouFollow,
-        ProfileTab::Following,
-    ];
-
-    /**
      * List of valid Tweets tab subpage values.
      * 
      * These are pages on which the user's timeline will appear.
@@ -65,5 +68,17 @@ enum ProfileTab : string
         ProfileTab::RecentTweets,
         ProfileTab::WithReplies,
         ProfileTab::Media,
+    ];
+
+    /**
+     * List of valid Lists tab subpage values.
+     * 
+     * These are pages on which the user's lists will appear.
+     * 
+     * @var ProfileTab[]
+     */
+    public const VALID_LISTS_TABS = [
+        ProfileTab::Lists,
+        ProfileTab::Memberships,
     ];
 }

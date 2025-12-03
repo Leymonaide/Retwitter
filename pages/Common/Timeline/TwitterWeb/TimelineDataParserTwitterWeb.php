@@ -34,6 +34,7 @@ use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MConversation;
 use Retwitter\Page\Common\Timeline\MConversationItemUnion;
 use Retwitter\Page\Common\Timeline\MMissingTweetsBar;
+use Retwitter\Page\Common\Timeline\MProfileListItem;
 use Retwitter\Page\Common\Timeline\MTimelineItemUnion;
 use Retwitter\Page\Common\Timeline\MTrend;
 use Retwitter\Page\Common\Timeline\MTweet;
@@ -133,6 +134,13 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
 
                 $parser = new ProfileDataParserTwitterWeb($entryContent->itemContent->user_results->result);
                 $currentUserGrid->items[] = new MUserGridItem($parser);
+            }
+            else if ("TimelineTwitterList" == @$entryContent->itemContent->itemType)
+            {
+                $parser = new ListDataParserTwitterWeb($entryContent->itemContent->list);
+                $result[] = new MTimelineItemUnion(
+                    profileListItem: new MProfileListItem($parser)
+                );
             }
             else if ("TimelineTimelineModule" == $entryContent->entryType)
             {

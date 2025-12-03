@@ -20,16 +20,14 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
-class MTimelineItemUnion
+use Retwitter\IApiSourceProvider;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+
+interface IListParser extends IApiSourceProvider
 {
-    public function __construct(
-        public ?MTweetUnion $tweetUnion = null,
-        public ?MConversation $conversation = null,
-        public ?MTrend $trend = null,
-        public ?MTimelineModule $module = null,
-        public ?MUserGrid $userGrid = null,
-        public ?MProfileListItem $profileListItem = null,
-    )
-    {
-    }
+    public function getId(): ?string;
+    public function getName(): ?string;
+    public function getDescription(): ?string;
+    public function getMemberCount(): ?int;
+    public function getAuthorParser(): ?IProfileDataParser;
 }

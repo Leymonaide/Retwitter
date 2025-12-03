@@ -42,6 +42,10 @@ tab_active: "%s, current page."
 tab_followers: "All followers"
 tab_followers_you_follow: "Followers you know"
 
+# Lists tab sub-tabs
+tab_lists: "Subscribed to"
+tab_memberships: "Member of"
+
 suspended_title: "Account suspended"
 suspended_message: "This account has been suspended."
 

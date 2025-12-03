@@ -122,7 +122,35 @@ class MProfileContent
                 openSignup: false,
             ));
         }
-        // TODO(aubymori): Lists heading
+        /* Lists (Subscribed to, Member of) */
+        else if (in_array($tab, ProfileTab::VALID_LISTS_TABS))
+        {
+            $this->heading = new MProfileHeading($i18n->get("stat_lists"));
+
+            /** 
+             * XXX(aubymori): Twitter seemed to hide this tab (and possibly the Member of tab for
+             * its case) if the user is not subscribed to or made any lists?? IDK if we can
+             * replicate this because Twitter doesn't seem to report the number of
+             * subscribed/created lists.
+             * 
+             * Source: https://github.com/1j01/palettes/blob/bb970c808fabfaaf228780eeb449febd88e751eb/Unintentional/twitter.htm
+             */
+            $this->heading->addTab(new MProfileHeadingTab(
+                label: $i18n->get("tab_lists"),
+                url: "/$username/lists",
+                tab: "lists", // Not confirmed, please find archive of this tab.
+                active: ProfileTab::Lists == $tab,
+                openSignup: false,
+            ));
+
+            $this->heading->addTab(new MProfileHeadingTab(
+                label: $i18n->get("tab_memberships"),
+                url: "/$username/memberships",
+                tab: "memberships", // Not confirmed, please find archive of this tab.
+                active: ProfileTab::Memberships == $tab,
+                openSignup: false,
+            ));
+        }
     }
 
     public function setTimeline(ITimelineDataParser $timelineParser): void
