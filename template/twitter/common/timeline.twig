@@ -592,9 +592,11 @@
                                 @<b>{{ tweet.author.screenName }}</b>
                             </span>
                         </div>
-                        <div class="QuoteTweet-text tweet-text u-dir" dir="ltr">
-                            {{- core.tweet_text(tweet.fullText) }}
-                        </div>
+                        {# Need to avoid surrounding whitespace; this has the CSS rule white-space: pre-wrap.
+                           https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space#pre-wrap #}
+                        <div class="QuoteTweet-text tweet-text u-dir" dir="ltr">{#
+                          #}{{- core.tweet_text(tweet.fullText) }}{#
+                        #}</div>
                     </div>
                 </div>
             </div>
