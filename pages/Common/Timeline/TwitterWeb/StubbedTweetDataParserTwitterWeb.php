@@ -137,6 +137,11 @@ class StubbedTweetDataParserTwitterWeb implements ITweetDataParser
         return null;
     }
 
+    public function getQuotedTweetPermalink(): ?string
+    {
+        return null;
+    }
+
     public function getIsRetweet(): bool
     {
         return false;

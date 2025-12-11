@@ -163,6 +163,19 @@ class TweetDataParserNitter implements ITweetDataParser
         return null;
     }
 
+    public function getQuotedTweetPermalink(): ?string
+    {
+        if ($quoteLinkNode = NitterParsingUtils::findFirst(
+                $this->rootNode, ".quote"))
+        {
+            /* Get permalink and remove the URL hash */
+            $permalink = $quoteLinkNode->getAttribute("href");
+            $permalink = preg_replace("/#.*$/", "", $permalink);
+            return $permalink;
+        }
+        return null;
+    }
+
     public function getLang(): ?string
     {
         // Nitter doesn't report the language of a tweet. Now I could query an

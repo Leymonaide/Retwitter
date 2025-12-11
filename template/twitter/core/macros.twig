@@ -88,7 +88,7 @@
 
 {# Tweet text is very sensitive to whitespace, so this macro avoids any
    around whitespace the formatted output. #}
-{% macro tweet_text(text) %}{#
+{% macro tweet_text(text, render_links = true) %}{#
 #}{% if text.simpleText %}{#
     #}{{ text.simpleText }}{#
 #}{% elseif text.runs %}{#
@@ -99,7 +99,7 @@
             title="{{ run.emoji.label }}"
             aria-label="Emoji: {{ run.emoji.label }}">{#
         #}{% elseif run.complexLink %}{#
-        #}<a class="twitter-timeline-link" href="{{ run.complexLink.targetUrl }}"
+        #}<{{ render_links ? "a" : "span"}} class="twitter-timeline-link" {% if render_links %}href="{{ run.complexLink.targetUrl }}"{% endif %}
              rel="nofollow noopener" dir="ltr" data-expanded-url="{{ run.complexLink.expandedUrl }}"
              target="_blank" title="{{ run.complexLink.expandedUrl }}">{#
           #}<span class="tco-ellipsis">{#
@@ -117,7 +117,7 @@
               #}{{ run.complexLink.afterEllipsis }}{#
               #}{% endif %}{#
           #}</span>{#
-      #}</a>{#
+      #}</{{ render_links ? "a" : "span"}}>{#
         #}{% else %}{#
         #}{% if run.url %}{#
         #}<a href="{{ run.url }}">{#

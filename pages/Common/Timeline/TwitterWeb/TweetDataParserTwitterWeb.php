@@ -270,6 +270,22 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         return null;
     }
 
+    public function getQuotedTweetPermalink(): ?string
+    {
+        $permalink = @$this->getData()->legacy->quoted_status_permalink->expanded ?? null;
+        if ($permalink !== null)
+        {
+            /**
+              * Remove the protocol and domain, to just leave /user/status/XXXXXXXXX.
+              * The permalink is still twitter.com for now, but adding the case for
+              * x.com too just to be save.
+              */
+            $permalink = preg_replace("/^https:\/\/(twitter|x).com/", "", $permalink);
+            return $permalink;
+        }
+        return null;
+    }
+
     public function getIsRetweet(): bool
     {
         return isset($this->getRootData()->legacy->retweeted_status_result);

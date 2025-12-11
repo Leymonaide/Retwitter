@@ -24,6 +24,7 @@ use DateTime;
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
 use Retwitter\ApiSource;
+use Retwitter\Utils\FormattedStringBuilder;
 use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
 
@@ -87,6 +88,22 @@ class MTweet
                     tweet: new MTweet(parser: $quotedTweet, isQuoteTweet: true),
                 );
             }
+        }
+
+        /* Append quote permalink if we are a quote or if
+           quoted tweet is tombstoned. */
+        $quotePermalink = $parser->getQuotedTweetPermalink();
+        if ($quotePermalink
+        && ($isQuoteTweet || (null != $this->quotedTweet->tombstone)))
+        {
+            $fsb = FormattedStringBuilder::from($this->fullText);
+            $fsb->createAndAddRun(" ");
+            $fsb->createAndAddRun(
+                "https://twitter.com" . $quotePermalink,
+                FormattedStringBuilder::RUN_AS_COMPLEX_LINK,
+                $quotePermalink
+            );
+            $this->fullText = $fsb->build();
         }
 
         $this->author = new MTweetAuthor($parser->getAuthorParser());

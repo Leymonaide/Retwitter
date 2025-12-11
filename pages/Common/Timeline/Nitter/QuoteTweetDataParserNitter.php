@@ -127,6 +127,11 @@ class QuoteTweetDataParserNitter implements ITweetDataParser
         return null;
     }
 
+    public function getQuotedTweetPermalink(): ?string
+    {
+        return null;
+    }
+
     public function getRetweetId(): ?string
     {
         return null;
@@ -167,6 +172,21 @@ class QuoteTweetDataParserNitter implements ITweetDataParser
     }
 
     public function getIsRetweet(): bool
+    {
+        return false;
+    }
+
+    public function getIsFavorited(): bool
+    {
+        return false;
+    }
+
+    public function getIsRetweeted(): bool
+    {
+        return false;
+    }
+
+    public function getIsBookmarked(): bool
     {
         return false;
     }
