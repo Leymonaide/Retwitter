@@ -48,6 +48,26 @@
     {% for run in text.runs %}
         {% if run.emoji %}
         <img class="Emoji Emoji--forText" src="{{ run.emoji.url }}" draggable="false" alt="{{ run.emoji.alt }}" title="{{ run.emoji.label }}" aria-label="Emoji: {{ run.emoji.label }}">
+        {% elseif run.complexLink %}
+        <a class="twitter-timeline-link" href="{{ run.complexLink.targetUrl }}"
+             rel="nofollow noopener" dir="ltr" data-expanded-url="{{ run.complexLink.expandedUrl }}"
+             target="_blank" title="{{ run.complexLink.expandedUrl }}">
+            <span class="tco-ellipsis">
+                {% if run.complexLink.beforeEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.beforeEllipsis }}
+                {% endif %}
+            </span>{#
+          #}<span class="invisible">{{ run.complexLink.beforeInvisible }}</span>{#
+          #}<span class="js-display-url">{{ run.complexLink.displayUrl }}</span>{#
+          #}<span class="invisible">{{ run.complexLink.afterInvisible }}</span>{#
+          #}<span class="tco-ellipsis">
+                {% if run.complexLink.afterEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.afterEllipsis }}
+                {% endif %}
+            </span>
+        </a>
         {% else %}
         {% if run.url %}
         <a href="{{ run.url }}">
@@ -78,6 +98,26 @@
             draggable="false" alt="{{ run.emoji.alt }}"
             title="{{ run.emoji.label }}"
             aria-label="Emoji: {{ run.emoji.label }}">{#
+        #}{% elseif run.complexLink %}{#
+        #}<a class="twitter-timeline-link" href="{{ run.complexLink.targetUrl }}"
+             rel="nofollow noopener" dir="ltr" data-expanded-url="{{ run.complexLink.expandedUrl }}"
+             target="_blank" title="{{ run.complexLink.expandedUrl }}">{#
+          #}<span class="tco-ellipsis">{#
+              #}{% if run.complexLink.beforeEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.beforeEllipsis }}{#
+              #}{% endif %}{#
+          #}</span>{#
+          #}<span class="invisible">{{ run.complexLink.beforeInvisible }}</span>{#
+          #}<span class="js-display-url">{{ run.complexLink.displayUrl }}</span>{#
+          #}<span class="invisible">{{ run.complexLink.afterInvisible }}</span>{#
+          #}<span class="tco-ellipsis">{#
+              #}{% if run.complexLink.afterEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.afterEllipsis }}{#
+              #}{% endif %}{#
+          #}</span>{#
+      #}</a>{#
         #}{% else %}{#
         #}{% if run.url %}{#
         #}<a href="{{ run.url }}">{#

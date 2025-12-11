@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Utils;
 
 use Rehike\FormattedString;
+use Rehike\ConfigManager\Config;
 use Retwitter\Utils\FormattedStringBuilder;
 
 class ParsingUtils
@@ -140,10 +141,16 @@ class ParsingUtils
             }
 
             // Add the substituted display URL as a link run
+            $url = $urlEntity->url;
+            if (@$urlEntity->expanded_url
+            && Config::getConfigProp("behavior.disableTcoShortLinks"))
+            {
+                $url = $urlEntity->expanded_url;
+            }
             $fsb->createAndAddRun(
-                $urlEntity->display_url ?? $urlEntity->url,
-                FormattedStringBuilder::RUN_AS_LINK,
                 $urlEntity->expanded_url ?? $urlEntity->url,
+                FormattedStringBuilder::RUN_AS_COMPLEX_LINK,
+                $url,
             );
 
             $cursor = $end;

@@ -11,6 +11,7 @@ use Retwitter\Utils\FormattedStringBuilder\{
 };
 
 use Rehike\Logging\DebugLogger;
+use Retwitter\ComplexLink;
 
 /**
  * Builder for formatted strings like InnerTube.
@@ -23,9 +24,10 @@ use Rehike\Logging\DebugLogger;
 class FormattedStringBuilder
 {    
     // Flags for run creation
-    public const RUN_AS_LINK        = 0b0001;
-    public const RUN_DISPLAY_BOLD   = 0b0010;
-    public const RUN_DISPLAY_ITALIC = 0b0100;
+    public const RUN_AS_LINK         = 0b0001;
+    public const RUN_DISPLAY_BOLD    = 0b0010;
+    public const RUN_DISPLAY_ITALIC  = 0b0100;
+    public const RUN_AS_COMPLEX_LINK = 0b1000;
     
     /**
      * An array of all the runs in the formatted string.
@@ -94,6 +96,10 @@ class FormattedStringBuilder
         if ($runCreationFlags & self::RUN_AS_LINK)
         {
             $builder->url = $linkText;
+        }
+        else if ($runCreationFlags & self::RUN_AS_COMPLEX_LINK)
+        {
+            $builder->complexLink = new ComplexLink($runText, $linkText);
         }
         
         if ($runCreationFlags & self::RUN_DISPLAY_BOLD)

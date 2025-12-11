@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace Retwitter\Utils\FormattedStringBuilder;
 
+use Retwitter\ComplexLink;
 use stdClass;
 
 /**
@@ -17,6 +18,7 @@ class RunBuilder extends stdClass
     public bool $bold = false;
     public bool $italic = false;
     public ?string $url = null;
+    public ?ComplexLink $complexLink = null;
     
     public function build(): object
     {
@@ -37,6 +39,11 @@ class RunBuilder extends stdClass
         if (null != $this->url)
         {
             $out->url = $this->url;
+        }
+
+        if (null != $this->complexLink)
+        {
+            $out->complexLink = $this->complexLink;
         }
 
         // TODO(pumpkin): I'm pretty sure the whole reason this class extends
