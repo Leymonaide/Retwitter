@@ -261,6 +261,12 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         {
             return new TweetDataParserTwitterWeb($data->quoted_status_result->result);
         }
+        // In the case we have quoted_status_result but not the underlying result,
+        // the quoted Tweet is to be tombstoned.
+        else if (isset($data->quoted_status_result))
+        {
+            return new StubbedTweetDataParserTwitterWeb;
+        }
         return null;
     }
 
