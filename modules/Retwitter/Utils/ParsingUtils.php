@@ -373,4 +373,21 @@ class ParsingUtils
 
         return $fsbOut->build();
     }
+
+    /**
+     * Decodes HTML entities (e.g. &lt; and &gt;) in a
+     * formatted string.
+     */
+    public static function decodeHtmlEntities(
+        \stdClass|FormattedString $formattedString
+    ): FormattedString
+    {
+        $fsbOut = FormattedStringBuilder::from($formattedString);
+        for ($i = 0; $i < count($fsbOut->runs); $i++)
+        {
+            if (isset($fsbOut->runs[$i]->text))
+                $fsbOut->runs[$i]->text = htmlspecialchars_decode($fsbOut->runs[$i]->text);
+        }
+        return $fsbOut->build();
+    }
 }

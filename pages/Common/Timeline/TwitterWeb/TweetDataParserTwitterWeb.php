@@ -196,6 +196,7 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
             ),
             fn($that) => ParsingUtils::formatTwitterLinksInFormattedString($that),
             fn($that) => ParsingUtils::formatEmojisInFormattedString($that),
+            fn($that) => ParsingUtils::decodeHtmlEntities($that),
         );
     }
 
