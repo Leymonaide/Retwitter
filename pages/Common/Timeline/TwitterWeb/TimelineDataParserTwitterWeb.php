@@ -225,12 +225,27 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
             );
         }
         
-        if (isset($entryContent->socialContext->contextType)
-            && "Pin" == $entryContent->socialContext->contextType)
+        if (isset($entryContent->socialContext->contextType))
         {
-            $tweetParser->setSocialContext(
-                new MTweetSocialContext(TweetSocialContext::Pin)
-            );
+            switch ($entryContent->socialContext->contextType)
+            {
+                case "Pin":
+                    $tweetParser->setSocialContext(
+                        new MTweetSocialContext(TweetSocialContext::Pin)
+                    );
+                    break;
+                case "Community":
+                    $tweetParser->setSocialContext(
+                        new MTweetSocialContext(
+                            type: TweetSocialContext::Community,
+                            communityName: $entryContent->socialContext->text,
+                            landingUrl: preg_replace(
+                                "/^https:\/\/(twitter|x).com/", "",
+                                $entryContent->socialContext->landingUrl->url)
+                        )
+                    );
+                    break;
+            }
         }
 
         return new MTweetUnion(

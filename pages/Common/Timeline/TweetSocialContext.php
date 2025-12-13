@@ -25,4 +25,5 @@ enum TweetSocialContext
     case None;
     case Retweet;
     case Pin;
+    case Community;
 }

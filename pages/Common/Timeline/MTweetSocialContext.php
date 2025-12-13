@@ -34,6 +34,8 @@ class MTweetSocialContext
     public function __construct(
         public TweetSocialContext $type,
         ?IBasicProfileInfoDataParser $retweeterProfile = null,
+        public ?string $communityName = null,
+        public ?string $landingUrl = null,
     )
     {
         if (null !== $retweeterProfile)

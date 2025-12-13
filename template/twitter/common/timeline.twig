@@ -296,6 +296,14 @@
                         {{ app.i18n.get("common", "tweet_social_context_pinned") }}
                     </span>
                 </div>
+            {% elseif tweet.socialContext.type == TweetSocialContext.Community %}
+                <div class="tweet-context with-icn ">
+                    {# This is unfilled but there's no better icon for this :/ #}
+                    <span class="Icon Icon--small Icon--people"></span>
+                    <a class="pretty-link" href="{{ tweet.socialContext.landingUrl }}">
+                        <b>{{ tweet.socialContext.communityName }}</b>
+                    </a>
+                </div>
             {% endif %}
         </div>
         <div class="content">
