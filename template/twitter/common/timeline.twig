@@ -591,14 +591,12 @@
                                 'account-group',
                                 'js-user-profile-link',
                             ]|join(' ') }}">
-                            <b class="QuoteTweet-fullname u-linkComplex-target">
-                                {{ core.text(tweet.author.name) }}
-                            </b>
+                            <b class="QuoteTweet-fullname u-linkComplex-target">{#
+                              #}{{ core.text(tweet.author.name) }}{#
+                          #}</b>
                             {{ core.user_badges(tweet.author.badges) }}
                             <span class="UserNameBreak">&nbsp;</span>
-                            <span class="username u-dir" dir="ltr">
-                                @<b>{{ tweet.author.screenName }}</b>
-                            </span>
+                            {{ core.username(tweet.author.screenName) }}
                         </div>
                         {# Need to avoid surrounding whitespace; this has the CSS rule white-space: pre-wrap.
                            https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/white-space#pre-wrap #}
