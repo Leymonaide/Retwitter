@@ -181,7 +181,7 @@ class MTweet
         {
             return $absoluteTime->format($i18n->get("dt_ym"));
         }
-        else if ($relativeTime->h >= 1) // Hours (up to 24 days)
+        else if ($relativeTime->h >= 1) // Hours (up to 23 hours)
         {
             $template = $i18n->get("dt_h_template");
             return sprintf($template, $relativeTime->h);

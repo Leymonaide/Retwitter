@@ -21,6 +21,7 @@ expandedDateWithTime: "Y年m月d日（D）　H:i" # 2023年10月17日（火）�
 expandedDate: "Y年m月d日（D）" # 2023年10月17日（火）
 dateWithTime: "Y年m月d日　H:i" # 2023年10月17日　00:50
 date: "Y年m月d日" # 2023年10月17日
+dateNoDay: "Y年m月" # 2023年10月
 shortDateWithTime: "Y年m月d日　H:i" # 2023年10月17日　00:50
 shortDate: "Y年m月d日" # 2023年10月17日
 time: "H:i" # 00:50

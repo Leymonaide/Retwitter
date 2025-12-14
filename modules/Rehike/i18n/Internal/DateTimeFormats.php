@@ -16,4 +16,5 @@ class DateTimeFormats
     public const EXPANDED_DATE = 4;
     public const EXPANDED_DATE_WITH_TIME = 5;
     public const TIME = 6;
+    public const DATE_NO_DAY = 7;
 }

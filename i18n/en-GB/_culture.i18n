@@ -27,6 +27,7 @@ expandedDateWithTime: "l, j F Y H:i A" # Tuesday, 17 October 2023 00:50
 expandedDate: "l, j F Y" # Tuesday, 17 October 2023
 dateWithTime: "j F Y H:i A" # 17 October 2023 00:50
 date: "j F Y" # 17 October 2023
+dateNoDay: "F Y" # October 2023
 shortDateWithTime: "d/m/Y H:i" # 17/10/2023 00:50
 shortDate: "d/m/Y" # 17/10/2023
 time: "H:i" # 00:50

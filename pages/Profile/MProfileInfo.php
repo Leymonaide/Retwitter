@@ -20,9 +20,11 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
+use DateTime;
 use Rehike\ConfigManager\Config;
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
+use Rehike\i18n\Internal\DateTimeFormats;
 use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Utils\ImageUtils;
 use Retwitter\Utils\ParsingUtils;
@@ -74,13 +76,12 @@ class MProfileInfo
         if (null !== $joinDate)
         {
             $i18n = i18n::getNamespace("profile");
-            // TODO: localize date formats?
-            $dateFormat = "F Y";
+            $dateFormat = DateTimeFormats::DATE_NO_DAY;
             if (Config::getConfigProp("appearance.fullJoinDates"))
             {
-                $dateFormat = "F j, Y";
+                $dateFormat = DateTimeFormats::DATE;
             }
-            $formattedJoinDate = $joinDate->format($dateFormat);
+            $formattedJoinDate = $i18n->formatDate($dateFormat, $joinDate->getTimestamp());
             $formattedJoinDate = $i18n->format("bio_join_date", $formattedJoinDate);
 
             $this->joinDate = (object)[

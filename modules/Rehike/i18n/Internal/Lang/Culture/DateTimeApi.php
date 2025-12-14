@@ -40,12 +40,13 @@ class DateTimeApi
             DateTimeFormats::SHORT_DATE_WITH_TIME => $dt->shortDateWithTime,
             DateTimeFormats::EXPANDED_DATE => $dt->expandedDate,
             DateTimeFormats::EXPANDED_DATE_WITH_TIME => $dt->expandedDateWithTime,
-            DateTimeFormats::TIME => $dt->time
+            DateTimeFormats::TIME => $dt->time,
+            DateTimeFormats::DATE_NO_DAY => $dt->dateNoDay,
         };
 
         return self::translateString(
             date(
-                $this->cultureInfo->dateTimeInfo->expandedDateWithTime,
+                $format,
                 $timestamp
             )
         );

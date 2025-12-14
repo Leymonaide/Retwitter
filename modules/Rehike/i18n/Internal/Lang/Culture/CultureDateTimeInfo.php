@@ -69,6 +69,13 @@ class CultureDateTimeInfo
     public string $date = "F j, Y";
 
     /**
+     * The full date with no day.
+     * 
+     * For example, October 2023.
+     */
+    public string $dateNoDay = "F Y";
+
+    /**
      * The short date, followed by the time.
      * 
      * For example: 10/17/2023 12:50 AM.
