@@ -180,7 +180,6 @@
 
 {% macro username(
     name_text, 
-    direction = "ltr",
     truncate_text = false,
     handle_class = null,
 ) %}
@@ -194,7 +193,7 @@
             'username',
             'u-dir',
             truncate_text ? 'u-textTruncate',
-        ]|join(' ') }}" dir="{{ direction }}">
+        ]|join(' ') }}" dir="ltr">
         @<b{{ handle_class ? " class=" ~ handle_class|join(' ')|e("html_attr") }}>{{ 
             name_text
         }}</b>
