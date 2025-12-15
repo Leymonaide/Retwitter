@@ -93,6 +93,7 @@ class Response implements IResponse
         }
         else
         {
+            \Rehike\Logging\DebugLogger::print("Failed getJson response: %s", var_export($this, true));
             throw new Exception(
                 "Response content is not valid JSON."
             );

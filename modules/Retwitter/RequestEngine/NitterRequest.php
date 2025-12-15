@@ -33,7 +33,7 @@ use Retwitter\GraphQlRequestParams;
 class NitterRequest implements IRequestManagerRequest
 {
     private Url $url;
-    private IResponse $response;
+    private ?IResponse $response = null;
 
     public function __construct(Url $url)
     {

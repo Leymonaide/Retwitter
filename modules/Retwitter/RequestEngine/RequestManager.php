@@ -58,6 +58,15 @@ class RequestManager
             
             foreach ($this->requests as $request)
             {
+                // If the request already succeeded, then it will be skipped.
+                // This allows the request manager to support new additions
+                // after a request has already been run, such as a request which
+                // has parameters dependent on another request.
+                if (null != $request->getResponse())
+                {
+                    continue;
+                }
+
                 // Not yielded on purpose. A wrapper promise is made for each
                 // request so that they can be iterated asynchronously.
                 $promises[] = async(function() use ($request) {

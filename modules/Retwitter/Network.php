@@ -27,6 +27,8 @@ use Rehike\Network\NetworkCore;
 use function Rehike\Async\async;
 
 use Retwitter\ClientTransaction\ClientTransaction;
+use Retwitter\SignIn\SignIn;
+
 use const Retwitter\Constants\CLIENT_TRANSACTION_TEST_STATIC;
 
 use const Retwitter\Constants\TWITTER_HOST;
@@ -71,20 +73,30 @@ class Network
         $features = $params->features;
 
         return async(function () use ($action, $variables, $features, $params) {
-            $svariables = $params->post
-                ? urlencode(json_encode($variables))
+            $svariables = (!$params->post)
+                ? urlencode(
+                    !(empty($variables))
+                        ? json_encode($variables)
+                        : "{}"
+                )
                 : "";
-            $sfeatures = $params->post
-                ? urlencode(json_encode($features))
+            $sfeatures = (!$params->post)
+                ? urlencode(
+                    !(empty($features))
+                        ? json_encode($features)
+                        : "{}"
+                )
                 : "";
             
             $postBody = $params->post
-                ? self::makeGraphqlPostBody($params)
-                : (object)[];
+                ? json_encode(self::makeGraphqlPostBody($params))
+                : "";
 
             $host = self::API_HOST;
 
-            $guestToken = yield TwitterGuestToken::getGuestToken();
+            $guestToken = SignIn::isSignedIn()
+                ? yield TwitterGuestToken::getGuestToken()
+                : "";
 
             // TODO: Restructure all code relating to this. This is just
             // temporary testing code at the moment.
@@ -120,32 +132,41 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
 {
             throw new \Exception("DEBUGDEBUG: Testing transaction string.");
 }
-            
+
             $response = yield NetworkCore::request(
-                url: $params->post
+                url: (!$params->post)
                     ? "{$host}/graphql/{$action}?variables={$svariables}&features={$sfeatures}"
                     : "{$host}/graphql/{$action}",
-                opts: ([
+                opts: [
                     "headers" => [
                         "User-Agent" => $_SERVER["HTTP_USER_AGENT"],
                         "Authorization" => self::API_AUTH,
                         "X-Twitter-Active-User" => "Yes",
                         "X-Twitter-Client-Language" => "en", // TODO: i18n
-
-                        // Required for unauthenticated requests.
-                        "X-Guest-Token" => $guestToken,
-
                         "X-Client-Transaction-ID" => $transactionStr,
-                    ],
+                    ] + (SignIn::isSignedIn()
+                        ? [
+                            "Cookie" => self::getCurrentRequestCookie(),
+                            "X-Twitter-Auth-Type" => "OAuth2Session",
+                            "x-csrf-token" => "68c9299dc955f1f15ecadb090b965363f85ce70d9f9ce801d04752410eed25a7be07bce82bb57f8064e3b0abf3bb2bf92e8eb1a02b5396b2b7b0e4c579d8eae1814be16c9bb6f32c7b23703f3ae5afd3",
+                        ]
+                        : [
+                            // Required for unauthenticated requests.
+                            "X-Guest-Token" => $guestToken,
+                        ]
+                    ) + ($params->post
+                        ? [
+                            "Content-Type" => "application/json",
+                        ]
+                        : []
+                    ),
+                    "method" => $params->post
+                        ? "POST"
+                        : "GET",
+                    "body" => $postBody,
                     "onError" => "ignore",
                     "dnsOverride" => self::DNS_OVERRIDE_HOST,
-                ] + ($params->post
-                    ? [
-                        "method" => "POST",
-                        "body" => json_encode($postBody),
-                    ]
-                    : []
-                ))
+                ],
             );
 
             return $response;

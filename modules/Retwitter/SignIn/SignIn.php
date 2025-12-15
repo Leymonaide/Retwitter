@@ -26,6 +26,7 @@ use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 
 use function Rehike\Async\async;
 
+use const Retwitter\Constants\FEATURE_SIGNIN;
 use const Retwitter\Constants\TEST_SIGNIN;
 
 /**
@@ -35,7 +36,7 @@ class SignIn
 {
     public static function isSignedIn(): bool
     {
-        if (TEST_SIGNIN)
+        if (TEST_SIGNIN || FEATURE_SIGNIN)
         {
             if (AuthManager::getInstance()->isInitialized())
             {
@@ -54,7 +55,7 @@ class SignIn
     public static function setup(): Promise
     {
         return async(function() {
-if (TEST_SIGNIN): // Temporarily optional while the infrastructure is still bad.
+if (TEST_SIGNIN || FEATURE_SIGNIN): // Temporarily optional while the infrastructure is still bad.
             yield AuthManager::getInstance()->ensure();
 endif;
         });

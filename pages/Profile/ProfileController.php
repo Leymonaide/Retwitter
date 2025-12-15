@@ -47,9 +47,10 @@ use Twig\Profiler\Profile;
 
 use function Rehike\Async\async;
 
+use const Retwitter\Constants\FEATURE_SIGNIN;
 use const Retwitter\Constants\TEST_SIGNIN;
 
-const PROFILE_TEST_LOCAL = true;
+const PROFILE_TEST_LOCAL = false;
 const PROFILE_TEST_NITTER = false &&!TEST_SIGNIN;
 
 enum ProfileControllerRequestTags : string
@@ -69,7 +70,7 @@ class ProfileController
             
 // Remove once signin is finalized and we're not using test documents
 // that may or may not exist on a developer's local copy of Retwitter.
-if (TEST_SIGNIN)
+if (TEST_SIGNIN || FEATURE_SIGNIN)
 {
             yield SignIn::setup();
 }
@@ -102,29 +103,6 @@ if (TEST_SIGNIN)
                 $requestManager->add(
                     request: $this->requestUserTwitterApi($username),
                     tag: ProfileControllerRequestTags::User->value,
-                );
-
-                // Most of these cases are temporary (e.g. all three user grid tabs using
-                // the same data)
-                switch ($tab)
-                {
-                    case ProfileTab::Followers:
-                    case ProfileTab::FollowersYouFollow:
-                    case ProfileTab::Following:
-                        $timelineRequest = $this->requestFollowersTwitterApi($username);
-                        break;
-                    case ProfileTab::Lists:
-                    case ProfileTab::Memberships:
-                        $timelineRequest = $this->requestListsTwitterApi($username);
-                        break;
-                    default:
-                        $timelineRequest = $this->requestTweetsTwitterApi($username);
-                        break;
-                }
-
-                $requestManager->add(
-                    request: $timelineRequest,
-                    tag: ProfileControllerRequestTags::Timeline->value
                 );
             }
 
@@ -187,6 +165,41 @@ if (TEST_SIGNIN)
                     data: $jsonData->data->user->result,
                     enableWriteToCache: true,
                 );
+
+                // Now we can request the main body content, which requires 
+
+                // Most of these cases are temporary (e.g. all three user grid tabs using
+                // the same data)
+                switch ($tab)
+                {
+                    case ProfileTab::Followers:
+                    case ProfileTab::FollowersYouFollow:
+                    case ProfileTab::Following:
+                        // XXX(leymonaide): Verify that this request uses a user
+                        // ID and not a username. I haven't touched it yet.
+                        $timelineRequest = $this->requestFollowersTwitterApi($username);
+                        break;
+                    case ProfileTab::Lists:
+                    case ProfileTab::Memberships:
+                        // XXX(leymonaide): Verify that this request uses a user
+                        // ID and not a username. I haven't touched it yet.
+                        $timelineRequest = $this->requestListsTwitterApi($username);
+                        break;
+                    default:
+                        $timelineRequest = $this->requestTweetsTwitterApi(
+                            userId: $profileDataParser->getId(),
+                        );
+                        break;
+                }
+
+                $requestManager->add(
+                    request: $timelineRequest,
+                    tag: ProfileControllerRequestTags::Timeline->value
+                );
+
+                // Rerun the request manager now that new requests have been
+                // added:
+                yield $requestManager->runAll();
             }
 
             // CONSIDER: Invert this condition. Everything after this point in
@@ -278,12 +291,62 @@ endif;
     }
 
     private function requestTweetsTwitterApi(
-        string $username,
+        string $userId,
     ): IRequestManagerRequest
     {
         // TODO: Request for real.
         // UserTweets
+if (PROFILE_TEST_LOCAL):
         return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_tweets_aubymori.json");
+endif;
+
+        return new GraphQlRequest(new GraphQlRequestParams(
+            action: "lZRf8IC-GTuGxDwcsHW8aw/UserTweets",
+            variables: [
+                // Requested user ID.
+                "userId" => $userId,
+                "count" => 20,
+                "includePromotedContent" => true,
+                "withQuickPromoteEligibilityTweetFields" => true,
+                "withVoice" => true,
+            ],
+            features: [
+                "rweb_video_screen_enabled" => false,
+                "profile_label_improvements_pcf_label_in_post_enabled" => true,
+                "responsive_web_profile_redirect_enabled" => false,
+                "rweb_tipjar_consumption_enabled" => true,
+                "verified_phone_label_enabled" => false,
+                "creator_subscriptions_tweet_preview_api_enabled" => true,
+                "responsive_web_graphql_timeline_navigation_enabled" => true,
+                "responsive_web_graphql_skip_user_profile_image_extensions_enabled" => false,
+                "premium_content_api_read_enabled" => false,
+                "communities_web_enable_tweet_community_results_fetch" => true,
+                "c9s_tweet_anatomy_moderator_badge_enabled" => true,
+                "responsive_web_grok_analyze_button_fetch_trends_enabled" => false,
+                "responsive_web_grok_analyze_post_followups_enabled" => true,
+                "responsive_web_jetfuel_frame" => true,
+                "responsive_web_grok_share_attachment_enabled" => true,
+                "articles_preview_enabled" => true,
+                "responsive_web_edit_tweet_api_enabled" => true,
+                "graphql_is_translatable_rweb_tweet_is_translatable_enabled" => true,
+                "view_counts_everywhere_api_enabled" => true,
+                "longform_notetweets_consumption_enabled" => true,
+                "responsive_web_twitter_article_tweet_consumption_enabled" => true,
+                "tweet_awards_web_tipping_enabled" => false,
+                "responsive_web_grok_show_grok_translated_post" => false,
+                "responsive_web_grok_analysis_button_from_backend" => true,
+                "creator_subscriptions_quote_tweet_preview_enabled" => false,
+                "freedom_of_speech_not_reach_fetch_enabled" => true,
+                "standardized_nudges_misinfo" => true,
+                "tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled" => true,
+                "longform_notetweets_rich_text_read_enabled" => true,
+                "longform_notetweets_inline_media_enabled" => true,
+                "responsive_web_grok_image_annotation_enabled" => true,
+                "responsive_web_grok_imagine_annotation_enabled" => true,
+                "responsive_web_grok_community_note_auto_translation_is_enabled" => false,
+                "responsive_web_enhance_cards_enabled" => false,
+            ],
+        ));
     }
 
     private function requestFollowersTwitterApi(

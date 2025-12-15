@@ -33,7 +33,7 @@ class GraphQlRequest implements IRequestManagerRequest
 {
     private GraphQlRequestParams $requestParams;
     private int $tryPaths = GraphQlRequestTryPaths::NoRetryAttempt->value;
-    private IResponse $response;
+    private ?IResponse $response = null;
 
     public function __construct(
         GraphQlRequestParams|string $paramsOrAction,

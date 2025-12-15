@@ -27,6 +27,7 @@ use Retwitter\Utils\NitterParsingUtils;
 
 use function Rehike\Async\async;
 use const Retwitter\Constants\TEST_SIGNIN;
+use const Retwitter\Constants\FEATURE_SIGNIN;
 
 /**
  * Manages the initial document from the Twitter server.
@@ -60,7 +61,7 @@ if (!TEST_SIGNIN):
                 "headers" => [
                     "User-Agent" => $_SERVER["HTTP_USER_AGENT"],
                     // Pass all user cookies in order to get their logged in __INITIAL_STATE__
-                    "Cookies" => Network::getCurrentRequestCookie(),
+                    "Cookie" => Network::getCurrentRequestCookie(),
                     "Accept" => "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
                     "Accept-Language" => "en",
                     "Cache-Control" => "no-cache",
@@ -76,6 +77,7 @@ if (!TEST_SIGNIN):
             ]);
             
             $this->document = $response->getText();
+            \Rehike\Logging\DebugLogger::print("Initial document text: %s", $this->document);
 else:
             $this->document = file_get_contents("cache/test_initialdoc.html");
 endif;
