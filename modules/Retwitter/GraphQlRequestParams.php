@@ -26,6 +26,7 @@ class GraphQlRequestParams
         public string $action,
         public array $variables,
         public array $features,
+        public bool $post = false,
     )
     {
     }

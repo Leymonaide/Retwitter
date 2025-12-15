@@ -70,9 +70,17 @@ class Network
         $variables = $params->variables;
         $features = $params->features;
 
-        return async(function () use ($action, $variables, $features) {
-            $svariables = urlencode(json_encode($variables));
-            $sfeatures = urlencode(json_encode($features));
+        return async(function () use ($action, $variables, $features, $params) {
+            $svariables = $params->post
+                ? urlencode(json_encode($variables))
+                : "";
+            $sfeatures = $params->post
+                ? urlencode(json_encode($features))
+                : "";
+            
+            $postBody = $params->post
+                ? self::makeGraphqlPostBody($params)
+                : (object)[];
 
             $host = self::API_HOST;
 
@@ -114,8 +122,10 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
 }
             
             $response = yield NetworkCore::request(
-                "{$host}/graphql/{$action}?variables={$svariables}&features={$sfeatures}",
-                [
+                url: $params->post
+                    ? "{$host}/graphql/{$action}?variables={$svariables}&features={$sfeatures}"
+                    : "{$host}/graphql/{$action}",
+                opts: ([
                     "headers" => [
                         "User-Agent" => $_SERVER["HTTP_USER_AGENT"],
                         "Authorization" => self::API_AUTH,
@@ -129,7 +139,13 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
                     ],
                     "onError" => "ignore",
                     "dnsOverride" => self::DNS_OVERRIDE_HOST,
-                ]
+                ] + ($params->post
+                    ? [
+                        "method" => "POST",
+                        "body" => json_encode($postBody),
+                    ]
+                    : []
+                ))
             );
 
             return $response;
@@ -153,5 +169,19 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
         }
         
         return $cookies;
+    }
+
+    /**
+     * Makes a GraphQL request post body from a GraphQlRequestParams object.
+     */
+    private static function makeGraphqlPostBody(GraphQlRequestParams $params): object
+    {
+        $queryId = explode("/", $params->action)[0];
+
+        return (object)[
+            "variables" => (object)$params->variables,
+            "queryId" => $queryId,
+            "features" => (object)$params->features,
+        ];
     }
 }
