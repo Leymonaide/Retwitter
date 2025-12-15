@@ -148,7 +148,7 @@ if (CLIENT_TRANSACTION_TEST_STATIC)
                         ? [
                             "Cookie" => self::getCurrentRequestCookie(),
                             "X-Twitter-Auth-Type" => "OAuth2Session",
-                            "x-csrf-token" => "68c9299dc955f1f15ecadb090b965363f85ce70d9f9ce801d04752410eed25a7be07bce82bb57f8064e3b0abf3bb2bf92e8eb1a02b5396b2b7b0e4c579d8eae1814be16c9bb6f32c7b23703f3ae5afd3",
+                            "x-csrf-token" => $_COOKIE["ct0"],
                         ]
                         : [
                             // Required for unauthenticated requests.
