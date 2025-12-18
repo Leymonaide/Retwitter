@@ -36,7 +36,7 @@ class SignIn
 {
     public static function isSignedIn(): bool
     {
-        if (TEST_SIGNIN || FEATURE_SIGNIN)
+        if (TEST_SIGNIN)
         {
             if (AuthManager::getInstance()->isInitialized())
             {
@@ -44,6 +44,16 @@ class SignIn
             }
             
             return false;
+        }
+        else if (FEATURE_SIGNIN && AuthManager::getInstance()->isInitialized())
+        {
+            if (!isset($_COOKIE["auth_token"]))
+            {
+                // If the auth_token cookie does not exist, then it's impossible
+                return false;
+            }
+
+            return AuthManager::getInstance()->isSignedIn();
         }
         
         return false;

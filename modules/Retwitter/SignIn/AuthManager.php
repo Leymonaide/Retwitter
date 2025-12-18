@@ -44,6 +44,7 @@ class AuthManager
     }
     
     private bool $isInitialized = false;
+    private bool $isSignedIn = false;
     private ?object $initialState = null;
     private ?InitialStateParser $initialStateParser = null;
     
@@ -60,12 +61,19 @@ class AuthManager
     
     private function initialize(TwitterInitialDocument $initialDoc): void
     {
-        $initialStateObj = $this->extractInitialState($initialDoc);
+        $initialStateObj = $this->extractVariable(
+            $initialDoc, "__INITIAL_STATE__"
+        );
+        $metadataObj = $this->extractVariable(
+            $initialDoc, "__META_DATA__"
+        );
         
         // while (ob_get_level() > 0)
         //     ob_end_clean();
         
         // throw new \Exception(var_export($initialStateObj->entities->users->entities, true));
+
+        $this->isSignedIn = $metadataObj->isLoggedIn ?? false;
         
         $this->initialState = $initialStateObj;
         $this->isInitialized = true;
@@ -74,6 +82,11 @@ class AuthManager
     public function isInitialized(): bool
     {
         return $this->isInitialized;
+    }
+
+    public function isSignedIn(): bool
+    {
+        return $this->isSignedIn;
     }
     
     public function getInitialStateParser(): InitialStateParser
@@ -94,16 +107,19 @@ class AuthManager
     /**
      * Extracts the __INITIAL_STATE__ variable from the HTML text of a Twitter response.
      */
-    private function extractInitialState(TwitterInitialDocument $initialDoc): ?object
+    private function extractVariable(
+        TwitterInitialDocument $initialDoc,
+        string $varName,
+    ): ?object
     {
         $rawDoc = $initialDoc->getRawDocument();
         $docLength = strlen($rawDoc);
         
-        // Find the assignment of window.__INITIAL_STATE__:
+        // Find the assignment of the variable:
         $index = 0;
         do
         {
-            $index = strpos($rawDoc, "window.__INITIAL_STATE__", $index);
+            $index = strpos($rawDoc, "window.$varName", $index);
             
             if ($index === false)
             {
@@ -111,7 +127,7 @@ class AuthManager
                 return null;
             }
             
-            $index += strlen("window.__INITIAL_STATE__");
+            $index += strlen("window.$varName");
             
             $bound = 16;
             
