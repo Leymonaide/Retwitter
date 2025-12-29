@@ -98,7 +98,8 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
                 $currentUserGrid = null;
             }
 
-            if ("TimelineTweet" == @$entryContent->itemContent->itemType)
+            if ("TimelineTweet" == @$entryContent->itemContent->itemType
+            && isset($entryContent->itemContent->tweet_results->result))
             {
                 $itemContent = $entryContent->itemContent;
                 $result[] = new MTimelineItemUnion(
@@ -310,7 +311,8 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
         {
             $content = $itemEntry->item->itemContent;
             if (isset($content->itemType) &&
-                "TimelineTweet" == $content->itemType)
+                "TimelineTweet" == $content->itemType
+                && isset($content->tweet_results->result))
             {
                 $tweetId = null;
                 $inReplyToId = null;
