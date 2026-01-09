@@ -31,4 +31,12 @@ enum ApiSource
      * This data comes from a Nitter instance.
      */
     case Nitter;
+
+    /**
+     * This data comes from a Bluesky AT protocol API.
+     * 
+     * This is a non-Twitter option which is supported as well (due to being
+     * pretty friendly)
+     */
+    case Bluesky;
 }
