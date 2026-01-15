@@ -294,7 +294,6 @@ endif;
         string $userId,
     ): IRequestManagerRequest
     {
-        // TODO: Request for real.
         // UserTweets
 if (PROFILE_TEST_LOCAL):
         return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_tweets_aubymori.json");

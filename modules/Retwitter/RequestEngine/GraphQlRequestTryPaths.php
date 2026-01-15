@@ -26,6 +26,6 @@ namespace Retwitter\RequestEngine;
 enum GraphQlRequestTryPaths : int
 {
     case NoRetryAttempt = 0;
-    case RegeneratedGuestToken = 1 << 1;
-    case BruteForcedFeatures = 1 << 2;
+    case RegeneratedGuestToken = 1 << 0;
+    case BruteForcedFeatures = 1 << 1;
 }

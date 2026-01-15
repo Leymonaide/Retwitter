@@ -87,11 +87,6 @@ class StubbedTweetDataParserTwitterWeb implements ITweetDataParser
         return null;
     }
 
-    private function createAuthorParser(object $dataRoot): ?IBasicProfileInfoDataParser
-    {
-        return null;
-    }
-
     public function getAuthorParser(): ?IBasicProfileInfoDataParser
     {
         return null;
