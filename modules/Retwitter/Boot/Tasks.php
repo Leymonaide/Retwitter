@@ -48,8 +48,11 @@ final class Tasks
 
     public static function initNetwork(): void
     {
+        $desiredDns = Config::getConfigProp("advanced.dnsAddress")
+            ?? "1.1.1.1";
+
         NetworkCore::setResolve([
-            Nameserver::get("x.com", "1.1.1.1", 443)->serialize()
+            Nameserver::get("x.com", $desiredDns, 443)->serialize()
         ]);
     }
 
