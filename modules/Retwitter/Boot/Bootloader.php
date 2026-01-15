@@ -18,7 +18,9 @@ use Rehike\Boot\{
 
 use Rehike\Async\Promise\PromiseStatus;
 use Rehike\ConfigManager\Config;
+use Retwitter\Context\AppContext;
 use Retwitter\RecentlyViewedCache\RecentlyViewedCache;
+use Retwitter\RetwitterPlatform;
 
 /**
  * Main bootstrapper insertion point for Retwitter.
@@ -142,7 +144,11 @@ final class Bootloader
         }
         else
         {
-            require "router.php";
+            require match (AppContext::getInstance()->retwitterPlatform)
+            {
+                RetwitterPlatform::Twitter => "router.php",
+                RetwitterPlatform::Bluesky => "router_bsky.php",
+            };
         }
     }
 

@@ -23,6 +23,7 @@ namespace Retwitter\Context;
 use Rehike\TemplateUtilsDelegate\RehikeUtilsI18nDelegate;
 use Retwitter\Page\Base\BasePageContext;
 use Retwitter\RequestOs;
+use Retwitter\RetwitterPlatform;
 use Retwitter\SignIn\SignIn;
 
 final class AppContext
@@ -38,6 +39,27 @@ final class AppContext
     {
         $this->i18n = new RehikeUtilsI18nDelegate();
         $this->requestUrl = $_SERVER["REQUEST_URI"];
+
+        // Parse the current Retwitter platform from the server environment.
+        // This is done in order to allow the same copy of the Retwitter source
+        // code to serve multiple different platforms on different domains using
+        // Apache virtual hosts.
+        if (isset($_SERVER["RETWITTER_TARGET_PLATFORM"]))
+        {
+            $platform =
+                RetwitterPlatform::tryFrom($_SERVER["RETWITTER_TARGET_PLATFORM"]);
+            
+            if (null === $platform)
+            {
+                \Rehike\Logging\DebugLogger::print(
+                    "Invalid Retwitter target platform \"%s\" specified. " .
+                    "The application will fall back to Twitter.",
+                    $_SERVER["RETWITTER_TARGET_PLATFORM"]
+                );
+            }
+
+            $this->retwitterPlatform = $platform ?? RetwitterPlatform::Twitter;
+        }
         
         // This is a pretty lazy way to determine the operating system from the
         // user agent string, but it works.
@@ -54,6 +76,11 @@ final class AppContext
     }
 
     public string $requestUrl;
+
+    /**
+     * The target social network service platform used by the Retwitter app.
+     */
+    public RetwitterPlatform $retwitterPlatform = RetwitterPlatform::Twitter;
 
     /**
      * The context of the current page.

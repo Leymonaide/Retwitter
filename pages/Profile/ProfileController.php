@@ -32,7 +32,7 @@ use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
-use Retwitter\Page\Error404\Error404Controller;
+use Retwitter\Page\Base\ForwardTo404ControllerMixin;
 use Retwitter\RequestEngine\GraphQlRequest;
 use Retwitter\RequestEngine\GraphQlRequestTest;
 use Retwitter\RequestEngine\IRequestManagerRequest;
@@ -43,7 +43,6 @@ use Retwitter\SignIn\SignIn;
 use Retwitter\Url;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
-use Twig\Profiler\Profile;
 
 use function Rehike\Async\async;
 
@@ -63,6 +62,8 @@ class ProfileController
     extends RetwitterPageController
     implements IGetControllerAsync
 {
+    use ForwardTo404ControllerMixin;
+
     public function getAsync(): Promise
     {
         return async(function () {
@@ -379,15 +380,5 @@ if (PROFILE_TEST_LOCAL):
 endif;
 
         return new NitterRequest(new Url("/$username"));
-    }
-
-    private function forwardTo404Controller(): Promise
-    {
-        return async(function () {
-            $controller = new Error404Controller();
-            $controller->initializeController($this->getRequest());
-            yield $controller->getAsync();
-            return;
-        });
     }
 }
