@@ -68,6 +68,14 @@ final class AppContext
         {
             $this->requestOperatingSystem = RequestOs::Windows;
         }
+
+        // MS JS will switch over to night mode if the cookie is detected but
+        // the server should give nightmode CSS to prevent the initial state
+        // being light mode. Also, the JS switch completely removes any profile
+        // colors.
+        $this->nightMode = isset($_COOKIE["night_mode"])
+            ? ((int)$_COOKIE["night_mode"]) > 0
+            : false;
     }
     
     public static function getInstance(): AppContext
@@ -97,6 +105,8 @@ final class AppContext
     }
 
     public RequestOs $requestOperatingSystem = RequestOs::Other;
+
+    public bool $nightMode = false;
 
     /**
      * The current language ID of the application.
