@@ -69,7 +69,7 @@ class BlueskyProfileController
             // Recent tweets can also represent no tab, such as in the case of
             // profiles without any tweets.
             $tab = BlueskyProfileTab::tryFrom($tab)
-                ?? BlueskyProfileTab::RecentTweets;
+                ?? BlueskyProfileTab::Default;
             
             $context = new ProfilePageContext(
                 tab: $tab->toProfileTab(),
