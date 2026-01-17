@@ -25,14 +25,15 @@ use Rehike\i18n\i18n;
 use Retwitter\Page\Profile\Common\IProfileDataParser;
 use Retwitter\SignIn\InitialStateProfileParser;
 use Retwitter\TwimgUrl;
+use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
 
 class MProfileCard implements IDashboardModule
 {
     public FormattedString $displayName;
     public string $username;
-    public ?TwimgUrl $avatarUrl = null;
-    public ?TwimgUrl $bannerUrl = null;
+    public TwimgUrl|Url|null $avatarUrl = null;
+    public TwimgUrl|Url|null $bannerUrl = null;
     
     /**
      * @var MProfileCardStat[]
@@ -51,20 +52,36 @@ class MProfileCard implements IDashboardModule
         
         if ($url = $profileParser->getAvatarUrl())
         {
-            $this->avatarUrl = new TwimgUrl($url);
+            if (strstr((new Url($url))->getHost(), "twimg.com"))
+            {
+                $this->avatarUrl = new TwimgUrl($url);
             
-            // The view is larger than usual, so ensure a nicely-sized image for the view.
-            // "bigger", which is 73x73, is almost perfect the view.
-            $this->avatarUrl->setVariant("bigger");
+                // The view is larger than usual, so ensure a nicely-sized image
+                // for the view. "bigger", which is 73x73, is almost perfect the
+                // view.
+                $this->avatarUrl->setVariant("bigger");
+            }
+            else
+            {
+                $this->avatarUrl = new Url($url);
+            }
         }
         
         if ($url = $profileParser->getBannerUrl())
         {
-            $this->bannerUrl = new TwimgUrl($url);
-            
-            // The view is quite smaller than usual, so don't request anything atrociously
-            // huge like the full-size banner. 300x100 is almost perfect for the view.
-            $this->bannerUrl->setVariant("300x100");
+            if (strstr((new Url($url))->getHost(), "twimg.com"))
+            {
+                $this->bannerUrl = new TwimgUrl($url);
+                
+                // The view is quite smaller than usual, so don't request
+                // anything atrociously huge like the full-size banner. 300x100
+                // is almost perfect for the view.
+                $this->bannerUrl->setVariant("300x100");
+            }
+            else
+            {
+                $this->bannerUrl = new Url($url);
+            }
         }
         
         $i18n = i18n::getNamespace("profile");
