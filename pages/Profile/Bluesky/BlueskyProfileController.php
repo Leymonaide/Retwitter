@@ -26,10 +26,11 @@ use Retwitter\Page\Base\RetwitterPageController;
 
 use Rehike\Async\Promise;
 use Retwitter\Page\Profile\ProfilePageContext;
+use Retwitter\RequestEngine\BlueskyRequest;
 use Retwitter\RequestEngine\RequestManager;
 use Retwitter\SignIn\SignIn;
+use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
-
 use UnexpectedValueException;
 use function Rehike\Async\async;
 
@@ -78,7 +79,43 @@ class BlueskyProfileController
 
             $requestManager = new RequestManager();
 
-            // TODO(leymonaide): Handle Bluesky requests.
+            // We need to resolve the user's DID from the handle in the URL.
+            // TODO: Handle direct DID URLs.
+            // TODO: This will probably be a common operation, so it should be
+            // moved to common utility code at some point.
+            $didRequest = new BlueskyRequest(
+                (new Url("/xrpc/com.atproto.identity.resolveHandle"))
+                ->setParameters([
+                    "handle" => $username,
+                ]));
+            $requestManager->add($didRequest);
+            yield $requestManager->runAll();
+
+            if (!$didRequest->succeeded())
+            {
+                // Error out.
+                \Rehike\Logging\DebugLogger::print(
+                    "Failed to get the DID for handle %s", $username);
+            }
+
+            $profileDid = $didRequest->getResponse()->getJson()->did;
+
+            // Now that the DID was retrieved, it is now possible to make a
+            // request to the profile page.
+            $profileRequestUrl = new Url("/xrpc/app.bsky.actor.getProfile");
+            $profileRequestUrl->setParameters([
+                "actor" => $profileDid,
+            ]);
+
+            $profileRequest = new BlueskyRequest($profileRequestUrl);
+            $requestManager->add($profileRequest);
+            yield $requestManager->runAll();
+
+            // Now we should have the profile response as we need.
+            // Let's parse it!
+            $profileDataParser = new ProfileDataParserBluesky(
+                $profileRequest->getResponse()->getJson());
+            $context->insertUserData($profileDataParser);
 
             $this->renderPage();
         });
