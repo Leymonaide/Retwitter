@@ -76,6 +76,10 @@ final class RecentlyViewedCache
                 {
                     $result = TwitterApiCache::fromJson($contents);
                 }
+                else if (ApiSource::Bluesky == $apiSource)
+                {
+                    $result = BlueskyApiCache::fromJson($contents);
+                }
             }
             catch (\Throwable $e)
             {
