@@ -26,7 +26,7 @@ enum BlueskyProfileTab : string
 {
     // The following are official URL routes used by the Bluesky web frontend:
     // https://github.com/bluesky-social/social-app/blob/3b98f2f8ab35de1eeec9933ba85767140d154e3e/src/routes.ts#L26-L31
-    case RecentTweets = "";
+    case Default = "";
     case Followers = "followers";
     case KnownFollowers = "known-followers";
     case Follows = "follows";
@@ -46,7 +46,7 @@ enum BlueskyProfileTab : string
         return match ($this)
         {
             // Official:
-            self::RecentTweets => ProfileTab::RecentTweets,
+            self::Default => ProfileTab::RecentTweets,
             self::Followers => ProfileTab::Followers,
             self::KnownFollowers => ProfileTab::FollowersYouFollow,
             self::Follows => ProfileTab::Following,
