@@ -99,7 +99,8 @@ class TimelineDataParserTwitterWeb implements ITimelineDataParser
             }
 
             if ("TimelineTweet" == @$entryContent->itemContent->itemType
-            && isset($entryContent->itemContent->tweet_results->result))
+            && isset($entryContent->itemContent->tweet_results->result)
+            && !isset($entryContent->itemContent->promotedMetadata))
             {
                 $itemContent = $entryContent->itemContent;
                 $result[] = new MTimelineItemUnion(
