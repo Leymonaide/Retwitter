@@ -169,8 +169,7 @@ class MTweet
             // seconds, so it's not a problem, and it's better than time
             // starting at like "15s", decrementing to "0s", then incrementing
             // back up to positive time.
-            $template = $i18n->get("dt_s_template");
-            return sprintf($template, 0);
+            return $i18n->get("dt_now");
         }
 
         if ($relativeTime->y >= 1) // Month, day, and year.

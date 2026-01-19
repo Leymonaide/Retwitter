@@ -23,6 +23,7 @@ dt_h_template: "%sh" # Up to "23h"
 dt_m_template: "%sm" # Up to "59m"
 dt_s_template: "%ss" # Up to "59s"
 dt_hm: "g:i A" # Hours and minutes shown, i.e. "5:06 PM"
+dt_now: "now" # Right now
 
 verified_tooltip: "Verified account"
 protected_tooltip: "Protected Tweets"
