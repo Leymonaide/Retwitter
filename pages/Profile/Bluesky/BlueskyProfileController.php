@@ -25,6 +25,7 @@ use Retwitter\Page\Base\ForwardTo404ControllerMixin;
 use Retwitter\Page\Base\RetwitterPageController;
 
 use Rehike\Async\Promise;
+use Retwitter\Page\Common\Timeline\Bluesky\TimelineDataParserBluesky;
 use Retwitter\Page\Profile\ProfilePageContext;
 use Retwitter\RequestEngine\BlueskyRequest;
 use Retwitter\RequestEngine\RequestManager;
@@ -109,6 +110,17 @@ class BlueskyProfileController
 
             $profileRequest = new BlueskyRequest($profileRequestUrl);
             $requestManager->add($profileRequest);
+
+            $authorFeedRequestUrl = new Url("/xrpc/app.bsky.feed.getAuthorFeed");
+            $authorFeedRequestUrl->setParameters([
+                "actor" => $profileDid,
+                "filter" => "posts_and_author_threads",
+                "includePins" => "true",
+                "limit" => "30",
+            ]);
+            $authorFeedRequest = new BlueskyRequest($authorFeedRequestUrl);
+            $requestManager->add($authorFeedRequest);
+
             yield $requestManager->runAll();
 
             // Now we should have the profile response as we need.
@@ -116,6 +128,12 @@ class BlueskyProfileController
             $profileDataParser = new ProfileDataParserBluesky(
                 $profileRequest->getResponse()->getJson());
             $context->insertUserData($profileDataParser);
+
+            // Parse the author feed:
+            $timelineParser = new TimelineDataParserBluesky(
+                $authorFeedRequest->getResponse()->getJson()
+            );
+            $context->insertTimeline($timelineParser);
 
             $this->renderPage();
         });

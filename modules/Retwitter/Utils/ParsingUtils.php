@@ -87,6 +87,14 @@ class ParsingUtils
     }
 
     /**
+     * Converts a raw string to a formatted string.
+     */
+    public static function toFormattedString(string $rawString): FormattedString
+    {
+        return (new FormattedStringBuilder())->createAndAddRun($rawString)->build();
+    }
+
+    /**
      * Performs entity substitution on a Twitter string.
      * 
      * Substituted entities primarily include URLs. The Twitter API returns a
