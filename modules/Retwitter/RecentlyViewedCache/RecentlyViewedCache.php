@@ -38,7 +38,7 @@ final class RecentlyViewedCache
     private const CACHE_FOLDER = "cache/recently_viewed";
     private const CACHE_MINUTES_MAX = 30;
 
-    public static function ensureCacheFolder()
+    public static function ensureCacheFolder(): void
     {
         if (!file_exists(self::CACHE_FOLDER))
         {
