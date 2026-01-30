@@ -20,6 +20,7 @@
 declare(strict_types=1);
 namespace Retwitter\RecentlyViewedCache\Daemon\Server;
 
+use Rehike\Async\EventLoop\EventLoop;
 use RuntimeException;
 
 /**
@@ -28,16 +29,28 @@ use RuntimeException;
 class Connection
 {
     private string $wantString = "";
+    private WatchdogTimer $watchdog;
+    private ConnectionWatchdogEvent $watchdogEvent;
 
     public function __construct(
-        private readonly Application $application,
+        public readonly Application $application,
         public readonly string $address,
     )
     {
-
+        // We expect a response from all clients within 30 seconds from the last
+        // instruction sent. If a client hangs, then it will be forcefully
+        // disconnected.
+        $this->watchdog = WatchdogTimer::inSeconds(30);
+        $this->watchdogEvent = new ConnectionWatchdogEvent($this);
+        EventLoop::addEvent($this->watchdogEvent);
     }
 
-    public function send(string $data)
+    public function __destruct()
+    {
+        EventLoop::removeEvent($this->watchdogEvent);
+    }
+
+    public function send(string $data): void
     {
         $status = stream_socket_sendto(
             $this->application->getSocket(),
@@ -60,5 +73,18 @@ class Connection
     public function getWantString(): string
     {
         return $this->wantString;
+    }
+
+    public function petWatchdog(): void
+    {
+        $this->watchdog->pet();
+    }
+
+    /**
+     * @internal
+     */
+    public function internalGetWatchdog(): WatchdogTimer
+    {
+        return $this->watchdog;
     }
 }

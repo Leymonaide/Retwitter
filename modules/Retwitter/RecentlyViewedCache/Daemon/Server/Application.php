@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\RecentlyViewedCache\Daemon\Server;
 
 use DomainException;
+use Rehike\Async\EventLoop\EventLoop;
 use Retwitter\RecentlyViewedCache\Daemon\Common\Opcode;
 
 /**
@@ -49,11 +50,11 @@ class Application
      */
     private $socket;
 
-    private ConnectionManager $connectionManager;
+    public readonly ConnectionManager $connections;
 
     public function __construct()
     {
-        $this->connectionManager = new ConnectionManager($this);
+        $this->connections = new ConnectionManager($this);
     }
 
     public function start(string $rootDirectory, string $address): never
@@ -73,13 +74,15 @@ class Application
 
         stream_set_blocking($this->socket, true);
 
+        EventLoop::addEvent(new SocketEvent($this));
+
         // Now that the server is up, let's tell the client if it wants to know.
         if (Arguments::$s_signalStartupCompletedInStdout)
         {
             echo "<retwitter-cache-server-up>";
         }
 
-        self::runInterpreterLoop();
+        $this->runInterpreterLoop();
     }
 
     /**
@@ -105,85 +108,50 @@ class Application
      */
     public function runInterpreterLoop(): never
     {
-        $readWatch = [$this->socket];
-        $writeWatch = null;
-        $exceptWatch = null;
-
-        while (($numChanged = stream_select($readWatch, $writeWatch, $exceptWatch, null)) || true)
+        while (true)
         {
-            if (false === $numChanged)
-            {
-                // Error.
-                echo "An error occurred when retrieving items from the stream.\n";
-            }
-            else if ($numChanged > 0)
-            {
-                // We take a peek at the opcode for the peer. The opcode is
-                // currently always one byte long at the start of the packet.
-                // Since this is only peeked at, it must be reread by the
-                // interpreter after the fact.
-                $data = stream_socket_recvfrom($this->socket, 1, STREAM_PEEK, $peer);
-                
-                if ($data)
-                {
-                    self::handleInstruction($data, peer: is_string($peer) ? $peer :  "");
-                }
-                else
-                {
-                    echo "Failed to get data from peer \"$peer\"." . PHP_EOL;
-
-                    // In this case, even though if the peer is now invalid or
-                    // whatever, we want to progress the buffer.
-                    $data = stream_socket_recvfrom($this->socket, 1, 0, $peer);
-                }
-            }
-            else if (0 === $numChanged)
-            {
-                // I guess this means we have downtime to check for things other
-                // than processing instructions.
-            }
+            EventLoop::run();
+            usleep(500_000);
         }
     }
 
-    private function handleInstruction(string $instruction, string $peer): void
+    public function handleInstruction(string $packet, string $peer): void
     {
-        $opcode = ord($instruction[0]);
+        $opcode = ord($packet[0]);
 
         match ($opcode)
         {
             Opcode::GetServerVersion->value =>
-                self::handleGetServerVersion($peer),
+                $this->handleGetServerVersion($packet, $peer),
             Opcode::ClientOpenConnection->value =>
-                self::handleClientOpenConnection(),
+                $this->handleClientOpenConnection($packet, $peer),
             Opcode::ClientCloseConnection->value =>
-                self::handleClientCloseConnection(),
+                $this->handleClientCloseConnection($packet, $peer),
 
             // Testing:
             Opcode::IdentifyWantString->value =>
-                self::handleIdentifyWantString($peer),
+                $this->handleIdentifyWantString($packet, $peer),
             Opcode::RetrieveWantString->value =>
-                self::handleRetrieveWantString($peer),
+                $this->handleRetrieveWantString($packet, $peer),
         };
     }
 
-    private function handleGetServerVersion(string $peer): void
+    private function handleGetServerVersion(string $packet, string $peer): void
     {
-        echo "Received GetServerVersion.\n";
-        stream_socket_recvfrom($this->socket, 1, 0, $peer);
+        echo "Received GetServerVersion from peer $peer.\n";
         stream_socket_sendto($this->socket, pack("V", 1), 0, $peer);
     }
 
     /**
      * Handles the ClientOpenConnection operation.
      */
-    private function handleClientOpenConnection(): void
+    private function handleClientOpenConnection(string $packet, string $peer): void
     {
-        echo "Received ClientOpenConnection.\n";
-        stream_socket_recvfrom($this->socket, 1, 0, $peer);
+        echo "Received ClientOpenConnection from peer $peer.\n";
 
         try
         {
-            $this->connectionManager->createNew($peer);
+            $this->connections->createNew($peer);
             echo "Created new connection for peer $peer.\n";
         }
         catch (DomainException $e)
@@ -192,14 +160,13 @@ class Application
         }
     }
 
-    private function handleClientCloseConnection(): void
+    private function handleClientCloseConnection(string $packet, string $peer): void
     {
-        echo "Received ClientCloseConnection.\n";
-        stream_socket_recvfrom($this->socket, 1, 0, $peer);
+        echo "Received ClientCloseConnection from peer $peer.\n";
 
-        if ($connection = $this->connectionManager->getConnection($peer))
+        if ($connection = $this->connections->getConnection($peer))
         {
-            $this->connectionManager->removeConnection($connection);
+            $this->connections->removeConnection($connection);
             echo "Removed connection for peer $peer.\n";
         }
         else
@@ -208,43 +175,33 @@ class Application
         }
     }
 
-    private function handleIdentifyWantString(string $peer): void
+    private function handleIdentifyWantString(string $packet, string $peer): void
     {
         echo "Received IdentifyWantString from peer $peer.\n";
 
         // Receive the character count:
-        $cch = ord(stream_socket_recvfrom($this->socket, 2, STREAM_PEEK, $peer));
+        $cch = ord($packet[1]);
 
         echo " - The identified want string is $cch byte(s) long.\n";
         
         // Receive the string:
-        $str = stream_socket_recvfrom($this->socket, $cch + 2, 0, $peer);
-        $str = substr($str, 2);
+        $str = substr($packet, 2);
 
         echo " - The identified want string is \"$str\".\n";
 
-        $connection = $this->connectionManager->getConnection($peer);
+        $connection = $this->connections->getConnection($peer);
         $connection->assignWantString($str);
     }
 
-    private function handleRetrieveWantString(string $peer): void
+    private function handleRetrieveWantString(string $packet, string $peer): void
     {
         echo "Received RetrieveWantString from peer $peer.\n";
 
-        $connection = $this->connectionManager->getConnection($peer);
-
-        stream_socket_recvfrom($this->socket, 1, 0, $peer);
-
-        // if (isset($this->wantStrings[$peer]))
-        // {
-        //     stream_socket_sendto($this->socket, $this->wantStrings[$peer], 0, $peer);
-        // }
-        // else
-        // {
-        //     echo "No want string is available for peer.\n";
-        //     stream_socket_sendto($this->socket, "", 0, $peer);
-        // }
-
-        $connection->send($connection->getWantString());
+        $connection = $this->connections->getConnection($peer);
+        if ($connection)
+        {
+            $connection->petWatchdog();
+            $connection->send($connection->getWantString());
+        }
     }
 }

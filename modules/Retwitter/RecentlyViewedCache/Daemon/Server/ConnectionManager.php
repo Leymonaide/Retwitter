@@ -76,4 +76,10 @@ class ConnectionManager
 
         unset($connection);
     }
+
+    public function notifyWatchdogBark(Connection $connection): void
+    {
+        echo "Connection $connection->address timed out.\n";
+        $this->removeConnection($connection);
+    }
 }
