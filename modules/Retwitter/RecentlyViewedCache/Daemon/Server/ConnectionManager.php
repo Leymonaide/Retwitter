@@ -51,6 +51,27 @@ class ConnectionManager
         return $connection;
     }
 
+    /**
+     * Gets an array of all active connections to the server.
+     * 
+     * @return Connection[]
+     */
+    public function getAllConnections(): array
+    {
+        return $this->connections;
+    }
+
+    public function getConnectionCount(): int
+    {
+        return \count($this->connections);
+    }
+
+    /**
+     * Retrieves a connection object by a peer address.
+     * 
+     * @return ?Connection
+     *         Null if no connection exists for the peer.
+     */
     public function getConnection(string $peerAddress): ?Connection
     {
         foreach ($this->connections as $connection)
@@ -64,6 +85,9 @@ class ConnectionManager
         return null;
     }
 
+    /**
+     * Removes a connection from the connection manager.
+     */
     public function removeConnection(Connection $connection): void
     {
         foreach ($this->connections as $i => $c)

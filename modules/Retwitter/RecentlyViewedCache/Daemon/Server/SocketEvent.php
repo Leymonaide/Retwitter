@@ -51,6 +51,10 @@ class SocketEvent extends Event
 
             while (($numChanged = stream_select($readWatch, $writeWatch, $exceptWatch, 0, 200000)))
             {
+                // If the stream receives any data at all, then we pet the
+                // watchdog.
+                $this->app->idleWatchdog->pet();
+
                 if (false === $numChanged)
                 {
                     // Error.

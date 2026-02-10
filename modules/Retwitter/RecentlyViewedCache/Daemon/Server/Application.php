@@ -52,12 +52,22 @@ class Application implements ILogger
      */
     private $socket;
 
+    public readonly WatchdogTimer $idleWatchdog;
+
     public readonly ConnectionManager $connections;
 
     public function __construct()
     {
         $this->connections = new ConnectionManager($this);
         $this->initializeLogger();
+
+        // We don't want the server to continue running literally forever. If it
+        // hasn't been doing anything on a user's system for quite some time,
+        // then it would probably good to shut it down. A future client can
+        // restart the server when use resumes.
+        // The watchdog is set to expire if an hour passes without the server
+        // receiving a single message from any client.
+        $this->idleWatchdog = WatchdogTimer::inSeconds(60 * 60);
     }
 
     public function start(string $rootDirectory, string $address): never
@@ -86,6 +96,7 @@ class Application implements ILogger
         stream_set_blocking($this->socket, true);
 
         EventLoop::addEvent(new SocketEvent($this));
+        EventLoop::addEvent(new IdleWatchdogEvent($this));
 
         // Now that the server is up, let's tell the client if it wants to know.
         if (isset(Arguments::$s_startupLogFile)
@@ -99,14 +110,34 @@ class Application implements ILogger
 
             // At this point, it's totally fine for us to disconnect from the
             // logging file if we're using it, because the client who started us
-            // up has received the key that we're up and running. This orphans
-            // the file, so it's expected that the client removes it once it
-            // gets the message.
+            // up has received the notice that we're up and running. This
+            // orphans the file, so it's expected that the client removes it
+            // once it gets the message.
             StartupLogger::closeStartupLogFile();
         }
 
         $this->log("Listening for messages...");
         $this->runInterpreterLoop();
+    }
+
+    /**
+     * Handles if the idle watchdog times out.
+     * 
+     * If this happens and there are no active connections, then the server will
+     * be exited.
+     */
+    public function onIdleWatchdogBark(): void
+    {
+        if ($this->connections->getConnectionCount() > 0)
+        {
+            $this->idleWatchdog->pet();
+            return;
+        }
+
+        $this->log("The idle watchdog timer expired, so the application will exit.");
+        $this->log("Good night (zzz...)");
+
+        exit(0);
     }
 
     /**
