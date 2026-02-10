@@ -28,8 +28,6 @@ set_include_path($projectRoot);
 require "Arguments.php";
 Arguments::$s_rootDirectory = $projectRoot;
 
-require "debug.php";
-
 set_time_limit(0);
 
 // Now we'll include the autoloader.
@@ -58,7 +56,7 @@ function parseArgs($args): void
             {
                 // Bad args, but we can't reliably report this error, so we just
                 // die and hope the programmer can catch on.
-                reportEarlyError("Bad arguments.");
+                echo "Bad arguments.";
                 die();
             }
 
@@ -117,21 +115,11 @@ if (!isServerUp($socket))
 {
     echo "Going to start the daemon." . PHP_EOL;
 
-    // start /B 
-    // pclose(popen("start /B C:\\xampp\\php\\php.exe " .
-    //     "\"$projectRoot\\modules\\Retwitter\\RecentlyViewedCache\\Daemon\\Server\\rvc_server.php\"" .
-    //     " --root-directory \"$projectRoot\"" .
-    //     " --server-address \"$serverAddress\" 1> NUL 2>&1 &", "r"));
-    // $command = "C:\\xampp\\php\\php.exe " .
-    //     "\"$projectRoot\\modules\\Retwitter\\RecentlyViewedCache\\Daemon\\Server\\rvc_server.php\"" .
-    //     " --root-directory \"$projectRoot\"" .
-    //     " --server-address \"$serverAddress\"" .
-    //     " --signal-startup-completed-in-stdout";
-
     $startupLogPath = sys_get_temp_dir() . "/retwitter-rvc-startup-log-" . time() . ".log";
 
     $command =
-        // On Windows, "start /B" is used to abandon a process.
+        // On Windows, "start /B" is used to start a new process in the
+        // background.
         "start /B " .
         "C:\\xampp\\php\\php.exe " .
         "$projectRoot\\modules\\Retwitter\\RecentlyViewedCache\\Daemon\\Server\\rvc_server.php " .
@@ -143,12 +131,7 @@ if (!isServerUp($socket))
         // but it is the only working solution I could manage to find.
         " --startup-log-file \"$startupLogPath\"" .
         " --signal-startup-completed-in-stdout" .
-        // TODO: Write the startup file from within the server application
-        // rather than redirecting stdout pipes. The issue with the current
-        // approach is that the log file is kept around for the lifetime of the
-        // server application and will continue to receive anything else that it
-        // prints, long after it's been abandoned.
-        " 1> $startupLogPath 2>&1 &";
+        " 1> NUL 2>&1 &";
     
     $descriptorSpec = [
         // stdin
@@ -248,7 +231,7 @@ if (isset($g_wantString))
     }
 }
 
-stream_socket_sendto($socket, chr(Opcode::ClientCloseConnection->value));
+//stream_socket_sendto($socket, chr(Opcode::ClientCloseConnection->value));
 
 // while (($numChanged = stream_select($readWatch, $writeWatch, $exceptWatch, 0)) || true)
 // {

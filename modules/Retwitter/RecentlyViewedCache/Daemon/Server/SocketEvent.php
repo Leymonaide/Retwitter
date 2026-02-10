@@ -66,7 +66,7 @@ class SocketEvent extends Event
                     
                     if ($packet)
                     {
-                        $this->app->handleInstruction($packet, peer: is_string($peer) ? $peer :  "");
+                        $this->app->executeInstruction($packet, peer: is_string($peer) ? $peer :  "");
                     }
                     else if ("" === $packet)
                     {

@@ -31,8 +31,10 @@ use Retwitter\RecentlyViewedCache\Daemon\Common\Opcode;
  * over a local network socket as a means to facilitate interprocess
  * communication.
  */
-class Application
+class Application implements ILogger
 {
+    use Logger;
+
     /**
      * The path to the root directory of the Retwitter application.
      */
@@ -55,12 +57,16 @@ class Application
     public function __construct()
     {
         $this->connections = new ConnectionManager($this);
+        $this->initializeLogger();
     }
 
     public function start(string $rootDirectory, string $address): never
     {
         $this->rootDirectory = $rootDirectory;
         $this->address = $address;
+
+        StartupLogger::log("Retwitter Recently Viewed Cache Service");
+        StartupLogger::log("Version 1.0");
 
         $this->socket = stream_socket_server(
             $this->address, $errno, $errstr,
@@ -71,17 +77,35 @@ class Application
         {
             die("Failed to open socket: $errstr ($errno)");
         }
+        else
+        {
+            StartupLogger::log(
+                "Successfully opened stream socket at address $this->address.");
+        }
 
         stream_set_blocking($this->socket, true);
 
         EventLoop::addEvent(new SocketEvent($this));
 
         // Now that the server is up, let's tell the client if it wants to know.
-        if (Arguments::$s_signalStartupCompletedInStdout)
+        if (isset(Arguments::$s_startupLogFile)
+            || Arguments::$s_signalStartupCompletedInStdout)
         {
-            echo "<retwitter-cache-server-up>";
+            // The client only really needs to scan for the first message, but
+            // in case it's expecting proper XML, the second message is also
+            // sent to make it well formed.
+            StartupLogger::log("<retwitter-cache-server-up>");
+            StartupLogger::log("</retwitter-cache-server-up>");
+
+            // At this point, it's totally fine for us to disconnect from the
+            // logging file if we're using it, because the client who started us
+            // up has received the key that we're up and running. This orphans
+            // the file, so it's expected that the client removes it once it
+            // gets the message.
+            StartupLogger::closeStartupLogFile();
         }
 
+        $this->log("Listening for messages...");
         $this->runInterpreterLoop();
     }
 
@@ -103,6 +127,14 @@ class Application
         return $this->socket;
     }
 
+    final protected function loggerGetBanner(): string
+    {
+        // Application global logs don't need a banner.
+        return "";
+    }
+
+    final protected function loggerGetSize(): int { return 1000; }
+
     /**
      * Runs the interpreter loop of the server.
      */
@@ -115,93 +147,98 @@ class Application
         }
     }
 
-    public function handleInstruction(string $packet, string $peer): void
+    public function executeInstruction(string $packet, string $peer): void
     {
-        $opcode = ord($packet[0]);
+        $rawOpcode = ord($packet[0]);
+        $opcode = Opcode::tryFrom($rawOpcode);
+        
+        // Retrieve the connection to which the instruction should be forwarded
+        // (may be null)
+        $connection = $this->connections->getConnection($peer);
 
-        match ($opcode)
+        if (!$opcode)
         {
-            Opcode::GetServerVersion->value =>
-                $this->handleGetServerVersion($packet, $peer),
-            Opcode::ClientOpenConnection->value =>
-                $this->handleClientOpenConnection($packet, $peer),
-            Opcode::ClientCloseConnection->value =>
-                $this->handleClientCloseConnection($packet, $peer),
+            ($connection ?? $this)->log("Invalid opcode 0x" . 
+                dechex($rawOpcode));
+            return;
+        }
 
-            // Testing:
-            Opcode::IdentifyWantString->value =>
-                $this->handleIdentifyWantString($packet, $peer),
-            Opcode::RetrieveWantString->value =>
-                $this->handleRetrieveWantString($packet, $peer),
+        $logCb = function() use ($opcode, $peer)
+        {
+            $this->log(
+                "[Global] Received $opcode->name instruction from peer " .
+                "$peer."
+            );
         };
+
+        $handled = match ($opcode)
+        {
+            // The following list of instructions are handled by the server
+            // without connection state being required.
+            Opcode::GetServerVersion =>
+                $this->handleGetServerVersion($packet, $peer, $logCb),
+            Opcode::ClientOpenConnection =>
+                $this->handleClientOpenConnection($packet, $peer, $logCb),
+            Opcode::ClientCloseConnection =>
+                $this->handleClientCloseConnection($packet, $peer, $logCb),
+
+            default => false
+        };
+
+        if (!$handled)
+        {
+            if (!$connection)
+            {
+                $this->log(
+                    "No client available to handle instruction " .
+                    $opcode->name . "."
+                );
+                return;
+            }
+
+            $handled = $connection->executeInstruction($opcode, $packet);
+        }
     }
 
-    private function handleGetServerVersion(string $packet, string $peer): void
+    private function handleGetServerVersion(string $packet, string $peer, callable $logCb): bool
     {
-        echo "Received GetServerVersion from peer $peer.\n";
+        $logCb();
         stream_socket_sendto($this->socket, pack("V", 1), 0, $peer);
+        return true;
     }
 
     /**
      * Handles the ClientOpenConnection operation.
      */
-    private function handleClientOpenConnection(string $packet, string $peer): void
+    private function handleClientOpenConnection(string $packet, string $peer, callable $logCb): bool
     {
-        echo "Received ClientOpenConnection from peer $peer.\n";
-
+        $logCb();
         try
         {
             $this->connections->createNew($peer);
-            echo "Created new connection for peer $peer.\n";
+            $this->log("Created new connection for peer $peer.");
         }
         catch (DomainException $e)
         {
-            echo "A client ($peer) tried to open a connection multiple times.\n";
+            $this->log("A client ($peer) tried to open a connection multiple times.");
         }
+
+        return true;
     }
 
-    private function handleClientCloseConnection(string $packet, string $peer): void
+    private function handleClientCloseConnection(string $packet, string $peer, callable $logCb): bool
     {
-        echo "Received ClientCloseConnection from peer $peer.\n";
-
+        $logCb();
         if ($connection = $this->connections->getConnection($peer))
         {
             $this->connections->removeConnection($connection);
-            echo "Removed connection for peer $peer.\n";
+            $this->log("Removed connection for peer $peer.");
         }
         else
         {
-            echo "A client ($peer) without a connection sent ClientCloseConnection.\n";
+            $this->log("A client ($peer) without a connection sent ClientCloseConnection.");
         }
-    }
 
-    private function handleIdentifyWantString(string $packet, string $peer): void
-    {
-        echo "Received IdentifyWantString from peer $peer.\n";
-
-        // Receive the character count:
-        $cch = ord($packet[1]);
-
-        echo " - The identified want string is $cch byte(s) long.\n";
-        
-        // Receive the string:
-        $str = substr($packet, 2);
-
-        echo " - The identified want string is \"$str\".\n";
-
-        $connection = $this->connections->getConnection($peer);
-        $connection->assignWantString($str);
-    }
-
-    private function handleRetrieveWantString(string $packet, string $peer): void
-    {
-        echo "Received RetrieveWantString from peer $peer.\n";
-
-        $connection = $this->connections->getConnection($peer);
-        if ($connection)
-        {
-            $connection->petWatchdog();
-            $connection->send($connection->getWantString());
-        }
+        return true;
     }
 }

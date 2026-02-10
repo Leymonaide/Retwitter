@@ -26,6 +26,12 @@ enum Opcode : int
     // protocol. None of them take arguments.
 
     /**
+     * Performs no operation other than letting the server know a client is
+     * still available.
+     */
+    case Ping = 0;
+
+    /**
      * Gets the version of the server.
      * 
      * Responds with a 4 byte little endian integer value.
@@ -53,10 +59,17 @@ enum Opcode : int
      */
     case ClientCloseConnection = 4;
 
+    /**
+     * Reports the version of the client.
+     */
+    case ClientReportVersion = 5;
+
     // These operations can change as they need to.
     case GetFromCache = 6;
     case WriteToCache = 7;
     case GetServerProcessId = 8;
+
+    case GetLogs = 11;
 
     // Debugging opcodes:
     case IdentifyWantString = 9;

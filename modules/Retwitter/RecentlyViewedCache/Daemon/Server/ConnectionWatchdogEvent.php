@@ -24,12 +24,20 @@ use Generator;
 use Rehike\Async\EventLoop\Event;
 use Rehike\Async\EventLoop\EventFlags;
 use Rehike\Attributes\Override;
+use WeakReference;
 
 class ConnectionWatchdogEvent extends Event
 {
-    public function __construct(private Connection $connection)
+    /**
+     * @var WeakReference<Connection>
+     */
+    private WeakReference/*<Connection>*/ $connection;
+
+    public function __construct(Connection $connection)
     {
         parent::__construct();
+
+        $this->connection = WeakReference::create($connection);
     }
 
     #[Override]
@@ -45,10 +53,19 @@ class ConnectionWatchdogEvent extends Event
     {
         while (true)
         {
-            if ($this->connection->internalGetWatchdog()->isTimedOut())
+            $connection = $this->connection->get();
+
+            // If the connection was destroyed, then we'll finalize ourselves.
+            if (null === $connection)
             {
-                $this->connection->application->connections->notifyWatchdogBark(
-                    $this->connection,
+                $this->fulfill();
+                yield;
+            }
+
+            if ($connection->internalGetWatchdog()->isTimedOut())
+            {
+                $connection->application->connections->notifyWatchdogBark(
+                    $connection,
                 );
                 $this->fulfill();
                 break;

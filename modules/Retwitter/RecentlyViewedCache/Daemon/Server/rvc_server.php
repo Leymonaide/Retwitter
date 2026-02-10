@@ -23,26 +23,32 @@ namespace Retwitter\RecentlyViewedCache\Daemon\Server;
 define("RETWITTER_IS_CACHE_SERVER", true);
 define("RETWITTER_CACHE_SERVER_DEBUG", true);
 
-require "debug.php";
-
 // Parses all arguments:
 require "Arguments.php";
+
+// Load and initialize the logging module and error handling:
+require "StartupLogger.php";
+require "error_handling.php";
+if (isset(Arguments::$s_startupLogFile))
+{
+    StartupLogger::openStartupLogFile(Arguments::$s_startupLogFile);
+}
 
 // Disable the PHP time limit as this script should practically run forever in
 // the background. That is, after all, its goal as a service daemon.
 set_time_limit(0);
 
-if (!\is_string(Arguments::$s_rootDirectory))
+if (!isset(Arguments::$s_rootDirectory))
 {
-    echo "The root directory must be set." . PHP_EOL;
-    echo "Pass the --root-directory argument and try again." . PHP_EOL;
+    StartupLogger::log("The root directory must be set.");
+    StartupLogger::log("Pass the --root-directory argument and try again.");
     die;
 }
 
-if (!\is_string(Arguments::$s_serverAddress))
+if (!isset(Arguments::$s_serverAddress))
 {
-    echo "The server address must be set." . PHP_EOL;
-    echo "Pass the --server-address argument and try again." . PHP_EOL;
+    StartupLogger::log("The server address must be set.");
+    StartupLogger::log("Pass the --server-address argument and try again.");
     die;
 }
 

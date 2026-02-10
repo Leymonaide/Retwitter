@@ -58,8 +58,7 @@ class Arguments
                 {
                     // Bad args, but we can't reliably report this error, so we
                     // just die and hope the programmer can catch on.
-                    reportEarlyError("Bad arguments.");
-                    die();
+                    die("Bad arguments.");
                 }
 
                 // We just parsed a key, so toggle this depending on if we want
