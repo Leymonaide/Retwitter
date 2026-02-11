@@ -78,6 +78,13 @@ class Application implements ILogger
         StartupLogger::log("Retwitter Recently Viewed Cache Service");
         StartupLogger::log("Version 1.0");
 
+        if ($this->isServerAlreadyRunning())
+        {
+            StartupLogger::log("Another server is already running on $address.");
+            StartupLogger::log("Exiting...");
+            die(1);
+        }
+
         $this->socket = stream_socket_server(
             $this->address, $errno, $errstr,
             STREAM_SERVER_BIND
@@ -118,6 +125,39 @@ class Application implements ILogger
 
         $this->log("Listening for messages...");
         $this->runInterpreterLoop();
+    }
+
+    private function isServerAlreadyRunning(): bool
+    {
+        // Check if a server already exists at the requested address:
+        $socket = stream_socket_client(
+            $this->address, $errno, $errstr,
+            1, STREAM_CLIENT_CONNECT
+        );
+
+        if (false === $socket)
+        {
+            return false;
+        }
+
+        if (false === stream_socket_sendto(
+            $socket, chr(Opcode::GetServerVersion->value)))
+        {
+            fclose($socket);
+            return false;
+        }
+
+        $serverVersion = fread($socket, 8);
+        if (false === $serverVersion || empty($serverVersion))
+        {
+            fclose($socket);
+            return false;
+        }
+        else
+        {
+            fclose($socket);
+            return true;
+        }
     }
 
     /**
