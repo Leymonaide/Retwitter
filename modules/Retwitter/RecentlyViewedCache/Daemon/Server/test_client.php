@@ -31,7 +31,7 @@ Arguments::$s_rootDirectory = $projectRoot;
 set_time_limit(0);
 
 // Now we'll include the autoloader.
-require "autoloader.php";
+require "includes/rehike_autoloader.php";
 
 /*
  * We use arguments for initialization information for the socket itself.

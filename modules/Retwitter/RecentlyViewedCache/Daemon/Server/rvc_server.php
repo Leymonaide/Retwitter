@@ -59,7 +59,7 @@ if (!set_include_path(Arguments::$s_rootDirectory))
     die("Failed to set include path.");
 }
 
-require "autoloader.php";
+require "includes/rehike_autoloader.php";
 
 // Pass off control to the application class. This is what will run for the
 // remainder of the script's lifetime.

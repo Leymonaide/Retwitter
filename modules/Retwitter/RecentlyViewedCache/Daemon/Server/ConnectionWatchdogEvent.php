@@ -40,6 +40,15 @@ class ConnectionWatchdogEvent extends Event
         $this->connection = WeakReference::create($connection);
     }
 
+    public function __destruct()
+    {
+        parent::__destruct();
+        echo "[DEBUG] Destructed ConnectionWatchdogEvent for " .
+            ($this->connection->get()
+                ? "connection " . $this->connection->get()->address
+                : "a stale connection.");
+    }
+
     #[Override]
     public function getEventFlags(): int
     {

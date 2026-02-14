@@ -143,7 +143,8 @@ class Autoloader
      */
     static function fileExists(string $filename): bool
     {
-        $path = $_SERVER["DOCUMENT_ROOT"] . "/" . $filename;
+        $rootPath = get_include_path();
+        $path = $rootPath . "/" . $filename;
 
         return 
             \file_exists($path) &&

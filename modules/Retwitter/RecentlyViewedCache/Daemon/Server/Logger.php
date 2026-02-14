@@ -22,6 +22,9 @@ namespace Retwitter\RecentlyViewedCache\Daemon\Server;
 
 use SplFixedArray;
 
+/**
+ * Implements a circular buffer logger.
+ */
 trait Logger // implements ILogger
 {
     /**
@@ -63,5 +66,10 @@ trait Logger // implements ILogger
 
         // Next, we'll output the log to stdout with the banner.
         echo $banner . $message . PHP_EOL;
+    }
+
+    protected function debug(string $message): void
+    {
+        $this->log("[DEBUG] $message");
     }
 }

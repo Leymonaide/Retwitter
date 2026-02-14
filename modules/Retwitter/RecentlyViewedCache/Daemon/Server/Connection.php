@@ -58,6 +58,7 @@ class Connection implements ILogger
     public function __destruct()
     {
         EventLoop::removeEvent($this->watchdogEvent);
+        $this->debug("Destructed connection for address $this->address.");
     }
 
     protected function loggerGetBanner(): string
