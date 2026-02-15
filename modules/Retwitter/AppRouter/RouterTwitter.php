@@ -50,7 +50,7 @@ class RouterTwitter implements IAppRouter
 
     public function getProfileLists(string $username): string
     {
-        return $this->getProfile($username) . "/" . ProfileTab::FollowersYouFollow->value;
+        return $this->getProfile($username) . "/" . ProfileTab::Lists->value;
     }
 
     public function getProfileLikes(string $username): string
