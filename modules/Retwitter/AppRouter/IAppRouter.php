@@ -1,7 +1,7 @@
 <?php
 /* 
  * This file is part of the Retwitter project.
- * Copyright (c) 2025 Leymonaide.
+ * Copyright (c) 2025-2026 Leymonaide.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,20 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common;
+namespace Retwitter\AppRouter;
 
-use DateTime;
 use Retwitter\IApiSourceProvider;
-use Retwitter\Page\Common\VerificationType;
-use Retwitter\Url;
 
-/**
- * API-agnostic interface for API data.
- */
-interface IBasicProfileInfoDataParser extends IApiSourceProvider
+interface IAppRouter extends IApiSourceProvider
 {
-    public function getUsername(): ?string;
-    public function getHandle(): ?string;
-    public function getProfileUrl(): Url;
-    public function getId(): ?string;
-    public function getDisplayName(): ?string;
-    public function getAvatarUrl(): ?string;
-    public function getVerified(): bool;
-    public function getVerificationType(): VerificationType;
-    public function getProtected(): bool;
+    public function getProfile(string $username): string;
+    public function getProfileFollowing(string $username): string;
+    public function getProfileFollowers(string $username): string;
+    public function getProfileMutualFollowers(string $username): string;
+    public function getProfileLists(string $username): string;
+    public function getProfileLikes(string $username): string;
+    public function getProfileReplies(string $username): string;
+    public function getProfileMedia(string $username): string;
+
+    public function getTweetPermalink(string $conversationId, ?string $author): string;
 }

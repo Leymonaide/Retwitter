@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
 use Rehike\i18n\i18n;
+use Retwitter\Context\AppContext;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MTimeline;
 
@@ -47,6 +48,8 @@ class MProfileContent
             $this->protectedTimeline = new MProtectedTimeline($username);
         }
 
+        $urlRouter = AppContext::getInstance()->router;
+
         /* Tweets, Tweets & replies, Media */
         if (in_array($tab, ProfileTab::VALID_TWEET_TABS))
         {
@@ -62,7 +65,7 @@ class MProfileContent
             {
                 $this->heading->addTab(new MProfileHeadingTab(
                     label: $i18n->get("tab_tweets"),
-                    url: "/$username",
+                    url: $urlRouter->getProfile($username),
                     tab: "tweets",
                     active: ProfileTab::RecentTweets == $tab,
                     openSignup: false,
@@ -70,7 +73,7 @@ class MProfileContent
         
                 $this->heading->addTab(new MProfileHeadingTab(
                     label: $i18n->get("tab_with_replies"),
-                    url: "/$username/with_replies",
+                    url: $urlRouter->getProfileReplies($username),
                     tab: "tweets_with_replies",
                     active: ProfileTab::WithReplies == $tab,
                     openSignup: true,
@@ -78,7 +81,7 @@ class MProfileContent
         
                 $this->heading->addTab(new MProfileHeadingTab(
                     label: $i18n->get("tab_media"),
-                    url: "/$username/media",
+                    url: $urlRouter->getProfileMedia($username),
                     tab: "photos_and_videos",
                     active: ProfileTab::Media == $tab,
                     openSignup: true,
@@ -108,7 +111,7 @@ class MProfileContent
 
             $this->heading->addTab(new MProfileHeadingTab(
                 label: $i18n->get("tab_followers"),
-                url: "/$username/followers",
+                url: $urlRouter->getProfileFollowers($username),
                 tab: "followers", // Not confirmed, please find archive of this tab.
                 active: ProfileTab::Followers == $tab,
                 openSignup: false,
@@ -116,7 +119,7 @@ class MProfileContent
 
             $this->heading->addTab(new MProfileHeadingTab(
                 label: $i18n->get("tab_followers_you_follow"),
-                url: "/$username/followers_you_follow",
+                url: $urlRouter->getProfileMutualFollowers($username),
                 tab: "followers_you_follow", // Not confirmed, please find archive of this tab.
                 active: ProfileTab::FollowersYouFollow == $tab,
                 openSignup: false,
@@ -137,12 +140,13 @@ class MProfileContent
              */
             $this->heading->addTab(new MProfileHeadingTab(
                 label: $i18n->get("tab_lists"),
-                url: "/$username/lists",
+                url: $urlRouter->getProfileLists($username),
                 tab: "lists", // Not confirmed, please find archive of this tab.
                 active: ProfileTab::Lists == $tab,
                 openSignup: false,
             ));
 
+            // Twitter only:
             $this->heading->addTab(new MProfileHeadingTab(
                 label: $i18n->get("tab_memberships"),
                 url: "/$username/memberships",

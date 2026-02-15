@@ -101,6 +101,9 @@ wrapper-profile
 {% set threeCol = true %}
 
 {% macro profile_info(info) %}
+    {% types {
+        info: "Retwitter\\Page\\Profile\\MProfileInfo",
+    } %}
     {% import "core/macros.twig" as core %}
     <div class="Grid Grid--withGutter">
         <div class="Grid-cell">
@@ -108,7 +111,7 @@ wrapper-profile
                 <div class="ProfileHeaderCard">
                     {% apply spaceless %}
                     <h1 class="ProfileHeaderCard-name">
-                        <a href="/{{ info.screenName }}" class="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{{ core.text(info.name) }}</a>
+                        <a href="{{ info.profileUrl }}" class="ProfileHeaderCard-nameLink u-textInheritColor js-nav">{{ core.text(info.name) }}</a>
                         {% with { badges: info.badges } %}
                             <span class="ProfileHeaderCard-badges">
                                 {{ core.user_badges(badges, true) }}
@@ -117,7 +120,7 @@ wrapper-profile
                     </h1>
                     {% endapply %}
                     <h2 class="ProfileHeaderCard-screenname u-inlineBlock u-dir" dir="ltr">
-                        <a href="/{{ info.screenName }}" class="ProfileHeaderCard-screennameLink u-linkComplex js-nav">
+                        <a href="{{ info.profileUrl }}" class="ProfileHeaderCard-screennameLink u-linkComplex js-nav">
                             <span class="username u-dir" dir="ltr">
                                 @<b class="u-linkComplex-target">{{ info.screenName }}</b>
                             </span>
@@ -290,14 +293,14 @@ wrapper-profile
                                 <div class="ProfileCardMini-details">
                                     <div class="ProfileNameTruncated account-group">
                                         <div class="u-textTruncate u-inlineBlock ProfileNameTruncated-withBadges ProfileNameTruncated-withBadges--1">
-                                            <a href="/{{ canopy.card.screenName }}" class="fullname ProfileNameTruncated-link u-textInheritColor js-nav">
+                                            <a href="{{ canopy.card.profileUrl }}" class="fullname ProfileNameTruncated-link u-textInheritColor js-nav">
                                                 {{ core.text(canopy.card.displayName) }}
                                             </a>
                                         </div>
                                         {{ core.user_badges(canopy.card.badges) }}
                                     </div>
                                     <div class="ProfileCardMini-screenname">
-                                        <a href="/{{ canopy.card.screenName }}" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">
+                                        <a href="{{ canopy.card.profileUrl }}" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">
                                             {{ core.username(
                                                 canopy.card.screenName,
                                                 handle_class: [

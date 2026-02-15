@@ -46,7 +46,7 @@
                     'js-user-profile-link',
                     'user-thumb',
                 ]|join(' ') }}"
-                href="/{{ user.username }}"
+                href="{{ app.router.getProfile(user.username) }}"
                 data-user-id="{{ user.userId }}"
                 rel="noopener">
                 <img class="avatar js-action-profile-avatar "

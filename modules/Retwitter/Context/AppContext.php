@@ -21,6 +21,9 @@ declare(strict_types=1);
 namespace Retwitter\Context;
 
 use Rehike\TemplateUtilsDelegate\RehikeUtilsI18nDelegate;
+use Retwitter\AppRouter\IAppRouter;
+use Retwitter\AppRouter\RouterBluesky;
+use Retwitter\AppRouter\RouterTwitter;
 use Retwitter\Page\Base\BasePageContext;
 use Retwitter\RequestOs;
 use Retwitter\RetwitterPlatform;
@@ -60,6 +63,12 @@ final class AppContext
 
             $this->retwitterPlatform = $platform ?? RetwitterPlatform::Twitter;
         }
+
+        $this->router = match ($this->retwitterPlatform)
+        {
+            RetwitterPlatform::Twitter => new RouterTwitter(),
+            RetwitterPlatform::Bluesky => new RouterBluesky(),
+        };
         
         // This is a pretty lazy way to determine the operating system from the
         // user agent string, but it works.
@@ -96,6 +105,8 @@ final class AppContext
     public BasePageContext $page;
 
     public RehikeUtilsI18nDelegate $i18n;
+
+    public IAppRouter $router;
     
     public function isLoggedIn(): bool
     {

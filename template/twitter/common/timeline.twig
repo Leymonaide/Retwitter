@@ -315,7 +315,7 @@
                         'js-user-profile-link',
                         'js-nav',
                     ]|join(' ') }}"
-                    href="/{{ tweet.author.screenName }}"
+                    href="{{ app.router.getProfile(tweet.author.screenName) }}"
                     data-user-id="{{ tweet.userId }}">
                     <img class="avatar js-action-profile-avatar"
                         src="{{ tweet.author.avatarUrl }}"

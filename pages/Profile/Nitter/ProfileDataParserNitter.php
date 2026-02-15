@@ -25,6 +25,7 @@ use PHPHtmlParser\Dom;
 use Rehike\FormattedString;
 use Rehike\Logging\DebugLogger;
 use Retwitter\ApiSource;
+use Retwitter\Context\AppContext;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\Profile\CommonProfileUrlParser;
 use Retwitter\Page\Common\Profile\IProfileUrlParser;
@@ -34,6 +35,7 @@ use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Url;
 
 /**
  * Parses main profile data from a Nitter HTML document.
@@ -108,6 +110,13 @@ class ProfileDataParserNitter implements IProfileDataParser
                 ".profile-card-username")?->text)
             return ParsingUtils::getUsernameAsHandle($username);
         return null;
+    }
+
+    public function getProfileUrl(): Url
+    {
+        return new Url(
+            AppContext::getInstance()->router->getProfile($this->getUsername())
+        );
     }
 
     public function getId(): ?string

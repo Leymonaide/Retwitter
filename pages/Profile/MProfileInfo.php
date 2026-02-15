@@ -30,11 +30,13 @@ use Retwitter\Utils\ImageUtils;
 use Retwitter\Utils\ParsingUtils;
 
 use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Url;
 
 class MProfileInfo
 {
     public FormattedString $name;
     public string $screenName;
+    public Url $profileUrl;
     public bool $followsYou;
     public MUserBadges $badges;
     public ?FormattedString $bio = null;
@@ -50,6 +52,7 @@ class MProfileInfo
     public function __construct(IProfileDataParser $parser)
     {
         $this->screenName = $parser->getUsername();
+        $this->profileUrl = $parser->getProfileUrl();
         $this->followsYou = $parser->getFollowsYou();
         $displayName = $parser->getDisplayName() ?? $this->screenName;
 

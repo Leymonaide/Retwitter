@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
 use Rehike\i18n\i18n;
+use Retwitter\Context\AppContext;
 use Retwitter\Page\Common\UserActions\MUserActions;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 
@@ -46,6 +47,8 @@ class MProfileCanopy
         $i18n = i18n::getNamespace("profile");
         $name = $parser->getUsername();
 
+        $urlRouter = AppContext::getInstance()->router;
+
         $tweetCount = $parser->getTweetCount();
         if (0 != $tweetCount)
         {
@@ -54,7 +57,7 @@ class MProfileCanopy
                 label: $i18n->get("stat_tweets"),
                 count: $tweetCount,
                 tooltip: $i18n->get("stat_tweets_tip"),
-                url: "/$name",
+                url: $urlRouter->getProfile($name),
                 active: in_array($tab, ProfileTab::VALID_TWEET_TABS),
             );
         }
@@ -67,7 +70,7 @@ class MProfileCanopy
                 label: $i18n->get("stat_following"),
                 count: $parser->getFollowingCount(),
                 tooltip: $i18n->get("stat_following_tip"),
-                url: "/$name/following",
+                url: $urlRouter->getProfileFollowing($name),
                 active: ProfileTab::Following == $tab,
             );
         }
@@ -80,7 +83,7 @@ class MProfileCanopy
                 label: $i18n->get("stat_followers"),
                 count: $followerCount,
                 tooltip: $i18n->get("stat_followers_tip"),
-                url: "/$name/followers",
+                url: $urlRouter->getProfileFollowers($name),
                 active: in_array($tab, ProfileTab::VALID_FOLLOWERS_TABS),
             );
         }
@@ -93,7 +96,7 @@ class MProfileCanopy
                 label: $i18n->get("stat_likes"),
                 count: $favoritesCount,
                 tooltip: $i18n->get("stat_likes_tip"),
-                url: "/$name/likes",
+                url: $urlRouter->getProfileLikes($name),
                 active: ProfileTab::Likes == $tab,
             );
         }
@@ -106,7 +109,7 @@ class MProfileCanopy
                 label: $i18n->get("stat_lists"),
                 count: $listCount,
                 tooltip: $i18n->get("stat_lists_tip"),
-                url: "/$name/lists",
+                url: $urlRouter->getProfileLists($name),
                 active: in_array($tab, ProfileTab::VALID_LISTS_TABS),
             );
         }

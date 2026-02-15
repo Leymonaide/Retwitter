@@ -30,8 +30,10 @@ use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Rehike\ConfigManager\Config;
+use Retwitter\Context\AppContext;
 use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Pipeline;
+use Retwitter\Url;
 
 class ProfileDataParserTwitterWeb implements IProfileDataParser
 {
@@ -90,6 +92,13 @@ class ProfileDataParserTwitterWeb implements IProfileDataParser
         if ($username = $this->getUsername())
             return ParsingUtils::getUsernameAsHandle($username);
         return null;
+    }
+
+    public function getProfileUrl(): Url
+    {
+        return new Url(
+            AppContext::getInstance()->router->getProfile($this->getUsername())
+        );
     }
 
     public function getId(): ?string

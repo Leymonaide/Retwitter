@@ -73,12 +73,12 @@ wrapper-home
     {% set m = "DashboardProfileCard" %}
     <div class="{{ m }} module">
         <a class="{{ m }}-bg u-bgUserColor u-block"
-           href="/{{ module.username }}"
+           href="{{ app.router.getProfile(module.username) }}"
            tabindex="-1"
            aria-hidden="true"
            rel="noopener"
            {% if module.bannerUrl %} {# This is probably not how it was actually done, but this is easy. #}
-                style="background-image: url({{ module.bannerUrl }})"
+                {{'style'}}="background-image: url({{ module.bannerUrl }})"
            {% endif %}></a>
         <div class="{{ m }}-content">
             <div class="{{ m }}-avatarContainer">
@@ -98,7 +98,7 @@ wrapper-home
                             "profile-picture",
                             "js-dropdown-toggle",
                        ]|join(" ") }}"
-                       href="/{{ module.username }}"
+                       href="{{ app.router.getProfile(module.username) }}"
                        tabindex="-1"
                        aria-hidden="true"
                        data-placement="top"
@@ -144,7 +144,7 @@ wrapper-home
             <div class="{{ m }}-userFields account-group">
                 <div class="{{ m }}-name u-textTruncate">
                     <a class="u-textInheritColor js-nav"
-                       href="/{{ module.username }}">{{ 
+                       href="{{ app.router.getProfile(module.username) }}">{{ 
                         core.text(module.displayName) 
                     }}</a>
                 </div>
@@ -155,7 +155,7 @@ wrapper-home
                             "u-linkClean",
                             "js-nav"
                        ]|join(" ") }}"
-                       href="/{{ module.username }}"
+                       href="{{ app.router.getProfile(module.username) }}"
                        rel="noopener">
                         <span class="username u-dir" dir="ltr">
                             @<b class="u-linkComplex-target">{{ module.username }}</b>

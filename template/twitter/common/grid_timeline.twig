@@ -71,15 +71,15 @@
                     {# TODO(aubymori): On the archive I found (Rosetta design FYI),
                        the background color seemed to vary between different shades
                        of blue for each account. Figure out calculation for that? #}
-                    <a class="ProfileCard-bg js-nav" href="/{{ user.screenName }}" tabindex="-1" aria-hidden="true"
-                       style="
+                    <a class="ProfileCard-bg js-nav" href="{{ app.router.getProfile(user.screenName) }}" tabindex="-1" aria-hidden="true"
+                       {{'style'}}="
                         background-color: #1DA1F2;
                         {%- if user.bannerUrl -%}
                         background-image: url({{ user.bannerUrl }});
                         {%- endif -%}">
                     </a>
                     <div class="ProfileCard-content">
-                        <a class="ProfileCard-avatarLink js-nav js-tooltip" href="/{{ user.screenName }}"
+                        <a class="ProfileCard-avatarLink js-nav js-tooltip" href="{{ app.router.getProfile(user.screenName) }}"
                            title="{{ user.name }}" tabindex="-1" aria-hidden="true">
                             <img class="ProfileCard-avatarImage js-action-profile-avatar"
                                  src="{{ user.avatarUrl }}" alt="">
@@ -98,7 +98,7 @@
                                Not sure to how many characters though. #}
                             <div class="ProfileNameTruncated">
                                 <a class="ProfileNameTruncated-link u-textInheritColor js-nav js-action-profile-name"
-                                   href="/{{ user.screenName }}" data-aria-label-part="">
+                                   href="{{ app.router.getProfile(user.screenName) }}" data-aria-label-part="">
                                     {{ user.name }}
                                 </a>
                                 {# TODO(aubymori): Protected Tweets badge HTML seems like it doesn't fit here.
@@ -106,7 +106,7 @@
                                 {{ core.user_badges(user.badges, true) }}
                             </div>
                             <span class="ProfileCard-screenname u-dir" dir="ltr">
-                                <a href="/{{ user.screenName }}"
+                                <a href="{{ app.router.getProfile(user.screenName) }}"
                                    class="ProfileCard-screennameLink u-linkComplex js-nav"
                                    data-aria-label-part="">
                                     @<span class="u-linkComplex-Target">{{ user.screenName }}</span>
@@ -142,7 +142,7 @@
             {{ list.name }}
         </a>
         <a class="ProfileListItem-avatarLink u-textUser u-pullRight"
-           href="/{{ list.ownerScreenName }}"
+           href="{{ app.router.getProfile(list.ownerScreenName) }}"
            tabindex="-1"
            aria-hidden="true">
             <img class="ProfileListItem-avatar" src="{{ list.ownerAvatarUrl }}" alt="">
@@ -150,7 +150,7 @@
         <span class="ProfileListItem-byLine">
             {% with %}
                 {%- set author_link_html -%}
-                <a class="ProfileListItem-ownerName" href="/{{ list.ownerScreenName }}">
+                <a class="ProfileListItem-ownerName" href="{{ app.router.getProfile(list.ownerScreenName) }}">
                     {{ list.ownerName }}
                 </a>
                 {%- endset -%}

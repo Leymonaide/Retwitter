@@ -22,11 +22,13 @@ namespace Retwitter\Page\Common\Timeline\Nitter;
 
 use PHPHtmlParser\Dom\Node\AbstractNode;
 use Retwitter\ApiSource;
+use Retwitter\Context\AppContext;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\VerificationType;
+use Retwitter\Url;
 
 class TweetAuthorDataParser implements IBasicProfileInfoDataParser
 {
@@ -56,6 +58,13 @@ class TweetAuthorDataParser implements IBasicProfileInfoDataParser
                 $this->rootNode, ".tweet-name-row .username")?->text)
             return ParsingUtils::getUsernameAsHandle($username);
         return null;
+    }
+
+    public function getProfileUrl(): Url
+    {
+        return new Url(
+            AppContext::getInstance()->router->getProfile($this->getUsername())
+        );
     }
 
     public function getId(): ?string

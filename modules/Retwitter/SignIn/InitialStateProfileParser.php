@@ -29,8 +29,10 @@ use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Rehike\ConfigManager\Config;
+use Retwitter\Context\AppContext;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Pipeline;
+use Retwitter\Url;
 
 // This is a flatter version of the profile data structure used by tweets and profiles.
 class InitialStateProfileParser implements IBasicProfileInfoDataParser
@@ -62,6 +64,13 @@ class InitialStateProfileParser implements IBasicProfileInfoDataParser
         if ($username = $this->getUsername())
             return ParsingUtils::getUsernameAsHandle($username);
         return null;
+    }
+
+    public function getProfileUrl(): Url
+    {
+        return new Url(
+            AppContext::getInstance()->router->getProfile($this->getUsername())
+        );
     }
 
     public function getId(): ?string

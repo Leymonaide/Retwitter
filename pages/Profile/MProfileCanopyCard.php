@@ -25,11 +25,13 @@ use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Utils\ParsingUtils;
 
 use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Url;
 
 class MProfileCanopyCard
 {
     public string $avatarUrl;
     public FormattedString $displayName;
+    public Url $profileUrl;
     public string $screenName;
     public MUserBadges $badges;
 
@@ -37,6 +39,7 @@ class MProfileCanopyCard
     {
         $this->avatarUrl = $parser->getAvatarUrl() ?? "";
         $this->screenName = $parser->getUsername() ?? "";
+        $this->profileUrl = $parser->getProfileUrl();
         $this->displayName = ParsingUtils::formatEmojis(
             $parser->getDisplayName() ?? $this->screenName
         );

@@ -254,7 +254,7 @@
             <ul>
                 <li class="DashUserDropdown-userInfo" data-name="user-info">
                     <a class="DashUserDropdown-userInfoLink js-nav"
-                       href="/{{ user_dropdown.username }}"
+                       href="{{ app.router.getProfile(user_dropdown.username) }}"
                        data-nav="view_profile">
                         <b class="fullname">{{ core.text(user_dropdown.userDisplayName) }}</b>
                         <p class="name">
@@ -265,7 +265,7 @@
                 <li class="dropdown-divider"></li>
                 <li class="current-user" data-name="profile">
                     <a class="js-nav"
-                        href="/{{ user_dropdown.username }}"
+                        href="{{ app.router.getProfile(user_dropdown.username) }}"
                         data-nav="view_profile">
                         <span class="Icon Icon--person Icon--large"></span>
                         {{ app.i18n.get('topbar', 'user_dropdown_profile') }}

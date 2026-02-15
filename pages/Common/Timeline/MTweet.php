@@ -24,6 +24,7 @@ use DateTime;
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
 use Retwitter\ApiSource;
+use Retwitter\Context\AppContext;
 use Retwitter\Utils\FormattedStringBuilder;
 use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
@@ -141,7 +142,11 @@ class MTweet
 
     public function getUrl(): string
     {
-        return "/" . ($this->author?->screenName ?? "i") . "/status/" . $this->conversationId;
+        $router = AppContext::getInstance()->router;
+        return $router->getTweetPermalink(
+            conversationId: $this->conversationId, 
+            author: $this->author?->screenName
+        );
     }
 
     public function getTimeForPresentation(): string
