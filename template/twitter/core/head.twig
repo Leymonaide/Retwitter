@@ -224,7 +224,7 @@
 <meta name="swift-page-section" id="swift-section-name" content="{{ app.page.sectionName }}">
 <link rel="search" type="application/opensearchdescription+xml" href="/opensearch.xml" title="Twitter">
 {% if app.isLoggedIn() %}
-    <style id="user-style-{{ "kawaipure" }}{# TODO!! #}">
+    <{{'style'}} id="user-style-{{ "kawaipure" }}{# TODO!! #}">
         {% include "common/user_style.twig" %}
-    </style>
+    </{{'style'}}>
 {% endif %}

@@ -23,62 +23,6 @@
 {% set retwitter_g_js_page_context = "profile" %}
 {% set retwitter_g_boot_module = "app/pages/profile/highline_landing" %}
 
-{%- set retwitter_g_js_page_config -%}
-    {%- autoescape "js" -%}
-    {%- with { c: app.page.jsConfig2 } -%}
-    {% types {
-        c: "\\Retwitter\\Page\\Profile\\MProfileJsConfigInfo"
-    } %}
-    {# TODO: Various properties. #}
-    "profile_user": {
-        "id": {{ c.id }},
-        "id_str": {{ c.id|json_encode|raw }},
-        "name": {{ c.name|json_encode|raw }},
-        "screen_name": {{ c.screenName|json_encode|raw }},
-        "location": {{ c.location|json_encode|raw }},
-        "url": {{ c.url|json_encode|raw }},
-        "description": {{ c.description|json_encode|raw }},
-        "protected": {{ c.protected|json_encode|raw }},
-        "followers_count": {{ c.followersCount|json_encode|raw }},
-        "friends_count": {{ c.friendsCount|json_encode|raw }},
-        "listed_count": {{ c.listedCount|json_encode|raw }},
-        "created_at": {{ c.createdAt|json_encode|raw }},
-        "favourites_count": {{ c.favouritesCount|json_encode|raw }},
-        "utc_offset": null,
-        "time_zone": null,
-        "geo_enabled": true,
-        "verified": {{ c.verified|json_encode|raw }},
-        "statuses_count": {{ c.statusesCount|json_encode|raw }},
-        "lang": "en",
-        "contributors_enabled": false,
-        "is_translator": false,
-        "is_translation_enabled": false,
-        "profile_background_color": "EBEBEB",
-        "profile_background_image_url": {{ c.profileBackgroundUrl|json_encode|raw }},
-        "profile_background_image_url_https": {{ c.profileBackgroundUrlHttps|json_encode|raw }},
-        "profile_background_tile": {{ c.profileBackgroundTile|json_encode|raw }},
-        "profile_image_url": {{ c.profileImageUrl|json_encode|raw }},
-        "profile_image_url_https": {{ c.profileImageUrlHttps|json_encode|raw }},
-        "profile_banner_url": {{ c.profileBannerUrl|json_encode|raw }},
-        "profile_link_color": "990000",
-        "profile_sidebar_border_color": "DFDFDF",
-        "profile_sidebar_fill_color": "F3F3F3",
-        "profile_text_color": "333333",
-        "profile_use_background_image": true,
-        "has_extended_profile": true,
-        "default_profile": false,
-        "default_profile_image": false,
-        "following": null,
-        "follow_request_sent": null,
-        "notifications": null,
-        "business_profile_state": "none",
-        "translator_type": "regular"
-    },
-    "profile_id": 1
-    {%- endwith -%}
-    {%- endautoescape -%}
-{%- endset -%}
-
 {% block body_class %}
 {% if not app.page.error %}
 enhanced-mini-profile

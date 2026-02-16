@@ -101,7 +101,6 @@
             <iframe aria-hidden="true" class="tweet-post-iframe" name="tweet-post-iframe"></iframe>
             <iframe aria-hidden="true" class="dm-post-iframe" name="dm-post-iframe"></iframe>
         </div>
-        {# <input type="hidden" id="init-data" class="json-data" value="{{ include("core/js_config.twig")|e }}"> #}
         {% do app.page.getJsConfig().templateSetInitialState({
             title: app.page.title ?? "Twitter",
             section: retwitter_g_page_section,
