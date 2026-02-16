@@ -20,6 +20,16 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Base;
 
+use Retwitter\Page\Base\JsConfig\JsConfig;
+use Retwitter\Page\Base\JsConfig\KeyboardShortcutsMap;
+use Retwitter\Page\Base\JsConfig\MixinDeciders;
+use Retwitter\Page\Base\JsConfig\MixinDirectMessageConfig;
+use Retwitter\Page\Base\JsConfig\MixinKeyboardShortcuts;
+use Retwitter\Page\Base\JsConfig\MixinSwiftAppConfig;
+use Retwitter\Page\Base\JsConfig\MixinTypeaheadData;
+use Retwitter\Page\Base\JsConfig\MixinUnsorted;
+use Retwitter\Page\Base\JsConfig\MixinUserLoginInfo;
+
 abstract class BasePageContext
 {
     /**
@@ -37,10 +47,21 @@ abstract class BasePageContext
      */
     public array $modules = [];
 
+    public JsConfig $jsConfig;
+
     public function __construct()
     {
         $this->topbar = new MTopbar();
         $this->footer = new MFooter();
+        $this->jsConfig = new JsConfig();
+
+        $this->jsConfig->addMixin(new MixinKeyboardShortcuts(new KeyboardShortcutsMap()));
+        $this->jsConfig->addMixin(new MixinDeciders());
+        $this->jsConfig->addMixin(new MixinDirectMessageConfig());
+        $this->jsConfig->addMixin(new MixinSwiftAppConfig());
+        $this->jsConfig->addMixin(new MixinTypeaheadData());
+        $this->jsConfig->addMixin(new MixinUnsorted());
+        $this->jsConfig->addMixin(new MixinUserLoginInfo());
     }
 
     public function getTitle(): string
@@ -62,6 +83,11 @@ abstract class BasePageContext
     public function getFooter(): MFooter
     {
         return $this->footer;
+    }
+
+    public function getJsConfig(): JsConfig
+    {
+        return $this->jsConfig;
     }
 
     /**

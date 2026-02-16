@@ -24,9 +24,13 @@ use Rehike\ConfigManager\Config;
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Page\Base\BasePageContext;
+use Retwitter\Page\Base\JsConfig\MixinRoutes;
+use Retwitter\Page\Base\JsConfig\RoutesMap;
 use Retwitter\Page\Common\Timeline\ITimelineDataParser;
+use Retwitter\Page\Profile\Model\JsConfig\MixinProfileJsConfig;
 use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\Profile\ProfileError;
+use Retwitter\Page\Profile\Model\JsConfig\MProfileUserInfo;
 
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 
@@ -39,7 +43,7 @@ class ProfilePageContext extends BasePageContext
     public bool $isGridTimeline = false;
     public bool $isListsTab = false;
     public ?MProfileError $error = null;
-    public ?MProfileJsConfigInfo $jsConfig = null;
+    public ?MProfileUserInfo $jsConfig2 = null;
     public ?MProfileCanopy $canopy = null;
     public ?MProfileInfo $info = null;
     public ?MProfileContent $content = null;
@@ -53,6 +57,10 @@ class ProfilePageContext extends BasePageContext
         $this->tab = $tab;
         $this->isGridTimeline = in_array($tab, ProfileTab::GRID_TIMELINE_TABS);
         $this->isListsTab = in_array($tab, ProfileTab::VALID_LISTS_TABS);
+
+        $routes = new RoutesMap();
+        $routes->addRoute("/", "profile");
+        $this->getJsConfig()->addMixin(new MixinRoutes($routes));
     }
 
     public function insertUserData(IProfileDataParser $parser): void
@@ -67,7 +75,10 @@ class ProfilePageContext extends BasePageContext
         // is stupid, so I will make it an option.
         if (ProfileError::Success === $parser->getError())
         {
-            $this->jsConfig = new MProfileJsConfigInfo($parser);
+            $this->jsConfig2 = new MProfileUserInfo($parser);
+
+            $this->getJsConfig()->addMixin(new MixinProfileJsConfig($parser));
+
             $this->canopy = new MProfileCanopy($parser, $this->tab);
             $this->info = new MProfileInfo($parser);
             $this->content = new MProfileContent($parser, $this->tab);
