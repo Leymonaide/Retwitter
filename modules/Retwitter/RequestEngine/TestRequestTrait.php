@@ -30,6 +30,7 @@ trait TestRequestTrait
 {
     private string $testFilePath;
     private string $content = "";
+    private bool $hasBeenTried = false;
 
     protected function setupTest(
         string $testFilePath,
@@ -46,23 +47,30 @@ trait TestRequestTrait
      */
     public function tryTest(): Promise/*<bool>*/
     {
-        return async(function () {
+        return async(function (): bool {
             if (!isset($this->testFilePath))
             {
                 throw new \Exception("Test file path is not set.");
             }
 
+            if (!file_exists($this->testFilePath))
+            {
+                throw new \Exception("Test file at path \"" . $this->testFilePath . "\" does not exist.");
+            }
+
             $content = file_get_contents($this->testFilePath);
             if ($content === false)
             {
-                trigger_error(
-                    "Test file at path \"" . $this->testFilePath . "\" does not exist.",
-                    E_USER_WARNING);
+                throw new \Exception(
+                    "Test file at path \"" . $this->testFilePath . "\" does not exist.");
             }
             else
             {
                 $this->content = $content;
             }
+
+            $this->hasBeenTried = true;
+            return false;
         });
     }
 
@@ -71,7 +79,7 @@ trait TestRequestTrait
      */
     public function succeededTest(): bool
     {
-        return true;
+        return $this->hasBeenTried;
     }
 
     /**
@@ -79,6 +87,11 @@ trait TestRequestTrait
      */
     public function getResponseTest(): ?IResponse
     {
+        if (!$this->hasBeenTried)
+        {
+            return null;
+        }
+
         return new Response(
             source: new Request($this->testFilePath, []),
             status: 200,
