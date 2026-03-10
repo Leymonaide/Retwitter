@@ -73,7 +73,7 @@ class JsConfig implements JsonSerializable
     /**
      * Hack for now.
      */
-    public function templateSetPageInfo(string $pageName, string $pageContext): void
+    public function templateSetPageInfo(string $pageName, ?string $pageContext): void
     {
         $this->addMixin(new MixinTemplatePageInfo($pageName, $pageContext));
     }

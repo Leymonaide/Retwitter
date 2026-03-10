@@ -22,7 +22,7 @@ namespace Retwitter\Page\Base\JsConfig;
 
 final class MixinTemplatePageInfo extends MixinBase
 {
-    public function __construct(public string $pageName, public string $pageContext)
+    public function __construct(public string $pageName, public ?string $pageContext)
     {
     }
 }
