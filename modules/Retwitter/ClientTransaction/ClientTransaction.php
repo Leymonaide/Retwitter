@@ -256,16 +256,22 @@ endif;
 
     private function findOnDemandScript(): ?string
     {
-        $REGEX = "/(['\"])ondemand\\.s\\1:\\s*(['\"])([\\w]*)\\2/";
+        $ID_REGEX = "/([0-9]+):\"ondemand\\.s\"/";
         $documentText = $this->rawDocument;
-
         $scriptRoot = $this->findScriptRoot();
+        $matches = [];
 
-        if (preg_match($REGEX, $documentText, $matches))
+        if (preg_match($ID_REGEX, $documentText, $matches))
         {
-            $scriptName = $matches[3];
-
-            return "https://abs.twimg.com/responsive-web/$scriptRoot/ondemand.s.{$scriptName}a.js";
+            $scriptID = $matches[1];
+            $NAME_REGEX = "/{$scriptID}:\"([0-9a-f]+)\"/";
+            $matches = [];
+            
+            if (preg_match($NAME_REGEX, $documentText, $matches))
+            {
+                $scriptName = $matches[1];
+                return "https://abs.twimg.com/responsive-web/$scriptRoot/ondemand.s.{$scriptName}a.js";
+            }
         }
 
         return null;
