@@ -81,6 +81,9 @@ class Request implements IRequest
      */
     public string $userAgent = "";
 
+    public float $internal_startTime = 0;
+    public float $internal_endTime = 0;
+
     public function __construct(string $url, array $opts)
     {
         $this->initPromise();
@@ -91,6 +94,8 @@ class Request implements IRequest
 
         $this->url = $url;
         $this->handleOptions($opts);
+
+        $this->internal_startTime = microtime(true);
     }
 
     /**

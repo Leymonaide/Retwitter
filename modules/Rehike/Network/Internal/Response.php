@@ -72,6 +72,15 @@ class Response implements IResponse
         $this->status = $status;
         $this->content = $content;
         $this->headers = new ResponseHeaders($headers);
+
+        $source->internal_endTime = microtime(true);
+        \Rehike\Logging\DebugLogger::print(
+            "[Request] %f ms : %s %s (%d)",
+            ($source->internal_endTime * 1000) - ($source->internal_startTime * 1000),
+            $this->sourceRequest->method,
+            $this->sourceRequest->url,
+            $this->status
+        );
     }
 
     /**
