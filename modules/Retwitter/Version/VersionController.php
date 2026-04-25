@@ -42,7 +42,12 @@ class VersionController
             self::$versionInfo->supportsDotGit = true;
         }
 
-        if ($dg)
+        if ($dv = DotVersion::canUse())
+        {
+            DotVersion::getInfo(self::$versionInfo);
+        }
+
+        if ($dg || $dv)
         {
             self::$versionInfo->buildNumber = BuildNumber::getBuildNumber();
             $hasRun = true;
