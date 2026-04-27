@@ -162,7 +162,7 @@ if (!TEST_SIGNIN):
                 $cache->document = $this->document;
                 FileSystem::writeFile(self::CACHE_FILE, json_encode($cache));
             }
-            \Rehike\Logging\DebugLogger::print("Initial document text: %s", $this->document);
+            //\Rehike\Logging\DebugLogger::print("Initial document text: %s", $this->document);
 else:
             $this->document = file_get_contents("cache/test_initialdoc.html");
 endif;
