@@ -52,6 +52,12 @@ class SimpleFunnel
         "transfer-encoding" // broke linux for months lol
     ];
 
+    #[\RetwitterNewMethod("We need to be able to change the hostname for API funneling.")]
+    public static function setHostname(string $hostname)
+    {
+        self::$hostname = $hostname;
+    }
+
     /**
      * Funnel a response through.
      * 

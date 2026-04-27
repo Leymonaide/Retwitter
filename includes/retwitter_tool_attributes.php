@@ -25,3 +25,11 @@ class RetwitterChangedProperty
 {
     public function __construct(string $from, string $to, string $reason = "") {}
 }
+
+/**
+ * A new method was added to this class.
+ */
+class RetwitterNewMethod
+{
+    public function __construct(string $reason) {}
+}

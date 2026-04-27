@@ -144,11 +144,20 @@ final class Bootloader
         }
         else
         {
-            require match (AppContext::getInstance()->retwitterPlatform)
+            // TODO(aubymori): How should requests to api.twitter.com be
+            // handled for Bluesky? I'll let Leymonaide figure that out.
+            if (strtolower($_SERVER["HTTP_HOST"]) == "api.twitter.com")
             {
-                RetwitterPlatform::Twitter => "router.php",
-                RetwitterPlatform::Bluesky => "router_bsky.php",
-            };
+                require "router_api.php";
+            }
+            else
+            {
+                require match (AppContext::getInstance()->retwitterPlatform)
+                {
+                    RetwitterPlatform::Twitter => "router.php",
+                    RetwitterPlatform::Bluesky => "router_bsky.php",
+                };
+            }
         }
     }
 
