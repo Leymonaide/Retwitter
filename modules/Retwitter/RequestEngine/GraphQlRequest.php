@@ -55,19 +55,25 @@ class GraphQlRequest implements IRequestManagerRequest
                 yield Network::graphqlRequestParam($this->requestParams);
 
             if (
-                !($this->tryPaths & GraphQlRequestTryPaths::RegeneratedGuestToken->value)
+                !$this->succeeded()
+                && !($this->tryPaths & GraphQlRequestTryPaths::RegeneratedGuestToken->value)
                 && !SignIn::isSignedIn()
             )
             {
+                \Rehike\Logging\DebugLogger::print(
+                    "[GraphQlRequest] The previous attempt failed, so we will attempt regenerating the guest token. " .
+                    "Action: %s",
+                    $this->requestParams->action,
+                );
                 TwitterGuestToken::getNewGuestToken();
 
                 $this->tryPaths |= GraphQlRequestTryPaths::RegeneratedGuestToken->value;
-                return true;
+                return false;
             }
 
             // TODO: Brute force feature flags.
             
-            return false;
+            return !$this->succeeded();
         });
     }
 

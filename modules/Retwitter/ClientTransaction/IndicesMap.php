@@ -22,7 +22,6 @@ namespace Retwitter\ClientTransaction;
 
 class IndicesMap
 {
-    
     /**
      * @param int[] $keyBytesIndices
      */

@@ -73,6 +73,13 @@ class RequestManager
                     do
                     {
                         $shouldRetry = yield $request->try();
+                        if ($shouldRetry)
+                        {
+                            $response = $request->getResponse();
+                            $sourceRequest = $response->sourceRequest;
+                            $responseText = $response->getText();
+                            \Rehike\Logging\DebugLogger::print("Failed request \"%s\": %s", $sourceRequest->url, $responseText);
+                        }
                     }
                     while ($shouldRetry);
                 });

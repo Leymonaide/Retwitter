@@ -228,10 +228,17 @@ if (TEST_SIGNIN || FEATURE_SIGNIN)
             {
                 $jsonData = $timelineRequest->getResponse()->getJson();
 
-                $timelineParser = new TimelineDataParserTwitterWeb(
-                    data: $jsonData->data->user->result->timeline->timeline,
-                    enableWriteToCache: true
-                );
+                try
+                {
+                    $timelineParser = new TimelineDataParserTwitterWeb(
+                        data: $jsonData->data->user->result->timeline->timeline,
+                        enableWriteToCache: true
+                    );
+                }
+                catch (\Throwable $e)
+                {
+                    \Rehike\Logging\DebugLogger::print("Exception when attempting to parse timeline data: %s", $e);
+                }
             }
             // Nitter timeline parser is created alongside the profile parser,
             // as they are packaged into the same response.

@@ -129,10 +129,12 @@ if (!TEST_SIGNIN):
             $cachedDoc = $this->readFromCache();
             if ($cachedDoc !== null)
             {
+                \Rehike\Logging\DebugLogger::print("[TwitterInitialDocument] Using cached initial document.");
                 $this->document = $cachedDoc;
             }
             else
             {
+                \Rehike\Logging\DebugLogger::print("[TwitterInitialDocument] Requesting new initial document...");
                 $response = yield NetworkCore::request("https://x.com", [
                     "headers" => [
                         "User-Agent" => $_SERVER["HTTP_USER_AGENT"],

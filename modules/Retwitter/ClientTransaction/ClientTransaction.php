@@ -94,6 +94,42 @@ class ClientTransaction
     public function init(): Promise
     {
         return async(function () {
+            $cacheValid = yield $this->initFromCache();
+            \Rehike\Logging\DebugLogger::print("client transaction cache valid: %s", $cacheValid ? "true" : "false");
+            if (!$cacheValid)
+            {
+                yield $this->initFromRemoteData();
+                CacheManager::writeToCache($this->indices, $this->keyBytes, $this->animationKey);
+            }
+        });
+    }
+    
+    /**
+     * @return Promise<bool>
+     */
+    private function initFromCache(): Promise
+    {
+        return async(function () {
+            $cacheData = CacheManager::readFromCache();
+            
+            if ($cacheData)
+            {
+                $this->indices = $cacheData->indiciesMap;
+                $this->keyBytes = $cacheData->keyBytes;
+                $this->animationKey = $cacheData->animationKey;
+                return true;
+            }
+            
+            return false;
+        });
+    }
+    
+    /**
+     * @return Promise<void>
+     */
+    private function initFromRemoteData(): Promise
+    {
+        return async(function () {
             $this->indices = yield $this->getIndices();
 
             Debug::print("Index: %d", $this->indices->rowIndex);

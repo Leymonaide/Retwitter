@@ -63,9 +63,9 @@ class TwitterGuestToken
      * Validate the new guest token, and if it is
      * invalid, generate a new one.
      * 
-     * @return Promise<string>
+     * @return Promise<void>
      */
-    public static function validateGuestToken(): Promise/*<string>*/
+    public static function validateGuestToken(): Promise/*<void>*/
     {
         return async(function() {
             $host = Network::API_HOST;
