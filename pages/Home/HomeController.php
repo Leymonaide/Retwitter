@@ -53,6 +53,7 @@ class HomeController extends RetwitterPageController implements IGetControllerAs
     {
         return async(function()
         {
+            $this->supportPushStateRequests();
             yield SignIn::setup();
             
             if (!SignIn::isSignedIn())

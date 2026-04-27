@@ -118,6 +118,8 @@ final class AppContext
     public RequestOs $requestOperatingSystem = RequestOs::Other;
 
     public bool $nightMode = false;
+    
+    public bool $isPushState = false;
 
     /**
      * The current language ID of the application.

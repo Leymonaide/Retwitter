@@ -42,6 +42,16 @@ class JsConfig implements JsonSerializable
     }
     
     /**
+     * Gets all mixins in the configuration.
+     * 
+     * @return MixinBase[]
+     */
+    public function getAllMixins(): array
+    {
+        return $this->mixins;
+    }
+    
+    /**
      * @template T
      * 
      * @param class-string<T> $typeName
@@ -64,10 +74,10 @@ class JsConfig implements JsonSerializable
     /**
      * Hack for now.
      */
-    public function templateSetInitialState(mixed $obj): void
+    public function templateSetPushStateData(mixed $obj): void
     {
         DebugLogger::print("Twig initial data: %s", var_export($obj, true));
-        $this->addMixin(new MixinInitialState((object)$obj));
+        $this->addMixin(new MixinPushStateData((object)$obj));
     }
 
     /**
@@ -89,6 +99,42 @@ class JsConfig implements JsonSerializable
             foreach ($decoratedMixin as $key => $value)
             {
                 $obj->{$key} = $value;
+            }
+        }
+
+        return $obj;
+    }
+    
+    /**
+     * Serialises the JS config for the initial data property of a push state response.
+     * 
+     * In this case, the push state data appears on the outside of the record, but all
+     * other mixins used for initialisation appear inside an "init_data" property.
+     */
+    public function serializeForPushState(): object
+    {
+        $obj = (object)[];
+        $obj->init_data = (object)[];
+
+        foreach ($this->mixins as $mixin)
+        {
+            if ($mixin instanceof MixinPushStateData)
+            {
+                $decoratedMixin = $mixin->toJsObject();
+
+                foreach ($decoratedMixin->initialState as $key => $value)
+                {
+                    $obj->{$key} = $value;
+                }
+            }
+            else
+            {
+                $decoratedMixin = $mixin->toJsObject();
+
+                foreach ($decoratedMixin as $key => $value)
+                {
+                    $obj->init_data->{$key} = $value;
+                }
             }
         }
 

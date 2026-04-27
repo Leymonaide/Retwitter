@@ -15,6 +15,20 @@
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
-{% extends app.isPushState
-    ? "core/core_pushstate_wrapper.twig" 
-    : "core/core_full_page.twig" %}
+{% do app.page.getJsConfig().templateSetPushStateData({
+    title: app.page.title ?? "Twitter",
+    section: retwitter_g_page_section,
+    module: retwitter_g_boot_module,
+    cache_ttl: 300,
+    body_class_names: retwitter_body_class,
+    doc_class_names: "route-profile",
+    route_name: "profile",
+    page_container_class_names: retwitter_page_container_class_names,
+    ttft_navigation: false
+}) %}
+{# TODO: It would probably be good to move these to the models at some
+   point, since they are just static state. #}
+{% do app.page.getJsConfig().templateSetPageInfo(
+    retwitter_g_js_page_name,
+    retwitter_g_js_page_context,
+) %}

@@ -63,10 +63,32 @@ class RetwitterPageController extends BaseController
     {
         $this->template = $newTemplate;
     }
+    
+    /**
+     * Determines if the header for a push state request is present and sets up the request
+     * for push state handling if so.
+     */
+    public function supportPushStateRequests(): void
+    {
+        AppContext::getInstance()->isPushState =
+            (bool)($this->getRequest()->headers->x_push_state_request) ?? false;
+    }
+    
+    public function disallowPushStateRequests(): void
+    {
+        AppContext::getInstance()->isPushState = false;
+    }
 
     public function renderPage(): void
     {
         \Rehike\Profiler::start("render-page");
+        
+        // If we're getting a push state request, then we need to set the response
+        // headers accordingly:
+        if (AppContext::getInstance()->isPushState)
+        {
+            header("Content-Type: application/json");
+        }
 
         /*
          * Expose the debugger if it is enabled. All necessary checks are performed

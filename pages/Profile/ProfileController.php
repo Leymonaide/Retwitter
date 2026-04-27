@@ -67,6 +67,7 @@ class ProfileController
     public function getAsync(): Promise
     {
         return async(function () {
+            $this->supportPushStateRequests();
             $this->setTemplate("profile");
             
 // Remove once signin is finalized and we're not using test documents

@@ -1,6 +1,7 @@
-{#
+<?php
+/* 
  * This file is part of the Retwitter project.
- * Copyright (c) 2026 Leymonaide.
+ * Copyright (c) 2025-2026 Leymonaide.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -14,7 +15,14 @@
  *
  * You should have received a copy of the GNU General Public License 
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
-#}
-{% extends app.isPushState
-    ? "core/core_pushstate_wrapper.twig" 
-    : "core/core_full_page.twig" %}
+ */
+
+declare(strict_types=1);
+namespace Retwitter\Page\Base\JsConfig;
+
+final class MixinPushStateData extends MixinBase
+{
+    public function __construct(public object $initialState)
+    {
+    }
+}

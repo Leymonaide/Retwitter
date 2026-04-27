@@ -1,0 +1,110 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 Leymonaide.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+{% import "core/macros.twig" as core %}
+<!DOCTYPE html>
+<html lang="{{ app.lang }}" data-scribe-reduced-action-queue="true">
+    <head>
+        {% include "core/head.twig" %}
+        {# For Rebug: #}
+        <{{"script"}}>{% include "@rehike/rehike/debugger/js/xhook.js" %}</{{"script"}}>
+    </head>
+    {% set retwitter_body_class %}{% include "core/body_class.twig" %} {% block body_class %}{% endblock %}{% endset %}
+    <body class="{{ retwitter_body_class }}" data-fouc-class-names="swift-loading {% block swift_class_names %}{% endblock %}" dir="{{ app.dir }}">
+        <script id="swift_loading_indicator">
+            document.body.className = document.body.className + " " + document.body.getAttribute("data-fouc-class-names");
+        </script>
+        <noscript>
+            <div class="NoScriptForm">
+                <div class="NoScriptForm-content">
+                    <span class="NoScriptForm-logo Icon Icon--logo Icon--extraLarge"></span>
+                    <p>{{ app.noScriptForm.message }}</p>
+                </div>
+            </div>
+        </noscript>
+        <a href="#timeline" class="u-hiddenVisually focusable">{{ app.skipToContent.message }}</a>
+        <div id="doc" data-at-shortcutkeys="{{ app.shortcutKeys|json_encode }}" class="">
+            {% block doc_root_content %}
+                <div class="topbar js-topbar">
+                    {% if app.isLoggedIn() %}
+                        <div class="ProfilePage-editingOverlay"></div>
+                    {% endif %}
+                    {% include "common/pageframe/topbar.twig" %}
+                </div>
+                <div id="page-outer">
+                    {% set retwitter_page_container_class_names %}AppContent {% block page_class %}{% endblock %}{% endset %}
+                    <div id="page-container" class="{{ retwitter_page_container_class_names }}">
+                        {% block header %}{% endblock %}
+                        {% block content %}{% endblock %}
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+        {# TODO: There are a fuckton of elements at the bottom of the document
+           that need to be inserted for presumably most JS functionality to work
+           out. #}
+        <div class="gallery-overlay"></div>
+        <div class="Gallery with-tweet">
+            <style class="Gallery-styles"></style>
+            <div class="Gallery-closeTarget"></div>
+            <div class="Gallery-content">
+                <div class="GalleryTweet-newsCameraBadge"></div>
+                <button class="{{ [
+                        'modal-btn',
+                        'modal-close',
+                        'modal-close-fixed',
+                        'js-close',
+                    ]|join(' ') }}" type="button">
+                    <span class="Icon Icon--close Icon--large">
+                        <span class="visuallyhidden">{{ app.i18n.get("common", "gallery_close") }}</span>
+                    </span>
+                </button>
+                <div class="Gallery-media"></div>
+                <div class="GalleryNav GalleryNav--prev">
+                    <span class="GalleryNav-handle GalleryNav-handle--prev">
+                        <span class="Icon Icon--caretLeft Icon--large">
+                            <span class="u-hiddenVisually">{{ app.i18n.get("common", "gallery_previous") }}</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="GalleryNav GalleryNav--next">
+                    <span class="GalleryNav-handle GalleryNav-handle--next">
+                        <span class="Icon Icon--caretRight Icon--large">
+                            <span class="u-hiddenVisually">{{ app.i18n.get("common", "gallery_next") }}</span>
+                        </span>
+                    </span>
+                </div>
+                <div class="GalleryTweet"></div>
+            </div>
+        </div>
+        <div class="modal-overlay"></div>
+        {% include "@rehike/rehike/debugger/main.twig" %}
+        <input type="hidden" class="swift-boot-module" value="{{ retwitter_g_boot_module }}">
+        <input type="hidden" id="swift-module-path" value="https://abs.twimg.com/k/swift/en">
+        {{ core.async_js("init") }}
+        {% if rehike.config.behavior.enableClientFixes %}
+            <script src="{{ rehike.resource.resolveVersioned('rehike/js/swift_js_fixes.js') }}"></script>
+        {% endif %}
+        <div class="hidden" id="hidden-content">
+            <iframe aria-hidden="true" class="tweet-post-iframe" name="tweet-post-iframe"></iframe>
+            <iframe aria-hidden="true" class="dm-post-iframe" name="dm-post-iframe"></iframe>
+        </div>
+        {% include "core/configure_js_config.twig" %}
+        {% set initial_state = app.page.getJsConfig() %}
+        <input type="hidden" id="init-data" class="json-data" value="{{ initial_state|json_encode }}">
+    </body>
+</html>

@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Utils;
 
 use Rehike\TemplateUtilsDelegate\SafeHtml;
+use Retwitter\Context\AppContext;
 
 class RetwitterUtilsDelegate
 {
@@ -37,5 +38,25 @@ class RetwitterUtilsDelegate
     public static function toSafeHtml(string $str): SafeHtml
     {
         return new SafeHtml($str);
+    }
+    
+    /**
+     * Makes a push state response object.
+     * 
+     * This is meant to be called from Twig code, as it passes HTML from Twig.
+     */
+    public static function makePushStateJson(
+        AppContext $app,
+        string $pageHtml,
+        ?string $bannersHtml = null
+    ): object
+    {
+        $jsConfig = $app->page->getJsConfig();
+        $pushState = $jsConfig->serializeForPushState();
+        
+        $pushState->page = $pageHtml;
+        $pushState->banners = $bannersHtml;
+        
+        return $pushState;
     }
 }
