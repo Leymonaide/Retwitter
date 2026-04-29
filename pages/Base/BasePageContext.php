@@ -30,6 +30,9 @@ use Retwitter\Page\Base\JsConfig\MixinTypeaheadData;
 use Retwitter\Page\Base\JsConfig\MixinUnsorted;
 use Retwitter\Page\Base\JsConfig\MixinUserLoginInfo;
 
+use Retwitter\Page\Common\Topbar\MTopbar;
+use Retwitter\Page\Common\Footer\MFooter;
+
 abstract class BasePageContext
 {
     /**

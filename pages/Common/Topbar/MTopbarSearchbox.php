@@ -18,17 +18,20 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
-use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 
-class MFooterLink
+class MTopbarSearchbox
 {
-    public function __construct(
-        public string $label,
-        public string $url,
-    )
+    public string $placeholder;
+    public string $a11yLabel;
+    public string $btnLabel;
+
+    public function __construct(NamespaceBoundLanguageApi $strings)
     {
+        $this->placeholder = $strings->get("search_placeholder");
+        $this->a11yLabel = $strings->get("search_a11y_label");
+        $this->btnLabel = $strings->get("search_placeholder");
     }
 }

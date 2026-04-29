@@ -18,14 +18,14 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
 use Rehike\FormattedString;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\SignIn\SignIn;
 use Retwitter\Utils\ParsingUtils;
 
-class MHeaderUserDropdown
+class MTopbarUserDropdown
 {
     public FormattedString $userDisplayName;
     public string $userId;

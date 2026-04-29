@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
 use Rehike\FormattedString;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
@@ -27,7 +27,7 @@ use Retwitter\Page\Common\ButtonStyle;
 use Retwitter\Page\Common\MEdgeButton;
 use Retwitter\Utils\FormattedStringBuilder;
 
-class MHeaderSigninDialog
+class MTopbarSigninDialog
 {
     public string $title;
     public string $usernamePlaceholder;

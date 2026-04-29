@@ -18,20 +18,22 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 
-class MHeaderSearchbox
+class MTopbarSigninLink
 {
-    public string $placeholder;
-    public string $a11yLabel;
-    public string $btnLabel;
+    public string $question;
+    public string $action;
+    public string $url;
+    public MTopbarSigninDialog $dialog;
 
     public function __construct(NamespaceBoundLanguageApi $strings)
     {
-        $this->placeholder = $strings->get("search_placeholder");
-        $this->a11yLabel = $strings->get("search_a11y_label");
-        $this->btnLabel = $strings->get("search_placeholder");
+        $this->question = $strings->get("signin_promo");
+        $this->action = $strings->get("signin_promo_action");
+        $this->url = "/login";
+        $this->dialog = new MTopbarSigninDialog($strings);
     }
 }

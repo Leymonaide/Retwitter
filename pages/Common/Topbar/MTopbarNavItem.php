@@ -18,22 +18,24 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 
-class MHeaderSigninLink
+class MTopbarNavItem
 {
-    public string $question;
-    public string $action;
-    public string $url;
-    public MHeaderSigninDialog $dialog;
+    public string $activeLabel;
 
-    public function __construct(NamespaceBoundLanguageApi $strings)
+    public function __construct(
+        NamespaceBoundLanguageApi $strings,
+        public string $id,
+        public string $icon,
+        public string $label,
+        public string $url,
+        public bool $active,
+        public bool $activeIcon,
+    )
     {
-        $this->question = $strings->get("signin_promo");
-        $this->action = $strings->get("signin_promo_action");
-        $this->url = "/login";
-        $this->dialog = new MHeaderSigninDialog($strings);
+        $this->activeLabel = $strings->format("tab_active", $this->label);
     }
 }

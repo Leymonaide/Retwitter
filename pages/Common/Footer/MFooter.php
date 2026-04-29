@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Footer;
 
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;

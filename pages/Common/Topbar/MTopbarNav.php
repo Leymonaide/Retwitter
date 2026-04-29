@@ -18,22 +18,22 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Context\AppContext;
 use Retwitter\SignIn\SignIn;
 
-class MHeaderNav
+class MTopbarNav
 {
     /**
-     * @var MHeaderNavItem[]
+     * @var MTopbarNavItem[]
      */
     public array $items = [];
 
     public function __construct(NamespaceBoundLanguageApi $strings)
     {
-        $this->items[] = new MHeaderNavItem(
+        $this->items[] = new MTopbarNavItem(
             strings: $strings,
             id: "home",
             icon: SignIn::isSignedIn() ? "home" : "bird",
@@ -50,14 +50,14 @@ class MHeaderNav
 
         if (SignIn::isSignedIn())
         {
-            $this->items[] = new MHeaderNavNotificationsItem(
+            $this->items[] = new MTopbarNavNotificationsItem(
                 strings: $strings,
                 count: "0",
                 active: false,
                 activeIcon: true,
             );
 
-            $this->items[] = new MHeaderNavDirectMessagesItem(
+            $this->items[] = new MTopbarNavDirectMessagesItem(
                 strings: $strings,
                 count: "0",
                 activeIcon: false,

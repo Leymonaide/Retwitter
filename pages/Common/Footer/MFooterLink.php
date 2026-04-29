@@ -18,24 +18,17 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Footer;
 
+use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 
-class MHeaderNavItem
+class MFooterLink
 {
-    public string $activeLabel;
-
     public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
         public string $label,
         public string $url,
-        public bool $active,
-        public bool $activeIcon,
     )
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
     }
 }

@@ -18,26 +18,27 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 
-class MHeaderNavDirectMessagesItem extends MHeaderNavItem
+class MTopbarNavNotificationsItem extends MTopbarNavItem
 {
     public function __construct(
         NamespaceBoundLanguageApi $strings,
         public string $count,
+        bool $active = false,
         bool $activeIcon = false,
     )
     {
         parent::__construct(
             strings: $strings,
-            id: "dm",
-            icon: "dm",
-            label: $strings->get("tab_messages"),
-            url: "#", // Not applicable.
-            active: false, // Not applicable.
+            id: "connect",
+            icon: "notifications",
+            label: $strings->get("tab_notifications"),
+            url: "/i/notifications",
+            active: $active,
             activeIcon: $activeIcon,
         );
     }

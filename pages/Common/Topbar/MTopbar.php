@@ -18,28 +18,34 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Base;
+namespace Retwitter\Page\Common\Topbar;
 
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+use Retwitter\SignIn\SignIn;
 
-class MHeaderNavNotificationsItem extends MHeaderNavItem
+class MTopbar
 {
-    public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $count,
-        bool $active = false,
-        bool $activeIcon = false,
-    )
+    public NamespaceBoundLanguageApi $strings;
+
+    public MTopbarNav $nav;
+    public MTopbarSearchbox $searchbox;
+    public ?MTopbarSigninLink $signinLink = null;
+    public ?MTopbarUserDropdown $userDropdown = null;
+
+    public function __construct()
     {
-        parent::__construct(
-            strings: $strings,
-            id: "connect",
-            icon: "notifications",
-            label: $strings->get("tab_notifications"),
-            url: "/i/notifications",
-            active: $active,
-            activeIcon: $activeIcon,
-        );
+        $this->strings = i18n::getNamespace("topbar");
+        $this->nav = new MTopbarNav($this->strings);
+        $this->searchbox = new MTopbarSearchbox($this->strings);
+        
+        if (SignIn::isSignedIn())
+        {
+            $this->userDropdown = new MTopbarUserDropdown($this->strings);
+        }
+        else
+        {
+            $this->signinLink = new MTopbarSigninLink($this->strings);
+        }
     }
 }

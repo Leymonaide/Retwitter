@@ -23,7 +23,7 @@ namespace Retwitter\Page\Home;
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
 use Retwitter\Page\Base\BasePageContext;
-use Retwitter\Page\Base\MFooter;
+use Retwitter\Page\Common\Footer\MFooter;
 
 class StaticLoggedOutHomePageContext extends BasePageContext
 {
