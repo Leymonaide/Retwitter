@@ -1,10 +1,10 @@
 {
-	"previousHash": "1f7a030bb03e6a18efea6edfd01d5b2a0b4e48b3",
-	"currentRevisionId": 246,
-	"subject": "Test bringing in .version stuff from Rehike",
-	"body": "Test bringing in .version stuff from Rehike",
+	"previousHash": "44846dfdd5b7fc865e9d7d452ab3fa34c4257a7d",
+	"currentRevisionId": 252,
+	"subject": "Introduce permalink view (SUPER incomplete right now)",
+	"body": "Introduce permalink view (SUPER incomplete right now)",
 	"branch": "master",
-	"committerName": "Pumpkin",
-	"committerEmail": "230778645+lemon-pumpkin-pie@users.noreply.github.com",
-	"time": 1777099730
+	"committerName": "Isabella Lulamoon",
+	"committerEmail": "kawapure@gmail.com",
+	"time": 1777499336
 }

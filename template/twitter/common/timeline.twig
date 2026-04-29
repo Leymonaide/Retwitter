@@ -79,13 +79,10 @@
                 'js-navigable-stream',
             ]|join(' ') }}">
             {% for item in stream.items %}
-                {% if item.tweetUnion %}
-                    {{ _self.render_stream_item_tweet(item.tweetUnion) }}
-                {% elseif item.conversation %}
-                    {{ extra.useThreadedConversation
-                        ? _self.render_threaded_conversation(item.conversation)
-                        : _self.render_stream_conversation_module(item.conversation) }}
-                {# TODO: Handle other types, such as tombstones. #}
+                {% if extra.render_stream_item %}
+                    {{ extra.render_stream_item(item, extra) }}
+                {% else %}
+                    {{ _self.render_stream_item_default(item, extra) }}
                 {% endif %}
             {% endfor %}
         </ol>
@@ -114,10 +111,26 @@
     </div>
 {% endmacro %}
 
+{% macro render_stream_item_default(item, extra = {}) %}
+    {% types {
+        conversation: "Retwitter\\Page\\Common\\Timeline\\MTimelineItemUnion",
+        extra: "object",
+    } %}
+    {% if item.tweetUnion %}
+        {{ _self.render_stream_item_tweet(item.tweetUnion, extra) }}
+    {% elseif item.conversation %}
+        {{ extra.useThreadedConversation
+            ? _self.render_threaded_conversation(item.conversation, extra)
+            : _self.render_stream_conversation_module(item.conversation, extra) }}
+    {# TODO: Handle other types, such as tombstones. #}
+    {% endif %}
+{% endmacro %}
+
 {# Renders stream conversation-module items. #}
-{% macro render_stream_conversation_module(conversation) %}
+{% macro render_stream_conversation_module(conversation, extra = {}) %}
     {% types {
         conversation: "Retwitter\\Page\\Common\\Timeline\\MConversation",
+        extra: "object",
     } %}
     <li id="stream-item-tweet-{{ conversation.getOwnerTweetId() }}"
         class="{{ [
@@ -173,7 +186,7 @@
     </li>
 {% endmacro %}
 
-{% macro render_threaded_conversation(conversation) %}
+{% macro render_threaded_conversation(conversation, extra) %}
     {# ThreadedConversation is a special type of conversation renderer that only
        appears on the timelines of permalinks, which are the tweet popups. All
        other timelines use conversation-module instead. I do not know why this
@@ -183,25 +196,35 @@
        models. This may change in the future. #}
     {% types {
         conversation: "Retwitter\\Page\\Common\\Timeline\\MConversation",
+        extra: "object",
     } %}
-    <li class="ThreadedConversation">
-        <ol class="stream-items">
-            {% for item in conversation.items %}
-                {% if item.tweetUnion %}
-                    <div class="ThreadedConversation-tweet {{ loop.last ? "last" }}">
-                        {{ _self.render_stream_item_tweet(item.tweetUnion, {
-                            componentContext: "conversation"
-                        }) }}
-                    </div>
-                {% endif %}
-            {% endfor %}
-        </ol>
-    </li>
+    {% if conversation.items|length == 1 and conversation.items[0].tweetUnion %}
+        <div class="ThreadedConversation--loneTweet">
+            {{ _self.render_stream_item_tweet(conversation.items[0].tweetUnion, {
+                componentContext: extra.streamComponentContext ?? null
+            }) }}
+        </div>
+    {% else %}
+        <li class="ThreadedConversation">
+            <ol class="stream-items">
+                {% for item in conversation.items %}
+                    {% if item.tweetUnion %}
+                        <div class="ThreadedConversation-tweet {{ loop.last ? "last" }}">
+                            {{ _self.render_stream_item_tweet(item.tweetUnion, {
+                                componentContext: extra.streamComponentContext ?? null
+                            }) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </li>
+    {% endif %}
 {% endmacro %}
 
 {% macro render_stream_item_tweet(tweetUnion, template_context = {}) %}
     {% types {
         tweetUnion: "Retwitter\\Page\\Common\\Timeline\\MTweetUnion",
+        template_context: "object",
     } %}
     <li id="stream-item-tweet-{{ tweetUnion.tweet.id }}" class="{{ [
             'js-stream-item',
@@ -222,6 +245,7 @@
     {# TODO: Analyze classes. #}
     <div class="{{ [
             'tweet',
+            template_context.isPermalinkTweet ? 'permalink-tweet',
             'js-stream-tweet',
             'js-actionable-tweet',
             'original-tweet', # TODO: Discern
@@ -231,8 +255,12 @@
             tweet.invertedColors ? "Tweet--invertedColors",
             tweet.isFavorited ? "favorited",
             tweet.isRetweeted ? "retweeted",
+            template_context.isLoggedIn ? 'logged-in',
+            template_context.isDescendent ? 'descendent',
+            template_context.isPermalinkDescendent ? 'permalink-descendent',
             template_context.isConversationTweet ? 'conversation-tweet',
             template_context.hasConversationModule ? 'has-conversation-module',
+            template_context.openedTweet ? 'opened-tweet',
         ]|join(' ') }}"
         data-tweet-id="{{ tweet.id }}"
         data-item-id="{{ tweet.id }}"

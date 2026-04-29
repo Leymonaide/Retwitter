@@ -32,86 +32,11 @@ class MProfileCanopy
     public MProfileCanopyCard $card;
     public MUserActions $userActions;
 
-    /**
-     * @var MProfileCanopyStat[]
-     */
-    public array $stats = [];
-
-    public function __construct(IProfileDataParser $parser, ProfileTab $tab)
+    public function __construct(IProfileDataParser $parser)
     {
         $this->banner = $parser->getBannerUrl();
         $this->avatar = new MProfileAvatar($parser);
         $this->card = new MProfileCanopyCard($parser);
         $this->userActions = new MUserActions($parser);
-
-        $i18n = i18n::getNamespace("profile");
-        $name = $parser->getUsername();
-
-        $urlRouter = AppContext::getInstance()->router;
-
-        $tweetCount = $parser->getTweetCount();
-        if (0 != $tweetCount)
-        {
-            $this->stats[] = new MProfileCanopyStat(
-                id: "tweets",
-                label: $i18n->get("stat_tweets"),
-                count: $tweetCount,
-                tooltip: $i18n->get("stat_tweets_tip"),
-                url: $urlRouter->getProfile($name),
-                active: in_array($tab, ProfileTab::VALID_TWEET_TABS),
-            );
-        }
-
-        $followingCount = $parser->getFollowingCount();
-        if (0 != $followingCount)
-        {
-            $this->stats[] = new MProfileCanopyStat(
-                id: "following",
-                label: $i18n->get("stat_following"),
-                count: $parser->getFollowingCount(),
-                tooltip: $i18n->get("stat_following_tip"),
-                url: $urlRouter->getProfileFollowing($name),
-                active: ProfileTab::Following == $tab,
-            );
-        }
-
-        $followerCount = $parser->getFollowerCount();
-        if (0 != $followerCount)
-        {
-            $this->stats[] = new MProfileCanopyStat(
-                id: "followers",
-                label: $i18n->get("stat_followers"),
-                count: $followerCount,
-                tooltip: $i18n->get("stat_followers_tip"),
-                url: $urlRouter->getProfileFollowers($name),
-                active: in_array($tab, ProfileTab::VALID_FOLLOWERS_TABS),
-            );
-        }
-
-        $favoritesCount = $parser->getFavoritesCount();
-        if (0 != $favoritesCount)
-        {
-            $this->stats[] = new MProfileCanopyStat(
-                id: "likes",
-                label: $i18n->get("stat_likes"),
-                count: $favoritesCount,
-                tooltip: $i18n->get("stat_likes_tip"),
-                url: $urlRouter->getProfileLikes($name),
-                active: ProfileTab::Likes == $tab,
-            );
-        }
-
-        $listCount = $parser->getListCount();
-        if (0 != $listCount)
-        {
-            $this->stats[] = new MProfileCanopyStat(
-                id: "lists",
-                label: $i18n->get("stat_lists"),
-                count: $listCount,
-                tooltip: $i18n->get("stat_lists_tip"),
-                url: $urlRouter->getProfileLists($name),
-                active: in_array($tab, ProfileTab::VALID_LISTS_TABS),
-            );
-        }
     }
 }

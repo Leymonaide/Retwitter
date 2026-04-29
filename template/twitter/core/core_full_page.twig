@@ -91,6 +91,10 @@
                 <div class="GalleryTweet"></div>
             </div>
         </div>
+        {% if app.page.permalinkOverlay %}
+            {% import "common/permalink.twig" as permalink %}
+            {{ permalink.render(app.page.permalinkOverlay) }}
+        {% endif %}
         <div class="modal-overlay"></div>
         {% include "@rehike/rehike/debugger/main.twig" %}
         <input type="hidden" class="swift-boot-module" value="{{ retwitter_g_boot_module }}">

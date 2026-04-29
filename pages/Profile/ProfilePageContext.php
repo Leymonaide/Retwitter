@@ -44,7 +44,7 @@ class ProfilePageContext extends BasePageContext
     public bool $isListsTab = false;
     public ?MProfileError $error = null;
     public ?MProfileUserInfo $jsConfig2 = null;
-    public ?MProfileCanopy $canopy = null;
+    public ?MProfileCanopyWithStats $canopy = null;
     public ?MProfileInfo $info = null;
     public ?MProfileContent $content = null;
     
@@ -79,7 +79,7 @@ class ProfilePageContext extends BasePageContext
 
             $this->getJsConfig()->addMixin(new MixinProfileJsConfig($parser));
 
-            $this->canopy = new MProfileCanopy($parser, $this->tab);
+            $this->canopy = new MProfileCanopyWithStats($parser, $this->tab);
             $this->info = new MProfileInfo($parser);
             $this->content = new MProfileContent($parser, $this->tab);
             $this->addJsModule("pages_profile");

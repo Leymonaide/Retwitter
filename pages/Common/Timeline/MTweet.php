@@ -25,6 +25,7 @@ use Rehike\FormattedString;
 use Rehike\i18n\i18n;
 use Retwitter\ApiSource;
 use Retwitter\Context\AppContext;
+use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Utils\FormattedStringBuilder;
 use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
@@ -49,6 +50,21 @@ class MTweet
     public ?MTweetSocialContext $socialContext = null;
     public bool $isFavorited = false;
     public bool $isRetweeted = false;
+    
+    /**
+     * This is basically just used as a hack for the permalink view in the case of
+     * TwitterWeb requests where the full profile information is available in the
+     * data of the TweetDetail response.
+     * 
+     * Importantly, in the case of TwitterWeb requests, the tweet data parser is
+     * constructed with a full ProfileDataParserTwitterWeb, which implements
+     * the complete IProfileDataParser interface useful for that purpose. Other
+     * clients will not do this.
+     * 
+     * It should not be used under other circumstances, as I don't think it is
+     * guaranteed to exist.
+     */
+    public ?IBasicProfileInfoDataParser $internalAuthorProfileParser = null;
 
     /**
      * @var MTweetMedia[]
@@ -66,6 +82,7 @@ class MTweet
         $this->id = $parser->getId();
         $this->conversationId = $parser->getConversationId();
         $this->userId = $parser->getUserId();
+        $this->internalAuthorProfileParser = $parser->getAuthorParser();
 
         if ($sourceText = $parser->getFullText())
         {

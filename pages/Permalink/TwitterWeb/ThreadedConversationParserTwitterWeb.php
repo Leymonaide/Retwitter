@@ -1,7 +1,7 @@
 <?php
 /* 
  * This file is part of the Retwitter project.
- * Copyright (c) 2025 Leymonaide.
+ * Copyright (c) 2025-2026 Leymonaide.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,26 +18,23 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page;
+namespace Retwitter\Page\Permalink\TwitterWeb;
 
-use Rehike\ControllerV2\Router;
+use Retwitter\Page\Common\Timeline\MTimeline;
+use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
+use Retwitter\Page\Permalink\IThreadedConversationParser;
 
-// Funnel = pages that the Retwitter server should not touch:
-Router::funnel([
-]);
-
-Router::redirect([
-]);
-
-Router::get([
-    "/" => Home\HomeController::class,
-    "/i/tweet/stickersHtml" => TweetStickers\TweetStickers::class,
-    "/playground" => Playground::class,
-    "/account/suspended" => AccountSuspended\AccountSuspendedController::class,
-    "/rehike/static/*" => rehike\StaticRouter::class,
-    "/*/status/*" => Permalink\PermalinkController::class,
-    "default" => Profile\ProfileController::class,
-]);
-
-Router::post([
-]);
+class ThreadedConversationParserTwitterWeb implements IThreadedConversationParser
+{
+    private MTimeline $timeline;
+    
+    public function __construct(object $timelineObj)
+    {
+        $this->timeline = new MTimeline(new TimelineDataParserTwitterWeb($timelineObj, true));
+    }
+    
+    public function getTimeline(): MTimeline
+    {
+        return $this->timeline;
+    }
+}

@@ -1,0 +1,94 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025-2026 Leymonaide.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{% macro render(data) %}
+    {% types {
+        data: "Retwitter\\Page\\Permalink\\PermalinkOverlay",
+    } %}
+    {% import "common/timeline.twig" as timeline %}
+    <div id="permalink-overlay" class="{{ [
+        'PermalinkOverlay',
+        'PermalinkOverlay-with-background',
+        'load-at-boot',
+    ]|join(' ') }}">
+        {# TODO: The buttons #}
+        <div id="permalink-overlay-dialog" class="PermalinkOverlay-modal" role="dialog" aria-labelledby="permalink-overlay-header">
+            <div tabindex="0" class="js-first-tabstop"></div>
+            <div class="PermalinkOverlay-content" role="document">
+                <div data-background-path="/i/status/1"{# temporary #}
+                    class="PermalinkOverlay-body">
+                    <div class="{{ [
+                            'permalink-container',
+                            'permalink-container--withArrows',
+                        ]|join(' ') }}" style="opacity: 1">
+                        {# PermalinkProfile #}
+                        <div class="{{ [
+                                'permalink',
+                                'light-inline-actions',
+                                'stream-uncapped',
+                                'has-replies',
+                                'original-permalink-page',
+                            ]|join(' ') }}" role="main">
+                            {# TweetArrows #}
+                            {# in reply tos #}
+                            <div class="permalink-inner permalink-tweet-container">
+                                {{ timeline.render_tweet(
+                                    data.threadedConversation.getTargetTweet().tweet, {
+                                        isLoggedIn: app.isLoggedIn(),
+                                        isPermalinkTweet: true,
+                                        openedTweet: true,
+                                    }) }}
+                            </div>
+                            <div data-component-context="replies" class="replies-to permalink-inner permalink-replies">
+                                <div class="tweets-wrapper">
+                                    <div class="ThreadedDescendents" id="descendents">
+                                        <div data-min-position="" data-max-position="" class="stream-container">
+                                            {{ timeline.render_stream(
+                                                data.threadedConversation.timeline.stream, {
+                                                    streamComponentContext: "replies",
+                                                    useThreadedConversation: true,
+                                                }
+                                            ) }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro _render_permalink_stream_item(item, template_context = {}) %}
+    {% types {
+        conversation: "Retwitter\\Page\\Common\\Timeline\\MTimelineItemUnion",
+        template_context: "object",
+    } %}
+    {% import "common/timeline.twig" as timeline %}
+    {% if item.tweetUnion %}
+        <div class="ThreadedConversation--loneTweet">
+            {{ _self.render_stream_item_tweet(item.tweetUnion, {
+                componentContext: extra.streamComponentContext ?? null
+            }) }}
+        </div>
+    {% else %}
+        {{ timeline.render_stream_item_default(item, template_context) }}
+    {% endif %}
+{% endmacro %}
