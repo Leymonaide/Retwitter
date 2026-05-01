@@ -24,6 +24,8 @@ use DateTime;
 use Rehike\FormattedString;
 use Retwitter\ApiSource;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\FollowState;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
@@ -160,6 +162,18 @@ class TweetDataParserBluesky implements ITweetDataParser
     {
         return new ProfileDataParserBluesky($this->getData()->author);
     }
+    
+    /**
+     * Gets the full profile parser.
+     * 
+     * This is not an interface method. It is specific to this client.
+     */
+    public function getFullProfileParser(): ?IProfileDataParser
+    {
+        // The contract is always obligated, since the author parser which we create
+        // is always a ProfileDataParserBluesky, which implements this interface.
+        return $this->getAuthorParser();
+    }
 
     public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser
     {
@@ -169,6 +183,16 @@ class TweetDataParserBluesky implements ITweetDataParser
         }
 
         return new ProfileDataParserBluesky($this->repostReasonObj->by);
+    }
+    
+    public function getAuthorFollowState(): ?FollowState
+    {
+        return $this->getFullProfileParser()->getFollowState();
+    }
+    
+    public function getAuthorFollowsYou(): ?bool
+    {
+        return $this->getFullProfileParser()->getFollowsYou();
     }
 
     public function getLang(): ?string

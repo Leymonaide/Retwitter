@@ -25,6 +25,7 @@ use Rehike\FormattedString;
 use Rehike\i18n\i18n;
 use Retwitter\ApiSource;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use Retwitter\Utils\FormattedStringBuilder;
@@ -93,6 +94,16 @@ class StubbedTweetDataParser implements ITweetDataParser
     }
 
     public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser
+    {
+        return null;
+    }
+    
+    public function getAuthorFollowState(): ?FollowState
+    {
+        return null;
+    }
+    
+    public function getAuthorFollowsYou(): ?bool
     {
         return null;
     }

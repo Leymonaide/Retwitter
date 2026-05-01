@@ -27,13 +27,14 @@ use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use PHPHtmlParser\Dom\Node\AbstractNode;
+use Retwitter\Page\Common\Timeline\StubbedTweetDataParser;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
 
 /**
  * Data parser for quote tweets from Nitter.
  */
-class QuoteTweetDataParserNitter implements ITweetDataParser
+class QuoteTweetDataParserNitter extends StubbedTweetDataParser
 {
     use NitterTweetParserCommon;
 
@@ -115,93 +116,5 @@ class QuoteTweetDataParserNitter implements ITweetDataParser
     public function getAuthorParser(): ?IBasicProfileInfoDataParser
     {
         return new TweetAuthorDataParser($this->sourceInfo, $this->rootNode);
-    }
-
-    public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser
-    {
-        return null;
-    }
-
-    public function getQuotedTweetParser(): ?ITweetDataParser
-    {
-        return null;
-    }
-
-    public function getQuotedTweetPermalink(): ?string
-    {
-        return null;
-    }
-
-    public function getRetweetId(): ?string
-    {
-        return null;
-    }
-
-    public function getInReplyToId(): ?string
-    {
-        return null;
-    }
-
-    public function getLang(): ?string
-    {
-        // Nitter doesn't report the language of a tweet. Now I could query an
-        // external service (i.e. Google Translate API) with the tweet text to
-        // determine the language, but that's overdoing it, and this information
-        // is not very important.
-        return null;
-    }
-
-    public function getFavoritesCount(): ?int
-    {
-        return null;
-    }
-
-    public function getReplyCount(): ?int
-    {
-        return null;
-    }
-
-    public function getRetweetCount(): ?int
-    {
-        return null;
-    }
-
-    public function getQuoteTweetCount(): ?int
-    {
-        return null;
-    }
-
-    public function getIsRetweet(): bool
-    {
-        return false;
-    }
-
-    public function getIsFavorited(): bool
-    {
-        return false;
-    }
-
-    public function getIsRetweeted(): bool
-    {
-        return false;
-    }
-
-    public function getIsBookmarked(): bool
-    {
-        return false;
-    }
-
-    private function isPinned(): bool
-    {
-        return false;
-    }
-
-    public function getSocialContext(): ?MTweetSocialContext
-    {
-        return null;
-    }
-
-    public function setSocialContext(?MTweetSocialContext $value): void
-    {
     }
 }

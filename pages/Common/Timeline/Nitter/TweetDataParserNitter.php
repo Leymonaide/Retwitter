@@ -27,6 +27,7 @@ use Retwitter\Page\Common\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use PHPHtmlParser\Dom\Node\AbstractNode;
+use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
@@ -135,6 +136,16 @@ class TweetDataParserNitter implements ITweetDataParser
         // Since retweets can only happen in a profile context, we'll just
         // return the profile information.
         return $this->sourceInfo->profileData;
+    }
+    
+    public function getAuthorFollowState(): ?FollowState
+    {
+        return FollowState::NotFollowing;
+    }
+    
+    public function getAuthorFollowsYou(): ?bool
+    {
+        return false;
     }
 
     public function getRetweetId(): ?string

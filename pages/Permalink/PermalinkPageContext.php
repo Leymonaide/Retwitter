@@ -53,6 +53,7 @@ class PermalinkPageContext extends BasePageContext
     public PermalinkOverlay $permalinkOverlay;
     
     private NamespaceBoundLanguageApi $i18n;
+    private ?IProfileDataParser $profileDataParser = null;
     
     public function __construct()
     {
@@ -69,22 +70,34 @@ class PermalinkPageContext extends BasePageContext
     public function insertThreadedConversation(IPermalinkParser $parser): void
     {
         $this->permalinkOverlay->conversation = new PermalinkConversation($parser);
+        $this->insertUserDataToPermalinkedTweetIfAvailable();
     }
 
     public function insertUserData(IProfileDataParser $parser): void
     {
+        $this->profileDataParser = $parser;
+        
         if (ProfileError::Success === $parser->getError())
         {
             $this->info = new MProfileInfo($parser);
             $this->canopy = new MProfileCanopy($parser);
             
-            // TODO(kawapure): This should probably be made order-independent. For now, it
-            // requires that the threaded conversation data is inserted before user data.
-            $this->permalinkOverlay->conversation->permalinkedTweetCtx->insertUserData($parser);
+            // The profile data parser will always be available.
+            $this->insertUserDataToPermalinkedTweetIfAvailable();
         }
         else if (ProfileError::Suspended === $parser->getError())
         {
             // I feel that the error here should be completely different.
+        }
+    }
+    
+    private function insertUserDataToPermalinkedTweetIfAvailable(): void
+    {
+        if ($this->profileDataParser)
+        {
+            $this->permalinkOverlay->conversation->permalinkedTweetCtx->insertUserData(
+                $this->profileDataParser
+            );
         }
     }
 }

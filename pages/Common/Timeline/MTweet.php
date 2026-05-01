@@ -26,6 +26,7 @@ use Rehike\i18n\i18n;
 use Retwitter\ApiSource;
 use Retwitter\Context\AppContext;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Utils\FormattedStringBuilder;
 use Retwitter\Utils\NumberFormat;
 use Retwitter\Utils\ParsingUtils;
@@ -39,6 +40,8 @@ class MTweet
     public string $userId;
     public FormattedString $fullText;
     public ?MTweetAuthor $author = null;
+    public ?FollowState $authorFollowState = null;
+    public ?bool $authorFollowsYou = null;
     public string $lang;
     public string $createdAtStr;
     public DateTime $createdAt;
@@ -124,6 +127,8 @@ class MTweet
         }
 
         $this->author = new MTweetAuthor($parser->getAuthorParser());
+        $this->authorFollowState = $parser->getAuthorFollowState();
+        $this->authorFollowsYou = $parser->getAuthorFollowsYou();
         $this->lang = $parser->getLang() ?? "en";
         $this->createdAt = $parser->getCreatedAt() ?? new DateTime();
         $this->createdAtStr =  $this->formatTimeString($this->createdAt);

@@ -230,6 +230,7 @@
         tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
         template_context: "object",
     } %}
+    {% set FollowState = enum("Retwitter\\Page\\Common\\Profile\\FollowState") %}
     {% import "core/macros.twig" as core %}
     <div class="{{ [
         'tweet',
@@ -243,7 +244,7 @@
         template_context.invertedColors ? "Tweet--invertedColors",
         tweet.isFavorited ? "favorited",
         tweet.isRetweeted ? "retweeted",
-        template_context.isLoggedIn ? 'logged-in',
+        template_context.isLoggedIn ? 'logged-in', # Used on permalinks
         template_context.isDescendent ? 'descendent',
         template_context.isPermalinkDescendent ? 'permalink-descendent',
         template_context.isConversationTweet ? 'conversation-tweet',
@@ -273,9 +274,15 @@
     data-screen-name="{{ tweet.author.screenName }}"
     data-name="{{ core.simple_text(tweet.author.name) }}"
     data-user-id="{{ tweet.userId }}"
-    data-you-follow="false"
-    data-follows-you="false"
-    data-you-block="false"
+    {% if tweet.authorFollowState is not null %}
+        data-you-follow="{{ tweet.authorFollowState == FollowState.Following ? 'true' : 'false' }}"
+    {% endif %}
+    {% if tweet.authorFollowsYou is not null %}
+        data-follows-you="{{ tweet.authorFollowsYou ? 'true' : 'false' }}"
+    {% endif %}
+    {% if tweet.authorFollowState is not null %}
+        data-you-block="{{ tweet.authorFollowState == FollowState.Blocked ? 'true' : 'false' }}"
+    {% endif %}
     data-reply-to-users-json="{# TODO. #}"
     data-disclosure-type=""
     {% if template_context.componentContext %}

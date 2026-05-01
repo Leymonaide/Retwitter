@@ -24,6 +24,7 @@ use DateTime;
 use Rehike\FormattedString;
 use Retwitter\IApiSourceProvider;
 use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\FollowState;
 
 /**
  * API-agnostic interface for parsing Tweet data.
@@ -42,6 +43,21 @@ interface ITweetDataParser extends IApiSourceProvider
     public function getDisplayTextRange(): ?array;
     public function getAuthorParser(): ?IBasicProfileInfoDataParser;
     public function getRetweetAuthorParser(): ?IBasicProfileInfoDataParser;
+    
+    /**
+     * Gets if the user is following or blocking the author.
+     * 
+     * A null response suggests that the information is unavailable.
+     */
+    public function getAuthorFollowState(): ?FollowState;
+    
+    /**
+     * Gets if the author is following the user.
+     * 
+     * A null response suggests that the information is unavailable.
+     */
+    public function getAuthorFollowsYou(): ?bool;
+    
     public function getLang(): ?string;
     public function getCreatedAt(): ?DateTime;
     public function getFavoritesCount(): ?int;
