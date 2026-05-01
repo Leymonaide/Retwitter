@@ -1,10 +1,10 @@
 {
-	"previousHash": "01ea0139e2919750a7d5eb92918aac3d0bd162e1",
-	"currentRevisionId": 257,
-	"subject": "Move IBasicProfileInfoDataParser namespace to Common\Profile",
-	"body": "Move IBasicProfileInfoDataParser namespace to Common\Profile",
+	"previousHash": "dc9c0b16c86d79e0600707b3cbf6d5d67747b4a2",
+	"currentRevisionId": 258,
+	"subject": "Fix oversight from the previous commit",
+	"body": "Fix oversight from the previous commit",
 	"branch": "master",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1777673397
+	"time": 1777673457
 }

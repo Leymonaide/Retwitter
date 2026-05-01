@@ -20,6 +20,8 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Common;
 
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
+
 class MUserBadges
 {
     public bool $verified = false;
