@@ -56,10 +56,12 @@ class TweetStickers extends RetwitterPageController
             // TODO: Request tweet if necessary instead of only retrieving from
             // cache.
             $tweet = $this->getTweetFromCache($tweetId);
-            $tweet->setInvertedColors(true);
 
             $html = TemplateManager::render([
-                "tweet" => $tweet
+                "tweet" => $tweet,
+                "template_context" => (object)[
+                    "invertedColors" => true,
+                ],
             ], "helper/render_tweet");
 
             header("Content-Type: application/json");

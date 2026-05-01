@@ -45,7 +45,6 @@ class MTweet
     public ?MTweetUnion $quotedTweet = null;
     public bool $isUserPinned = false;
     public bool $isRetweet = false;
-    public bool $invertedColors = false;
     public ?string $retweeterUsername = null;
     public ?MTweetSocialContext $socialContext = null;
     public bool $isFavorited = false;
@@ -150,11 +149,6 @@ class MTweet
 
         $this->isFavorited = $parser->getIsFavorited();
         $this->isRetweeted = $parser->getIsRetweeted();
-    }
-
-    public function setInvertedColors(bool $value): void
-    {
-        $this->invertedColors = $value;
     }
 
     public function getUrl(): string

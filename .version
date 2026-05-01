@@ -1,10 +1,10 @@
 {
-	"previousHash": "99f4cae972d2f14840f36feedf07eec414b928a1",
-	"currentRevisionId": 253,
-	"subject": "General work on permalinks",
-	"body": "General work on permalinks",
+	"previousHash": "cfadd220a1b7e39c6192da823da56f5349cdbc46",
+	"currentRevisionId": 254,
+	"subject": "Move tweet "inverted colours" property to template context",
+	"body": "Move tweet "inverted colours" property to template context",
 	"branch": "master",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1777604170
+	"time": 1777668887
 }
