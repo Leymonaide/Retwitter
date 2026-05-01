@@ -37,6 +37,10 @@
                             'permalink-container--withArrows',
                         ]|join(' ') }}" style="opacity: 1">
                         {# PermalinkProfile #}
+                        
+                        {# TODO: Self-threads have the classes "self-thread-permalink-with-descendant" and
+                           "self-thread-permalink". These classes are responsible for handling the drawing
+                           of the line connecting the tweets (RWeb self-threads lack this design) #}
                         <div class="{{ [
                                 'permalink',
                                 'light-inline-actions',
@@ -47,11 +51,12 @@
                             {# TweetArrows #}
                             {# in reply tos #}
                             <div class="permalink-inner permalink-tweet-container">
-                                {{ timeline.render_tweet(
-                                    data.threadedConversation.getTargetTweet().tweet, {
+                                {{ _self.render_permalink_tweet(
+                                    data.conversation.permalinkedTweetCtx.tweet, {
                                         isLoggedIn: app.isLoggedIn(),
                                         isPermalinkTweet: true,
                                         openedTweet: true,
+                                        userActions: data.conversation.permalinkedTweetCtx.userActions,
                                     }) }}
                             </div>
                             <div data-component-context="replies" class="replies-to permalink-inner permalink-replies">
@@ -59,9 +64,12 @@
                                     <div class="ThreadedDescendents" id="descendents">
                                         <div data-min-position="" data-max-position="" class="stream-container">
                                             {{ timeline.render_stream(
-                                                data.threadedConversation.timeline.stream, {
+                                                data.conversation.repliesStream, {
                                                     streamComponentContext: "replies",
-                                                    useThreadedConversation: true,
+                                                    render_stream_item: {
+                                                        context: _self,
+                                                        macro_name: "_render_permalink_stream_item",
+                                                    },
                                                 }
                                             ) }}
                                         </div>
@@ -82,13 +90,106 @@
         template_context: "object",
     } %}
     {% import "common/timeline.twig" as timeline %}
-    {% if item.tweetUnion %}
-        <div class="ThreadedConversation--loneTweet">
-            {{ _self.render_stream_item_tweet(item.tweetUnion, {
-                componentContext: extra.streamComponentContext ?? null
-            }) }}
-        </div>
+    {% if item.conversation %}
+        {{ _self.render_threaded_conversation(item.conversation, template_context) }}
     {% else %}
         {{ timeline.render_stream_item_default(item, template_context) }}
     {% endif %}
 {% endmacro %}
+
+{% macro render_threaded_conversation(conversation, extra) %}
+    {# ThreadedConversation is a special type of conversation renderer that only
+       appears on the timelines of permalinks, which are the tweet popups. All
+       other timelines use conversation-module instead. I do not know why this
+       is the case, but it's whatever.
+       
+       For now, all ThreadedConversation and conversation-module share the same
+       models. This may change in the future. #}
+    {% types {
+        conversation: "Retwitter\\Page\\Common\\Timeline\\MConversation",
+        extra: "object",
+    } %}
+    {% import "common/timeline.twig" as timeline %}
+    {% if conversation.items|length == 1 and conversation.items[0].tweetUnion %}
+        <div class="ThreadedConversation--loneTweet">
+            {{ timeline.render_stream_item_tweet(conversation.items[0].tweetUnion, {
+                componentContext: extra.streamComponentContext ?? null
+            }) }}
+        </div>
+    {% else %}
+        <li class="ThreadedConversation">
+            <ol class="stream-items">
+                {% for item in conversation.items %}
+                    {% if item.tweetUnion %}
+                        <div class="ThreadedConversation-tweet {{ loop.last ? "last" }}">
+                            {{ timeline.render_stream_item_tweet(item.tweetUnion, {
+                                componentContext: extra.streamComponentContext ?? null
+                            }) }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </ol>
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_permalink_tweet(tweet, template_context = {}) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        template_context: "object",
+    } %}
+    {% import "core/macros.twig" as core %}
+    {% import "common/timeline.twig" as timeline %}
+    {# TODO: Analyze classes. #}
+    {{ timeline.tweet_begin(tweet, template_context) }}
+        {{ timeline.render_tweet_context(tweet) }}
+        <div class="content clearfix">
+            <div class="permalink-header">
+                {{ timeline.render_tweet_header(tweet, template_context) }}
+            </div>
+        </div>
+        {{ timeline.render_tweet_main_body(tweet, template_context) }}
+        <div class="client-and-actions">
+            <span class="metadata">
+                <span>{{ tweet.getTimeTooltipForPresentation() }}</span>
+            </span>
+        </div>
+        {{ timeline.render_tweet_footer(tweet) }}
+    {{ timeline.tweet_end(tweet, template_context) }}
+{% endmacro %}
+
+{# OBSOLETE (kinda)
+   Really, I wrote this macro when I was referencing a Rosetta document for the differences
+   originally. The differences here are just Rosetta differences, so I am keeping this code
+   around for future reference when we do the Rosetta theme. #}
+{#{% macro render_permalink_tweet_header(tweet) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+    } %}
+    {% import "core/macros.twig" as core %}
+    {% import "common/timeline.twig" as timeline %}
+    <div class="permalink-header">
+        {# follow-bar # }
+        
+        <a class="{{ [
+                'account-group',
+                'js-account-group',
+                'js-action-profile',
+                'js-user-profile-link',
+                'js-nav'
+            ]|join(' ') }}"
+            data-user-id="{{ tweet.userId }}"
+            href="{{ app.router.getProfile(tweet.author.screenName) }}">
+            <img class="avatar js-action-profile-avatar"
+                src="{{ tweet.author.avatarUrl }}"
+                alt="{# Profile avatar accessibility text: I don't know what this would be. # }">
+            <strong data-aria-label-part="" class="fullname js-action-profile-name show-popup-with-id">{{
+                core.text(tweet.author.name) }}</strong>
+            <span>&rlm;</span>
+            <span data-aria-label-part="" class="username js-action-profile-name"><s>@</s><b>{{ 
+                tweet.author.screenName }}</b></span>
+        </a>
+        
+        {{ timeline.render_tweet_time(tweet) }}
+    </div>
+{% endmacro %}#}

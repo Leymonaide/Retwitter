@@ -20,34 +20,20 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Permalink;
 
+use Retwitter\Page\Common\Timeline\MStream;
 use Retwitter\Page\Common\Timeline\MTimeline;
 use Retwitter\Page\Common\Timeline\MTweetUnion;
 
-class ThreadedConversation
+class PermalinkConversation
 {
-    public MTimeline $timeline;
+    public PermalinkedTweetContext $permalinkedTweetCtx;
+    public ?MStream $inReplyTosStream = null;
+    public ?MStream $repliesStream = null;
     
-    public function __construct(IThreadedConversationParser $parser)
+    public function __construct(IPermalinkParser $parser)
     {
-        $this->timeline = $parser->getTimeline();
-    }
-    
-    /**
-     * Gets the target tweet from the timeline.
-     * 
-     * The target tweet is the only tweet in the timeline which exists at the top level.
-     * All other tweets in the timeline are nested in conversation modules.
-     */
-    public function getTargetTweet(): MTweetUnion
-    {
-        foreach ($this->timeline->stream->items as $item)
-        {
-            if (null !== $item->tweetUnion)
-            {
-                return $item->tweetUnion;
-            }
-        }
-        
-        throw new \Exception("Somehow there is no target tweet.");
+        $this->permalinkedTweetCtx = new PermalinkedTweetContext($parser->getPermalinkedTweet()->tweet);
+        $this->inReplyTosStream = $parser->getInReplyTosStream();
+        $this->repliesStream = $parser->getRepliesStream();
     }
 }

@@ -20,9 +20,22 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Permalink;
 
-use Retwitter\Page\Common\Timeline\MTimeline;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Page\Common\Timeline\MTweet;
+use Retwitter\Page\Common\UserActions\MUserActions;
 
-interface IThreadedConversationParser
+class PermalinkedTweetContext
 {
-    public function getTimeline(): MTimeline;
+    public ?MUserActions $userActions = null;
+    
+    public function __construct(
+        public MTweet $tweet,
+    )
+    {
+    }
+    
+    public function insertUserData(IProfileDataParser $profileParser): void
+    {
+        $this->userActions = new MUserActions($profileParser);
+    }
 }

@@ -27,8 +27,35 @@ class MStream
      */
     public array $items;
 
+    // CONSIDER(kawapure): Restructure this into a static function "parse" for consistency.
+    // This will also avoid the need for reflection in the existing static functions, which
+    // currently require it to construct instances without calling the constructor.
     public function __construct(ITimelineDataParser $parser)
     {
         $this->items = $parser->parseAll();
+    }
+    
+    public static function createEmpty(): static
+    {
+        $refl = new \ReflectionClass(static::class);
+        return $refl->newInstanceWithoutConstructor();
+    }
+    
+    /**
+     * Creates a deep clone of the timeline, which is separately mutable without affecting
+     * the original instance.
+     */
+    public static function clone(self $other): static
+    {
+        $clone = static::createEmpty();
+        
+        $newItems = [];
+        foreach ($other->items as $item)
+        {
+            $newItems[] = $item;
+        }
+        $clone->items = $newItems;
+        
+        return $clone;
     }
 }

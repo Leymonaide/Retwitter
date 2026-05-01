@@ -7,6 +7,7 @@ use Retwitter\Context\AppContext;
 
 use Twig\TwigFunction, Twig\TwigFilter;
 use Rehike\ControllerV2\Core as ControllerV2;
+use Twig\Extension\StringLoaderExtension;
 
 /**
  * Implements the template manager.
@@ -55,6 +56,7 @@ class TemplateManager
                 "auto_reload" => true
             ]
         );
+        self::$twig->addExtension(new StringLoaderExtension());
     }
 
     /**

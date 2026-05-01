@@ -26,7 +26,7 @@ use Retwitter\GraphQlRequestParams;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Page\Common\Timeline\Nitter\TimelineDataParserNitter;
-use Retwitter\Page\Permalink\ThreadedConversationParserTwitterWeb;
+use Retwitter\Page\Permalink\TwitterWeb\PermalinkParserTwitterWeb;
 use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;
 use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
@@ -34,7 +34,6 @@ use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 use Rehike\Async\Promise;
 use Retwitter\Page\Base\ForwardTo404ControllerMixin;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
-use Retwitter\Page\Permalink\TwitterWeb\ThreadedConversationParserTwitterWeb as TwitterWebThreadedConversationParserTwitterWeb;
 use Retwitter\RequestEngine\GraphQlRequest;
 use Retwitter\RequestEngine\GraphQlRequestTest;
 use Retwitter\RequestEngine\IRequestManagerRequest;
@@ -148,23 +147,18 @@ if (TEST_SIGNIN || FEATURE_SIGNIN)
                     throw new \Exception("Bad TweetDetail response.");
                 }
                 
-                $threadedConversationParser = new TwitterWebThreadedConversationParserTwitterWeb(
+                $permalinkParser = new PermalinkParserTwitterWeb(
                     timelineObj: $jsonData->data->threaded_conversation_with_injections_v2,
                 );
                 
-                $context->insertThreadedConversation($threadedConversationParser);
+                $context->insertThreadedConversation($permalinkParser);
 
-                // TODO(kawapure): For permalinks, the logic to determine the path to the user result
-                // will obviously be more complicated.
-                // $profileDataParser = new ProfileDataParserTwitterWeb(
-                //     data: $jsonData->data->user->result,
-                //     enableWriteToCache: false,
-                // );
-                $targetTweet = $context->permalinkOverlay->threadedConversation->getTargetTweet();
-                if (null !== $targetTweet->tweet 
-                    && $targetTweet->tweet->internalAuthorProfileParser instanceof IProfileDataParser)
+                // TODO: Paths to request the background profile in the case of other clients.
+                $permalinked = $context->permalinkOverlay->conversation->permalinkedTweetCtx;
+                if (null !== $permalinked->tweet 
+                    && $permalinked->tweet->internalAuthorProfileParser instanceof IProfileDataParser)
                 {
-                    $profileDataParser = $targetTweet->tweet->internalAuthorProfileParser;
+                    $profileDataParser = $permalinked->tweet->internalAuthorProfileParser;
                 }
             }
 

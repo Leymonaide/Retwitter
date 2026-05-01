@@ -80,7 +80,8 @@
             ]|join(' ') }}">
             {% for item in stream.items %}
                 {% if extra.render_stream_item %}
-                    {{ extra.render_stream_item(item, extra) }}
+                    {% set templateCode = '{% import "' ~ extra.render_stream_item.context ~ '" as macros %}{{ macros.' ~ extra.render_stream_item.macro_name ~ '(item, extra) }}' %}
+                    {{ include(template_from_string(templateCode), { item: item, extra: extra }) }}
                 {% else %}
                     {{ _self.render_stream_item_default(item, extra) }}
                 {% endif %}
@@ -119,9 +120,7 @@
     {% if item.tweetUnion %}
         {{ _self.render_stream_item_tweet(item.tweetUnion, extra) }}
     {% elseif item.conversation %}
-        {{ extra.useThreadedConversation
-            ? _self.render_threaded_conversation(item.conversation, extra)
-            : _self.render_stream_conversation_module(item.conversation, extra) }}
+        {{ _self.render_stream_conversation_module(item.conversation, extra) }}
     {# TODO: Handle other types, such as tombstones. #}
     {% endif %}
 {% endmacro %}
@@ -186,41 +185,6 @@
     </li>
 {% endmacro %}
 
-{% macro render_threaded_conversation(conversation, extra) %}
-    {# ThreadedConversation is a special type of conversation renderer that only
-       appears on the timelines of permalinks, which are the tweet popups. All
-       other timelines use conversation-module instead. I do not know why this
-       is the case, but it's whatever.
-       
-       For now, all ThreadedConversation and conversation-module share the same
-       models. This may change in the future. #}
-    {% types {
-        conversation: "Retwitter\\Page\\Common\\Timeline\\MConversation",
-        extra: "object",
-    } %}
-    {% if conversation.items|length == 1 and conversation.items[0].tweetUnion %}
-        <div class="ThreadedConversation--loneTweet">
-            {{ _self.render_stream_item_tweet(conversation.items[0].tweetUnion, {
-                componentContext: extra.streamComponentContext ?? null
-            }) }}
-        </div>
-    {% else %}
-        <li class="ThreadedConversation">
-            <ol class="stream-items">
-                {% for item in conversation.items %}
-                    {% if item.tweetUnion %}
-                        <div class="ThreadedConversation-tweet {{ loop.last ? "last" }}">
-                            {{ _self.render_stream_item_tweet(item.tweetUnion, {
-                                componentContext: extra.streamComponentContext ?? null
-                            }) }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            </ol>
-        </li>
-    {% endif %}
-{% endmacro %}
-
 {% macro render_stream_item_tweet(tweetUnion, template_context = {}) %}
     {% types {
         tweetUnion: "Retwitter\\Page\\Common\\Timeline\\MTweetUnion",
@@ -239,223 +203,302 @@
 {% macro render_tweet(tweet, template_context = {}) %}
     {% types {
         tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        template_context: "object",
     } %}
     {% import "core/macros.twig" as core %}
-    {% set TweetSocialContext = enum("Retwitter\\Page\\Common\\Timeline\\TweetSocialContext") %}
     {# TODO: Analyze classes. #}
-    <div class="{{ [
-            'tweet',
-            template_context.isPermalinkTweet ? 'permalink-tweet',
-            'js-stream-tweet',
-            'js-actionable-tweet',
-            'original-tweet', # TODO: Discern
-            'js-original-tweet',
-            tweet.socialContext ? 'tweet-has-context',
-            tweet.isUserPinned ? 'user-pinned',
-            tweet.invertedColors ? "Tweet--invertedColors",
-            tweet.isFavorited ? "favorited",
-            tweet.isRetweeted ? "retweeted",
-            template_context.isLoggedIn ? 'logged-in',
-            template_context.isDescendent ? 'descendent',
-            template_context.isPermalinkDescendent ? 'permalink-descendent',
-            template_context.isConversationTweet ? 'conversation-tweet',
-            template_context.hasConversationModule ? 'has-conversation-module',
-            template_context.openedTweet ? 'opened-tweet',
-        ]|join(' ') }}"
-        data-tweet-id="{{ tweet.id }}"
-        data-item-id="{{ tweet.id }}"
-        data-permalink-path="{{ tweet.getUrl() }}"
-        data-conversation-id="{{ tweet.conversationId }}"
-        data-tweet-nonce="{# Tweet ID, maybe with random ID after #}"
-        {# TODO: The below information is wrong. Sometimes tweets just get blank
-           stat buttons, which are initialized on the client side. Figure out
-           what conditions this happens under and replicate, or settle for an
-           inaccurate implementation (which I imagine is fine) #}
-        {# data-tweet-stat-initialized seems to only appear at template time as
-           "true" if the tweet has any stat information at template time. #}
-        {% if not tweet.areAllStatsEmpty() %}
-            data-tweet-stat-initialized="true"
-        {% endif %}
-        {% if tweet.retweetId %}
-            data-retweet-id="{{ tweet.retweetId }}"
-        {% endif %}
-        {% if tweet.isRetweet %}
-            data-retweeter="{{ tweet.retweeterUsername }}"
-        {% endif %}
-        data-screen-name="{{ tweet.author.screenName }}"
-        data-name="{{ core.simple_text(tweet.author.name) }}"
-        data-user-id="{{ tweet.userId }}"
-        data-you-follow="false"
-        data-follows-you="false"
-        data-you-block="false"
-        data-reply-to-users-json="{# TODO. #}"
-        data-disclosure-type=""
-        {% if template_context.componentContext %}
-            data-component-context="{{ template_context.componentContext }}"
-        {% endif %}
-        {# The following don't seem to be there for most tweets, just the one I
-           happened to start copying from.
-        data-card2-type="audio"
-        data-has-cards="true"
-        #}
-        >
-        <div class="context">
-            {% if tweet.socialContext.type == TweetSocialContext.Retweet %}
-                <div class="tweet-context with-icn ">
-                    <span class="Icon Icon--small Icon--retweeted"></span>
-                    <span class="js-retweet-text">
-                        {% with %}
-                            {%- set profile_link -%}
-                                <a class="pretty-link js-user-profile-link"
-                                    href="{{ tweet.socialContext.retweeterUrl }}"
-                                    data-user-id="{{ tweet.socialContext.retweeterUserId }}"
-                                    rel="noopener">
-                                    <b>{{ core.text(tweet.socialContext.retweeterDisplayName) }}</b>
-                                </a>
-                            {%- endset -%}
-                            {{ app.i18n.formatHtml("common", "tweet_social_context_retweeted", profile_link|safeHtml) }}
-                        {% endwith %}
-                    </span>
-                </div>
-            {% elseif tweet.socialContext.type == TweetSocialContext.Pin %}
-                <div class="tweet-context with-icn pinned">
-                    <span class="Icon Icon--small Icon--pinned u-textUserColor"></span>
-                    <span class="js-pinned-text" data-aria-label-part="">
-                        {{ app.i18n.get("common", "tweet_social_context_pinned") }}
-                    </span>
-                </div>
-            {% elseif tweet.socialContext.type == TweetSocialContext.Community %}
-                <div class="tweet-context with-icn ">
-                    {# This is unfilled but there's no better icon for this :/ #}
-                    <span class="Icon Icon--small Icon--people"></span>
-                    <a class="pretty-link" href="{{ tweet.socialContext.landingUrl }}">
-                        <b>{{ tweet.socialContext.communityName }}</b>
-                    </a>
-                </div>
-            {% endif %}
-        </div>
+    {{ _self.tweet_begin(tweet, template_context) }}
+        {{ _self.render_tweet_context(tweet) }}
         <div class="content">
             <div class="stream-item-header">
-                <a class="{{ [
-                        'account-group',
-                        'js-account-group',
-                        'js-action-profile',
-                        'js-user-profile-link',
-                        'js-nav',
-                    ]|join(' ') }}"
-                    href="{{ app.router.getProfile(tweet.author.screenName) }}"
-                    data-user-id="{{ tweet.userId }}">
-                    <img class="avatar js-action-profile-avatar"
-                        src="{{ tweet.author.avatarUrl }}"
-                        alt="{# Profile avatar accessibility text: I don't know what this would be. #}">
-                    <span class="FullNameGroup">
-                        <strong class="fullname show-popup-with-id u-textTruncate"
-                            data-aria-label-part="">
-                            {{ core.text(tweet.author.name) }}
-                        </strong>
-                        {{ core.user_badges(tweet.author.badges) }}
-                        <span class="UserNameBreak">&nbsp;</span>
-                    </span>
-                    <span class="username u-dir u-textTruncate" dir="ltr"
-                        data-aria-label-part="">
-                        @<b>{{ tweet.author.screenName }}</b>
-                    </span>
-                </a>
-                <small class="time">
-                    <a class="tweet-timestamp js-permalink js-nav js-tooltip"
-                        href="{{ tweet.getUrl() }}"
-                        title="{{ tweet.getTimeTooltipForPresentation() }}"
-                        data-conversation-id="{{ tweet.conversationId }}">
-                        <span class="_timestamp js-short-timestamp"
-                            data-aria-label-part="last"
-                            data-time="{{ tweet.getTimeSeconds() }}"
-                            data-time-ms="{{ tweet.getTimeMilliseconds() }}"
-                            data-long-form="true">{{ tweet.getTimeForPresentation() }}</span>
-                    </a>
-                </small>
-
-                
-                <div class="{{ [
-                        'ProfileTweet-action',
-                        'ProfileTweet-action--more',
-                        'js-more-ProfileTweet-actions',
-                    ]|join(' ') }}">
-                    <div class="dropdown">
-                        <button class="{{ [
-                                'ProfileTweet-actionButton',
-                                'u-textUserColorHover',
-                                'dropdown-toggle',
-                                'js-dropdown-toggle',
-                            ]|join(' ') }}"
-                            type="button" aria-haspopup="true">
-                            <div class="IconContainer js-tooltip"
-                                title="{{ app.i18n.get("common", "more_tooltip") }}">
-                                <span class="Icon Icon--caretDownLight Icon--small"></span>
-                                <span class="u-hiddenVisually"></span>
-                            </div>
-                        </button>
-                        <div class="dropdown-menu is-autoCentered">
-                            <div class="dropdown-caret">
-                                <div class="caret-outer"></div>
-                                <div class="caret-inner"></div>
-                            </div>
-                            <ul>
-                                <li class="copy-link-to-tweet js-actionCopyLinkToTweet">
-                                    <button class="dropdown-link" type="button">
-                                        {{ app.i18n.get("common", "tweet_menu_copy_link") }}
-                                    </button>
-                                </li>
-                                <li class="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
-                                    <button class="dropdown-link" type="button">
-                                        {{ app.i18n.get("common", "tweet_menu_embed") }}
-                                    </button>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                {{ _self.render_tweet_header(tweet, template_context) }}
             </div>
-            <div class="js-tweet-text-container">
-                <p class="{{ [
-                        'TweetTextSize',
-                        'TweetTextSize--normal',
-                        'js-tweet-text',
-                        'tweet-text',
-                    ]|join(' ') }}"
-                    data-aria-label-part="0" lang="{{ tweet.lang }}">{# TODO: Improve #}{#
-                    #}{{- core.tweet_text(tweet.fullText) }}{#
-                #}</p>
-            </div>
-            {% if tweet.media is not empty %}
-                {{ _self.tweet_adaptive_media(tweet.media) }}
-            {% endif %}
-            {% if tweet.quotedTweet.tweet %}
-                {{ _self.quoted_tweet(tweet.quotedTweet.tweet) }}
-            {% elseif tweet.quotedTweet.tombstone %}
-                <div class="Tombstone">
-                    <span class="Tombstone-label">
-                        {{ core.text(tweet.quotedTweet.tombstone.message) }}
-                    </span>
-                </div>
-            {% endif %}
+            {{ _self.render_tweet_main_body(tweet, template_context) }}
             {#}
             <div class="card2 js-media-container" data-card2-name="audio">
                 TODO: What is this element, exactly? Does not exist on all
                 Tweets either.
             </div>
             #}
-            <div class="stream-item-footer">
-                <div class="ProfileTweet-actionCountList u-hiddenVisually">
-                    {% for tweet_action in tweet.actionStrip.actions %}
-                        {{ _self.tweet_action_count(tweet, tweet_action) }}
-                    {% endfor %}
+            {{ _self.render_tweet_footer(tweet) }}
+        </div>
+    {{ _self.tweet_end(tweet, template_context) }}
+{% endmacro %}
+
+{% macro tweet_begin(tweet, template_context) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        template_context: "object",
+    } %}
+    {% import "core/macros.twig" as core %}
+    <div class="{{ [
+        'tweet',
+        template_context.isPermalinkTweet ? 'permalink-tweet',
+        'js-stream-tweet',
+        'js-actionable-tweet',
+        'original-tweet', # TODO: Discern
+        'js-original-tweet',
+        tweet.socialContext ? 'tweet-has-context',
+        tweet.isUserPinned ? 'user-pinned',
+        tweet.invertedColors ? "Tweet--invertedColors",
+        tweet.isFavorited ? "favorited",
+        tweet.isRetweeted ? "retweeted",
+        template_context.isLoggedIn ? 'logged-in',
+        template_context.isDescendent ? 'descendent',
+        template_context.isPermalinkDescendent ? 'permalink-descendent',
+        template_context.isConversationTweet ? 'conversation-tweet',
+        template_context.hasConversationModule ? 'has-conversation-module',
+        template_context.openedTweet ? 'opened-tweet',
+    ]|join(' ') }}"
+    data-tweet-id="{{ tweet.id }}"
+    data-item-id="{{ tweet.id }}"
+    data-permalink-path="{{ tweet.getUrl() }}"
+    data-conversation-id="{{ tweet.conversationId }}"
+    data-tweet-nonce="{# Tweet ID, maybe with random ID after #}"
+    {# TODO: The below information is wrong. Sometimes tweets just get blank
+    stat buttons, which are initialized on the client side. Figure out
+    what conditions this happens under and replicate, or settle for an
+    inaccurate implementation (which I imagine is fine) #}
+    {# data-tweet-stat-initialized seems to only appear at template time as
+    "true" if the tweet has any stat information at template time. #}
+    {% if not tweet.areAllStatsEmpty() %}
+        data-tweet-stat-initialized="true"
+    {% endif %}
+    {% if tweet.retweetId %}
+        data-retweet-id="{{ tweet.retweetId }}"
+    {% endif %}
+    {% if tweet.isRetweet %}
+        data-retweeter="{{ tweet.retweeterUsername }}"
+    {% endif %}
+    data-screen-name="{{ tweet.author.screenName }}"
+    data-name="{{ core.simple_text(tweet.author.name) }}"
+    data-user-id="{{ tweet.userId }}"
+    data-you-follow="false"
+    data-follows-you="false"
+    data-you-block="false"
+    data-reply-to-users-json="{# TODO. #}"
+    data-disclosure-type=""
+    {% if template_context.componentContext %}
+        data-component-context="{{ template_context.componentContext }}"
+    {% endif %}
+    {# The following don't seem to be there for most tweets, just the one I
+    happened to start copying from.
+    data-card2-type="audio"
+    data-has-cards="true"
+    #}
+    >
+{% endmacro %}
+
+{% macro tweet_end(tweet, template_context) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        template_context: "object",
+    } %}
+    </div>
+{% endmacro %}
+
+{% macro render_tweet_text(tweet, size) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+    } %}
+    {% import "core/macros.twig" as core %}
+    <div class="js-tweet-text-container">
+        <p class="{{ [
+                'TweetTextSize',
+                'TweetTextSize--' ~ size,
+                'js-tweet-text',
+                'tweet-text',
+            ]|join(' ') }}"
+            data-aria-label-part="0" lang="{{ tweet.lang }}">{# TODO: Improve #}{#
+            #}{{- core.tweet_text(tweet.fullText) }}{#
+        #}</p>
+    </div>
+{% endmacro %}
+
+{% macro render_tweet_main_body(tweet, template_context) %}
+    {{ _self.render_tweet_text(tweet, template_context.isPermalinkTweet ? "jumbo" : "normal") }}
+    {% if tweet.media is not empty %}
+        {{ _self.tweet_adaptive_media(tweet.media) }}
+    {% endif %}
+    {% if tweet.quotedTweet.tweet %}
+        {{ _self.quoted_tweet(tweet.quotedTweet.tweet) }}
+    {% elseif tweet.quotedTweet.tombstone %}
+        <div class="Tombstone">
+            <span class="Tombstone-label">
+                {{ core.text(tweet.quotedTweet.tombstone.message) }}
+            </span>
+        </div>
+    {% endif %}
+{% endmacro %}
+
+{% macro render_tweet_time(tweet) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+    } %}
+    <small class="time">
+        <a class="tweet-timestamp js-permalink js-nav js-tooltip"
+            href="{{ tweet.getUrl() }}"
+            title="{{ tweet.getTimeTooltipForPresentation() }}"
+            data-conversation-id="{{ tweet.conversationId }}">
+            <span class="_timestamp js-short-timestamp"
+                data-aria-label-part="last"
+                data-time="{{ tweet.getTimeSeconds() }}"
+                data-time-ms="{{ tweet.getTimeMilliseconds() }}"
+                data-long-form="true">{{ tweet.getTimeForPresentation() }}</span>
+        </a>
+    </small>
+{% endmacro %}
+
+{% macro render_tweet_context(tweet) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+    } %}
+    {% import "core/macros.twig" as core %}
+    {% set TweetSocialContext = enum("Retwitter\\Page\\Common\\Timeline\\TweetSocialContext") %}
+    <div class="context">
+        {% if tweet.socialContext.type == TweetSocialContext.Retweet %}
+            <div class="tweet-context with-icn ">
+                <span class="Icon Icon--small Icon--retweeted"></span>
+                <span class="js-retweet-text">
+                    {% with %}
+                        {%- set profile_link -%}
+                            <a class="pretty-link js-user-profile-link"
+                                href="{{ tweet.socialContext.retweeterUrl }}"
+                                data-user-id="{{ tweet.socialContext.retweeterUserId }}"
+                                rel="noopener">
+                                <b>{{ core.text(tweet.socialContext.retweeterDisplayName) }}</b>
+                            </a>
+                        {%- endset -%}
+                        {{ app.i18n.formatHtml("common", "tweet_social_context_retweeted", profile_link|safeHtml) }}
+                    {% endwith %}
+                </span>
+            </div>
+        {% elseif tweet.socialContext.type == TweetSocialContext.Pin %}
+            <div class="tweet-context with-icn pinned">
+                <span class="Icon Icon--small Icon--pinned u-textUserColor"></span>
+                <span class="js-pinned-text" data-aria-label-part="">
+                    {{ app.i18n.get("common", "tweet_social_context_pinned") }}
+                </span>
+            </div>
+        {% elseif tweet.socialContext.type == TweetSocialContext.Community %}
+            <div class="tweet-context with-icn ">
+                {# This is unfilled but there's no better icon for this :/ #}
+                <span class="Icon Icon--small Icon--people"></span>
+                <a class="pretty-link" href="{{ tweet.socialContext.landingUrl }}">
+                    <b>{{ tweet.socialContext.communityName }}</b>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{% macro render_tweet_header(tweet, template_context = {}) %}
+    {% types {
+        tweet: "Retwitter\\Page\\Common\\Timeline\\MTweet",
+        template_context: "object",
+    } %}
+    {{ _self.render_tweet_header_account_group(tweet) }}
+    {% if template_context.userActions %}
+        <div class="follow-bar">
+            {% import "common/user_actions.twig" as user_actions %}
+            {{ user_actions.render(template_context.userActions) }}
+        </div>
+    {% endif %}
+    {{ _self.render_tweet_time(tweet) }}
+    {{ _self.render_tweet_actions(tweet) }}
+{% endmacro %}
+
+{% macro render_tweet_header_account_group(tweet) %}
+    {% types {
+        tweet_media: "array<Retwitter\\Page\\Common\\Timeline\\MTweetMedia>",
+    } %}
+    {% import "core/macros.twig" as core %}
+    <a class="{{ [
+        'account-group',
+        'js-account-group',
+        'js-action-profile',
+        'js-user-profile-link',
+        'js-nav',
+    ]|join(' ') }}"
+    href="{{ app.router.getProfile(tweet.author.screenName) }}"
+    data-user-id="{{ tweet.userId }}">
+    <img class="avatar js-action-profile-avatar"
+        src="{{ tweet.author.avatarUrl }}"
+        alt="{# Profile avatar accessibility text: I don't know what this would be. #}">
+    <span class="FullNameGroup">
+        <strong class="fullname show-popup-with-id u-textTruncate"
+            data-aria-label-part="">
+            {{ core.text(tweet.author.name) }}
+        </strong>
+        {{ core.user_badges(tweet.author.badges) }}
+        <span class="UserNameBreak">&nbsp;</span>
+    </span>
+    <span class="username u-dir u-textTruncate" dir="ltr"
+        data-aria-label-part="">
+        @<b>{{ tweet.author.screenName }}</b>
+    </span>
+    </a>
+{% endmacro %}
+
+{% macro render_tweet_footer(tweet) %}
+    {% types {
+        tweet_media: "array<Retwitter\\Page\\Common\\Timeline\\MTweetMedia>",
+    } %}
+    <div class="stream-item-footer">
+        <div class="ProfileTweet-actionCountList u-hiddenVisually">
+            {% for tweet_action in tweet.actionStrip.actions %}
+                {{ _self.tweet_action_count(tweet, tweet_action) }}
+            {% endfor %}
+        </div>
+        <div class="ProfileTweet-actionList js-actions" role="group"
+            aria-label="Tweet actions">
+            {% for tweet_action in tweet.actionStrip.actions %}
+                {{ _self.tweet_action_button(tweet, tweet_action) }}
+            {% endfor %}
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_tweet_actions(tweet) %}
+    {% types {
+        tweet_media: "array<Retwitter\\Page\\Common\\Timeline\\MTweetMedia>",
+    } %}
+    <div class="{{ [
+        'ProfileTweet-action',
+        'ProfileTweet-action--more',
+        'js-more-ProfileTweet-actions',
+    ]|join(' ') }}">
+        <div class="dropdown">
+            <button class="{{ [
+                    'ProfileTweet-actionButton',
+                    'u-textUserColorHover',
+                    'dropdown-toggle',
+                    'js-dropdown-toggle',
+                ]|join(' ') }}"
+                type="button" aria-haspopup="true">
+                <div class="IconContainer js-tooltip"
+                    title="{{ app.i18n.get("common", "more_tooltip") }}">
+                    <span class="Icon Icon--caretDownLight Icon--small"></span>
+                    <span class="u-hiddenVisually"></span>
                 </div>
-                <div class="ProfileTweet-actionList js-actions" role="group"
-                    aria-label="Tweet actions">
-                    {% for tweet_action in tweet.actionStrip.actions %}
-                        {{ _self.tweet_action_button(tweet, tweet_action) }}
-                    {% endfor %}
+            </button>
+            <div class="dropdown-menu is-autoCentered">
+                <div class="dropdown-caret">
+                    <div class="caret-outer"></div>
+                    <div class="caret-inner"></div>
                 </div>
+                <ul>
+                    <li class="copy-link-to-tweet js-actionCopyLinkToTweet">
+                        <button class="dropdown-link" type="button">
+                            {{ app.i18n.get("common", "tweet_menu_copy_link") }}
+                        </button>
+                    </li>
+                    <li class="embed-link js-actionEmbedTweet" data-nav="embed_tweet">
+                        <button class="dropdown-link" type="button">
+                            {{ app.i18n.get("common", "tweet_menu_embed") }}
+                        </button>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

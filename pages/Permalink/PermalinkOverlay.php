@@ -22,5 +22,5 @@ namespace Retwitter\Page\Permalink;
 
 class PermalinkOverlay
 {
-    public ?ThreadedConversation $threadedConversation = null;
+    public ?PermalinkConversation $conversation = null;
 }

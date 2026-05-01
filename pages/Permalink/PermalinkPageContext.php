@@ -66,9 +66,9 @@ class PermalinkPageContext extends BasePageContext
         // $this->getJsConfig()->addMixin(new MixinRoutes($routes));
     }
     
-    public function insertThreadedConversation(IThreadedConversationParser $parser): void
+    public function insertThreadedConversation(IPermalinkParser $parser): void
     {
-        $this->permalinkOverlay->threadedConversation = new ThreadedConversation($parser);
+        $this->permalinkOverlay->conversation = new PermalinkConversation($parser);
     }
 
     public function insertUserData(IProfileDataParser $parser): void
@@ -77,6 +77,10 @@ class PermalinkPageContext extends BasePageContext
         {
             $this->info = new MProfileInfo($parser);
             $this->canopy = new MProfileCanopy($parser);
+            
+            // TODO(kawapure): This should probably be made order-independent. For now, it
+            // requires that the threaded conversation data is inserted before user data.
+            $this->permalinkOverlay->conversation->permalinkedTweetCtx->insertUserData($parser);
         }
         else if (ProfileError::Suspended === $parser->getError())
         {

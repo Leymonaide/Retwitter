@@ -219,6 +219,9 @@ class MTweet
         }
     }
 
+    // CONSIDER(kawapure): Rename this method to something like
+    // "getFullTimestampForPresentation" as this is used for the timestamp text at the
+    // bottom of permalinks too.
     public function getTimeTooltipForPresentation(): string
     {
         if (null == $this->createdAt)
