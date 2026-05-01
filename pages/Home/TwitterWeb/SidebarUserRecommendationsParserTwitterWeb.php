@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Home\TwitterWeb;
 
 use Retwitter\ApiSource;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Home\ISidebarUserRecommendationsParser;
 use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
 

@@ -23,7 +23,7 @@ namespace Retwitter\Page\Common\Timeline\Bluesky;
 use DateTime;
 use Rehike\FormattedString;
 use Retwitter\ApiSource;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;

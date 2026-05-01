@@ -23,7 +23,7 @@ namespace Retwitter\Page\Common\Timeline;
 use DateTime;
 use Rehike\FormattedString;
 use Retwitter\IApiSourceProvider;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\Profile\FollowState;
 
 /**

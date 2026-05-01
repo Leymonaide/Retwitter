@@ -1,10 +1,10 @@
 {
-	"previousHash": "2d40eb0453d721cbeafbd9735bc3c6cab0c705a1",
-	"currentRevisionId": 256,
-	"subject": "Report follow and block state to tweet models",
-	"body": "Report follow and block state to tweet models",
+	"previousHash": "01ea0139e2919750a7d5eb92918aac3d0bd162e1",
+	"currentRevisionId": 257,
+	"subject": "Move IBasicProfileInfoDataParser namespace to Common\Profile",
+	"body": "Move IBasicProfileInfoDataParser namespace to Common\Profile",
 	"branch": "master",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1777672830
+	"time": 1777673397
 }

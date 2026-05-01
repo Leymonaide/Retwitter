@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Common\Timeline;
 
 use Rehike\FormattedString;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\MUserBadges;
 use Retwitter\Utils\ParsingUtils;
 

@@ -26,7 +26,7 @@ use Retwitter\Context\AppContext;
 use Retwitter\NitterSourceInfo;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\VerificationType;
 use Retwitter\Url;
 

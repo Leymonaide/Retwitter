@@ -22,7 +22,7 @@ namespace Retwitter\SignIn;
 
 use Rehike\Async\Promise;
 use Retwitter\Context\AppContext;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 
 use function Rehike\Async\async;
 

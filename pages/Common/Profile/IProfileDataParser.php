@@ -22,7 +22,7 @@ namespace Retwitter\Page\Common\Profile;
 
 use DateTime;
 use Rehike\FormattedString;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\VerificationType;
 
 /**

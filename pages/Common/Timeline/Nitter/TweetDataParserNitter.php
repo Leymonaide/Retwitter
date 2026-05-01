@@ -23,7 +23,7 @@ namespace Retwitter\Page\Common\Timeline\Nitter;
 use Rehike\FormattedString;
 use Retwitter\ApiSource;
 use Retwitter\NitterSourceInfo;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use PHPHtmlParser\Dom\Node\AbstractNode;

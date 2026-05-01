@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common;
+namespace Retwitter\Page\Common\Profile;
 
 use DateTime;
 use Retwitter\IApiSourceProvider;

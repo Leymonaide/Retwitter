@@ -24,7 +24,7 @@ use DateTime;
 use Rehike\FormattedString;
 use Rehike\i18n\i18n;
 use Retwitter\ApiSource;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Page\Common\Profile\FollowState;
 use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;

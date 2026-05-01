@@ -22,7 +22,7 @@ namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
 use Rehike\FormattedString;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Utils\ParsingUtils;
 
 class MTweetSocialContext

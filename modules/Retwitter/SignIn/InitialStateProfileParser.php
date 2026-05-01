@@ -30,7 +30,7 @@ use Retwitter\Utils\ParsingUtils;
 use Retwitter\Page\Common\VerificationType;
 use Rehike\ConfigManager\Config;
 use Retwitter\Context\AppContext;
-use Retwitter\Page\Common\IBasicProfileInfoDataParser;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
 use Retwitter\Pipeline;
 use Retwitter\Url;
 
