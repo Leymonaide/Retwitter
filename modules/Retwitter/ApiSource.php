@@ -23,6 +23,12 @@ namespace Retwitter;
 enum ApiSource
 {
     /**
+     * This data does not come from an API source, or the API source is irrelevant, but
+     * an ApiSource is required to fulfill contractual obligations.
+     */
+    case None;
+    
+    /**
      * This data comes from the internal API of the Twitter web service.
      */
     case TwitterWeb;

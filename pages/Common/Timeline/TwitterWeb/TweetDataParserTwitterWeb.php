@@ -29,6 +29,7 @@ use Retwitter\Page\Common\Timeline\ITweetDataParser;
 use Retwitter\Page\Common\Timeline\MTweetSocialContext;
 use Retwitter\Page\Common\Timeline\TweetSocialContext;
 use Retwitter\Page\Common\Timeline\MTweetMedia;
+use Retwitter\Page\Common\Timeline\StubbedTweetDataParser;
 use Retwitter\Page\Common\Timeline\TweetMediaType;
 use Retwitter\Page\Common\Timeline\TweetMediaAvailability;
 use Retwitter\Pipeline;
@@ -266,7 +267,7 @@ class TweetDataParserTwitterWeb implements ITweetDataParser
         // the quoted Tweet is to be tombstoned.
         else if (isset($data->quoted_status_result))
         {
-            return new StubbedTweetDataParserTwitterWeb;
+            return new StubbedTweetDataParser;
         }
         return null;
     }

@@ -1,10 +1,10 @@
 {
-	"previousHash": "cfadd220a1b7e39c6192da823da56f5349cdbc46",
-	"currentRevisionId": 254,
-	"subject": "Move tweet "inverted colours" property to template context",
-	"body": "Move tweet "inverted colours" property to template context",
+	"previousHash": "39f8410166ca7eb7dc136825bc2cdab95495bf43",
+	"currentRevisionId": 255,
+	"subject": "Generalise the stubbed tweet data parser",
+	"body": "Generalise the stubbed tweet data parser",
 	"branch": "master",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1777668887
+	"time": 1777669539
 }

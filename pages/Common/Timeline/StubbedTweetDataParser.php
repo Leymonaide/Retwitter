@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Timeline\TwitterWeb;
+namespace Retwitter\Page\Common\Timeline;
 
 use DateTime;
 use Rehike\FormattedString;
@@ -32,11 +32,11 @@ use Retwitter\Utils\FormattedStringBuilder;
 /**
  * Parser for stubbed Quote Tweets that show up as a tombstone.
  */
-class StubbedTweetDataParserTwitterWeb implements ITweetDataParser
+class StubbedTweetDataParser implements ITweetDataParser
 {
     public function getSourceApi(): ApiSource
     {
-        return ApiSource::TwitterWeb;
+        return ApiSource::None;
     }
 
     public function getIsTombstone(): bool
