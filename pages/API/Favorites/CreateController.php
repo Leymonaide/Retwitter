@@ -35,7 +35,7 @@ class CreateController extends APIController
     {
         return async(function()
         {
-            SignIn::setup();
+            yield SignIn::setup();
 
             if (!isset($_POST["id"]))
             {

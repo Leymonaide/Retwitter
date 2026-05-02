@@ -1,10 +1,10 @@
 {
-	"previousHash": "1fe747915af1ca3942521652900df156f5bf1400",
-	"currentRevisionId": 259,
-	"subject": "Fix API create/destroy favorite controllers",
-	"body": "Fix API create/destroy favorite controllers",
+	"previousHash": "534aa0a880139e59a163bee126ae2dc7c1144d93",
+	"currentRevisionId": 260,
+	"subject": "Wait these return promises",
+	"body": "Wait these return promises",
 	"branch": "master",
 	"committerName": "Pumpkin",
 	"committerEmail": "230778645+lemon-pumpkin-pie@users.noreply.github.com",
-	"time": 1777680117
+	"time": 1777680388
 }
