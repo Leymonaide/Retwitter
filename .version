@@ -1,10 +1,10 @@
 {
-	"previousHash": "64d636ef52601aa627afe7093dff247d1fadeb4f",
-	"currentRevisionId": 262,
-	"subject": "Work on permalinks (working AJAX, fix some mistakes)",
-	"body": "Work on permalinks (working AJAX, fix some mistakes)",
+	"previousHash": "454f07edd4c5c8dbcff9351d6c893ba333ea9dd1",
+	"currentRevisionId": 263,
+	"subject": "Disable Rebug network hooking",
+	"body": "Disable Rebug network hooking",
 	"branch": "master",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1777743045
+	"time": 1777743490
 }

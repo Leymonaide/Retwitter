@@ -108,10 +108,10 @@ rebug.network._setupXhook = function()
  */
 rebug.network._onRebugInit = function()
 {
-    if (window._rebugcfg && window._rebugcfg.CONDENSED === false)
-    {
-        rebug.network._setupXhook();
-    }
+    // if (window._rebugcfg && window._rebugcfg.CONDENSED === false)
+    // {
+    //     rebug.network._setupXhook();
+    // }
 };
 
 rehike.pubsub.subscribe("rebug-init-finish", rebug.network._onRebugInit);
