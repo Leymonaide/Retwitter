@@ -1,10 +1,10 @@
 {
-	"previousHash": "454f07edd4c5c8dbcff9351d6c893ba333ea9dd1",
-	"currentRevisionId": 263,
-	"subject": "Disable Rebug network hooking",
-	"body": "Disable Rebug network hooking",
+	"previousHash": "fc18d100d55ab208a52f7570f70bbd20dac8cabd",
+	"currentRevisionId": 264,
+	"subject": "Restructure the parser for MTimeline/MStream",
+	"body": "Restructure the parser for MTimeline/MStream",
 	"branch": "master",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1777743490
+	"time": 1777747625
 }

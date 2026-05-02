@@ -27,18 +27,26 @@ class MStream
      */
     public array $items;
 
-    // CONSIDER(kawapure): Restructure this into a static function "parse" for consistency.
-    // This will also avoid the need for reflection in the existing static functions, which
-    // currently require it to construct instances without calling the constructor.
-    public function __construct(ITimelineDataParser $parser)
+    public function __construct(?ITimelineDataParser $parser = null)
     {
-        $this->items = $parser->parseAll();
+        if ($parser)
+        {
+            $this->items = $parser->parseAll();
+        }
+        else
+        {
+            $this->items = [];
+        }
     }
     
     public static function createEmpty(): static
     {
-        $refl = new \ReflectionClass(static::class);
-        return $refl->newInstanceWithoutConstructor();
+        return new static();
+    }
+    
+    public static function parse(ITimelineDataParser $parser): static
+    {
+        return new static($parser);
     }
     
     /**
