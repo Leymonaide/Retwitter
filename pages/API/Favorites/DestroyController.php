@@ -25,6 +25,7 @@ use Retwitter\GraphQlRequestParams;
 use Retwitter\Page\API\APIController;
 use Retwitter\RequestEngine\GraphQlRequest;
 use Retwitter\RequestEngine\RequestManager;
+use Retwitter\SignIn\SignIn;
 
 use function Rehike\Async\async;
 
@@ -34,6 +35,8 @@ class DestroyController extends APIController
     {
         return async(function()
         {
+            SignIn::setup();
+
             if (!isset($_POST["id"]))
             {
                 http_response_code(400);
