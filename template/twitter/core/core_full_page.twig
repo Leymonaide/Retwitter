@@ -24,7 +24,10 @@
         <{{"script"}}>{% include "@rehike/rehike/debugger/js/xhook.js" %}</{{"script"}}>
     </head>
     {% set retwitter_body_class %}{% include "core/body_class.twig" %} {% block body_class %}{% endblock %}{% endset %}
-    <body class="{{ retwitter_body_class }}" data-fouc-class-names="swift-loading {% block swift_class_names %}{% endblock %}" dir="{{ app.dir }}">
+    <body class="{{ retwitter_body_class }}{#
+        The "overlay-enabled" class only appears on the HTML body class. It is not included
+        in the JS config.
+        #}{{ app.page.permalinkOverlay ? "overlay-enabled" }}" data-fouc-class-names="swift-loading {% block swift_class_names %}{% endblock %}" dir="{{ app.dir }}">
         <script id="swift_loading_indicator">
             document.body.className = document.body.className + " " + document.body.getAttribute("data-fouc-class-names");
         </script>
@@ -91,10 +94,8 @@
                 <div class="GalleryTweet"></div>
             </div>
         </div>
-        {% if app.page.permalinkOverlay %}
-            {% import "common/permalink.twig" as permalink %}
-            {{ permalink.render(app.page.permalinkOverlay) }}
-        {% endif %}
+        {% import "common/permalink.twig" as permalink %}
+        {{ permalink.render(app.page.permalinkOverlay ?? null) }}
         <div class="modal-overlay"></div>
         {% include "@rehike/rehike/debugger/main.twig" %}
         <input type="hidden" class="swift-boot-module" value="{{ retwitter_g_boot_module }}">

@@ -32,6 +32,7 @@ use Retwitter\Page\Base\RetwitterPageController;
 use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
+use Retwitter\Context\AppContext;
 use Retwitter\Page\Base\ForwardTo404ControllerMixin;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Retwitter\RequestEngine\GraphQlRequest;
@@ -41,6 +42,7 @@ use Retwitter\RequestEngine\NitterRequest;
 use Retwitter\RequestEngine\NitterRequestTest;
 use Retwitter\RequestEngine\RequestManager;
 use Retwitter\SignIn\SignIn;
+use Retwitter\TemplateManager;
 use Retwitter\Url;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
@@ -60,10 +62,21 @@ class PermalinkController
     public function getAsync(): Promise
     {
         return async(function () {
+            // Permalink AJAX navigation isn't facilitated with this mechanism, but I
+            // will keep this call anyway, because it is likely that this functionality
+            // will be restructured in the future to be common to all standard Swift page
+            // controllers via a base class.
             $this->supportPushStateRequests();
             
-            // Permalinks use the profile as a background if they are not loaded via push state.
-            $this->setTemplate("profile");
+            // This is the TRUE AJAX handler:
+            $isAjax = (bool)$this->getRequest()->headers["x-overlay-request"];
+            
+            if ($isAjax)
+            {
+                AppContext::getInstance()->isPushState = true;
+            }
+            
+            $this->setTemplate("permalink");
             
 // Remove once signin is finalized and we're not using test documents
 // that may or may not exist on a developer's local copy of Retwitter.

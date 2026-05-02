@@ -186,116 +186,113 @@ wrapper-profile
 </div>
 {% endmacro %}
 
-{% block header %}
-{% if app.page.canopy %}
-{% set canopy = app.page.canopy %}
+{% macro render_canopy(canopy) %}
 {% import "core/macros.twig" as core %}
 <div class="{{ [
-        'ProfileCanopy',
-        'ProfileCanopy--withNav',
-        'ProfileCanopy--large',
-        'js-variableHeightTopBar',
-    ]|join(' ') }}">
-    <div class="ProfileCanopy-inner">
-        <div class="ProfileCanopy-header u-bgUserColor">
-            <div class="ProfileCanopy-headerBg">
-                <img alt="" src="{{ canopy.banner }}">
-            </div>
-            <div class="AppContainer">
-                <div class="ProfileCanopy-avatar">
-                    <div class="ProfileAvatar">
-                        <a class="ProfileAvatar-container u-block js-tooltip profile-picture"
-                           href="{{ canopy.avatar.url }}"
-                           data-resolved-url-large="{{ canopy.avatar.url }}"
-                           data-url="{{ canopy.avatar.url }}"
-                           target="_blank"
-                           rel="noopener"
-                           title="{{ canopy.avatar.tooltip }}"
-                           >
-                            <img src="{{ canopy.avatar.url }}" alt="{{ canopy.avatar.tooltip }}" class="ProfileAvatar-image">
-                        </a>
-                    </div>
-                </div>
-                <div class="ProfileCanopy-headerPromptAnchor"></div>
-            </div>
+    'ProfileCanopy',
+    'ProfileCanopy--withNav',
+    'ProfileCanopy--large',
+    'js-variableHeightTopBar',
+]|join(' ') }}">
+<div class="ProfileCanopy-inner">
+    <div class="ProfileCanopy-header u-bgUserColor">
+        <div class="ProfileCanopy-headerBg">
+            <img alt="" src="{{ canopy.banner }}">
         </div>
-        <div class="ProfileCanopy-navBar u-boxShadow">
-            <div class="AppContainer">
-                <div class="Grid Grid--withGutter">
-                    <div class="Grid-cell u-size1of3 u-lg-size1of4">
-                        <div class="ProfileCanopy-card" role="presentation">
-                            <div class="ProfileCardMini">
-                                <a class="ProfileCardMini-avatar profile-picture js-tooltip"
-                                   href="{{ canopy.card.avatarUrl }}"
-                                   data-resolved-url-large="{{ canopy.card.avatarUrl }}"
-                                   data-url="{{ canopy.card.avatarUrl }}"
-                                   target="_blank"
-                                   rel="noopener"
-                                   title="{{ core.simple_text(canopy.card.name) }}">
-                                    <img src="{{ canopy.card.avatarUrl }}" alt="{{ core.simple_text(canopy.card.displayName) }}" class="ProfileCardMini-avatarImage"></img>
-                                </a>
-                                <div class="ProfileCardMini-details">
-                                    <div class="ProfileNameTruncated account-group">
-                                        <div class="u-textTruncate u-inlineBlock ProfileNameTruncated-withBadges ProfileNameTruncated-withBadges--1">
-                                            <a href="{{ canopy.card.profileUrl }}" class="fullname ProfileNameTruncated-link u-textInheritColor js-nav">
-                                                {{ core.text(canopy.card.displayName) }}
-                                            </a>
-                                        </div>
-                                        {{ core.user_badges(canopy.card.badges) }}
-                                    </div>
-                                    <div class="ProfileCardMini-screenname">
-                                        <a href="{{ canopy.card.profileUrl }}" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">
-                                            {{ core.username(
-                                                canopy.card.screenName,
-                                                handle_class: [
-                                                    "u-linkComplex-target",
-                                                ],
-                                            ) }}
+        <div class="AppContainer">
+            <div class="ProfileCanopy-avatar">
+                <div class="ProfileAvatar">
+                    <a class="ProfileAvatar-container u-block js-tooltip profile-picture"
+                       href="{{ canopy.avatar.url }}"
+                       data-resolved-url-large="{{ canopy.avatar.url }}"
+                       data-url="{{ canopy.avatar.url }}"
+                       target="_blank"
+                       rel="noopener"
+                       title="{{ canopy.avatar.tooltip }}"
+                       >
+                        <img src="{{ canopy.avatar.url }}" alt="{{ canopy.avatar.tooltip }}" class="ProfileAvatar-image">
+                    </a>
+                </div>
+            </div>
+            <div class="ProfileCanopy-headerPromptAnchor"></div>
+        </div>
+    </div>
+    <div class="ProfileCanopy-navBar u-boxShadow">
+        <div class="AppContainer">
+            <div class="Grid Grid--withGutter">
+                <div class="Grid-cell u-size1of3 u-lg-size1of4">
+                    <div class="ProfileCanopy-card" role="presentation">
+                        <div class="ProfileCardMini">
+                            <a class="ProfileCardMini-avatar profile-picture js-tooltip"
+                               href="{{ canopy.card.avatarUrl }}"
+                               data-resolved-url-large="{{ canopy.card.avatarUrl }}"
+                               data-url="{{ canopy.card.avatarUrl }}"
+                               target="_blank"
+                               rel="noopener"
+                               title="{{ core.simple_text(canopy.card.name) }}">
+                                <img src="{{ canopy.card.avatarUrl }}" alt="{{ core.simple_text(canopy.card.displayName) }}" class="ProfileCardMini-avatarImage"></img>
+                            </a>
+                            <div class="ProfileCardMini-details">
+                                <div class="ProfileNameTruncated account-group">
+                                    <div class="u-textTruncate u-inlineBlock ProfileNameTruncated-withBadges ProfileNameTruncated-withBadges--1">
+                                        <a href="{{ canopy.card.profileUrl }}" class="fullname ProfileNameTruncated-link u-textInheritColor js-nav">
+                                            {{ core.text(canopy.card.displayName) }}
                                         </a>
                                     </div>
+                                    {{ core.user_badges(canopy.card.badges) }}
+                                </div>
+                                <div class="ProfileCardMini-screenname">
+                                    <a href="{{ canopy.card.profileUrl }}" class="ProfileCardMini-screennameLink u-linkComplex js-nav u-dir" dir="ltr">
+                                        {{ core.username(
+                                            canopy.card.screenName,
+                                            handle_class: [
+                                                "u-linkComplex-target",
+                                            ],
+                                        ) }}
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="Grid-cell u-size2of3 u-lg-size3of4">
-                        <div class="ProfileCanopy-nav">
-                            <div class="ProfileNav" role="navigation" data-user-id="{{ canopy.id }}">
-                                <ul class="ProfileNav-list">
-                                    {% for stat in canopy.stats %}
-                                    <li class="ProfileNav-item ProfileNav-item--{{ stat.id }} {{ stat.active ? "is-active" }}">
-                                        <a {% if not stat.active %}href="{{ stat.url }}" {% endif %}class="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav"
-                                            title="{{ stat.tooltip }}">
-                                            <span class="ProfileNav-label" aria-hidden="true">{{ stat.label }}</span>
-                                            <span class="u-hiddenVisually">{{ stat.active ? stat.activeLabel : stat.label }}</span>
-                                            <span class="ProfileNav-value" data-count="{{ stat.count }}" data-is-compact="false">
-                                                {{ stat.value }}
-                                            </span>
-                                        </a>
-                                    </li>
-                                    {% endfor %}
-                                    <li class="{{ [
-                                            'ProfileNav-item',
-                                            'ProfileNav-item--more',
-                                            'dropdown',
-                                            'is-hidden',
-                                        ]|join(' ') }}">
-                                        {# TODO: Used for overflow. The current implementation is to get
-                                           JS loaded at all. #}
-                                    </li>
-                                    <li class="{{ [
-                                            'ProfileNav-item',
-                                            'ProfileNav-item--userActions',
-                                            'u-floatRight',
-                                            'u-textRight',
-                                            'with-rightCaret',
-                                        ]|join(' ') }}">
-                                        <div class="UserActions u-textLeft">
-                                            {% from "common/user_actions.twig" import render as user_actions %}
-                                            {{ user_actions(canopy.userActions) }}
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
+                </div>
+                <div class="Grid-cell u-size2of3 u-lg-size3of4">
+                    <div class="ProfileCanopy-nav">
+                        <div class="ProfileNav" role="navigation" data-user-id="{{ canopy.id }}">
+                            <ul class="ProfileNav-list">
+                                {% for stat in canopy.stats %}
+                                <li class="ProfileNav-item ProfileNav-item--{{ stat.id }} {{ stat.active ? "is-active" }}">
+                                    <a {% if not stat.active %}href="{{ stat.url }}" {% endif %}class="ProfileNav-stat ProfileNav-stat--link u-borderUserColor u-textCenter js-tooltip js-nav"
+                                        title="{{ stat.tooltip }}">
+                                        <span class="ProfileNav-label" aria-hidden="true">{{ stat.label }}</span>
+                                        <span class="u-hiddenVisually">{{ stat.active ? stat.activeLabel : stat.label }}</span>
+                                        <span class="ProfileNav-value" data-count="{{ stat.count }}" data-is-compact="false">
+                                            {{ stat.value }}
+                                        </span>
+                                    </a>
+                                </li>
+                                {% endfor %}
+                                <li class="{{ [
+                                        'ProfileNav-item',
+                                        'ProfileNav-item--more',
+                                        'dropdown',
+                                        'is-hidden',
+                                    ]|join(' ') }}">
+                                    {# TODO: Used for overflow. The current implementation is to get
+                                       JS loaded at all. #}
+                                </li>
+                                <li class="{{ [
+                                        'ProfileNav-item',
+                                        'ProfileNav-item--userActions',
+                                        'u-floatRight',
+                                        'u-textRight',
+                                        'with-rightCaret',
+                                    ]|join(' ') }}">
+                                    <div class="UserActions u-textLeft">
+                                        {% from "common/user_actions.twig" import render as user_actions %}
+                                        {{ user_actions(canopy.userActions) }}
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -303,6 +300,12 @@ wrapper-profile
         </div>
     </div>
 </div>
+</div>
+{% endmacro %}
+
+{% block header %}
+{% if app.page.canopy %}
+{{ _self.render_canopy(app.page.canopy) }}
 {% endif %}
 {% endblock %}
 

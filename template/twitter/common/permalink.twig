@@ -16,69 +16,101 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
 #}
 
+{# We use a null data parameter to represent the empty overlay used on all standard pages
+   other than the cold-loaded permalink page. #}
 {% macro render(data) %}
+    {% types {
+        data: "Retwitter\\Page\\Permalink\\PermalinkOverlay|null",
+    } %}
+    <div id="permalink-overlay" class="{{ [
+        'PermalinkOverlay',
+        'PermalinkOverlay-with-background',
+        data is not null ? 'load-at-boot',
+    ]|join(' ') }}">
+        <div class="PermalinkProfile-dismiss modal-close-fixed">
+            <span class="Icon Icon--close"></span>
+        </div>
+        {# TODO: The buttons #}
+        {% if data is not null %}
+            {{ _self.render_cold_loaded_permalink_wrapper(data) }}
+        {% else %}
+            {# Placeholder permalink overlay content: #}
+            <div class="PermalinkOverlay-modal">
+                <div class="PermalinkOverlay-spinnerContainer u-hidden">
+                    <div class="PermalinkOverlay-spinner"></div>
+                </div>
+                <div class="PermalinkOverlay-content">
+                    <div class="PermalinkOverlay-body"></div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endmacro %}
+
+{# Rendered directly in the case of AJAX requests. #}
+{% macro render_overlay_body(data) %}
     {% types {
         data: "Retwitter\\Page\\Permalink\\PermalinkOverlay",
     } %}
     {% import "common/timeline.twig" as timeline %}
-    <div id="permalink-overlay" class="{{ [
-        'PermalinkOverlay',
-        'PermalinkOverlay-with-background',
-        'load-at-boot',
-    ]|join(' ') }}">
-        {# TODO: The buttons #}
-        <div id="permalink-overlay-dialog" class="PermalinkOverlay-modal" role="dialog" aria-labelledby="permalink-overlay-header">
-            <div tabindex="0" class="js-first-tabstop"></div>
-            <div class="PermalinkOverlay-content" role="document">
-                <div data-background-path="/i/status/1"{# temporary #}
-                    class="PermalinkOverlay-body">
-                    <div class="{{ [
-                            'permalink-container',
-                            'permalink-container--withArrows',
-                        ]|join(' ') }}" style="opacity: 1">
-                        {# PermalinkProfile #}
-                        
-                        {# TODO: Self-threads have the classes "self-thread-permalink-with-descendant" and
-                           "self-thread-permalink". These classes are responsible for handling the drawing
-                           of the line connecting the tweets (RWeb self-threads lack this design) #}
-                        <div class="{{ [
-                                'permalink',
-                                'light-inline-actions',
-                                'stream-uncapped',
-                                'has-replies',
-                                'original-permalink-page',
-                            ]|join(' ') }}" role="main">
-                            {# TweetArrows #}
-                            {# in reply tos #}
-                            <div class="permalink-inner permalink-tweet-container">
-                                {{ _self.render_permalink_tweet(
-                                    data.conversation.permalinkedTweetCtx.tweet, {
-                                        isLoggedIn: app.isLoggedIn(),
-                                        isPermalinkTweet: true,
-                                        openedTweet: true,
-                                        userActions: data.conversation.permalinkedTweetCtx.userActions,
-                                    }) }}
-                            </div>
-                            <div data-component-context="replies" class="replies-to permalink-inner permalink-replies">
-                                <div class="tweets-wrapper">
-                                    <div class="ThreadedDescendents" id="descendents">
-                                        <div data-min-position="" data-max-position="" class="stream-container">
-                                            {{ timeline.render_stream(
-                                                data.conversation.repliesStream, {
-                                                    streamComponentContext: "replies",
-                                                    render_stream_item: {
-                                                        context: _self,
-                                                        macro_name: "_render_permalink_stream_item",
-                                                    },
-                                                }
-                                            ) }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+    <div class="{{ [
+        'permalink-container',
+        'permalink-container--withArrows',
+    ]|join(' ') }}" style="opacity: 1">
+        {# PermalinkProfile #}
+
+        {# TODO: Self-threads have the classes "self-thread-permalink-with-descendant" and
+        "self-thread-permalink". These classes are responsible for handling the drawing
+        of the line connecting the tweets (RWeb self-threads lack this design) #}
+        <div class="{{ [
+                'permalink',
+                'light-inline-actions',
+                'stream-uncapped',
+                'has-replies',
+                'original-permalink-page',
+            ]|join(' ') }}" role="main">
+            {# TweetArrows #}
+            {# in reply tos #}
+            <div class="permalink-inner permalink-tweet-container">
+                {{ _self.render_permalink_tweet(
+                    data.conversation.permalinkedTweetCtx.tweet, {
+                        isLoggedIn: app.isLoggedIn(),
+                        isPermalinkTweet: true,
+                        openedTweet: true,
+                        userActions: data.conversation.permalinkedTweetCtx.userActions,
+                    }) }}
+            </div>
+            <div data-component-context="replies" class="replies-to permalink-inner permalink-replies">
+                <div class="tweets-wrapper">
+                    <div class="ThreadedDescendents" id="descendents">
+                        <div data-min-position="" data-max-position="" class="stream-container">
+                            {{ timeline.render_stream(
+                                data.conversation.repliesStream, {
+                                    streamComponentContext: "replies",
+                                    render_stream_item: {
+                                        context: _self,
+                                        macro_name: "_render_permalink_stream_item",
+                                    },
+                                }
+                            ) }}
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+{% endmacro %}
+
+{% macro render_cold_loaded_permalink_wrapper(data) %}
+    {% types {
+        data: "Retwitter\\Page\\Permalink\\PermalinkOverlay",
+    } %}
+    <div id="permalink-overlay-dialog" class="PermalinkOverlay-modal" role="dialog" aria-labelledby="permalink-overlay-header">
+        <div tabindex="0" class="js-first-tabstop"></div>
+        <div class="PermalinkOverlay-content" role="document">
+            <div data-background-path="/camocamo_d"{# temporary #}
+                class="PermalinkOverlay-body">
+                {{ _self.render_overlay_body(data) }}
             </div>
         </div>
     </div>

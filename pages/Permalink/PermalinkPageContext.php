@@ -23,6 +23,7 @@ namespace Retwitter\Page\Permalink;
 use Rehike\ConfigManager\Config;
 use Rehike\i18n\i18n;
 use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
+use Retwitter\Context\AppContext;
 use Retwitter\Page\Base\BasePageContext;
 use Retwitter\Page\Base\JsConfig\MixinRoutes;
 use Retwitter\Page\Base\JsConfig\RoutesMap;
@@ -30,6 +31,7 @@ use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Page\Profile\MProfileInfo;
 
 use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Page\Permalink\Model\JsConfig\MPermalinkJsConfig;
 use Retwitter\Page\Profile\MProfileCanopy;
 
 /**
@@ -39,16 +41,9 @@ class PermalinkPageContext extends BasePageContext
 {
     /**
      * Provides profile information.
-     * 
-     * This member must be named "info", same as the ProfilePageContext, as the same template
-     * is used between both pages.
      */
-    public ?MProfileInfo $info = null;
-    
-    /**
-     * This is just needed for the markup of the profile to render correctly.
-     */
-    public ?MProfileCanopy $canopy = null;
+    public ?MProfileInfo $backgroundProfileInfo = null;
+    public ?MProfileCanopy $backgroundProfileCanopy = null;
     
     public PermalinkOverlay $permalinkOverlay;
     
@@ -61,10 +56,8 @@ class PermalinkPageContext extends BasePageContext
         $this->i18n = i18n::getNamespace("profile");
         
         $this->permalinkOverlay = new PermalinkOverlay();
-
-        // $routes = new RoutesMap();
-        // $routes->addRoute("/", "profile");
-        // $this->getJsConfig()->addMixin(new MixinRoutes($routes));
+        
+        $this->getJsConfig()->addMixin(new MPermalinkJsConfig());
     }
     
     public function insertThreadedConversation(IPermalinkParser $parser): void
@@ -79,11 +72,18 @@ class PermalinkPageContext extends BasePageContext
         
         if (ProfileError::Success === $parser->getError())
         {
-            $this->info = new MProfileInfo($parser);
-            $this->canopy = new MProfileCanopy($parser);
+            $this->backgroundProfileInfo = new MProfileInfo($parser);
+            $this->backgroundProfileCanopy = new MProfileCanopy($parser);
             
             // The profile data parser will always be available.
             $this->insertUserDataToPermalinkedTweetIfAvailable();
+            
+            $routes = new RoutesMap();
+            $routes->addRoute(
+                AppContext::getInstance()->router->getProfile($parser->getUsername()),
+                "profile"
+            );
+            $this->getJsConfig()->addMixin(new MixinRoutes($routes));
         }
         else if (ProfileError::Suspended === $parser->getError())
         {

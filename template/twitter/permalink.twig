@@ -1,0 +1,90 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025-2026 Leymonaide.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+
+{# Permalink pages are based on the profile page. #}
+{% extends "profile.twig" %}
+
+{% set retwitter_g_js_page_name = "permalink" %}
+{% set retwitter_g_js_page_context = null %}
+{% set retwitter_g_boot_module = "app/pages/permalink" %}
+
+{% block body_class %}
+PermalinkPage
+{% endblock %}
+
+{% block page_class %}
+{{ parent() }}
+wrapper
+wrapper-permalink
+{% endblock %}
+
+{% block content %}
+    {% if app.isPushState %}
+        {# If we're rendering through AJAX, then we want to render the overlay contents
+           here. The logic to render the permalink overlay container is skipped, so it's
+           okay. #}
+        {% import "common/permalink.twig" as permalink %}
+        {{ permalink.render_overlay_body(app.page.permalinkOverlay) }}
+    {% else %}
+        <a class="PermalinkProfile-overlay js-nav" href="{{ app.page.backgroundProfileInfo.profileUrl }}">
+            <span class="visuallyhidden">{# jack's profile #}</span>
+        </a>
+        <div class="PermalinkProfile-background without-banner">
+            {% import "profile.twig" as profile %}
+            {{ profile.render_canopy(app.page.backgroundProfileCanopy) }}
+            {{ profile.heading(null) }}
+            {% embed "common/three_col_page.twig" %}
+                {# Of course, this requires a terrible hack to account for the lack of consistency
+                   between literally any part of Macaw-Swift. #}
+                {% set no_app_content = true %}
+            
+                {% block col_one_content %}
+                    {# Embed tags have janky scoping. #}
+                    {% from "profile.twig" import profile_info %}
+                    {{ profile_info(app.page.backgroundProfileInfo) }}
+                {% endblock %}
+
+                {% block col_two_extra_attributes %}
+                    {% if app.page.content.protectedTimeline %}
+                        {# This element doesn't exist in the case of this page, and this is fine.
+                           This is exactly what Macaw-Swift did. #}
+                        data-test-selector="ProfileTimeline"
+                    {% endif %}
+                {% endblock %}
+
+                {% block col_two_content %}
+                    {# Intentionally left blank. #}
+                {% endblock %}
+
+                {% block col_three_content %}
+                {% set sidebar = app.page.sidebar %}
+                <div class="Grid Grid--withGutter">
+                    <div class="Grid-cell">
+                        <div class="ProfileSidebar ProfileSidebar--withRightAlignment">
+                            <div class="MoveableModule">
+                                {% include "common/sidebar_modules.twig" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endblock %}
+            {% endembed %}
+        </div>
+        {# Profile-specific styles go here. #}
+    {% endif %}
+{% endblock %}

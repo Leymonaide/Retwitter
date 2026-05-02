@@ -71,7 +71,7 @@ class RetwitterPageController extends BaseController
     public function supportPushStateRequests(): void
     {
         AppContext::getInstance()->isPushState =
-            (bool)($this->getRequest()->headers->x_push_state_request) ?? false;
+            (bool)($this->getRequest()->headers["x-push-state-request"]) ?? false;
     }
     
     public function disallowPushStateRequests(): void
