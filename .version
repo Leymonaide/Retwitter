@@ -1,10 +1,10 @@
 {
-	"previousHash": "534aa0a880139e59a163bee126ae2dc7c1144d93",
-	"currentRevisionId": 260,
-	"subject": "Wait these return promises",
-	"body": "Wait these return promises",
+	"previousHash": "91e689ef3f84a8bcfdc223dd5b6cef97841bb4f6",
+	"currentRevisionId": 261,
+	"subject": "Fix up IDE type errors from RequestMetadata",
+	"body": "Fix up IDE type errors from RequestMetadata",
 	"branch": "master",
 	"committerName": "Pumpkin",
 	"committerEmail": "230778645+lemon-pumpkin-pie@users.noreply.github.com",
-	"time": 1777680388
+	"time": 1777681058
 }
