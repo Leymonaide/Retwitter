@@ -1,10 +1,10 @@
 {
-	"previousHash": "fc18d100d55ab208a52f7570f70bbd20dac8cabd",
-	"currentRevisionId": 264,
-	"subject": "Restructure the parser for MTimeline/MStream",
-	"body": "Restructure the parser for MTimeline/MStream",
+	"previousHash": "e13daf670bb9c0dce86ae7183362601f1b2a627a",
+	"currentRevisionId": 265,
+	"subject": "Fix permalink template config and Japanese time formatting",
+	"body": "Fix permalink template config and Japanese time formatting",
 	"branch": "master",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1777747625
+	"time": 1777748073
 }

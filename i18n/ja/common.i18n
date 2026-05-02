@@ -17,9 +17,9 @@
 # Date/Time localization constants:
 dt_ymd: "Y年m月j日" # Year, month, and day all shown, i.e. "1 Mar 2018".
 dt_ym: "m月j日" # Year and month shown, i.e. "May 9"
-dt_h_template: "%sh時間" # Up to "23h"
-dt_m_template: "%sm分" # Up to "59m"
-dt_s_template: "%ss秒" # Up to "59s"
+dt_h_template: "%s時間" # Up to "23h"
+dt_m_template: "%s分" # Up to "59m"
+dt_s_template: "%s秒" # Up to "59s"
 dt_hm: "g:i A" # Hours and minutes shown, i.e. "5:06 PM". TODO.
 
 verified_tooltip: "認証済みアカウント"
