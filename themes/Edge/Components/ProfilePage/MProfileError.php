@@ -18,25 +18,14 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
-use Rehike\i18n\i18n;
-use Retwitter\Context\AppContext;
-use Retwitter\Page\Common\UserActions\MUserActions;
-use Retwitter\Page\Common\Profile\IProfileDataParser;
-
-class MProfileCanopy
+class MProfileError
 {
-    public ?string $banner = null;
-    public MProfileAvatar $avatar;
-    public MProfileCanopyCard $card;
-    public MUserActions $userActions;
-
-    public function __construct(IProfileDataParser $parser)
+    public function __construct(
+        public string $title,
+        public string $message,
+    )
     {
-        $this->banner = $parser->getBannerUrl();
-        $this->avatar = new MProfileAvatar($parser);
-        $this->card = new MProfileCanopyCard($parser);
-        $this->userActions = new MUserActions($parser);
     }
 }

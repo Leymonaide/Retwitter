@@ -1,7 +1,7 @@
 <?php
 /* 
  * This file is part of the Retwitter project.
- * Copyright (c) 2025 Leymonaide.
+ * Copyright (c) 2025-2026 Leymonaide.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,23 +18,11 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\ThemeManager;
 
-use Rehike\i18n\i18n;
+use Retwitter\Page\Profile\Transtheme\IThemeProfileComponentFactory;
 
-class MProfileHeadingTab
+interface IThemeModelFactory
 {
-    public string $activeLabel;
-
-    public function __construct(
-        public string $label,
-        public string $url,
-        public string $tab,
-        public bool $active,
-        public bool $openSignup = false
-    )
-    {
-        $i18n = i18n::getNamespace("profile");
-        $this->activeLabel = $i18n->format("tab_active", $label);
-    }
+    public function getProfileComponentFactory(): IThemeProfileComponentFactory;
 }

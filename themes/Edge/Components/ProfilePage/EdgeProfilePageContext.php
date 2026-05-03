@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
 use Rehike\ConfigManager\Config;
 use Rehike\i18n\i18n;
@@ -33,11 +33,13 @@ use Retwitter\Page\Common\Profile\ProfileError;
 use Retwitter\Page\Profile\Model\JsConfig\MProfileUserInfo;
 
 use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Page\Profile\ProfileTab;
+use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
 
 /**
  * Twitter profile model.
  */
-class ProfilePageContext extends BasePageContext
+class EdgeProfilePageContext extends BasePageContext implements IThemeProfilePageContext
 {
     public ProfileTab $tab;
     public bool $isGridTimeline = false;

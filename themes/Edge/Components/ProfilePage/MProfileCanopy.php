@@ -18,31 +18,25 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
-use Rehike\FormattedString;
-use Retwitter\Page\Common\MUserBadges;
-use Retwitter\Utils\ParsingUtils;
-
+use Rehike\i18n\i18n;
+use Retwitter\Context\AppContext;
+use Retwitter\Page\Common\UserActions\MUserActions;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
-use Retwitter\Url;
 
-class MProfileCanopyCard
+class MProfileCanopy
 {
-    public string $avatarUrl;
-    public FormattedString $displayName;
-    public Url $profileUrl;
-    public string $screenName;
-    public MUserBadges $badges;
+    public ?string $banner = null;
+    public MProfileAvatar $avatar;
+    public MProfileCanopyCard $card;
+    public MUserActions $userActions;
 
     public function __construct(IProfileDataParser $parser)
     {
-        $this->avatarUrl = $parser->getAvatarUrl() ?? "";
-        $this->screenName = $parser->getUsername() ?? "";
-        $this->profileUrl = $parser->getProfileUrl();
-        $this->displayName = ParsingUtils::formatEmojis(
-            $parser->getDisplayName() ?? $this->screenName
-        );
-        $this->badges = new MUserBadges($parser);
+        $this->banner = $parser->getBannerUrl();
+        $this->avatar = new MProfileAvatar($parser);
+        $this->card = new MProfileCanopyCard($parser);
+        $this->userActions = new MUserActions($parser);
     }
 }

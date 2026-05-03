@@ -18,14 +18,29 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
-class MProfileError
+use Rehike\FormattedString;
+use Rehike\i18n\i18n;
+use Retwitter\Utils\FormattedStringBuilder;
+use Retwitter\Page\Common\Profile\IProfileUrlParser;
+
+class MProfileUrl
 {
-    public function __construct(
-        public string $title,
-        public string $message,
-    )
+    public readonly string $displayUrl;
+    public readonly string $url;
+    public readonly FormattedString $formattedString;
+
+    public function __construct(IProfileUrlParser $parser)
     {
+        $this->displayUrl = $parser->getDisplayUrl();
+        $this->url = $parser->getTargetUrl();
+
+        $fsb = new FormattedStringBuilder();
+        $run = $fsb->createRunBuilder();
+        $run->text = $this->displayUrl;
+        $run->url = $this->url;
+        $fsb->addRunFromBuilder($run);
+        $this->formattedString = $fsb->build();
     }
 }

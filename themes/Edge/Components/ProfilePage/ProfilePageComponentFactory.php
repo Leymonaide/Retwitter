@@ -1,7 +1,7 @@
 <?php
 /* 
  * This file is part of the Retwitter project.
- * Copyright (c) 2025 Leymonaide.
+ * Copyright (c) 2025-2026 Leymonaide.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,20 +18,16 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
-class MProfileEmptyModule
+use Retwitter\Page\Profile\ProfileTab;
+use Retwitter\Page\Profile\Transtheme\IThemeProfileComponentFactory;
+use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
+
+class ProfilePageComponentFactory implements IThemeProfileComponentFactory
 {
-    /**
-     * We provide string IDs instead of actual text because we
-     * need to format the username into the header text.
-     */
-    public function __construct(
-        public string $username,
-        public string $headerStringId,
-        public string $bodyStringId,
-    )
+    public function createProfileThemeContext(ProfileTab $tab): IThemeProfilePageContext
     {
-
+        return new EdgeProfilePageContext($tab);
     }
 }

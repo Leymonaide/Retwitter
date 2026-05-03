@@ -18,32 +18,20 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
-use Rehike\FormattedString;
-use Rehike\i18n\i18n;
-use Retwitter\Utils\NumberFormat;
-use Retwitter\Utils\ParsingUtils;
-
-class MProfileCanopyStat
+class MProfileEmptyModule
 {
-    public string $value;
-    public string $tooltip;
-    public string $activeLabel;
-
+    /**
+     * We provide string IDs instead of actual text because we
+     * need to format the username into the header text.
+     */
     public function __construct(
-        public string $id,
-        public string $label,
-        public int $count,
-               string $tooltip,
-        public string $url,
-        public bool $active = false,
+        public string $username,
+        public string $headerStringId,
+        public string $bodyStringId,
     )
     {
-        $i18n = i18n::getNamespace("profile");
 
-        $this->value = NumberFormat::shorten($this->count);
-        $this->tooltip = sprintf($tooltip, number_format($this->count));
-        $this->activeLabel = $i18n->format("tab_active", $this->label);
     }
 }

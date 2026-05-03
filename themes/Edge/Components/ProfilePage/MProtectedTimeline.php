@@ -18,24 +18,16 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
-class MProfileHeading
+/**
+ * The timeline view for private accounts.
+ */
+class MProtectedTimeline
 {
-    /**
-     * @var MProfileHeadingTab[]
-     */
-    public array $tabs = [];
-
     public function __construct(
-        public string $title,
-        public bool   $noFill = false,
+        public readonly string $username,
     )
     {
-    }
-
-    public function addTab(MProfileHeadingTab $tab): void
-    {
-        $this->tabs[] = $tab;
     }
 }

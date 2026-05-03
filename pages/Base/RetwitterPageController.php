@@ -33,7 +33,7 @@ class RetwitterPageController extends BaseController
     /**
      * Stores all information that is sent to Twig for rendering the page.
      */
-    private BasePageContext $pageContext;
+    private object $pageContext;
 
     /**
      * Defines the default page template.
@@ -43,12 +43,12 @@ class RetwitterPageController extends BaseController
      */
     private string $template = "";
     
-    public function getPageContext(): BasePageContext
+    public function getPageContext(): object
     {
         return $this->pageContext;
     }
 
-    public function setPageContext(BasePageContext $context): void
+    public function setPageContext(object $context): void
     {
         $this->pageContext = $context;
         AppContext::getInstance()->page = $this->pageContext;

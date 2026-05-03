@@ -18,16 +18,19 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
-/**
- * The timeline view for private accounts.
- */
-class MProtectedTimeline
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Utils\ImageUtils;
+
+class MProfileAvatar
 {
-    public function __construct(
-        public readonly string $username,
-    )
+    public string $url;
+    public string $tooltip;
+
+    public function __construct(IProfileDataParser $parser)
     {
+        $this->url = ImageUtils::resize($parser->getAvatarUrl() ?? "", "400x400");
+        $this->tooltip = $parser->getDisplayName() ?? "";
     }
 }

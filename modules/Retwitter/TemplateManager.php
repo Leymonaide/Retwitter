@@ -7,6 +7,7 @@ use Retwitter\Context\AppContext;
 
 use Twig\TwigFunction, Twig\TwigFilter;
 use Rehike\ControllerV2\Core as ControllerV2;
+use Retwitter\ThemeManager\ThemeManager;
 use Twig\Extension\StringLoaderExtension;
 
 /**
@@ -32,22 +33,7 @@ class TemplateManager
 
     public static function __initStatic()
     {
-        $defaultViewsDir = "template/twitter";
-        $rehikeViewsDir = "template/hitchhiker";
-
-        $fileSystemLoader = new \Twig\Loader\FilesystemLoader();
-        
-        $templateDirs = [];
-
-        // Add default (no extensions) template paths:
-        $fileSystemLoader->addPath(
-            $_SERVER["DOCUMENT_ROOT"] . "/" . $rehikeViewsDir,
-            "rehike"
-        );
-
-        $fileSystemLoader->addPath(
-            $_SERVER["DOCUMENT_ROOT"] . "/" . $defaultViewsDir
-        );
+        $fileSystemLoader = self::createTwigFileSystemLoader();
 
         self::$twig = new \Twig\Environment(
             $fileSystemLoader,
@@ -57,6 +43,40 @@ class TemplateManager
             ]
         );
         self::$twig->addExtension(new StringLoaderExtension());
+    }
+    
+    public static function reloadTemplatesLoader(): void
+    {
+        $fileSystemLoader = self::createTwigFileSystemLoader();
+        self::$twig->setLoader($fileSystemLoader);
+    }
+    
+    private static function createTwigFileSystemLoader(): \Twig\Loader\FilesystemLoader
+    {
+        $rehikeViewsDir = "template/hitchhiker";
+        $defaultThemeViewsDir = ThemeManager::getThemePath() . "/"
+            . ThemeManager::getTheme()->getTemplatesPath();
+        
+        $fileSystemLoader = new \Twig\Loader\FilesystemLoader();
+        
+        $templateDirs = [];
+
+        // Add default (no extensions) template paths:
+        $fileSystemLoader->addPath(
+            $_SERVER["DOCUMENT_ROOT"] . "/" . $rehikeViewsDir,
+            "rehike"
+        );
+        
+        $fileSystemLoader->addPath(
+            $_SERVER["DOCUMENT_ROOT"] . "/" . $defaultThemeViewsDir,
+            ThemeManager::getTheme()->getTemplatesNamespace()
+        );
+
+        $fileSystemLoader->addPath(
+            $_SERVER["DOCUMENT_ROOT"] . "/" . $defaultThemeViewsDir
+        );
+        
+        return $fileSystemLoader;
     }
 
     /**

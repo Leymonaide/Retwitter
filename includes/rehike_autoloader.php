@@ -38,7 +38,8 @@ class Autoloader
             self::fileExists($f = "modules/generated/$PATH.php") ||
             self::mapPrefix($PATH, "Rehike/Model/Rehike", "models/Rehike", $f) ||
             self::mapPrefix($PATH, "Retwitter/Model/", "models/", $f) ||
-            self::mapPrefix($PATH, "Retwitter/Page/", "pages/", $f)
+            self::mapPrefix($PATH, "Retwitter/Page/", "pages/", $f) ||
+            self::mapPrefix($PATH, "Retwitter/Theme/", "themes/", $f)
         )
         {
             self::tryImportClass($f, $class);

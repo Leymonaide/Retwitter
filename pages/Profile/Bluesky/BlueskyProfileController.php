@@ -30,6 +30,7 @@ use Retwitter\Page\Profile\ProfilePageContext;
 use Retwitter\RequestEngine\BlueskyRequest;
 use Retwitter\RequestEngine\RequestManager;
 use Retwitter\SignIn\SignIn;
+use Retwitter\ThemeManager\ThemeManager;
 use Retwitter\Url;
 use Retwitter\Utils\ParsingUtils;
 use UnexpectedValueException;
@@ -73,7 +74,10 @@ class BlueskyProfileController
             $tab = BlueskyProfileTab::tryFrom($tab)
                 ?? BlueskyProfileTab::Default;
             
-            $context = new ProfilePageContext(
+            $theme = ThemeManager::getTheme();
+            $themeProfileFactory = $theme->getModelFactory()->getProfileComponentFactory();
+            
+            $context = $themeProfileFactory->createProfileThemeContext(
                 tab: $tab->toProfileTab(),
             );
             $this->setPageContext($context);

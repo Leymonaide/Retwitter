@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Profile;
+namespace Retwitter\Theme\Edge\Components\ProfilePage;
 
 use Rehike\i18n\i18n;
 use Retwitter\Context\AppContext;
@@ -26,6 +26,7 @@ use Retwitter\Page\Common\Timeline\ITimelineDataParser;
 use Retwitter\Page\Common\Timeline\MTimeline;
 
 use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Page\Profile\ProfileTab;
 
 class MProfileContent
 {

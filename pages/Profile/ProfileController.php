@@ -40,6 +40,7 @@ use Retwitter\RequestEngine\NitterRequest;
 use Retwitter\RequestEngine\NitterRequestTest;
 use Retwitter\RequestEngine\RequestManager;
 use Retwitter\SignIn\SignIn;
+use Retwitter\ThemeManager\ThemeManager;
 use Retwitter\Url;
 use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
@@ -49,7 +50,7 @@ use function Rehike\Async\async;
 use const Retwitter\Constants\FEATURE_SIGNIN;
 use const Retwitter\Constants\TEST_SIGNIN;
 
-const PROFILE_TEST_LOCAL = false;
+const PROFILE_TEST_LOCAL = true;
 const PROFILE_TEST_NITTER = false &&!TEST_SIGNIN;
 
 enum ProfileControllerRequestTags : string
@@ -86,7 +87,10 @@ if (TEST_SIGNIN || FEATURE_SIGNIN)
             // profiles without any tweets.
             $tab = ProfileTab::tryFrom($tab) ?? ProfileTab::RecentTweets;
             
-            $context = new ProfilePageContext(
+            $theme = ThemeManager::getTheme();
+            $themeProfileFactory = $theme->getModelFactory()->getProfileComponentFactory();
+            
+            $context = $themeProfileFactory->createProfileThemeContext(
                 tab: $tab,
             );
             $this->setPageContext($context);
