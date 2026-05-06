@@ -1,0 +1,34 @@
+{% macro guide_item(id, label, href, selected) %}
+<div id="guide-item-{{id}}" class="guide-item{{id == selected ? ' guide-item-selected'}}">
+   <a class="guide-item-inner spf-link" href="{{href}}">
+      <span class="guide-icon-container">
+         <span class="guide-icon guide-icon-{{id}}"></span>
+      </span>
+      <span class="guide-label">{{label}}</span>
+   </a>
+   <span class="arrow-outer"><span class="arrow-inner"></span></span>
+</div>
+{% endmacro %}
+
+<div id="guide">
+   {{ _self.guide_item("home", "Home", '/', guideSelectedItem) }}
+   <div id="guide-item-profile" class="guide-item">
+      <a class="guide-item-inner spf-link" href="/profile">
+         <span class="guide-icon-container">
+            <span class="guide-icon guide-icon-profile"></span>
+         </span>
+         <span class="guide-label">Profile</span>
+      </a>
+      <span class="image-arrow">
+         <span class="image-arrow-top">
+            <span class="image-arrow-top-outer"></span>
+         </span>
+         <span class="image-arrow-bottom">
+            <span class="image-arrow-bottom-outer"></span>
+         </span>
+      </span>
+   </div>
+   {{ _self.guide_item("explore", "Explore", '/explore', guideSelectedItem) }}
+   {{ _self.guide_item("photos", "Photos", '/photos', guideSelectedItem) }}
+   {{ _self.guide_item("circles", "Circles", '/circles', guideSelectedItem) }}
+</div>

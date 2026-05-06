@@ -18,15 +18,14 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\ThemeManager;
+namespace Retwitter\Theme\Plus\Components\ProfilePage;
 
-interface ITheme
+class MProfileFeedPost
 {
-    public function getName(): string;
-    public function getVersion(): string;
-    public function getAuthorName(): string;
-    public function getModelFactory(): IThemeModelFactory;
-    public function getStaticPath(): ?string;
-    public function getTemplatesPath(): string;
-    public function getResourcesNamespace(): string;
+    public string $authorName;
+    public string $authorUrl;
+    public string $authorAvatarUrl;
+    
+    public string $postContent;
+    public string $postDate;
 }

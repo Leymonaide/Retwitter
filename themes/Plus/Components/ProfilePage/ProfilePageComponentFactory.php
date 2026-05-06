@@ -18,15 +18,16 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\ThemeManager;
+namespace Retwitter\Theme\Plus\Components\ProfilePage;
 
-interface ITheme
+use Retwitter\Page\Profile\ProfileTab;
+use Retwitter\Page\Profile\Transtheme\IThemeProfileComponentFactory;
+use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
+
+class ProfilePageComponentFactory implements IThemeProfileComponentFactory
 {
-    public function getName(): string;
-    public function getVersion(): string;
-    public function getAuthorName(): string;
-    public function getModelFactory(): IThemeModelFactory;
-    public function getStaticPath(): ?string;
-    public function getTemplatesPath(): string;
-    public function getResourcesNamespace(): string;
+    public function createProfileThemeContext(ProfileTab $tab): IThemeProfilePageContext
+    {
+        return new PlusThemeProfilePageContext($tab);
+    }
 }

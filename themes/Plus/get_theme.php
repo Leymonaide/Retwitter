@@ -18,7 +18,7 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Theme\Edge;
+namespace Retwitter\Theme\Plus;
 
 use Retwitter\ThemeManager\ITheme;
 use Retwitter\ThemeManager\IThemeModelFactory;
@@ -27,7 +27,7 @@ return new class implements ITheme
 {
     public function getName(): string
     {
-        return "Edge";
+        return "Plus";
     }
     
     public function getVersion(): string
@@ -37,17 +37,17 @@ return new class implements ITheme
     
     public function getAuthorName(): string
     {
-        return "The Retwitter Authors";
+        return "Isabella Lulamoon (kawapure)";
     }
     
     public function getModelFactory(): IThemeModelFactory
     {
-        return new EdgeThemeModelFactory();
+        return new PlusThemeModelFactory();
     }
     
-    public function getStaticPath(): ?string
+    public function getStaticPath(): string
     {
-        return null;
+        return "s";
     }
     
     public function getTemplatesPath(): string
@@ -57,6 +57,6 @@ return new class implements ITheme
     
     public function getResourcesNamespace(): string
     {
-        return "swift_edge";
+        return "kawapure_plus";
     }
 };

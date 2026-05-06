@@ -1,0 +1,30 @@
+{% extends app.spfnavigate ? 'base_spf.twig' : 'base.twig' %}
+
+{% set guideSelectedItem = 'home' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{%- block page_header -%}
+   {% if app.isLoggedIn() %}
+      <div id="header-container">
+         <div class="header">
+            <span class="feed-controls uix-button-group valign">
+               <button class="uix-button uix-button-default uix-button-active start">All</button>
+               <button class="uix-button uix-button-default end">Friends</button>
+            </span>
+         </div>
+      </div>
+   {% else %}
+   {% endif %}
+{% endblock %}
+
+{%- block content -%}
+<ul class="feed">
+   {% for post in app.page.feed.posts %}
+      <li class="feed-item">
+         {% import "/module/feed.twig" as feed %}
+         {{ feed.render_feed_post(post) }}
+      </li>
+   {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% macro render_feed_post(post) %}
+    <div class="feed-item-content">
+        <a class="profile-img-container" href="{{ post.authorUrl }}">
+            <img class="profile-img" title="{{ post.authorName }}" src="{{ post.authorAvatarUrl }}" />
+        </a>
+        <span class="feed-post">
+            <div class="feed-post-primary">
+                <div class="feed-post-header">
+                    <a class="username" title="{{ post.authorName }}" href="{{ post.authorUrl }}">
+                        {{ post.authorName }}
+                    </a>
+                    <a class="date" href="#"> {{ post.postDate }} </a>
+                </div>
+                <div class="feed-post-content">{{ post.postContent }}</div>
+                <div class="feed-post-actions">
+                    <span class="feed-action-buttons">
+                        <button
+                            class="uix-button uix-button-icon feed-plusone-button"
+                            title="+1"
+                        >
+                            <span class="uix-button-content"></span>
+                        </button>
+                        <button
+                            class="uix-button uix-button-icon feed-share-button"
+                            title="Share"
+                        >
+                            <span class="uix-button-content"></span>
+                        </button>
+                    </span>
+                </div>
+            </div>
+            <div class="feed-post-secondary">
+                <div class="simplebox-container">
+                    <div class="simplebox-collapsed">
+                        <span class="simplebox-collapsed-label"> Add a comment... </span>
+                        <div class="simplebox-content hid"></div>
+                    </div>
+                </div>
+            </div>
+        </span>
+    </div>
+{% endmacro %}

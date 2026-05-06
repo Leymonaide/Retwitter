@@ -21,6 +21,7 @@ use Rehike\ConfigManager\Config;
 use Retwitter\Context\AppContext;
 use Retwitter\RecentlyViewedCache\RecentlyViewedCache;
 use Retwitter\RetwitterPlatform;
+use Retwitter\ThemeManager\ThemeManager;
 
 /**
  * Main bootstrapper insertion point for Retwitter.
@@ -194,6 +195,7 @@ final class Bootloader
     private static function runInitTasks(): void
     {
         Tasks::initConfigManager();
+        ThemeManager::setTheme("Plus"); // Testing theme system.
         Tasks::initNetwork();
         Tasks::initResourceConstants();
         Tasks::initDebugger();

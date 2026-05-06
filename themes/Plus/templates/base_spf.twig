@@ -1,0 +1,22 @@
+{% spaceless %}
+{
+   "title": "{% block title %}Twitter{% endblock %}",
+   "body": {
+      "page": {%- apply json_encode|raw|spaceless -%}
+         {% block page_header %}
+         <div id="header-container">
+            <div class="header">
+               <span class="title valign">
+                  {% block header_title %}{% endblock %}
+               </span>
+               {% block header_extension %}{% endblock %}
+            </div>
+         </div>
+         {% endblock %}
+         <div id="content">
+            {% block content %}{% endblock %}
+         </div>
+      {% endapply %}
+   }
+}
+{% endspaceless %}

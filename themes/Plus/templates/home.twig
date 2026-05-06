@@ -1,0 +1,64 @@
+{% extends app.spfnavigate ? 'base_spf.twig' : 'base.twig' %}
+
+{% set guideSelectedItem = 'home' %}
+
+{% block title %}{{ parent() }}{% endblock %}
+
+{%- block page_header -%}
+   {% if app.isLoggedIn() %}
+      <div id="header-container">
+         <div class="header">
+            <span class="feed-controls uix-button-group valign">
+               <button class="uix-button uix-button-default uix-button-active start">All</button>
+               <button class="uix-button uix-button-default end">Friends</button>
+            </span>
+         </div>
+      </div>
+   {% else %}
+   {% endif %}
+{% endblock %}
+
+{%- block content -%}
+<ul class="feed">
+   <li class="feed-item">
+      <div class="feed-item-content">
+         <a class="profile-img-container" href="#">
+            <img class="profile-img" title="testuser" src="//{{ app.consts.DYNAMIC_HOST }}/dynamic/pfp/{{ app.core.useravatar }}">
+         </a>
+         <span class="feed-post">
+            <div class="feed-post-primary">
+               <div class="feed-post-header">
+                  <a class="username" title="testuser" href="#">
+                     testuser
+                  </a>
+                  <a class="date" href="#">
+                     Jan 1, 1970
+                  </a>
+               </div>
+               <div class="feed-post-content">
+                  Feed post contents.
+               </div>
+               <div class="feed-post-actions">
+                  <span class="feed-action-buttons">
+                     <button class="uix-button uix-button-icon feed-plusone-button" title="+1"><span class="uix-button-content"></span></button>
+                     <button class="uix-button uix-button-icon feed-share-button" title="Share"><span class="uix-button-content"></span></button>
+                  </span>
+               </div>
+            </div>
+            <div class="feed-post-secondary">
+               <div class="simplebox-container">
+                  <div class="simplebox-collapsed">
+                     <span class="simplebox-collapsed-label">
+                        Add a comment...
+                     </span>
+                     <div class="simplebox-content hid">
+                        
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </span>
+      </div>
+   </li>
+</ul>
+{% endblock %}

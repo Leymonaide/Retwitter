@@ -1,0 +1,23 @@
+<div id="gnavbar-container">
+   <a class="gnavbar-item selected" href="/">
+      {%- if app.core.userFirstName -%}
+         +{{app.core.userFirstName}}
+      {% elseif app.core.username %}
+         +{{app.core.username}}
+      {% else %}
+         +You
+      {% endif %}
+   </a>
+   <a class="gnavbar-item" href="//x.com">
+      X: The Everything App - Blaze Your Glory
+   </a>
+   <a class="gnavbar-item" href="//github.com/Leymonaide">
+      Leymonaide
+   </a>
+   <a class="gnavbar-item" href="//kawapure.github.io">
+      kawapure
+   </a>
+   <a class="gnavbar-item" href="//aubymori.github.io">
+      aubymori
+   </a>
+</div>

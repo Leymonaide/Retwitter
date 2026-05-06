@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>{% block title %}Twitter{% endblock %}</title>
+      <link name="www-core" rel="stylesheet" href="{{ rehike.resource.resolveThemeUri('/cssbin/www-gnavbar.css') }}">
+      <link name="www-core" rel="stylesheet" href="{{ rehike.resource.resolveThemeUri('/cssbin/www-hitchhiker.css') }}">
+      <script>
+         var _gel = function(a) {
+            return document.getElementById(a) || null;
+         };
+      </script>
+   </head>
+   <body class="date-{{ null|date("Ymd") }}{{ app.isLoggedIn() ? ' user-logged-in' }}">
+      {{ include ('module/gnavbar.twig') }}
+      {{ include ('module/masthead.twig') }}
+      <div id="alerts">
+      </div>
+      <div id="body-container">
+         <div id="extras-sidebar" class="">
+            {% if app.isLoggedIn() == false %}
+            <div id="signup-promo">
+               <span class="arrow"></span>
+               <h3>You're not logged in</h3>
+               Sign in or sign up today to post, comment, join Circles, and more!
+            </div>
+            {% else %}
+            {% endif %}
+         </div>
+         <div id="guide-container">
+            {{ include ('module/guide_module.twig') }}
+         </div>
+         <div id="page" class="{% block page_class %}{% endblock %}">
+            {% block page_header %}
+            <div id="header-container">
+               <div class="header">
+                  <span class="title valign">
+                     {% block header_title %}{% endblock %}
+                  </span>
+                  {% block header_extension %}{% endblock %}
+               </div>
+            </div>
+            {% endblock %}
+            <div id="content">
+               {% block content %}{% endblock %}
+            </div>
+         </div>
+      </div>
+      <div id="footer-container">
+         <div class="footer-info">
+            &copy; {{ null|date("Y") }} Retwitter - <a href="//github.com/Leymonaide/Retwitter">Repository</a>
+         </div>
+      </div>
+   <script src="{{ rehike.resource.resolveThemeUri('/jsbin/www-spf.js') }}"></script>
+   <script>
+      spf.init();
+   </script>
+   <script src="{{ rehike.resource.resolveThemeUri('/jsbin/www-core.js') }}"></script>
+   </body>
+</html>

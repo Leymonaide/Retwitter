@@ -18,15 +18,15 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\ThemeManager;
+namespace Retwitter\Theme\Plus;
 
-interface ITheme
+use Retwitter\Page\Profile\Transtheme\IThemeProfileComponentFactory;
+use Retwitter\ThemeManager\IThemeModelFactory;
+
+class PlusThemeModelFactory implements IThemeModelFactory
 {
-    public function getName(): string;
-    public function getVersion(): string;
-    public function getAuthorName(): string;
-    public function getModelFactory(): IThemeModelFactory;
-    public function getStaticPath(): ?string;
-    public function getTemplatesPath(): string;
-    public function getResourcesNamespace(): string;
+    public function getProfileComponentFactory(): IThemeProfileComponentFactory
+    {
+        return new Components\ProfilePage\ProfilePageComponentFactory();
+    }
 }

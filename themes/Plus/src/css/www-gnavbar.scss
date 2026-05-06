@@ -1,0 +1,23 @@
+#gnavbar-container {
+   background-color: #2d2d2d;
+   border-bottom: 1px solid #000;
+   padding: 0px 33px;
+   font-family: Arial,sans-serif;
+}
+#gnavbar-container .gnavbar-item {
+   display: inline-block;
+   font-size: 12px;
+   line-height: 27px;
+   font-weight: 700;
+   color: #bbb;
+   padding: 0 10px;
+}
+#gnavbar-container .gnavbar-item:hover {
+   background-color: #4c4c4c;
+}
+#gnavbar-container a.gnavbar-item {
+   text-decoration: none;
+}
+#gnavbar-container .gnavbar-item.selected {
+   color: #fff;
+}

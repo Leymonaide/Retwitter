@@ -9,6 +9,7 @@ use Rehike\UserPrefs\{
 };
 
 use Rehike\Util\Exception\ResourceUtils\BadResourceException;
+use Retwitter\ThemeManager\ThemeManager;
 
 /**
  * Provides helper functions for getting resource locations.
@@ -102,5 +103,39 @@ class ResourceUtils
         }
         
         return $prefixUri ? "/rehike/$resultName" : $resultName;
+    }
+    
+    /**
+     * Gets a theme resource.
+     */
+    #[\RetwitterNewMethod("Used to facilitate the theme system of Retwitter.")]
+    public static function resolveThemeUri(
+        string $name,
+        ?string $themeName = null,
+    ): string
+    {
+        // Versioned resources from a theme are currently not supported.
+        //$constants = ResourceConstantsStore::getVersionMap();
+        
+        if (is_null($themeName))
+        {
+            $themeName = ThemeManager::getTheme()->getResourcesNamespace();
+        }
+        
+        if ($name[0] == "/")
+        {
+            $name = substr($name, 1);
+        }
+        
+        $lookupUri = "static/theme/$themeName/$name";
+        
+        $resultName = $lookupUri;
+        
+        // if (isset($constants->{$lookupUri}))
+        // {
+        //     $resultName = $constants->{$lookupUri};
+        // }
+        
+        return "/rehike/$resultName";
     }
 }

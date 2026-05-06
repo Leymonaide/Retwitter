@@ -1,0 +1,142 @@
+@mixin guide-icon($name) {
+   .guide-item a &#{$name} {
+      background-image: url(/src/img/www-hitchhiker.sprites/guide-icon-#{$name}-inactive.png);
+   }
+   .guide-item a:hover &#{$name} {
+      background-image: url(/src/img/www-hitchhiker.sprites/guide-icon-#{$name}-hover.png);
+   }
+   .guide-item.guide-item-selected &#{$name}, .guide-item.guide-item-selected a:hover &#{$name} {
+      background-image: url(/src/img/www-hitchhiker.sprites/guide-icon-#{$name}-active.png);
+   }
+}
+
+#guide {
+   float: left;
+   width: 100px;
+}
+
+.guide-item {
+   position: relative;
+   z-index: 1000;
+   
+   & .arrow, & .image-arrow {
+      display: none;
+   }
+   
+   & .guide-item-inner {
+      display: inline-block;
+      width: 70px;
+      height: 70px;
+      padding-top: 10px;
+      margin-left: 16px;
+   }
+   
+   & a {
+      text-decoration: none;
+   }
+   & .guide-icon-container {
+      display: inline-block;
+      width: 70px;
+      text-align: center;
+   }
+   & .guide-icon {
+      width: 32px;
+      height: 32px;
+      display: inline-block;
+   }
+   & .guide-label {
+      display: inline-block;
+      width: 70px;
+      text-align: center;
+      color: #bbb;
+      font-size: 10px;
+      margin-top: 5px;
+      user-select: none;
+   }
+   
+   & a:hover .guide-label {
+      color: #666;
+   }
+   
+   &.guide-item-selected a .guide-label {
+      color: #000;
+   }
+   
+   &.guide-item-selected .arrow-outer {
+      position: absolute;
+      top: 16px;
+      right: -1px;
+      display: inline-block;
+      width: 0;
+      height: 0;
+      border-top: 12px solid transparent;
+      border-bottom: 12px solid transparent;
+      border-right: 12px solid $border-primary;
+   }
+   &.guide-item-selected .arrow-inner {
+      position: absolute;
+      top: -11px;
+      left: 1px;
+      right: 0;
+      bottom: 0;
+      width: 0;
+      height: 0;
+      border-top: 11px solid transparent;
+      border-bottom: 11px solid transparent;
+      border-right: 11px solid $background-primary;
+   }
+   
+   &.guide-item-selected .image-arrow {
+      display: block;
+      position: absolute;
+      top: 16px;
+      right: -1px;
+      width: 12px;
+      height: 24px;
+      background: $background-primary;
+      z-index: -1;
+      &-top {
+         z-index: 1;
+         position: absolute;
+         height: 0;
+         width: 0;
+         border-top: 12px solid $border-primary;
+         border-right: 12px solid transparent;
+         &-outer {
+            z-index: 1;
+            position: absolute;
+            height: 0;
+            width: 0;
+            border-top: 11px solid $background-secondary;
+            border-right: 12px solid transparent;
+            top: -12px;
+         }
+      }
+      &-bottom {
+         z-index: 1;
+         position: absolute;
+         height: 0;
+         width: 0;
+         border-bottom: 12px solid $border-primary;
+         border-right: 12px solid transparent;
+         top: 12px;
+         &-outer {
+            z-index: 1;
+            position: absolute;
+            height: 0;
+            width: 0;
+            border-bottom: 11px solid $background-secondary;
+            border-right: 11px solid transparent;
+            bottom: -12px;
+         }
+      }
+   }
+}
+
+.guide-icon- {
+   @include guide-icon(home);
+   @include guide-icon(explore);
+   @include guide-icon(profile);
+   @include guide-icon(circles);
+   @include guide-icon(photos);
+}

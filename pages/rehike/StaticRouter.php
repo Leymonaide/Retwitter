@@ -9,6 +9,7 @@ use Rehike\YtApp;
 use Rehike\FileSystem;
 use Rehike\ResourceConstantsStore;
 use Rehike\ControllerV2\RequestMetadata;
+use Retwitter\ThemeManager\ThemeManager;
 
 /**
  * Static content router stub.
@@ -29,8 +30,42 @@ class StaticRouter extends BaseController implements IGetController, IPostContro
         // lookup in this case.
         $map = $this->reverseObject($baseMap);
         
-        $filename = "static/";
-        for ($i = 2; $i < count($request->path); $i++)
+        $requestedThemeResource = @(
+            $request->path[0] == "rehike" &&
+            $request->path[1] == "static" &&
+            $request->path[2] == "theme"
+        );
+        
+        if ($requestedThemeResource)
+        {
+            $themeName = $request->path[3];
+            
+            // XXX(kawapure): The theme manager currently does not support routing multiple
+            // themes at once, so the current theme is always used.
+            $themeInstance = ThemeManager::getTheme();
+            $themeDiskPath = ThemeManager::getThemePath();
+            $themeResourcePath = $themeInstance->getStaticPath();
+            
+            if (is_null($themeResourcePath))
+            {
+                http_response_code(404);
+                exit();
+            }
+            
+            $filename = "$themeDiskPath/$themeResourcePath/";
+            
+            // rehike/static/theme/<theme name>
+            $skippedUriComponents = 4;
+        }
+        else
+        {
+            $filename = "static/";
+            
+            // rehike/static
+            $skippedUriComponents = 2;
+        }
+        
+        for ($i = $skippedUriComponents; $i < count($request->path); $i++)
         {
             if ($i == count($request->path) - 1)
             {
@@ -43,7 +78,9 @@ class StaticRouter extends BaseController implements IGetController, IPostContro
         }
         
         // If we're requesting a VFL version, then we map it back to the original.
-        if (isset($map->{$filename}))
+        // TODO(kawapure): Not currently supported for themes, so it's currently
+        // disabled completely.
+        if (!$requestedThemeResource && isset($map->{$filename}))
         {
             $filename = $map->{$filename};
         }

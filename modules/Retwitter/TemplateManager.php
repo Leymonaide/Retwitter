@@ -69,7 +69,7 @@ class TemplateManager
         
         $fileSystemLoader->addPath(
             $_SERVER["DOCUMENT_ROOT"] . "/" . $defaultThemeViewsDir,
-            ThemeManager::getTheme()->getTemplatesNamespace()
+            ThemeManager::getTheme()->getResourcesNamespace()
         );
 
         $fileSystemLoader->addPath(
