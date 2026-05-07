@@ -18,21 +18,21 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Theme\Plus\Components\ProfilePage;
+namespace Retwitter\Theme\Plus\Components\Common;
 
-use Retwitter\Page\Common\Timeline\MTweetMedia;
+use Retwitter\Page\Common\Profile\IBasicProfileInfoDataParser;
+use Retwitter\TwimgUrl;
 
-class MProfileFeedPost
+class MMastheadUser
 {
-    public string $authorName;
-    public string $authorUrl;
-    public string $authorAvatarUrl;
+    public string $name;
+    public ?string $avatarUrl = null;
     
-    public string $postContent;
-    public string $postDate;
-    
-    /**
-     * @var MTweetMedia[]
-     */
-    public array $media;
+    public function __construct(IBasicProfileInfoDataParser $parser)
+    {
+        $this->name = $parser->getDisplayName() ?? "";
+        $avatarUrl = new TwimgUrl($parser->getAvatarUrl());
+        $avatarUrl->setVariant("bigger");
+        $this->avatarUrl = (string)$avatarUrl;
+    }
 }

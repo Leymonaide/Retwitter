@@ -2,16 +2,16 @@
    <div class="logo-container valign-container">
       <a class="logo sprite valign" href="/" title="SubRocks+ home"></a>
    </div>
-   {%- if app.core.loggedIn -%}
+   {%- if app.isLoggedIn() -%}
    <div id="masthead-user-container" class="valign-container">
       <span id="masthead-display-name" onclick=";_gel('masthead-user').click();" class="display-name">
-         {{ app.core.username }}
+         {{ app.page.mastheadUser.name }}
       </span>
       <button id="sb-button-notify" onclick=";return false;" type="button" role="button" class="sb-notif-off uix-button uix-button-masthead yt-uix-button-size-default"><span class="uix-button-content">0</span></button>
       <button id="sb-button-share" onclick=";return false;" type="button" role="button" class="sb-notif-off uix-button uix-button-masthead yt-uix-button-size-default"><span class="icon"></span><span class="uix-button-content">Share</span><span class="arrow"></span></button>
       <span id="masthead-user" class="uix-clickcard">
-         <span id="masthead-user-avatar-container" class="valign-container uix-clickcard-target">
-            <img id="masthead-user-avatar" src="//{{ app.consts.DYNAMIC_HOST }}/dynamic/pfp/{{ app.core.useravatar }}">
+         <span id="masthead-user-avatar-container" class="{#valign-container#} uix-clickcard-target">
+            <img id="masthead-user-avatar" src="{{ app.page.mastheadUser.avatarUrl }}">
          </span>
          <span class="arrow"></span>
          <div class="masthead-user-clickcard uix-clickcard-content">
@@ -21,7 +21,7 @@
             <div class="primary">
                <div class="user-info">
                   <div class="username">
-                     {{ app.core.username }}
+                     {{ app.page.mastheadUser.name }}
                   </div>
                   <div class="email">
                      {{ app.core.useremail }}

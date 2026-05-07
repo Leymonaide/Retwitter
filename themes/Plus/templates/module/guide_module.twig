@@ -12,7 +12,8 @@
 
 <div id="guide">
    {{ _self.guide_item("home", "Home", '/', guideSelectedItem) }}
-   <div id="guide-item-profile" class="guide-item">
+   <div id="guide-item-profile" class="guide-item{{ 
+         guideSelectedItem == "profile" and app.page.profile.isCurrentUser ? " guide-item-selected" }}">
       <a class="guide-item-inner spf-link" href="/profile">
          <span class="guide-icon-container">
             <span class="guide-icon guide-icon-profile"></span>

@@ -11,7 +11,14 @@
                     </a>
                     <a class="date" href="#"> {{ post.postDate }} </a>
                 </div>
-                <div class="feed-post-content">{{ post.postContent }}</div>
+                <div class="feed-post-content">{{ post.postContent }}{#
+                    #}{% if post.media %}
+                        {% for media in post.media %}
+                        <span class="feed-post-media">
+                            <img src="{{ media.mediaUrl }}" style="max-width:100%;height:auto">
+                        </span>
+                        {% endfor %}
+                    {% endif %}</div>
                 <div class="feed-post-actions">
                     <span class="feed-action-buttons">
                         <button

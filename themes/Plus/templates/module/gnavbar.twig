@@ -1,9 +1,7 @@
 <div id="gnavbar-container">
    <a class="gnavbar-item selected" href="/">
-      {%- if app.core.userFirstName -%}
-         +{{app.core.userFirstName}}
-      {% elseif app.core.username %}
-         +{{app.core.username}}
+      {%- if app.isLoggedIn() -%}
+         +{{app.page.mastheadUser.name}}
       {% else %}
          +You
       {% endif %}

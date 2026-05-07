@@ -41,7 +41,7 @@ namespace Retwitter\Constants
     const CLIENT_TRANSACTION_TEST_STATIC = false;
     
     // Temporary testing constant:
-    const TEST_SIGNIN = false;
+    const TEST_SIGNIN = true;
     const FEATURE_SIGNIN = true;
 
     const TWITTER_HOST = "x.com";

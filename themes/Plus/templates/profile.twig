@@ -1,24 +1,114 @@
 {% extends app.spfnavigate ? 'base_spf.twig' : 'base.twig' %}
 
-{% set guideSelectedItem = 'home' %}
+{% set guideSelectedItem = 'profile' %}
 
 {% block title %}{{ parent() }}{% endblock %}
 
 {%- block page_header -%}
-   {% if app.isLoggedIn() %}
-      <div id="header-container">
-         <div class="header">
-            <span class="feed-controls uix-button-group valign">
-               <button class="uix-button uix-button-default uix-button-active start">All</button>
-               <button class="uix-button uix-button-default end">Friends</button>
-            </span>
+   <{{"style"}} id="user-style-{{ app.page.profile.id }}">
+      #profile-banner, #guide-item-profile .image-arrow
+      {
+         background: url({{ app.page.profile.bannerUrl }});
+         background-size: {{ 700 - 12 }}px auto;
+      }
+      
+      #profile-banner
+      {
+         height: 116px;
+         background-position: -12px 0;
+      }
+      
+      #guide-item-profile .image-arrow
+      {
+         background-position: 0 -36px;
+      }
+   </{{"style"}}>
+   {# Too lazy to edit main CSS #}
+   <{{"style"}}>
+      #profile-info
+      {
+         margin-left: 700px;
+         position: absolute;
+         margin-top: 16px;
+      }
+      
+      #profile-info-card
+      {
+         position: relative;
+         border: 1px solid #cecece;
+         border-radius: 3px;
+         box-shadow: 0 0 1px rgba(0,0,0,.1);
+         z-index: 60;
+         padding: 3px;
+         background: #fff;
+      }
+      
+      #profile-info-card .profile-picture
+      {
+         width: 250px;
+         height: 250px;
+      }
+      
+      #profile-info-card img
+      {
+         width: 250px;
+         height: 250px;
+      }
+      
+      #profile-info-secondary-card
+      {
+         position: relative;
+         border: 1px solid #cecece;
+         background: #f8f8f8;
+         border-radius: 3px;
+         border-top: none;
+         border-top-left-radius: 0;
+         border-top-right-radius: 0;
+         margin: 0 3px;
+         padding-bottom: 4px;
+         z-index: 30;
+         box-shadow: 0 0px 1px rgba(0,0,0,.1);
+         padding: 10px;
+         font-size: 13px;
+         max-width: 230px;
+      }
+   </{{"style"}}>
+   <div id="profile-info">
+      <div id="profile-info-card">
+         <div class="profile-picture">
+            <img src="{{ app.page.profile.avatarUrl }}" title="{{ app.page.profile.title }}">
          </div>
       </div>
-   {% else %}
-   {% endif %}
+      <div id="profile-info-secondary-card">
+         {% if app.page.profile.descriptionText %}
+            <div class="description"><b>{{ app.page.profile.descriptionText }}</b></div>
+         {% endif %}
+         {% if app.page.profile.birthdayText %}
+            <div class="birthday">Born on <b>{{ app.page.profile.birthdayText }}</b></div>
+         {% endif %}
+         {% if app.page.profile.websiteUrl %}
+            <div class="website-url"><a href="app.page.profile.websiteUrl">{{ app.page.profile.websiteUrl }}</a></div>
+         {% endif %}
+      </div>
+   </div>
+   <div id="header-container">
+      <div class="header">
+         <span class="title">{{ app.page.profile.title }}</span>
+         <span class="feed-controls valign clearfix" style="float:right;margin-right:20px">
+            <button class="uix-button uix-button-primary">Edit profile</button>
+         </span>
+      </div>
+   </div>
 {% endblock %}
 
 {%- block content -%}
+<div id="profile-banner"></div>
+<div class="feed-controls valign uix-button-group" style="margin-top: 10px">
+   <button class="uix-button uix-button-default start uix-button-active">Posts</button>{#
+   #}<button class="uix-button uix-button-default ">About</button>{#
+   #}<button class="uix-button uix-button-default ">Media</button>{#
+   #}<button class="uix-button uix-button-default end">+1's</button>
+</div>
 <ul class="feed">
    {% for post in app.page.feed.posts %}
       <li class="feed-item">

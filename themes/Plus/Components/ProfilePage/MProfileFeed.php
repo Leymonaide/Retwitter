@@ -46,6 +46,8 @@ class MProfileFeed
                 $post->postContent = ParsingUtils::getText($sourceTweet->fullText);
                 $post->postDate = $sourceTweet->createdAt->format("M d, Y");
                 
+                $post->media = $sourceTweet->media;
+                
                 $this->posts[] = $post;
             }
         }

@@ -218,6 +218,13 @@ class TwimgUrl extends Url
         
         $bucket = $this->getBucket();
         
+        if (empty($variant))
+        {
+            $path[array_key_last($path)] = $this->getBaseName() . $this->getExtension();
+            $this->setPath($path);
+            return;
+        }
+        
         switch (self::TWIMG_BUCKET_DEFINITIONS[$bucket]["variantFormat"])
         {
             case self::VARIANT_FORMAT_UNDERSCORE:

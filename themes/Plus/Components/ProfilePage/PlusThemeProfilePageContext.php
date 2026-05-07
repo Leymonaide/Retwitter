@@ -35,6 +35,8 @@ use Retwitter\Page\Profile\Model\JsConfig\MProfileUserInfo;
 use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Retwitter\Page\Profile\ProfileTab;
 use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
+use Retwitter\SignIn\SignIn;
+use Retwitter\Theme\Plus\Components\Common\MMastheadUser;
 
 /**
  * Twitter profile model.
@@ -42,6 +44,8 @@ use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
 class PlusThemeProfilePageContext extends BasePageContext implements IThemeProfilePageContext
 {
     public ProfileTab $tab;
+    public MMastheadUser $mastheadUser;
+    public MProfileInfo $profile;
     public MProfileFeed $feed;
     
     private NamespaceBoundLanguageApi $i18n;
@@ -49,6 +53,7 @@ class PlusThemeProfilePageContext extends BasePageContext implements IThemeProfi
     public function __construct(ProfileTab $tab)
     {
         parent::__construct();
+        $this->mastheadUser = new MMastheadUser(SignIn::getActiveProfileParser());
         $this->i18n = i18n::getNamespace("profile");
         $this->tab = $tab;
     }
@@ -65,15 +70,7 @@ class PlusThemeProfilePageContext extends BasePageContext implements IThemeProfi
         // is stupid, so I will make it an option.
         if (ProfileError::Success === $parser->getError())
         {
-            // $this->jsConfig2 = new MProfileUserInfo($parser);
-
-            // $this->getJsConfig()->addMixin(new MixinProfileJsConfig($parser));
-
-            // $this->canopy = new MProfileCanopyWithStats($parser, $this->tab);
-            // $this->info = new MProfileInfo($parser);
-            // $this->content = new MProfileContent($parser, $this->tab);
-            // $this->addJsModule("pages_profile");
-            // $this->setUpTitle($parser);
+            $this->profile = new MProfileInfo($parser);
         }
         else if (ProfileError::Suspended === $parser->getError())
         {

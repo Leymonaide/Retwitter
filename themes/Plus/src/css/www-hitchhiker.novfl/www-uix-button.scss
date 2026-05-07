@@ -103,18 +103,22 @@
       text-decoration: none;
    }
    
-   @at-root .uix-button-group {
-      & {
-         border-radius: 0;
-      }
-      & .start {
-         border-top-right-radius: 0;
-         border-bottom-right-radius: 0;
-      }
-      & .end {
-         border-top-left-radius: 0;
-         border-bottom-left-radius: 0;
-      }
-   }
    
+   
+}
+
+.uix-button-group {
+   .uix-button {
+      border-radius: 0;
+   }
+   .start {
+      @include vendor (border-radius, (2px));
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+   }
+   .end {
+      @include vendor (border-radius, (2px));
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+   }
 }
