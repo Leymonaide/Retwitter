@@ -1,3 +1,14 @@
+{% macro render_feed_post_content(post) %}
+{{ post.postContent }}
+{% if post.media %}
+    {% for media in post.media %}
+        <div class="feed-post-media">
+            <img src="{{ media.mediaUrl }}">
+        </div>
+    {% endfor %}
+{% endif %}
+{% endmacro %}
+
 {% macro render_feed_post(post) %}
     <div class="feed-item-content">
         <a class="profile-img-container" href="{{ post.authorUrl }}">
@@ -9,16 +20,27 @@
                     <a class="username" title="{{ post.authorName }}" href="{{ post.authorUrl }}">
                         {{ post.authorName }}
                     </a>
-                    <a class="date" href="#"> {{ post.postDate }} </a>
+                    <a class="date" href="{{ post.postUrl }}"> {{ post.postDate }} </a>
                 </div>
-                <div class="feed-post-content">{{ post.postContent }}{#
-                    #}{% if post.media %}
-                        {% for media in post.media %}
-                        <span class="feed-post-media">
-                            <img src="{{ media.mediaUrl }}" style="max-width:100%;height:auto">
-                        </span>
-                        {% endfor %}
-                    {% endif %}</div>
+                <div class="feed-post-content">
+                    {{ _self.render_feed_post_content(post) }}
+                    {% if post.originalShare %}
+                    <div class="originally-shared-container clearfix">
+                        <a class="profile-img-container" href="{{ post.originalShare.authorUrl }}">
+                            <img class="profile-img" title="{{ post.originalShare.authorName }}" src="{{ post.originalShare.authorAvatarUrl }}">
+                        </a>
+                        <div class="originally-shared-content">
+                            <div class="originally-shared-header">
+                                <a class="username" title="{{ post.originalShare.authorName }}" href="{{ post.originalShare.authorUrl }}">
+                                    {{ post.originalShare.authorName }}
+                                </a>
+                                originally shared this <a href="{{ post.originalShare.postUrl }}">post</a>:
+                            </div>
+                            {{ _self.render_feed_post_content(post.originalShare) }}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
                 <div class="feed-post-actions">
                     <span class="feed-action-buttons">
                         <button

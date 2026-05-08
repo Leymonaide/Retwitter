@@ -1,0 +1,7 @@
+@use "www-uix-button";
+@use "www-uix-clickcard";
+
+@mixin styles() {
+    @include www-uix-button.styles();
+    @include www-uix-clickcard.styles();
+}

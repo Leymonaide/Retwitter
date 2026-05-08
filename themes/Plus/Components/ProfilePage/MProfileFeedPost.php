@@ -31,6 +31,10 @@ class MProfileFeedPost
     public string $postContent;
     public string $postDate;
     
+    public string $postUrl;
+    
+    public ?MProfileFeedPost $originalShare = null;
+    
     /**
      * @var MTweetMedia[]
      */

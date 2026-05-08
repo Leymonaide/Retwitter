@@ -13,28 +13,43 @@ const {
     g_buildTaskRegistry: buildTaskRegistry 
 } = require("./build_task");
 
+const ArgumentsParser = require("./parse_args");
+
 // RehikeBuild root directory.
 const REHIKEBUILD_DIR = path.resolve(__dirname, "../");
 
 // Includes should be relative to the src/ directory, and this script resides in
 // src/build_tools/scripts, so we need to up two directories.
-const BASE_SRC_DIR = path.resolve(__dirname, "../..");
+const BASE_SRC_DIR = (function()
+{
+    const args = ArgumentsParser.getArgs();
+    if ("base_dir" in args)
+    {
+        return path.isAbsolute(args.base_dir[0])
+            ? args.base_dir[0]
+            : path.join(process.cwd(), args.base_dir[0]);
+    }
+    
+    return path.resolve(__dirname, "../..");
+})();
 
 // Rehike root directory is three directories up from here.
-const REHIKE_ROOT_DIR = path.resolve(__dirname, "../../..");
+const REHIKE_ROOT_DIR = (function()
+{
+    const args = ArgumentsParser.getArgs();
+    if ("root_dir" in args)
+    {
+        return path.isAbsolute(args.root_dir[0])
+            ? args.root_dir[0]
+            : path.join(process.cwd(), args.root_dir[0]);
+    }
+    
+    return path.resolve(__dirname, "../../..");
+})();
 
 // Build task backends:
 const { CSSBuildTask } = require("./css_build");
 const { JSBuildTask } = require("./js_build");
-
-/**
- * Common build configuration options.
- */
-const commonBuildCfg = {
-    base: BASE_SRC_DIR,
-    root: BASE_SRC_DIR,
-    cwd: BASE_SRC_DIR,
-};
 
 /**
  * Pushes a list of source files from a .rhbuild file to the global list.

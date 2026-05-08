@@ -1,4 +1,27 @@
 {
+    "cake": {
+        "x": 136,
+        "y": 39,
+        "width": 16,
+        "height": 16,
+        "source_image": "D:\\0e\\src\\Retwitter\\themes\\Plus\\src\\img\\www-hitchhiker.sprites\\cake.png",
+        "image": "www-hitchhiker.png",
+        "total_width": 187,
+        "total_height": 139,
+        "escaped_image": "www-hitchhiker.png",
+        "offset_x": -136,
+        "offset_y": -39,
+        "px": {
+            "x": "136px",
+            "y": "39px",
+            "offset_x": "-136px",
+            "offset_y": "-39px",
+            "height": "16px",
+            "width": "16px",
+            "total_height": "139px",
+            "total_width": "187px"
+        }
+    },
     "feed_plusone_inactive": {
         "x": 155,
         "y": 102,
@@ -24,7 +47,7 @@
     },
     "feed_post_arrow": {
         "x": 136,
-        "y": 39,
+        "y": 107,
         "width": 10,
         "height": 21,
         "source_image": "D:\\0e\\src\\Retwitter\\themes\\Plus\\src\\img\\www-hitchhiker.sprites\\feed_post_arrow.png",
@@ -33,12 +56,12 @@
         "total_height": 139,
         "escaped_image": "www-hitchhiker.png",
         "offset_x": -136,
-        "offset_y": -39,
+        "offset_y": -107,
         "px": {
             "x": "136px",
-            "y": "39px",
+            "y": "107px",
             "offset_x": "-136px",
-            "offset_y": "-39px",
+            "offset_y": "-107px",
             "height": "21px",
             "width": "10px",
             "total_height": "139px",
@@ -409,6 +432,29 @@
             "offset_y": "-68px",
             "height": "32px",
             "width": "32px",
+            "total_height": "139px",
+            "total_width": "187px"
+        }
+    },
+    "link": {
+        "x": 136,
+        "y": 73,
+        "width": 16,
+        "height": 16,
+        "source_image": "D:\\0e\\src\\Retwitter\\themes\\Plus\\src\\img\\www-hitchhiker.sprites\\link.png",
+        "image": "www-hitchhiker.png",
+        "total_width": 187,
+        "total_height": 139,
+        "escaped_image": "www-hitchhiker.png",
+        "offset_x": -136,
+        "offset_y": -73,
+        "px": {
+            "x": "136px",
+            "y": "73px",
+            "offset_x": "-136px",
+            "offset_y": "-73px",
+            "height": "16px",
+            "width": "16px",
             "total_height": "139px",
             "total_width": "187px"
         }

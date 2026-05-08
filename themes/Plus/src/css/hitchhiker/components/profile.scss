@@ -1,0 +1,86 @@
+@mixin styles() {
+    .profile-actions {
+        float: right;
+        margin-right: 20px;
+    }
+
+    #profile-info {
+        margin-left: 700px;
+        position: absolute;
+        margin-top: 16px;
+    }
+
+    #profile-info-card {
+        position: relative;
+        border: 1px solid #cecece;
+        border-radius: 3px;
+        box-shadow: 1px 1px 3px 1px rgba(0,0,0,.1);
+        z-index: 60;
+        padding: 5px;
+        background: #fff;
+
+        .profile-picture {
+            width: 250px;
+            height: 250px;
+        }
+
+        img {
+            width: 250px;
+            height: 250px;
+        }
+    }
+
+    #profile-info-secondary-card {
+        position: relative;
+        border: 1px solid #cecece;
+        background: #f8f8f8;
+        border-radius: 3px;
+        border-top: none;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        margin: 0 3px;
+        padding-bottom: 4px;
+        z-index: 30;
+        box-shadow: 0 0px 2px 1px rgba(0,0,0,.1);
+        padding: 15px;
+        font-size: 13px;
+        max-width: 230px;
+        
+        > .info-snippet {
+            margin-bottom: 15px;
+            
+            &.last {
+                margin-bottom: 0;
+            }
+        }
+        
+        .info {
+            margin-left: 25px;
+        }
+        
+        .icon {
+            width: 16px;
+            height: 16px;
+            display: block;
+            position: absolute;
+        }
+        
+        .birthday .icon {
+            background: url(/src/img/www-hitchhiker.sprites/cake.png);
+        }
+        
+        .website-url .icon {
+            background: url(/src/img/www-hitchhiker.sprites/link.png);
+        }
+    }
+
+    .profile-tabs {
+        margin-left: 20px;
+
+        .uix-button {
+            margin-top: 10px;
+            height: 32px;
+            padding: 0 16px;
+        }
+    }
+}

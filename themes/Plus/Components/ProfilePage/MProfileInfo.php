@@ -47,6 +47,7 @@ class MProfileInfo
         
         $this->descriptionText = ParsingUtils::getText($parser->getDescription());
         $this->websiteUrl = $parser->getUrlParser()?->getTargetUrl();
+        $this->websiteUrl = "https://kawapure.github.io/"; // temporary
         $this->birthdayText = "Dec 19, 2004"; // temporary
         
         $this->isCurrentUser = SignIn::isSignedIn()

@@ -1,0 +1,306 @@
+
+@use "util" as *;
+
+@mixin styles() {
+   #masthead-container {
+      margin: 12px 30px;
+      height: 51px;
+      
+      & .arrow {
+         display: inline-block;
+         background: url(//ssl.gstatic.com/gb/images/j_e6a6aca6.png);
+         background-position: -30px -25px;
+         opacity: .8;
+         height: 4px;
+         width: 7px;
+      }
+      
+      #masthead-content {
+         white-space: nowrap;
+         overflow:hidden;
+      }
+      
+      & #masthead-signin-container, & #masthead-user-container {
+         float: right;
+      }
+
+      & #masthead-signin-container, & #masthead-user-container, & #masthead-content {
+         height: 51px;
+         line-height: 51px;
+      }
+      
+      & #masthead-signin-container {
+         vertical-align: middle;
+         margin-right: 16px;
+      }
+
+      & .display-name {
+         font-size: 12px;
+         color: #666;
+         margin-right: 8px;
+         cursor: pointer;
+         @media only screen and (max-width: $screen-thin1-snap) {
+            display: none;
+         }
+      }
+
+      & .logo-container {
+         float: left;
+         margin-left: 16px;
+         height:51px;
+         line-height:51px;
+      }
+      & #masthead-search {
+      position:relative;
+      padding:0;
+      overflow:hidden;
+      padding-left: 55px;
+      width: 650px;
+      }
+      & #masthead-search label {
+      height:100%;
+      line-height:30px;
+      padding:0;
+      border:none;
+      overflow:hidden;
+      *zoom:1
+      }
+      & #masthead-search-terms {
+      position:relative;
+      overflow:hidden;
+      height:32px;
+      _padding-left:5px;
+      _padding-right:5px;
+      font-size:14px;
+      line-height:30px;
+      background-color:#fff;
+      -moz-box-sizing:border-box;
+      -ms-box-sizing:border-box;
+      -webkit-box-sizing:border-box;
+      box-sizing:border-box;
+      -moz-border-radius-topleft:3px;
+      -webkit-border-top-left-radius:3px;
+      border-top-left-radius:3px;
+      -moz-border-radius-bottomleft:3px;
+      -webkit-border-bottom-left-radius:3px;
+      border-bottom-left-radius:3px;
+      -moz-transition:border-color .2s ease;
+      -ms-transition:border-color .2s ease;
+      -o-transition:border-color .2s ease;
+      -webkit-transition:border-color .2s ease;
+      transition:border-color .2s ease;
+      border-radius: 0;
+      height: 29px;
+      width: 529px;
+      display: inline-block;
+      vertical-align: middle;
+      }
+      & .masthead-search-terms-border {
+      border:1px solid #ccc;
+      -moz-box-shadow:inset 0 1px 2px #eee;
+      -ms-box-shadow:inset 0 1px 2px #eee;
+      -webkit-box-shadow:inset 0 1px 2px #eee;
+      box-shadow:inset 0 1px 2px #eee
+      }
+      & #masthead-search-terms label {
+      display:block;
+      *padding:2px 0 3px;
+      _margin-top:5px;
+      *margin-top:2px
+      }
+      & #masthead-search-terms input {
+      display:inline-block;
+      width:100%;
+      padding:2px 6px;
+      margin:0;
+      border:0;
+      outline:none;
+      background:transparent;
+      font-size:16px;
+      _position:absolute;
+      _left:0;
+      _width:100%;
+      *padding:0;
+      zoom:1;
+      -moz-box-sizing:border-box;
+      -ms-box-sizing:border-box;
+      -webkit-box-sizing:border-box;
+      box-sizing:border-box
+      }
+      & #masthead-search input:focus {
+      border-color:#b0c4de
+      }
+      & #masthead-search .search-btn-component {
+      margin: 0 15px;
+      display: inline-block;
+      opacity:1;
+      filter:none;
+      }
+      & #masthead-search .search-btn-component {
+         vertical-align: top;
+         background-color: #4d90fe;
+         @include linear-gradient(top,#4d90fe,#4787ed);
+         filter: progid:DXImageTransform.Microsoft.gradient(startColorStr='#4d90fe',EndColorStr='#4787ed');
+         border: 1px solid #3079ed;
+         color: #fff !important;
+         height: 29px;
+         vertical-align: middle;
+         &:hover, &:active {
+            border-color: #2f5bb7;
+            background-color: #357ae8;
+            background-image: -moz-linear-gradient(top,#4d90fe,#357ae8);
+         }
+         &:active {
+            -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
+            -moz-box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
+         }
+      }
+      & #masthead-search .search-btn-component .uix-button-content {
+         background: url(//ssl.gstatic.com/gb/images/j_e6a6aca6.png);
+         background-position: -357px 0;
+         display: inline-block;
+         height: 13px;
+         margin: 6px 19px;
+         width: 14px;
+         vertical-align: top;
+      }
+
+      & .uix-button-masthead {
+         background-color: #f8f8f8;
+         @include linear-gradient(top,#f8f8f8,#ececec);
+         border-color: #c6c6c6;
+         &:hover {
+            background-color: #ffffff;
+            @include linear-gradient(top,#ffffff,#ececec);
+            border-color: #bbb;
+         }
+         &:active {
+            background-color: #ffffff;
+            @include linear-gradient(top,#ffffff,#ececec);
+            box-shadow: inset 0 1px 2px rgba(0,0,0,.3);
+         }
+         & .uix-button-content {
+            color: #999;
+            text-shadow: none;
+            font-size: 14px;
+            font-weight: bold;
+         }
+      }
+
+      & #sb-button-notify {
+         height: 27px;
+         width: 27px;
+         padding: 0;
+      }
+
+      & #masthead-user {
+         display: inline-block;
+         height: 50px;
+         margin-left: 12px;
+         cursor: pointer;
+         & .arrow {
+            margin-left: 4px;
+         }
+      }
+   }
+
+   .sprite.logo {
+      background-image: url(/src/img/www-hitchhiker.sprites/logo.png);
+      width: 153px;
+      height: 37px;
+   }
+
+   #masthead-user-avatar-container {
+      display: inline-block;
+      width: 50px;
+      height: 50px;
+      border: 1px solid #c6c6c6;
+      background-color: #c6c6c6;
+      vertical-align: middle;
+   }
+
+
+   #masthead-user-avatar {
+      width: 50px;
+      height: 50px;
+   }
+
+   #sb-button-share {
+      margin-left: 8px;
+      position: relative;
+      overflow: visible;
+      &.uix-button .uix-button-content {
+         font-weight: 500;
+         color: #666;
+         @media only screen and (max-width: $screen-thin2-snap) {
+            display: none;
+         }
+      }
+      & .icon {
+         display: inline-block;
+         width: 10px;
+         height: 10px;
+         opacity: .8;
+         background: url(//ssl.gstatic.com/gb/images/j_e6a6aca6.png);
+         background-position: -30px -34px;
+         padding-left: 9px;
+         @media only screen and (max-width: $screen-thin2-snap) {
+            padding-left: 0;
+         }
+      }
+      & .arrow {
+         background: url(//ssl.gstatic.com/gb/images/j_e6a6aca6.png);
+         background-position: 0 0;
+         height: 11px;
+         margin-left: -2px;
+         position: absolute;
+         top: 8px;
+         width: 10px;
+         left: 100%;
+      }
+      &:hover .arrow {
+         background-position: -166px -32px;
+      }
+      &:active .arrow {
+         background-position: -342px -16px;
+      }
+   }
+
+
+   .footer-info {
+      color: #666;
+      font-size: 11px;
+      text-align: center;
+      margin: 30px 0;
+   }
+
+   .masthead-user-clickcard {
+      background: #f5f5f5;
+      border: 1px solid #bebebe;
+      box-shadow: 0 2px 4px rgba(0,0,0,.2);
+      & .primary {
+         background: #fff;
+         border-bottom: 1px solid #bebebe;
+         box-shadow: 0 2px 4px rgba(0,0,0,.12);
+         padding: 15px 20px 10px;
+         padding-right: 120px;
+      }
+      & .secondary {
+         padding: 8px;
+         min-height: 30px;
+         height: 30px;
+      }
+      & .signout-button {
+         float: right;
+      }
+      & .settings-button {
+         margin: 10px 0;
+      }
+      & .email {
+         font-size: 13px;
+         margin-top: 1px;
+         color: #666;
+      }
+   }
+}

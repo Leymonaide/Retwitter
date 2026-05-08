@@ -1,0 +1,3 @@
+CSS_BUILD_FILES = {
+    "main.scss": "s/cssbin/www-hitchhiker.css"
+}

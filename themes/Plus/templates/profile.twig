@@ -9,68 +9,18 @@
       #profile-banner, #guide-item-profile .image-arrow
       {
          background: url({{ app.page.profile.bannerUrl }});
-         background-size: {{ 700 - 12 }}px auto;
+         background-size: {{ 970 + 12 }}px auto;
       }
       
       #profile-banner
       {
-         height: 116px;
+         height: 180px;
          background-position: -12px 0;
       }
       
       #guide-item-profile .image-arrow
       {
          background-position: 0 -36px;
-      }
-   </{{"style"}}>
-   {# Too lazy to edit main CSS #}
-   <{{"style"}}>
-      #profile-info
-      {
-         margin-left: 700px;
-         position: absolute;
-         margin-top: 16px;
-      }
-      
-      #profile-info-card
-      {
-         position: relative;
-         border: 1px solid #cecece;
-         border-radius: 3px;
-         box-shadow: 0 0 1px rgba(0,0,0,.1);
-         z-index: 60;
-         padding: 3px;
-         background: #fff;
-      }
-      
-      #profile-info-card .profile-picture
-      {
-         width: 250px;
-         height: 250px;
-      }
-      
-      #profile-info-card img
-      {
-         width: 250px;
-         height: 250px;
-      }
-      
-      #profile-info-secondary-card
-      {
-         position: relative;
-         border: 1px solid #cecece;
-         background: #f8f8f8;
-         border-radius: 3px;
-         border-top: none;
-         border-top-left-radius: 0;
-         border-top-right-radius: 0;
-         margin: 0 3px;
-         padding-bottom: 4px;
-         z-index: 30;
-         box-shadow: 0 0px 1px rgba(0,0,0,.1);
-         padding: 10px;
-         font-size: 13px;
-         max-width: 230px;
       }
    </{{"style"}}>
    <div id="profile-info">
@@ -80,34 +30,50 @@
          </div>
       </div>
       <div id="profile-info-secondary-card">
-         {% if app.page.profile.descriptionText %}
-            <div class="description"><b>{{ app.page.profile.descriptionText }}</b></div>
-         {% endif %}
+         {% set snippets_html %}
          {% if app.page.profile.birthdayText %}
-            <div class="birthday">Born on <b>{{ app.page.profile.birthdayText }}</b></div>
+            <div class="birthday info-snippet">
+               <span class="icon"></span>
+               <div class="info">Born on <b>{{ app.page.profile.birthdayText }}</b></div>
+            </div>
          {% endif %}
          {% if app.page.profile.websiteUrl %}
-            <div class="website-url"><a href="app.page.profile.websiteUrl">{{ app.page.profile.websiteUrl }}</a></div>
+            <div class="website-url info-snippet">
+               <span class="icon"></span>
+               <div class="info"><a href="app.page.profile.websiteUrl">{{ app.page.profile.websiteUrl }}</a></div>
+            </div>
          {% endif %}
+         {% endset %}
+         {# Hack to put a "last" class on the last item. #}
+         {% set snippets_html = snippets_html|split("info-snippet") %}
+         {% for snippet in snippets_html %}
+            {% if loop.last %}{#
+               #}info-snippet last{{ snippet|raw }}{#
+            #}{% elseif loop.first %}{#
+               #}{{ snippet|raw }}{#
+            #}{% else %}{#
+               #}info-snippet{{ snippet|raw }}{#
+            #}{% endif %}
+         {% endfor %}
       </div>
    </div>
    <div id="header-container">
       <div class="header">
          <span class="title">{{ app.page.profile.title }}</span>
-         <span class="feed-controls valign clearfix" style="float:right;margin-right:20px">
+         <span class="feed-controls profile-actions valign clearfix">
             <button class="uix-button uix-button-primary">Edit profile</button>
          </span>
       </div>
    </div>
+   <div id="profile-banner"></div>
 {% endblock %}
 
 {%- block content -%}
-<div id="profile-banner"></div>
-<div class="feed-controls valign uix-button-group" style="margin-top: 10px">
-   <button class="uix-button uix-button-default start uix-button-active">Posts</button>{#
-   #}<button class="uix-button uix-button-default ">About</button>{#
-   #}<button class="uix-button uix-button-default ">Media</button>{#
-   #}<button class="uix-button uix-button-default end">+1's</button>
+<div class="profile-tabs valign uix-button-group">
+   <button class="uix-button uix-button-light start uix-button-active">Posts</button>{#
+   #}<button class="uix-button uix-button-light ">About</button>{#
+   #}<button class="uix-button uix-button-light ">Media</button>{#
+   #}<button class="uix-button uix-button-light end">+1's</button>
 </div>
 <ul class="feed">
    {% for post in app.page.feed.posts %}

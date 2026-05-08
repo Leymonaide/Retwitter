@@ -1,0 +1,35 @@
+@mixin styles() {
+   .uix-clickcard {
+      &-content {
+         display: none;
+      }
+      &-card {
+         position: absolute;
+         top: 0;
+         left: 0;
+         z-index: 100000;
+      }
+      &-arrow  {
+         & .outer {
+            position: absolute;
+            width: 0;
+            height: 0;
+            right: 15px;
+            top: -14px;
+            border-left: 14px solid transparent;
+            border-right: 14px solid transparent;
+            border-bottom: 14px solid #bebebe;
+         }
+         & .inner {
+            position: absolute;
+            width: 0;
+            height: 0;
+            left: -13px;
+            bottom: -14px;
+            border-left: 13px solid transparent;
+            border-right: 13px solid transparent;
+            border-bottom: 13px solid #fff;
+         }
+      }
+   }
+}

@@ -1,0 +1,161 @@
+@use "components/www-uix";
+@use "components/www-pageframe";
+@use "components/www-guide";
+@use "components/www-feed";
+@use "components/spf-progress";
+@use "components/profile";
+@use "components/util" as *;
+
+
+
+html, body {
+   margin: 0;
+   padding: 0;
+   background-color: $background-secondary;
+   min-width: $screen-min-width;
+}
+
+menu, ol, ul {
+   list-style:none;
+   padding: 0;
+}
+
+html, body, button, input, textarea {
+   font-family: Arial, sans-serif;
+}
+
+.clearfix:after {
+   content: ".";
+   display: block;
+   height: 0;
+   clear: both;
+   visibility: hidden;
+}
+
+a {
+ color:#36c;
+ cursor:pointer;
+ text-decoration:none
+}
+a:hover,
+a:active {
+ text-decoration:underline
+}
+
+.valign-container {
+   display: block;
+}
+
+.valign {
+   display: inline-block;
+   vertical-align: middle;
+}
+
+// hacky fix
+.valign-container::before {
+   content: "";
+   height: 100%;
+   width: 0px;
+   display: inline-block;
+   vertical-align: middle;
+}
+.valign-block {
+   display: inline-block;
+}
+
+.sprite {
+   display: inline-block;
+}
+
+.hid {
+   display: none;
+}
+
+@include www-uix.styles();
+@include www-pageframe.styles();
+@include www-guide.styles();
+@include www-feed.styles();
+@include spf-progress.styles();
+@include profile.styles();
+
+/*
+ * begin page
+*/
+
+#page {
+   position: relative;
+   background-color: $background-primary;
+   border: 1px solid $border-primary;
+   border-radius: 4px;
+   min-width: $content-width;
+   min-height: 700px;
+   margin-left: 100px;
+   margin-right: 250px;
+}
+
+#content {
+   width: $content-width;
+}
+
+#page #header-container {
+   display: block;
+   width: 100%;
+   height: 58px;
+   line-height: 58px;
+   border-bottom: 1px solid $border-primary;
+}
+
+#page #header-container .header {
+   width: $content-width;
+   height: 58px;
+   line-height: 58px;
+}
+
+#page #header-container .title {
+   font-size: 21px;
+   margin: 0 20px;
+   vertical-align: middle;
+}
+
+#extras-sidebar {
+   float: right;
+   width: 200px;
+   margin: 0 25px;
+}
+
+#signup-promo {
+   background: $signup-promo-background;
+   padding: 50px 12px;
+   position: relative;
+   border: 1px solid $signup-promo-border;
+   border-radius: 3px;
+   color: #ddd;
+   font-size: 13px;
+   & .arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      right: 36px;
+      top: -14px;
+      border-left: 14px solid transparent;
+      border-right: 14px solid transparent;
+      border-bottom: 14px solid $signup-promo-border;
+      &:after {
+         content: "";
+         display: block;
+         position: absolute;
+         width: 0;
+         height: 0;
+         left: -13px;
+         bottom: -14px;
+         border-left: 13px solid transparent;
+         border-right: 13px solid transparent;
+         border-bottom: 13px solid $signup-promo-background;
+      }
+   }
+   & h3 {
+      font-size: 18px;
+      color: #eee;
+      text-align: center;
+   }
+}

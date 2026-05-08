@@ -48,6 +48,8 @@ class PlusThemeProfilePageContext extends BasePageContext implements IThemeProfi
     public MProfileInfo $profile;
     public MProfileFeed $feed;
     
+    private IProfileDataParser $profileParser;
+    
     private NamespaceBoundLanguageApi $i18n;
     
     public function __construct(ProfileTab $tab)
@@ -60,6 +62,7 @@ class PlusThemeProfilePageContext extends BasePageContext implements IThemeProfi
 
     public function insertUserData(IProfileDataParser $parser): void
     {
+        $this->profileParser = $parser;
         // Nonexistent profiles did not show a profile error, but the standard
         // 404 page. On the React frontend, most invalid pages are assumed to
         // be nonexistent profiles, which get a profile-styled error page.
@@ -80,7 +83,7 @@ class PlusThemeProfilePageContext extends BasePageContext implements IThemeProfi
 
     public function insertTimeline(ITimelineDataParser $parser): void
     {
-        $this->feed = new MProfileFeed($parser);
+        $this->feed = new MProfileFeed($this->profileParser, $parser);
         //$this->content?->setTimeline($parser);
     }
 
