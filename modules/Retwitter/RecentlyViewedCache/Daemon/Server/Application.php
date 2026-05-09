@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\RecentlyViewedCache\Daemon\Server;
 
 use DomainException;
+use Rehike\Async\Debugging\Tracing;
 use Rehike\Async\EventLoop\EventLoop;
 use Retwitter\RecentlyViewedCache\Daemon\Common\Opcode;
 
@@ -77,6 +78,22 @@ class Application implements ILogger
 
         StartupLogger::log("Retwitter Recently Viewed Cache Service");
         StartupLogger::log("Version 1.0");
+        StartupLogger::log("Memory limit: " . MemoryManager::formatBytes(MemoryManager::getTotalBytes()));
+        $startupUsed = MemoryManager::getUsedBytes();
+        $startupTotal = MemoryManager::getTotalBytes();
+        StartupLogger::log(
+            "Startup memory usage: " .
+            MemoryManager::formatBytes($startupUsed) . "/" .
+            MemoryManager::formatBytes($startupTotal) .
+            " (" . round($startupUsed / $startupTotal, 3) . "%)"
+        );
+
+        // The async library doesn't put a limit to tracing, so it would very
+        // slowly leak memory if enabled. This is a fringe case, as the async
+        // library is typically designed to exist in a short lived script
+        // session, rather than a long living server application, so it doesn't
+        // really make sense to rewrite it to account for this.
+        Tracing::enableTracing(false);
 
         if ($this->isServerAlreadyRunning())
         {
@@ -158,6 +175,19 @@ class Application implements ILogger
             fclose($socket);
             return true;
         }
+    }
+
+    public function logMemoryUsage(): void
+    {
+        $used = MemoryManager::getUsedBytes();
+        $total = MemoryManager::getTotalBytes();
+
+        $this->log(
+            "Memory usage: " .
+            MemoryManager::formatBytes($used) . "/" .
+            MemoryManager::formatBytes($total) .
+            " (" . round(($used / $total) * 100, 2) . "%)"
+        );
     }
 
     /**

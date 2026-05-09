@@ -192,7 +192,6 @@ if (!isServerUp($socket))
 
     // Next, we have to stall until the server is ready to take our messages.
     // This will take a little bit.
-    $serverVersion;
     do
     {
         stream_socket_sendto($socket, chr(Opcode::GetServerVersion->value));

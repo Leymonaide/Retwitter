@@ -49,7 +49,7 @@ class SocketEvent extends Event
             $writeWatch = null;
             $exceptWatch = null;
 
-            while (($numChanged = stream_select($readWatch, $writeWatch, $exceptWatch, 0, 200000)))
+            while (($numChanged = stream_select($readWatch, $writeWatch, $exceptWatch, 0, 5)))
             {
                 // If the stream receives any data at all, then we pet the
                 // watchdog.
@@ -83,7 +83,6 @@ class SocketEvent extends Event
                 }
             }
 
-            usleep(10000);
             yield;
         }
 

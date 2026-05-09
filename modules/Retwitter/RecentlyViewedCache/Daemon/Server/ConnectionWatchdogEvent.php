@@ -46,7 +46,7 @@ class ConnectionWatchdogEvent extends Event
         echo "[DEBUG] Destructed ConnectionWatchdogEvent for " .
             ($this->connection->get()
                 ? "connection " . $this->connection->get()->address
-                : "a stale connection.");
+                : "a stale connection.") . "\n";
     }
 
     #[Override]
@@ -80,7 +80,16 @@ class ConnectionWatchdogEvent extends Event
                 break;
             }
 
-            usleep(300_000);
+            $connectionCount = 1;
+            if ($this->connection->get())
+            {
+                $connectionCount = max(
+                    $this->connection->get()->application->connections
+                        ->getConnectionCount(),
+                    1
+                );
+            }
+            
             yield;
         }
     }

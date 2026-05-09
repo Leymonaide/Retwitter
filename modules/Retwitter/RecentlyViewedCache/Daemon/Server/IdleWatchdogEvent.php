@@ -57,7 +57,6 @@ class IdleWatchdogEvent extends Event
                 $this->application->onIdleWatchdogBark();
             }
 
-            usleep(300_000);
             yield;
         }
     }
