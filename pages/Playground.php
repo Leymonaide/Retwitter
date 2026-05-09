@@ -45,7 +45,7 @@ class Playground extends RetwitterPageController
         {
             yield SignIn::setup();
             
-            $this->setTemplate("profile");
+            $this->setTemplate("playground2");
             $this->setPageContext(new class extends BasePageContext {
                 public function __construct()
                 {

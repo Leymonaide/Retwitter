@@ -1,0 +1,387 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 Leymonaide.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+{% from "common/edge_button.twig" import render as edge_button %}
+{% import "core/macros.twig" as core %}
+{% with { topbar: app.page.getTopbar() } %}
+<div class="{{ [
+        'global-nav',
+        not app.isLoggedIn() ? 'global-nav--newLoggedOut',
+    ]|join(' ') }}" data-section-term="top_nav">
+    <div class="global-nav-inner">
+        <div class="container">
+            {% if app.isLoggedIn() %}
+                <h1 class="Icon Icon--bird bird-topbar-etched" 
+                    style="display: inline-block; width: 24px; height: 21px;">
+                    <span class="visuallyhidden">Twitter</span>
+                </h1>
+                <div class="pushstate-spinner"></div>
+            {% endif %}
+            <ul class="nav js-global-actions" role="navigation" id="global-actions">
+                {% for item in topbar.nav.items %}
+                    {{ _self.nav_tab(item) }}
+                {% endfor %}
+            </ul>
+            <div class="pull-right nav-extras">
+                <div role="search">
+                    {% set searchbox = topbar.searchbox %}
+                    <form action="/search" id="global-nav-search" class="t1-form form-search js-search-form">
+                        <label for="search-query" class="visuallyhidden">
+                            {{ searchbox.a11yLabel }}
+                        </label>
+                        <input type="text" id="search-query" class="search-input" placeholder="{{ searchbox.placeholder }}" name="q" autocomplete="off" spellcheck="false" aria-autocomplete="list" aria-expanded="false" aria-owns="typeahead-dropdown-1">
+                        <span class="search-icon js-search-action">
+                            <button class="Icon Icon--medium Icon--search nav-search" type="submit" tabindex="-1">
+                                <span class="visuallyhidden">{{ searchbox.btnLabel }}</span>
+                            </button>
+                        </span>
+                    </form>
+                </div>
+                {% if app.isLoggedIn() %}
+                    <ul id="session" class="nav right-actions">
+                        {{ _self.session_logged_in(topbar.userDropdown) }}
+                    </ul>
+                {% else %}
+                    <ul id="session" class="nav secondary-nav session-dropdown">
+                        {{ _self.session_signin_upsell(topbar.signinLink) }}
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endwith %}
+
+{% macro nav_tab(item) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+    } %}
+
+    {# All navigation tabs have different wrappers for each type. #}
+    {% if item.id == "connect" %}
+        {# Notifications #}
+        <li class="{{ [
+                "people",
+                "notifications",
+                item.active ? "active",
+            ]|join(" ") }}" data-global-action="{{ item.id }}">
+            {% set notifications_foot %}
+                <span class="count">
+                    <span class="count-inner">0{# TODO: Get notifications count. #}</span>
+                </span>
+            {% endset %}
+            {{ _self.nav_tab_inner_std(item, notifications_foot) }}
+        </li>
+    {% elseif item.id == "dm" %}
+        {# Special direct messages tab #}
+        <li class="dm-nav">
+            {{ _self.nav_tab_inner_dm(item) }}
+        </li>
+    {% elseif item.id == "moments" and app.isLoggedIn() %}
+        {# Moments only has JS metadata when logged in. #}
+        <li class="moments js-moments tab {{ item.active ? "active" }}" data-global-action="{{ item.id }}">
+            {{ _self.nav_tab_inner_std(item) }}
+        </li>
+    {% else %}
+        {# All other tabs (Home, logged out Moments) #}
+        <li id="global-nav-{{ item.id }}" class="{{ [
+                item.id,
+                item.active ? "active",
+            ]|join(" ") }}" 
+            data-global-action="{{ item.id }}">
+            {{ _self.nav_tab_inner_std(item) }}
+        </li>
+    {% endif %}
+{% endmacro %}
+
+{% macro nav_tab_inner_icon_std(item) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+    } %}
+
+    <span class="Icon Icon--{{ item.icon }} Icon--large"></span>
+    {%- if app.currentThemeName == "SwiftEdge" and item.activeIcon -%}
+        {# u-textUserColor added with Edge style. #}
+        <span class="Icon Icon--{{ item.icon }}Filled Icon--large u-textUserColor"></span>
+    {%- endif -%}
+{% endmacro %}
+
+{% macro nav_tab_inner_std(item, foot_html = "") %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+        foot_html: "string",
+    } %}
+    
+    <a href="{{ item.url }}" class="js-nav js-tooltip js-dynamic-tooltip" 
+        data-placement="bottom" 
+        data-component-context="{{ item.id }}_nav" 
+        data-nav="{{ item.id }}">
+        {{ _self.nav_tab_inner_level2_std(item, foot_html) }}
+    </a>
+{% endmacro %}
+
+{% macro nav_tab_inner_level2_std(item, foot_html) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavItem",
+        foot_html: "string",
+    } %}
+
+    {{ _self.nav_tab_inner_icon_std(item) }}
+    <span class="text" aria-hidden="true">{{ item.label }}</span>
+    {{ foot_html }}
+    <span class="u-hiddenVisually a11y-inactive-page-text">{{ item.label }}</span>
+    <span class="u-hiddenVisually a11y-active-page-text">{{ item.activeLabel }}</span>
+{% endmacro %}
+
+{% macro nav_tab_inner_dm(item) %}
+    {% types {
+        item: "Retwitter\\Page\\Base\\MHeaderNavDirectMessagesItem",
+    } %}
+
+    <a class="{{ [
+            'js-tooltip',
+            'js-dynamic-tooltip',
+            'global-dm-nav',
+        ]|join(' ') }}"
+        role="button"
+        href="#"
+        data-placement="bottom">
+        {% set dm_foot %}
+            <span class="dm-new">
+                <span class="count-inner"></span>
+            </span>
+        {% endset %}
+        {{ _self.nav_tab_inner_level2_std(item, dm_foot) }}
+    </a>
+{% endmacro %}
+
+{% macro session_signin_upsell(link) %}
+    {% types {
+        link: "Retwitter\\Page\\Base\\MHeaderSigninLink",
+    } %}
+
+    <li class="dropdown js-session">
+        <a href="{{ link.url }}" id="signin-link" class="dropdown-toggle js-dropdown-toggle dropdown-signin">
+            <small>{{ link.question }}</small>
+            <span class="emphasize">{{ link.action }}</span>
+            <span class="caret"></span>
+        </a>
+        <div id="signin-dropdown" class="dropdown-menu dropdown-form dropdown-menu--rightAlign is-forceRight">
+            {% set dialog = link.dialog %}
+            <span class="dropdown-caret right">
+                <span class="caret-outer"></span>
+                <span class="caret-inner">  </span>
+            </span>
+            <div class="signin-dialog-body">
+                <div>{{ dialog.title }}</div>
+                <form action="https://twitter.com/sessions" method="post" class="LoginForm js-front-signin" data-form-component="login_callout" data-element="form">
+                    <div class="LoginForm-input LoginForm-username">
+                        <input class="text-input email-input js-signin-email" type="text" name="session[username_or_email]" autocomplete="username" placeholder="{{ dialog.usernamePlaceholder }}">
+                    </div>
+                    <div class="LoginForm-input LoginForm-password">
+                        <input class="text-input" type="password" name="session[password]" placeholder="{{ dialog.passwordPlaceholder }}" autocomplete="current-password">
+                    </div>
+                    <div class="LoginForm-rememberForgot">
+                        <label>
+                            <input type="checkbox" value="1" name="remember_me" checked="checked">
+                            <span>{{ dialog.rememberMeLabel }}</span>
+                        </label>
+                        <span class="separator">&middot;</span>
+                        <a href="{{ dialog.forgotPasswordLink.runs.0.url }}" class="forgot" rel="noopener">
+                            {{ dialog.forgotPasswordLink.runs.0.text }}
+                        </a>
+                    </div>
+                    {{ edge_button(dialog.loginButton) }}
+                </form>
+                <hr>
+                <div class="signup SignupForm">
+                    <div class="SignupForm-header">{{ dialog.signUpTitle }}</div>
+                    {{ edge_button(dialog.signUpButton, [
+                        'u-block',
+                        'js-signup',
+                    ]) }}
+                </div>
+            </div>
+        </div>
+    </li>
+{% endmacro %}
+
+{% macro session_logged_in(user_dropdown) %}
+    {% types {
+        user_dropdown: "Retwitter\\Page\\Base\\MHeaderUserDropdown",
+    } %}
+    {% set is_edge = app.currentThemeName == "SwiftEdge" %}
+    <li id="user-dropdown" class="me dropdown session js-session"
+        data-global-action="t1me">
+        <a id="user-dropdown-toggle" class="{{ [
+                'btn',
+                'js-tooltip',
+                'settings',
+                'dropdown-toggle',
+                'js-dropdown-toggle',
+            ]|join(' ') }}"
+            href="/settings"
+            data-placement="bottom"
+            rel="noopener"
+            role="button"
+            aria-haspopup="true"
+            title="{{ app.i18n.get('topbar', 'user_dropdown_title') }}">
+            <img class="{{ is_edge ? 'Avatar Avatar--size32' : 'avatar size32' }}" src="{{ user_dropdown.userAvatarUrl }}"
+                data-user-id="{{ user_dropdown.userId }}"
+                alt="{{ app.i18n.get('topbar', 'user_dropdown_title') }}">
+        </a>
+        <div class="{{ [
+                "DashUserDropdown",
+                "dropdown-menu",
+                "dropdown-menu--rightAlign",
+                "is-forceRight",
+                "is-autoCentered",
+            ]|join(" ") }}">
+            <div class="dropdown-caret"></div>
+            <ul>
+                <li class="DashUserDropdown-userInfo" data-name="user-info">
+                    <a class="DashUserDropdown-userInfoLink js-nav"
+                       href="{{ app.router.getProfile(user_dropdown.username) }}"
+                       data-nav="view_profile">
+                        <b class="fullname">{{ core.text(user_dropdown.userDisplayName) }}</b>
+                        <p class="name">
+                            {{ core.username(user_dropdown.username) }}
+                        </p>
+                    </a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li class="current-user" data-name="profile">
+                    <a class="js-nav"
+                        href="{{ app.router.getProfile(user_dropdown.username) }}"
+                        data-nav="view_profile">
+                        <span class="Icon Icon--person Icon--large"></span>
+                        {{ app.i18n.get('topbar', 'user_dropdown_profile') }}
+                    </a>
+                </li>
+                <li data-name="lists">
+                    <a class="js-nav" href="{# twitter.com/me/lists #}" data-nav="all_lists">
+                        <span class="Icon Icon--list Icon--large"></span>
+                        {{ app.i18n.get('topbar', 'user_dropdown_lists') }}
+                    </a>
+                </li>
+                {# <li data-name="moments">
+                    <a class="js-nav" href=" twitter.com/me/moments " data-nav="all_moments">
+                        <span class="Icon Icon--lightning Icon--large"></span>
+                        {{ app.i18n.get('topbar', 'user_dropdown_moments') }}
+                    </a>
+                </li> #}
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a href="//ads.twitter.com/start?ref=gl-tw-tw-twitter-ads"
+                        target="_blank"
+                        data-nav="ads"
+                        rel="noopener">
+                        <span class="Icon Icon--promotedStroked Icon--large"></span>
+                        {{ app.i18n.get('topbar', 'user_dropdown_ads') }}
+                    </a>
+                </li>
+                <li>
+                    <a class="user-dropdown-analytics"
+                       href="//analytics.twitter.com/"
+                       target="_blank"
+                       data-nav="user_dropdown_analytics"
+                       rel="noopener">
+                       <span class="Icon Icon--analytics Icon--large"></span>
+                       {{ app.i18n.get('topbar', 'user_dropdown_analytics') }}
+                    </a>
+                </li>
+                <li class="dropdown-divider"></li>
+                <li>
+                    <a class="js-nav" href="/settings" data-nav="settings"
+                       rel="noopener">{{ 
+                        app.i18n.get('topbar', 'user_dropdown_settings') 
+                    }}</a>
+                </li>
+                <li>
+                    <a href="//support.twitter.com" data-nav="help_center"
+                       rel="noopener">{{ 
+                        app.i18n.get('topbar', 'user_dropdown_help')
+                    }}</a>
+                </li>
+                <li class="js-keyboard-shortcut-trigger" data-nav="shortcuts">
+                    <button class="dropdown-link" type="button">
+                        {{ app.i18n.get('topbar', 'user_dropdown_shortcuts') }}
+                    </button>
+                </li>
+                <li id="signout-button" class="js-signout-button" data-nav="logout">
+                    <button class="dropdown-link" type="button">
+                        {# TODO(isabella): There's one experiment (I guess) in which this username
+                           element could have been left out.
+                           (pumpkin): According to the above TODO, this uses
+                           the template string. #}
+                        {{ app.i18n.formatHtml(
+                            'topbar', 'user_dropdown_logout_template',
+                            core.username(user_dropdown.username)|safeHtml,
+                        ) }}
+                    </button>
+                    {# TODO(izzy): This form isn't there anymore in our Edge archive. This might just
+                                   be an issue with how it was saved, though.
+                    <form id="signout-form" action="/logout" method="POST"
+                        class="t1-form dropdown-link-form signout-form">
+                        <input type="hidden" value="05cea5600404fe895dd10aae504129a5b55458b2" 
+                            name="authenticity_token" class="authenticity_token">
+                        <input type="hidden" name="reliability_event" class="js-reliability-event">
+                        <input type="hidden" name="scribe_log">
+                    </form>
+                    #}
+                </li>
+                <li class="dropdown-divider"></li>
+                <li class="current-user nightmode-toggle" data-name="profile">
+                    <a class="js-nav" data-nav="view_profile">
+                        {# TODO(isabella): The filled variant was probably not always used.
+                           (pumpkin): What filled variant? #}
+                        <span class="js-nightmode-label">
+                            <span class="Icon Icon--crescent Icon--large js-nightmode-icon"></span>
+                            {{ app.i18n.get('topbar', 'user_dropdown_nightmode') }}
+                        </span>
+                    </a>
+                </li>
+                {# XXX(izzy): Just for completeness.
+                <li>
+                    <button class="dropdown-link enable-rweb-link" type="button">{{ app.i18n.get('topbar', 'user_dropdown_enable_rweb') }}</button>
+                </li> #}
+            </ul>
+        </div>
+    </li>
+    <li class="topbar-tweet-btn" role="complementary"
+        aria-labelledby="global-new-tweet-button">
+        {# TODO: Refactor into edge_button/button macros? #}
+        <button id="global-new-tweet-button" class="{{ [
+                'js-global-new-tweet',
+                'js-tooltip',
+                is_edge ? 'EdgeButton' : 'btn',
+                is_edge ? 'EdgeButton--primary' : 'primary-btn',
+                'tweet-btn',
+                'js-dynamic-tooltip',
+            ]|join(' ') }}"
+            type="button" data-placement="bottom"
+            data-component-context="new_tweet_button">
+            {# Before the redesign, this button had an icon which was
+               Icon--tweet. After EdgeButton was introduced, the icon doesn't
+               fit into the top bar, so it was removed. #}
+            {% if not is_edge %}
+                <span class="Icon Icon--tweet Icon--large"></span>
+            {% endif %}
+            <span class="text">{{ app.i18n.get("topbar", "new_tweet_button") }}</span>
+        </button>
+    </li>
+{% endmacro %}

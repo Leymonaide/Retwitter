@@ -28,6 +28,7 @@ use Retwitter\Page\Base\BasePageContext;
 use Retwitter\RequestOs;
 use Retwitter\RetwitterPlatform;
 use Retwitter\SignIn\SignIn;
+use Retwitter\ThemeManager\AbstractTheme;
 
 final class AppContext
 {
@@ -102,9 +103,12 @@ final class AppContext
     /**
      * The context of the current page.
      */
-    public BasePageContext $page;
+    public object $page;
 
     public RehikeUtilsI18nDelegate $i18n;
+    
+    public AbstractTheme $currentTheme;
+    public string $currentThemeName;
 
     public IAppRouter $router;
     

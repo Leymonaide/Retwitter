@@ -18,25 +18,32 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Theme\SwiftRosetta\Components\ProfilePage;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
+use Rehike\FormattedString;
+use Rehike\i18n\i18n;
+use Retwitter\Utils\NumberFormat;
+use Retwitter\Utils\ParsingUtils;
 
-class MTopbarNavItem
+class MProfileCanopyStat
 {
+    public string $value;
+    public string $tooltip;
     public string $activeLabel;
 
     public function __construct(
-        NamespaceBoundLanguageApi $strings,
         public string $id,
-        public string $icon,
         public string $label,
+        public int $count,
+               string $tooltip,
         public string $url,
-        public bool $active,
-        public bool $activeIcon,
+        public bool $active = false,
     )
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
+        $i18n = i18n::getNamespace("profile");
+
+        $this->value = NumberFormat::shorten($this->count);
+        $this->tooltip = sprintf($tooltip, number_format($this->count));
+        $this->activeLabel = $i18n->format("tab_active", $this->label);
     }
 }

@@ -18,16 +18,31 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Theme\Plus\Components\ProfilePage;
+namespace Retwitter\Theme\SwiftRosetta\Components\ProfilePage;
 
+use Rehike\Attributes\Override;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
 use Retwitter\Page\Profile\ProfileTab;
-use Retwitter\Page\Profile\Transtheme\AbstractThemeProfileComponentFactory;
-use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
+use Retwitter\Theme\SwiftBase\Components\ProfilePage\SwiftBaseProfilePageContext;
 
-class ProfilePageComponentFactory extends AbstractThemeProfileComponentFactory
+/**
+ * Swift Rosetta profile page context.
+ * 
+ * This includes support for the profile canopy view introduced in Rosetta.
+ */
+class SwiftRosettaProfilePageContext extends SwiftBaseProfilePageContext
 {
-    public function createProfileThemeContext(ProfileTab $tab): IThemeProfilePageContext
+    public ?MProfileCanopyWithStats $canopy = null;
+    
+    public function __construct(ProfileTab $tab)
     {
-        return new PlusThemeProfilePageContext($tab);
+        parent::__construct($tab);
+    }
+    
+    #[Override]
+    protected function insertUserDataHandleSuccess(IProfileDataParser $parser): void
+    {
+        parent::insertUserDataHandleSuccess($parser);
+        $this->canopy = new MProfileCanopyWithStats($parser, $this->tab);
     }
 }

@@ -18,25 +18,19 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Theme\SwiftBase\Components\ProfilePage;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Utils\ImageUtils;
 
-class MTopbarNavItem
+class MProfileAvatar
 {
-    public string $activeLabel;
+    public string $url;
+    public string $tooltip;
 
-    public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
-        public string $label,
-        public string $url,
-        public bool $active,
-        public bool $activeIcon,
-    )
+    public function __construct(IProfileDataParser $parser)
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
+        $this->url = ImageUtils::resize($parser->getAvatarUrl() ?? "", "400x400");
+        $this->tooltip = $parser->getDisplayName() ?? "";
     }
 }

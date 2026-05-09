@@ -1,7 +1,7 @@
 <?php
 /* 
  * This file is part of the Retwitter project.
- * Copyright (c) 2025 Leymonaide.
+ * Copyright (c) 2025-2026 Leymonaide.
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,16 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Theme\SwiftBase\Components\ProfilePage;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
+use Retwitter\Page\Profile\ProfileTab;
+use Retwitter\Page\Profile\Transtheme\AbstractThemeProfileComponentFactory;
+use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
 
-class MTopbarNavItem
+class ProfilePageComponentFactory extends AbstractThemeProfileComponentFactory
 {
-    public string $activeLabel;
-
-    public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
-        public string $label,
-        public string $url,
-        public bool $active,
-        public bool $activeIcon,
-    )
+    public function createProfileThemeContext(ProfileTab $tab): IThemeProfilePageContext
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
+        return new SwiftBaseProfilePageContext($tab);
     }
 }

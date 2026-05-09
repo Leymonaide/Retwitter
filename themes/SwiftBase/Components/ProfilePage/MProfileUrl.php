@@ -18,25 +18,29 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Theme\SwiftBase\Components\ProfilePage;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
+use Rehike\FormattedString;
+use Rehike\i18n\i18n;
+use Retwitter\Utils\FormattedStringBuilder;
+use Retwitter\Page\Common\Profile\IProfileUrlParser;
 
-class MTopbarNavItem
+class MProfileUrl
 {
-    public string $activeLabel;
+    public readonly string $displayUrl;
+    public readonly string $url;
+    public readonly FormattedString $formattedString;
 
-    public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
-        public string $label,
-        public string $url,
-        public bool $active,
-        public bool $activeIcon,
-    )
+    public function __construct(IProfileUrlParser $parser)
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
+        $this->displayUrl = $parser->getDisplayUrl();
+        $this->url = $parser->getTargetUrl();
+
+        $fsb = new FormattedStringBuilder();
+        $run = $fsb->createRunBuilder();
+        $run->text = $this->displayUrl;
+        $run->url = $this->url;
+        $fsb->addRunFromBuilder($run);
+        $this->formattedString = $fsb->build();
     }
 }

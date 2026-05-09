@@ -18,25 +18,26 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Theme\SwiftRosetta\Components\ProfilePage;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
+use Rehike\i18n\i18n;
+use Retwitter\Context\AppContext;
+use Retwitter\Page\Common\UserActions\MUserActions;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Theme\SwiftBase\Components\ProfilePage\MProfileAvatar;
 
-class MTopbarNavItem
+class MProfileCanopy
 {
-    public string $activeLabel;
+    public ?string $banner = null;
+    public MProfileAvatar $avatar;
+    public MProfileCanopyCard $card;
+    public MUserActions $userActions;
 
-    public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
-        public string $label,
-        public string $url,
-        public bool $active,
-        public bool $activeIcon,
-    )
+    public function __construct(IProfileDataParser $parser)
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
+        $this->banner = $parser->getBannerUrl();
+        $this->avatar = new MProfileAvatar($parser);
+        $this->card = new MProfileCanopyCard($parser);
+        $this->userActions = new MUserActions($parser);
     }
 }

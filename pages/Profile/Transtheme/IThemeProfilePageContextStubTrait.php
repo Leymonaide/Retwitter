@@ -18,25 +18,14 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Page\Profile\Transtheme;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
+use Retwitter\Page\Common\Profile\IProfileDataParser;
+use Retwitter\Page\Common\Timeline\ITimelineDataParser;
+use Retwitter\Page\Profile\ProfileTab;
 
-class MTopbarNavItem
+trait IThemeProfilePageContextStubTrait
 {
-    public string $activeLabel;
-
-    public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
-        public string $label,
-        public string $url,
-        public bool $active,
-        public bool $activeIcon,
-    )
-    {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
-    }
+    public function insertUserData(IProfileDataParser $parser): void {}
+    public function insertTimeline(ITimelineDataParser $parser): void {}
 }

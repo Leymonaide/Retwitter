@@ -1,0 +1,201 @@
+{#
+ * This file is part of the Retwitter project.
+ * Copyright (c) 2025 Leymonaide.
+ * 
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but 
+ * WITHOUT ANY WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU 
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License 
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+#}
+{% macro css(name, class) %}
+{%- set url = "https://abs.twimg.com/a/" -%}
+{%- set url = url ~ app.cssRev ~ "/css/t1/" -%}
+{%- if app.currentThemeName == "SwiftEdge" and app.nightMode -%}
+{%- set url = url ~ "nightmode_" -%}
+{%- endif -%}
+{%- set url = url ~ "twitter_" ~ name ~ ".bundle.css" -%}
+<link rel="stylesheet" href="{{ url }}" {{ class ? ('class="' ~ class ~ 'CSSBundles"')|raw }}>
+{% endmacro %}
+
+{% macro preload_js(name) %}
+<link rel="preload" href="https://abs.twimg.com/k/{{ app.lang }}/{{ retwitter.resource.getJsName(name, app.lang) }}.js" as="script">
+{% endmacro %}
+
+{% macro preload_js_module(module) %}
+    {% types {
+        module: "Retwitter\\Page\\Base\\PageJsModule",
+    } %}
+    <link rel="preload" href="{{ module.resolvedModulePath }}" as="script">
+{% endmacro %}
+
+{% macro async_js(name) %}
+<script src="https://abs.twimg.com/k/{{ app.lang }}/{{ retwitter.resource.getJsName(name, app.lang) }}.js" async=""></script>
+{% endmacro %}
+
+{% macro text(text, nl2br = false) %}
+{% apply spaceless %}
+{% if text.simpleText %}
+    {{ text.simpleText }}
+{% elseif text.runs %}
+    {% for run in text.runs %}
+        {% if run.emoji %}
+        <img class="Emoji Emoji--forText" src="{{ run.emoji.url }}" draggable="false" alt="{{ run.emoji.alt }}" title="{{ run.emoji.label }}" aria-label="Emoji: {{ run.emoji.label }}">
+        {% elseif run.complexLink %}
+        <a class="twitter-timeline-link" href="{{ run.complexLink.targetUrl }}"
+             rel="nofollow noopener" dir="ltr" data-expanded-url="{{ run.complexLink.expandedUrl }}"
+             target="_blank" title="{{ run.complexLink.expandedUrl }}">
+            <span class="tco-ellipsis">
+                {% if run.complexLink.beforeEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.beforeEllipsis }}
+                {% endif %}
+            </span>{#
+          #}<span class="invisible">{{ run.complexLink.beforeInvisible }}</span>{#
+          #}<span class="js-display-url">{{ run.complexLink.displayUrl }}</span>{#
+          #}<span class="invisible">{{ run.complexLink.afterInvisible }}</span>{#
+          #}<span class="tco-ellipsis">
+                {% if run.complexLink.afterEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.afterEllipsis }}
+                {% endif %}
+            </span>
+        </a>
+        {% else %}
+        {% if run.url %}
+        <a href="{{ run.url }}">
+        {% endif %}
+            {% if nl2br %}
+            {{ run.text|nl2br }}
+            {% else %}
+            {{ run.text }}
+            {% endif %}
+        {% if run.url %}
+        </a>
+        {% endif %}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endapply %}
+{% endmacro %}
+
+{# Tweet text is very sensitive to whitespace, so this macro avoids any
+   around whitespace the formatted output. #}
+{% macro tweet_text(text, render_links = true) %}{#
+#}{% if text.simpleText %}{#
+    #}{{ text.simpleText }}{#
+#}{% elseif text.runs %}{#
+    #}{% for run in text.runs %}{#
+        #}{% if run.emoji %}{#
+        #}<img class="Emoji Emoji--forText" src="{{ run.emoji.url }}"
+            draggable="false" alt="{{ run.emoji.alt }}"
+            title="{{ run.emoji.label }}"
+            aria-label="Emoji: {{ run.emoji.label }}">{#
+        #}{% elseif run.complexLink %}{#
+        #}<{{ render_links ? "a" : "span"}} class="twitter-timeline-link" {% if render_links %}href="{{ run.complexLink.targetUrl }}"{% endif %}
+             rel="nofollow noopener" dir="ltr" data-expanded-url="{{ run.complexLink.expandedUrl }}"
+             target="_blank" title="{{ run.complexLink.expandedUrl }}">{#
+          #}<span class="tco-ellipsis">{#
+              #}{% if run.complexLink.beforeEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.beforeEllipsis }}{#
+              #}{% endif %}{#
+          #}</span>{#
+          #}<span class="invisible">{{ run.complexLink.beforeInvisible }}</span>{#
+          #}<span class="js-display-url">{{ run.complexLink.displayUrl }}</span>{#
+          #}<span class="invisible">{{ run.complexLink.afterInvisible }}</span>{#
+          #}<span class="tco-ellipsis">{#
+              #}{% if run.complexLink.afterEllipsis %}{#
+              #}<span class="invisible">&nbsp;</span>{#
+              #}{{ run.complexLink.afterEllipsis }}{#
+              #}{% endif %}{#
+          #}</span>{#
+      #}</{{ render_links ? "a" : "span"}}>{#
+        #}{% else %}{#
+        #}{% if run.url %}{#
+        #}<a href="{{ run.url }}">{#
+        #}{% endif %}{#
+            #}{{ run.text }}{#
+        #}{% if run.url %}{#
+        #}</a>{#
+        #}{% endif %}{#
+        #}{% endif %}{#
+    #}{% endfor %}{#
+#}{% endif %}{#
+#}{% endmacro %}
+
+{% macro simple_text(text) %}
+{% if text.simpleText %}
+    {{ text.simpleText }}
+{% elseif text.runs %}
+    {% for run in text.runs %}
+        {% if run.emoji %}
+            {{ run.emoji.alt }}
+        {% else %}
+            {{ run.text }}
+        {% endif %}
+    {% endfor %}
+{% endif %}
+{% endmacro %}
+
+{% macro user_badges(badges, linked = false) %}
+    {% types {
+        badges: "Retwitter\\Page\\Common\\MUserBadges",
+    } %}
+    <span class="UserBadges">
+        {% if badges.verified %}
+            {%- if linked -%}
+            <a href="/help/verified" class="js-tooltip" data-placement="right" target="_blank" rel="noopener" title="{{ app.page.i18n.get('verified_tooltip') }}">
+            {%- endif -%}
+                <span class="Icon Icon--verified">
+                    <span class="u-hiddenVisually">{{ 
+                        app.i18n.get('common', 'verified_tooltip') }}</span>
+                </span>
+            {%- if linked -%}
+            </a>
+            {%- endif -%}
+        {% endif %}
+        {% if badges.protected %}
+            {%- if linked -%}
+            <a href="//support.twitter.com/articles/14016-about-public-and-protected-tweets"
+               target="_blank"
+               data-placement="right"
+               rel="noopener"
+               title="{{ app.i18n.get('common', 'protected_tooltip') }}"></a>
+            {%- endif -%}
+            <span class="Icon Icon--protected">
+                <span class="u-hiddenVisually">{{ 
+                    app.i18n.get('common', 'protected_tooltip') }}</span>
+            </span>
+        {% endif %}
+    </span>
+{% endmacro %}
+
+{% macro username(
+    name_text, 
+    truncate_text = false,
+    handle_class = null,
+) %}
+    {% types {
+        name_text: "string",
+        direction: "string",
+        truncate_text: "bool",
+        handle_class: "string[]|null",
+    } %}
+    <span class="{{ [
+            'username',
+            'u-dir',
+            truncate_text ? 'u-textTruncate',
+        ]|join(' ') }}" dir="ltr">
+        @<b{{ handle_class ? " class=" ~ handle_class|join(' ')|e("html_attr") }}>{{ 
+            name_text
+        }}</b>
+    </span>
+{% endmacro %}

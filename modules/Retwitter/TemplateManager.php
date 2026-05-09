@@ -54,8 +54,6 @@ class TemplateManager
     private static function createTwigFileSystemLoader(): \Twig\Loader\FilesystemLoader
     {
         $rehikeViewsDir = "template/hitchhiker";
-        $defaultThemeViewsDir = ThemeManager::getThemePath() . "/"
-            . ThemeManager::getTheme()->getTemplatesPath();
         
         $fileSystemLoader = new \Twig\Loader\FilesystemLoader();
         
@@ -67,14 +65,23 @@ class TemplateManager
             "rehike"
         );
         
-        $fileSystemLoader->addPath(
-            $_SERVER["DOCUMENT_ROOT"] . "/" . $defaultThemeViewsDir,
-            ThemeManager::getTheme()->getResourcesNamespace()
-        );
-
-        $fileSystemLoader->addPath(
-            $_SERVER["DOCUMENT_ROOT"] . "/" . $defaultThemeViewsDir
-        );
+        $theme = ThemeManager::getTheme();
+        
+        do
+        {
+            $themeViewsDir = ThemeManager::getThemePathForTheme($theme) . "/"
+                . $theme->getTemplatesPath();
+            
+            $fileSystemLoader->addPath(
+                $_SERVER["DOCUMENT_ROOT"] . "/" . $themeViewsDir,
+                ThemeManager::getTheme()->getResourcesNamespace()
+            );
+    
+            $fileSystemLoader->addPath(
+                $_SERVER["DOCUMENT_ROOT"] . "/" . $themeViewsDir
+            );
+        }
+        while ($theme = $theme->getBaseTheme());
         
         return $fileSystemLoader;
     }

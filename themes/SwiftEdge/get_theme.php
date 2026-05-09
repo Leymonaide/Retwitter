@@ -18,16 +18,28 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Theme\Plus;
+namespace Retwitter\Theme\SwiftEdge;
 
+use Retwitter\Context\AppContext;
 use Retwitter\ThemeManager\AbstractTheme;
-use Retwitter\ThemeManager\AbstractThemeModelFactory;
+use Retwitter\ThemeManager\IThemeModelFactory;
+use Retwitter\ThemeManager\ThemeManager;
 
 return new class extends AbstractTheme
 {
+    public function getBaseTheme(): ?AbstractTheme
+    {
+        return ThemeManager::loadTheme("SwiftRosetta");
+    }
+    
+    public function onThemeLoaded(): void
+    {
+        AppContext::getInstance()->cssRev = "1462855906";
+    }
+    
     public function getName(): string
     {
-        return "Plus";
+        return "Swift Edge";
     }
     
     public function getVersion(): string
@@ -37,17 +49,12 @@ return new class extends AbstractTheme
     
     public function getAuthorName(): string
     {
-        return "Isabella Lulamoon (kawapure)";
+        return "The Retwitter Authors";
     }
     
-    public function getModelFactory(): AbstractThemeModelFactory
+    public function getModelFactory(): SwiftEdgeThemeModelFactory
     {
-        return new PlusThemeModelFactory();
-    }
-    
-    public function getStaticPath(): string
-    {
-        return "s";
+        return new SwiftEdgeThemeModelFactory();
     }
     
     public function getTemplatesPath(): string
@@ -57,6 +64,6 @@ return new class extends AbstractTheme
     
     public function getResourcesNamespace(): string
     {
-        return "kawapure_plus";
+        return "swift_edge";
     }
 };

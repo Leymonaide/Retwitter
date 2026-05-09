@@ -18,25 +18,20 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Theme\SwiftBase\Components\ProfilePage;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
-
-class MTopbarNavItem
+class MProfileEmptyModule
 {
-    public string $activeLabel;
-
+    /**
+     * We provide string IDs instead of actual text because we
+     * need to format the username into the header text.
+     */
     public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
-        public string $label,
-        public string $url,
-        public bool $active,
-        public bool $activeIcon,
+        public string $username,
+        public string $headerStringId,
+        public string $bodyStringId,
     )
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
+
     }
 }

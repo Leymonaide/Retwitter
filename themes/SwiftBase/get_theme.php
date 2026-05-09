@@ -18,16 +18,16 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Theme\Plus;
+namespace Retwitter\Theme\SwiftBase;
 
 use Retwitter\ThemeManager\AbstractTheme;
-use Retwitter\ThemeManager\AbstractThemeModelFactory;
+use Retwitter\ThemeManager\IThemeModelFactory;
 
 return new class extends AbstractTheme
 {
     public function getName(): string
     {
-        return "Plus";
+        return "Swift Base";
     }
     
     public function getVersion(): string
@@ -37,17 +37,12 @@ return new class extends AbstractTheme
     
     public function getAuthorName(): string
     {
-        return "Isabella Lulamoon (kawapure)";
+        return "The Retwitter Authors";
     }
     
-    public function getModelFactory(): AbstractThemeModelFactory
+    public function getModelFactory(): SwiftBaseThemeModelFactory
     {
-        return new PlusThemeModelFactory();
-    }
-    
-    public function getStaticPath(): string
-    {
-        return "s";
+        return new SwiftBaseThemeModelFactory();
     }
     
     public function getTemplatesPath(): string
@@ -57,6 +52,6 @@ return new class extends AbstractTheme
     
     public function getResourcesNamespace(): string
     {
-        return "kawapure_plus";
+        return "swift_common";
     }
 };

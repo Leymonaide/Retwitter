@@ -20,12 +20,12 @@
 declare(strict_types=1);
 namespace Retwitter\Theme\Plus;
 
-use Retwitter\Page\Profile\Transtheme\IThemeProfileComponentFactory;
-use Retwitter\ThemeManager\IThemeModelFactory;
+use Retwitter\Page\Profile\Transtheme\AbstractThemeProfileComponentFactory;
+use Retwitter\ThemeManager\AbstractThemeModelFactory;
 
-class PlusThemeModelFactory implements IThemeModelFactory
+class PlusThemeModelFactory extends AbstractThemeModelFactory
 {
-    public function getProfileComponentFactory(): IThemeProfileComponentFactory
+    public function getProfileComponentFactory(): AbstractThemeProfileComponentFactory
     {
         return new Components\ProfilePage\ProfilePageComponentFactory();
     }

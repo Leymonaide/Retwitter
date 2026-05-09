@@ -18,45 +18,41 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Theme\Plus;
+namespace Retwitter\ThemeManager;
 
-use Retwitter\ThemeManager\AbstractTheme;
-use Retwitter\ThemeManager\AbstractThemeModelFactory;
-
-return new class extends AbstractTheme
+abstract class AbstractTheme
 {
-    public function getName(): string
+    protected string $_internal_themeId;
+    
+    final public function getThemeId(): string
     {
-        return "Plus";
+        return $this->_internal_themeId;
     }
     
-    public function getVersion(): string
+    final public function getThemePath(): string
     {
-        return "1.0";
+        return "themes/" . $this->_internal_themeId;
     }
     
-    public function getAuthorName(): string
+    abstract public function getName(): string;
+    abstract public function getVersion(): string;
+    abstract public function getAuthorName(): string;
+    abstract public function getModelFactory(): AbstractThemeModelFactory;
+    abstract public function getTemplatesPath(): string;
+    abstract public function getResourcesNamespace(): string;
+    
+    public function getStaticPath(): ?string
     {
-        return "Isabella Lulamoon (kawapure)";
+        return null;
     }
     
-    public function getModelFactory(): AbstractThemeModelFactory
+    public function getBaseTheme(): ?AbstractTheme
     {
-        return new PlusThemeModelFactory();
+        return null;
     }
     
-    public function getStaticPath(): string
+    public function onThemeLoaded(): void
     {
-        return "s";
+        
     }
-    
-    public function getTemplatesPath(): string
-    {
-        return "templates";
-    }
-    
-    public function getResourcesNamespace(): string
-    {
-        return "kawapure_plus";
-    }
-};
+}

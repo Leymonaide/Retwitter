@@ -18,25 +18,14 @@
  */
 
 declare(strict_types=1);
-namespace Retwitter\Page\Common\Topbar;
+namespace Retwitter\Theme\SwiftBase\Components\ProfilePage;
 
-use Rehike\i18n\Internal\Lang\NamespaceBoundLanguageApi;
-use Retwitter\ThemeManager\ThemeManager;
-
-class MTopbarNavItem
+class MProfileError
 {
-    public string $activeLabel;
-
     public function __construct(
-        NamespaceBoundLanguageApi $strings,
-        public string $id,
-        public string $icon,
-        public string $label,
-        public string $url,
-        public bool $active,
-        public bool $activeIcon,
+        public string $title,
+        public string $message,
     )
     {
-        $this->activeLabel = $strings->format("tab_active", $this->label);
     }
 }
