@@ -24,6 +24,7 @@ use Rehike\ControllerV2\Router;
 
 // Funnel = pages that the Retwitter server should not touch:
 Router::funnel([
+    "/i/api/*"
 ]);
 
 Router::redirect([

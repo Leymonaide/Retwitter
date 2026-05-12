@@ -7,7 +7,8 @@ use Rehike\{
     ConfigManager\Config,
     FileSystem,
     SimpleFunnel,
-    i18n
+    i18n,
+    SimpleFunnelResponse
 };
 
 /**
@@ -55,15 +56,9 @@ class DisableRetwitter
      */
     public static function disableForSession(): void
     {
-        PolymerDocument::getPolymerDocument()->then(function(PolymerDocument $doc) {
-            http_response_code($doc->status);
-
-            foreach (SimpleFunnel::responseHeadersToHttp($doc->headers) as $httpHeader)
-            {
-                header($httpHeader, false);
-            }
-
-            echo $doc->response;
+        SimpleFunnel::funnelCurrentPage()->then(function (SimpleFunnelResponse $r)
+        {
+            $r->output();
         });
     }
 
@@ -115,7 +110,7 @@ class DisableRetwitter
         if (self::isDisableRetwitterUrl())
         {
             $ep = $_GET["disable_retwitter"];
-            return $ep == "0" || strtolower($ep) == "false";
+            return $ep == "1" || strtolower($ep) == "true";
         }
 
         return null;
