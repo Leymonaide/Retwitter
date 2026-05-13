@@ -20,29 +20,16 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
-use PHPHtmlParser\Dom;
 use Rehike\ControllerV2\IGetControllerAsync;
-use Retwitter\GraphQlRequestParams;
-use Retwitter\NitterSourceInfo;
 use Retwitter\Page\Common\Profile\ProfileError;
-use Retwitter\Page\Common\Timeline\Nitter\TimelineDataParserNitter;
-use Retwitter\Page\Profile\TwitterWeb\ProfileDataParserTwitterWeb;
-use Retwitter\Page\Profile\Nitter\ProfileDataParserNitter;
 use Retwitter\Page\Base\RetwitterPageController;
-use Retwitter\Page\Common\Timeline\TwitterWeb\TimelineDataParserTwitterWeb;
 
 use Rehike\Async\Promise;
+use Retwitter\ApiSource;
 use Retwitter\Page\Base\ForwardTo404ControllerMixin;
-use Retwitter\RequestEngine\GraphQlRequest;
-use Retwitter\RequestEngine\GraphQlRequestTest;
-use Retwitter\RequestEngine\IRequestManagerRequest;
-use Retwitter\RequestEngine\NitterRequest;
-use Retwitter\RequestEngine\NitterRequestTest;
-use Retwitter\RequestEngine\RequestManager;
+use Retwitter\Page\Profile\Exception\UserDoesNotExistException;
 use Retwitter\SignIn\SignIn;
 use Retwitter\ThemeManager\ThemeManager;
-use Retwitter\Url;
-use Retwitter\Utils\NitterParsingUtils;
 use Retwitter\Utils\ParsingUtils;
 
 use function Rehike\Async\async;
@@ -50,20 +37,23 @@ use function Rehike\Async\async;
 use const Retwitter\Constants\FEATURE_SIGNIN;
 use const Retwitter\Constants\TEST_SIGNIN;
 
-const PROFILE_TEST_LOCAL = true;
 const PROFILE_TEST_NITTER = false &&!TEST_SIGNIN;
-
-enum ProfileControllerRequestTags : string
-{
-    case User = "user";
-    case Timeline = "timeline";
-}
 
 class ProfileController
     extends RetwitterPageController
     implements IGetControllerAsync
 {
     use ForwardTo404ControllerMixin;
+    
+    public function getBestClient(): ApiSource
+    {
+        if (PROFILE_TEST_NITTER)
+        {
+            return ApiSource::Nitter;
+        }
+        
+        return ApiSource::TwitterWeb;
+    }
 
     public function getAsync(): Promise
     {
@@ -87,6 +77,17 @@ if (TEST_SIGNIN || FEATURE_SIGNIN)
             // profiles without any tweets.
             $tab = ProfileTab::tryFrom($tab) ?? ProfileTab::RecentTweets;
             
+            $layout = ProfilePageLayoutFactory::createForClient($this->getBestClient());
+            
+            try
+            {
+                yield $layout->requestDataForLayout($username, $tab);
+            }
+            catch (UserDoesNotExistException $e)
+            {
+                $this->forwardTo404Controller();
+            }
+            
             $theme = ThemeManager::getTheme();
             $themeProfileFactory = $theme->getModelFactory()->getProfileComponentFactory();
             
@@ -95,302 +96,22 @@ if (TEST_SIGNIN || FEATURE_SIGNIN)
             );
             $this->setPageContext($context);
 
-            $requestManager = new RequestManager();
-
-            if (PROFILE_TEST_NITTER)
-            {
-                $requestManager->add(
-                    request: $this->requestProfileNitter($username),
-                    tag: ProfileControllerRequestTags::User->value,
-                );
-            }
-            else
-            {
-                $requestManager->add(
-                    request: $this->requestUserTwitterApi($username),
-                    tag: ProfileControllerRequestTags::User->value,
-                );
-            }
-
-            // Run all requests:
-            yield $requestManager->runAll();
-
-            $userRequest = $requestManager->getRequestByTag(
-                ProfileControllerRequestTags::User->value,
-            );
-
             // TODO: Handle failed state. This should be general code.
 
-            if ($userRequest instanceof NitterRequest)
+            if (ProfileError::Nonexistent == $layout->getUserData()->getError())
             {
-                $rawDocument = $userRequest->getResponse()->getText();
-                
-                \Rehike\Logging\DebugLogger::print("%s", $rawDocument);
-
-                $dom = new Dom();
-                $dom->setOptions(NitterParsingUtils::getDefaultParserOptions());
-                $dom->loadStr($rawDocument);
-
-                $nitterSourceInfo = new NitterSourceInfo(
-                    nitterSourceUri: new Url($userRequest->getRequestUri()->getOrigin()),
-                );
-
-                $profileDataParser = new ProfileDataParserNitter(
-                    sourceInfo: $nitterSourceInfo,
-                    document: $dom
-                );
-
-                $nitterSourceInfo->setProfileData($profileDataParser);
-
-                // Nitter can't access the timelines of protected profiles under
-                // any circumstances, so the timeline parser is only made if the
-                // profile is public.
-                if (!$profileDataParser->getProtected())
-                {
-                    $timelineParser = new TimelineDataParserNitter(
-                        $nitterSourceInfo,
-                        $dom,
-                    );
-                }
-            }
-            else if ($userRequest instanceof GraphQlRequest)
-            {
-                $jsonData = $userRequest->getResponse()->getJson();
-
-                if (!isset($jsonData->data->user))
-                {
-                    // This is the exact same case as ProfileError::Nonexistent,
-                    // but there's a problem with how the TwitterWeb profile
-                    // data parser works (at the moment?) that prevents the
-                    // getError() method from working in this case.
-                    $this->forwardTo404Controller();
-                    return;
-                }
-
-                $profileDataParser = new ProfileDataParserTwitterWeb(
-                    data: $jsonData->data->user->result,
-                    enableWriteToCache: true,
-                );
-
-                // Now we can request the main body content, which requires 
-
-                // Most of these cases are temporary (e.g. all three user grid tabs using
-                // the same data)
-                switch ($tab)
-                {
-                    case ProfileTab::Followers:
-                    case ProfileTab::FollowersYouFollow:
-                    case ProfileTab::Following:
-                        // XXX(leymonaide): Verify that this request uses a user
-                        // ID and not a username. I haven't touched it yet.
-                        $timelineRequest = $this->requestFollowersTwitterApi($username);
-                        break;
-                    case ProfileTab::Lists:
-                    case ProfileTab::Memberships:
-                        // XXX(leymonaide): Verify that this request uses a user
-                        // ID and not a username. I haven't touched it yet.
-                        $timelineRequest = $this->requestListsTwitterApi($username);
-                        break;
-                    default:
-                        $timelineRequest = $this->requestTweetsTwitterApi(
-                            userId: $profileDataParser->getId(),
-                        );
-                        break;
-                }
-
-                $requestManager->add(
-                    request: $timelineRequest,
-                    tag: ProfileControllerRequestTags::Timeline->value
-                );
-
-                // Rerun the request manager now that new requests have been
-                // added:
-                yield $requestManager->runAll();
+                $this->forwardTo404Controller();
+                return;
             }
 
-            // CONSIDER: Invert this condition. Everything after this point in
-            // this function is dependent on this condition being met. You can't
-            // have a timeline only profile, after all. This can probably be
-            // done just fine once infrastructure for request failure error
-            // reporting is built.
-            if (isset($profileDataParser))
-            {
-                if (ProfileError::Nonexistent == $profileDataParser->getError())
-                {
-                    $this->forwardTo404Controller();
-                    return;
-                }
+            $context->insertUserData($layout->getUserData());
 
-                $context->insertUserData($profileDataParser);
-            }
-
-            $timelineRequest = $requestManager->getRequestByTag(
-                ProfileControllerRequestTags::Timeline->value,
-            );
-
-            if (null != $timelineRequest && $timelineRequest instanceof GraphQlRequest)
-            {
-                $jsonData = $timelineRequest->getResponse()->getJson();
-
-                try
-                {
-                    $timelineParser = new TimelineDataParserTwitterWeb(
-                        data: $jsonData->data->user->result->timeline->timeline,
-                        enableWriteToCache: true
-                    );
-                }
-                catch (\Throwable $e)
-                {
-                    \Rehike\Logging\DebugLogger::print("Exception when attempting to parse timeline data: %s", $e);
-                }
-            }
-            // Nitter timeline parser is created alongside the profile parser,
-            // as they are packaged into the same response.
-
-            if (isset($timelineParser))
+            if (($timelineParser = $layout->getTimeline()))
             {
                 $context->insertTimeline($timelineParser);
             }
 
             $this->renderPage();
         });
-    }
-
-    private function requestUserTwitterApi(
-        string $username,
-    ): IRequestManagerRequest
-    {
-if (PROFILE_TEST_LOCAL):
-        // UserByScreenName
-        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_main.json");
-endif;
-
-        return new GraphQlRequest(new GraphQlRequestParams(
-            action: "96tVxbPqMZDoYB5pmzezKA/UserByScreenName",
-            variables: [
-                "screen_name" => $username,
-                "withSafetyModeUserFields" => true,
-                "withSuperFollowsUserFields",
-            ],
-            features: [
-                "responsive_web_twitter_blue_verified_badge_is_enabled" => true,
-                "verified_phone_label_enabled" => false,
-                "responsive_web_graphql_timeline_navigation_enabled" => true,
-                "longform_notetweets_consumption_enabled" => true,
-                "tweetypie_unmention_optimization_enabled" => true,
-                "vibe_api_enabled" => true,
-                "responsive_web_edit_tweet_api_enabled" => true,
-                "graphql_is_translatable_rweb_tweet_is_translatable_enabled" => true,
-                "view_counts_everywhere_api_enabled" => true,
-                "standardized_nudges_misinfo" => true,
-                "tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled" => false,
-                "interactive_text_enabled" => true,
-                "responsive_web_text_conversations_enabled" => false,
-                "responsive_web_enhance_cards_enabled" => false,
-                // Must be set below:
-                "payments_enabled" => false,
-                "profile_label_improvements_pcf_label_in_post_enabled" => false,
-                "subscriptions_verification_info_is_identity_verified_enabled" => false,
-                "rweb_tipjar_consumption_enabled" => false,
-                "responsive_web_twitter_article_notes_tab_enabled" => false,
-                "subscriptions_feature_can_gift_premium" => false,
-                "creator_subscriptions_tweet_preview_api_enabled" => false,
-                "responsive_web_graphql_skip_user_profile_image_extensions_enabled" => false,
-                "highlights_tweets_tab_ui_enabled" => false,
-                "hidden_profile_subscriptions_enabled" => false,
-                "subscriptions_verification_info_verified_since_enabled" => false,
-            ],
-        ));
-    }
-
-    private function requestTweetsTwitterApi(
-        string $userId,
-    ): IRequestManagerRequest
-    {
-        // UserTweets
-if (PROFILE_TEST_LOCAL):
-        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_tweets_aubymori.json");
-endif;
-
-        return new GraphQlRequest(new GraphQlRequestParams(
-            action: "lZRf8IC-GTuGxDwcsHW8aw/UserTweets",
-            variables: [
-                // Requested user ID.
-                "userId" => $userId,
-                "count" => 20,
-                "includePromotedContent" => true,
-                "withQuickPromoteEligibilityTweetFields" => true,
-                "withVoice" => true,
-            ],
-            features: [
-                "rweb_video_screen_enabled" => false,
-                "profile_label_improvements_pcf_label_in_post_enabled" => true,
-                "responsive_web_profile_redirect_enabled" => false,
-                "rweb_tipjar_consumption_enabled" => true,
-                "verified_phone_label_enabled" => false,
-                "creator_subscriptions_tweet_preview_api_enabled" => true,
-                "responsive_web_graphql_timeline_navigation_enabled" => true,
-                "responsive_web_graphql_skip_user_profile_image_extensions_enabled" => false,
-                "premium_content_api_read_enabled" => false,
-                "communities_web_enable_tweet_community_results_fetch" => true,
-                "c9s_tweet_anatomy_moderator_badge_enabled" => true,
-                "responsive_web_grok_analyze_button_fetch_trends_enabled" => false,
-                "responsive_web_grok_analyze_post_followups_enabled" => true,
-                "responsive_web_jetfuel_frame" => true,
-                "responsive_web_grok_share_attachment_enabled" => true,
-                "articles_preview_enabled" => true,
-                "responsive_web_edit_tweet_api_enabled" => true,
-                "graphql_is_translatable_rweb_tweet_is_translatable_enabled" => true,
-                "view_counts_everywhere_api_enabled" => true,
-                "longform_notetweets_consumption_enabled" => true,
-                "responsive_web_twitter_article_tweet_consumption_enabled" => true,
-                "tweet_awards_web_tipping_enabled" => false,
-                "responsive_web_grok_show_grok_translated_post" => false,
-                "responsive_web_grok_analysis_button_from_backend" => true,
-                "creator_subscriptions_quote_tweet_preview_enabled" => false,
-                "freedom_of_speech_not_reach_fetch_enabled" => true,
-                "standardized_nudges_misinfo" => true,
-                "tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled" => true,
-                "longform_notetweets_rich_text_read_enabled" => true,
-                "longform_notetweets_inline_media_enabled" => true,
-                "responsive_web_grok_image_annotation_enabled" => true,
-                "responsive_web_grok_imagine_annotation_enabled" => true,
-                "responsive_web_grok_community_note_auto_translation_is_enabled" => false,
-                "responsive_web_enhance_cards_enabled" => false,
-            ],
-        ));
-    }
-
-    private function requestFollowersTwitterApi(
-        string $username,
-    ): IRequestManagerRequest
-    {
-        // TODO: Request for real.
-        // Followers
-        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_followers.json");
-    }
-
-    private function requestListsTwitterApi(
-        string $username
-    ): IRequestManagerRequest
-    {
-        // TODO: Request for real.
-        // CombinedLists
-        //
-        // XXX(aubymori): We will also need to implement custom parsing for the
-        // ListManagementPageTimeline endpoint, as it's differently structured.
-        // IDK how the user's own lists page looked on MS actually. Look into?
-        return new GraphQlRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_profile_lists.json");
-    }
-
-    private function requestProfileNitter(
-        string $username,
-    ): IRequestManagerRequest
-    {
-if (PROFILE_TEST_LOCAL):
-        return new NitterRequestTest($_SERVER["DOCUMENT_ROOT"] . "/cache/test_nitter_elonmusk.html");
-endif;
-
-        return new NitterRequest(new Url("/$username"));
     }
 }

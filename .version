@@ -1,10 +1,10 @@
 {
-	"previousHash": "58851267f56c21a4bc339c344cb676f60c88b91e",
-	"currentRevisionId": 270,
-	"subject": "Progress on theme system (early work on Swift subthemes)",
-	"body": "Progress on theme system (early work on Swift subthemes)",
+	"previousHash": "47f34ba5cc087626ba8c57fac22b6dfdaa80be9c",
+	"currentRevisionId": 271,
+	"subject": "Experiment with page "layouts"",
+	"body": "Experiment with page "layouts"",
 	"branch": "themes-experimentation",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1778362087
+	"time": 1778641713
 }
