@@ -1,7 +1,7 @@
 <?php
     namespace Rehike\ErrorHandler\FatalErrorTemplate;
 
-    $minimumPhpVersion = "8.0";
+    $minimumPhpVersion = "8.1";
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,7 +19,7 @@
                 <h1>Your version of PHP is too old!</h1>
             </div>
             <p>
-                Rehike requires at least <b>PHP <?php echo $minimumPhpVersion ?></b>. You are using
+                Retwitter requires at least <b>PHP <?php echo $minimumPhpVersion ?></b>. You are using
                 <b>PHP <?php echo PHP_VERSION ?></b>.
             </p>
             <p>

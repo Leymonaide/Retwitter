@@ -15,9 +15,9 @@ html, body
 body
 {
     margin: 0;
-    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     font-size: 13px;
-    background: #f1f1f1;
+    background-color: #f5f8fa !important;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +25,7 @@ body
 
 body, input, button, textarea, select
 {
-    font-family: Roboto, Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 <?php endif ?>
@@ -36,8 +36,8 @@ body, input, button, textarea, select
     padding: 15px;
     margin: 0 auto;
     background: #fff;
-    box-shadow: 0 1px 2px rgba(0,0,0,.1);
-    -moz-box-sizing: border-box;
+    border: 1px solid #e1e8ed;
+    border-radius: 5px;
     box-sizing: border-box;
 }
 
@@ -58,25 +58,40 @@ body, input, button, textarea, select
 
 .fatal-button
 {
-    display: inline-block;
-    height: 28px;
-    border: solid 1px transparent;
-    padding: 0 10px;
-    outline: 0;
-    font-weight: 500;
-    font-size: 11px;
-    text-decoration: none;
-    white-space: nowrap;
-    word-wrap: normal;
-    line-height: normal;
-    vertical-align: middle;
-    cursor: pointer;
-    border-radius: 2px;
-    box-shadow: 0 1px 0 rgba(0,0,0,0.05);
+    background-color:#ccd6dd;
+    background-repeat:no-repeat;
+    border:1px solid #e1e8ed;
+    border-radius:4px;
+    color: #292f33;
+    cursor:pointer;
+    display:inline-block;
+    font-size:13px;
+    font-weight:bold;
+    line-height:normal;
+    padding:8px 16px;
+    position:relative;
+    
+    background-color:#f5f8fa;
+    background-image:linear-gradient(#fff,#f5f8fa);
+    -ms-filter:"progid:DXImageTransform.Microsoft.gradient(startColorstr=#fff, endColorstr=#f5f8fa)"
+}
 
-    border-color: #d3d3d3;
-    background: #f8f8f8;
-    color: #333;
+.fatal-button:hover
+{
+    color: #292f33;
+    text-decoration: none;
+    background-color: #e1e8ed;
+    background-image: linear-gradient(#fff,#e1e8ed);
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)";
+    border-color: #e1e8ed;
+}
+
+.fatal-button:active
+{
+    color: #292f33;
+    background: #e1e8ed;
+    border-color: #ccd6dd;
+    box-shadow: inset 0 1px 4px rgba(0,0,0,0.2);
 }
 
 .failed-request-info .section-title

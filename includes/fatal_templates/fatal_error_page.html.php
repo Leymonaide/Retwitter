@@ -8,8 +8,8 @@
     use Rehike\ErrorHandler\ErrorPage\InnertubeFailedRequestPage;
     use Rehike\ErrorHandler\ErrorPage\FatalErrorPage;
 
-    use const Rehike\Constants\GH_ENABLED;
-    use const Rehike\Constants\GH_REPO;
+    use const Retwitter\Constants\GH_ENABLED;
+    use const Retwitter\Constants\GH_REPO;
 
     include_once "includes/fatal_templates/fatal_template_functions.php";
 
@@ -25,8 +25,7 @@
 <!-- thanks aubrey <33 -->
 <html>
     <head>
-        <title>Rehike fatal error</title>
-        <?php include "fatal_roboto.css.php" ?>
+        <title>Retwitter fatal error</title>
 <?php endif ?>
         <?php include "fatal.css.php" ?>
         <?php include "fatal.js.php" ?>
@@ -48,7 +47,7 @@
                 On macOS and Linux, please try running <code>chmod -R +rw /path/to/htdocs</code> and try
                 again.
                 <?php else: ?>
-                A fatal error has occurred and Rehike cannot continue. Sorry for the inconvenience.
+                A fatal error has occurred and Retwitter cannot continue. Sorry for the inconvenience.
                 <?php endif ?>
                 <?php if (true == GH_ENABLED && $page->shouldDisplayIssueTrackerLink()): ?>
                     <div class="github-link">
@@ -69,44 +68,9 @@
                 <div>
                     <h3 class="section-header">Actions</h3>
                     <button class="fatal-button" onclick="window.location.reload()">Refresh page</button>
-                    <button class="fatal-button" onclick="fatalDisableRehikeOnce()">Disable Rehike (just this time)</button>
-                    <button class="fatal-button" onclick="fatalDisableRehike()">Disable Rehike (persistently)</button>
+                    <button class="fatal-button" onclick="fatalDisableRehikeOnce()">Disable Retwitter (just this time)</button>
+                    <button class="fatal-button" onclick="fatalDisableRehike()">Disable Retwitter (persistently)</button>
                 </div>
-
-                <?php if ($page instanceof InnertubeFailedRequestPage): ?>
-                    <?php $e = $page->getInnertubeFailedException()->failedResponse ?>
-                    <h3 class="section-header">
-                        Failed request information
-                    </h3>
-                    <ul class="failed-request-info">
-                        <li>
-                            <span class="section-title">
-                                Response status: 
-                            </span>
-                            <?= $e->status ?>
-                        </li>
-                        <li>
-                            <span class="section-title">
-                                Response content:
-                            </span>
-                            <div class="failed-request-text">
-                                <?= htmlspecialchars($e->getText()) ?>
-                            </div>
-                        </li>
-                        <li>
-                            <span class="section-title">
-                                Response headers:
-                            </span>
-                            <ul class="response-headers-list">
-                                <?php foreach ($e->headers as $name => $value): ?>
-                                    <li>
-                                        <?= "$name: $value" ?>
-                                    </li>
-                                <?php endforeach ?>
-                            </ul>
-                        </li>
-                    </ul>
-                <?php endif ?>
 
                 <?php if ($page instanceof UncaughtExceptionPage): ?>
                     <?php if ($page instanceof PromiseAllExceptionPage): ?>
