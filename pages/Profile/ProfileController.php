@@ -86,6 +86,7 @@ if (TEST_SIGNIN || FEATURE_SIGNIN)
             catch (UserDoesNotExistException $e)
             {
                 $this->forwardTo404Controller();
+                return;
             }
             
             $theme = ThemeManager::getTheme();
