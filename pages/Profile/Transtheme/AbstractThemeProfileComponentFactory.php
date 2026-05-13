@@ -20,6 +20,8 @@
 declare(strict_types=1);
 namespace Retwitter\Page\Profile\Transtheme;
 
+use Rehike\ControllerV2\RequestMetadata;
+use Retwitter\Page\Base\IVisualController;
 use Retwitter\Page\Profile\ProfileTab;
 
 abstract class AbstractThemeProfileComponentFactory
@@ -30,5 +32,10 @@ abstract class AbstractThemeProfileComponentFactory
         {
             use IThemeProfilePageContextStubTrait;
         };
+    }
+    
+    public function getTemplateName(): string
+    {
+        return "profile";
     }
 }

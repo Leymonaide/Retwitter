@@ -58,8 +58,11 @@ class ProfileController
     public function getAsync(): Promise
     {
         return async(function () {
+            $theme = ThemeManager::getTheme();
+            $themeProfileFactory = $theme->getModelFactory()->getProfileComponentFactory();
+            
             $this->supportPushStateRequests();
-            $this->setTemplate("profile");
+            $this->setTemplate($themeProfileFactory->getTemplateName());
             
 // Remove once signin is finalized and we're not using test documents
 // that may or may not exist on a developer's local copy of Retwitter.
@@ -88,9 +91,6 @@ if (TEST_SIGNIN || FEATURE_SIGNIN)
                 $this->forwardTo404Controller();
                 return;
             }
-            
-            $theme = ThemeManager::getTheme();
-            $themeProfileFactory = $theme->getModelFactory()->getProfileComponentFactory();
             
             $context = $themeProfileFactory->createProfileThemeContext(
                 tab: $tab,

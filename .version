@@ -1,10 +1,10 @@
 {
-	"previousHash": "8c2c2ac45007044cf4036d6e4f262bdc42e3d7e7",
-	"currentRevisionId": 272,
-	"subject": "Correct small typo",
-	"body": "Correct small typo",
+	"previousHash": "1fd9e023b5436c45c1ee0b96d9282dc7c58bad62",
+	"currentRevisionId": 273,
+	"subject": "Enable templates names to differ between themes",
+	"body": "Enable templates names to differ between themes",
 	"branch": "themes-experimentation",
 	"committerName": "Isabella Lulamoon",
 	"committerEmail": "kawapure@gmail.com",
-	"time": 1778642364
+	"time": 1778644907
 }

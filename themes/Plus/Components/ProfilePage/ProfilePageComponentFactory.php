@@ -20,14 +20,24 @@
 declare(strict_types=1);
 namespace Retwitter\Theme\Plus\Components\ProfilePage;
 
+use Rehike\Attributes\Override;
+use Rehike\ControllerV2\RequestMetadata;
+use Retwitter\Page\Base\IVisualController;
 use Retwitter\Page\Profile\ProfileTab;
 use Retwitter\Page\Profile\Transtheme\AbstractThemeProfileComponentFactory;
 use Retwitter\Page\Profile\Transtheme\IThemeProfilePageContext;
 
 class ProfilePageComponentFactory extends AbstractThemeProfileComponentFactory
 {
+    #[Override]
     public function createProfileThemeContext(ProfileTab $tab): IThemeProfilePageContext
     {
         return new PlusThemeProfilePageContext($tab);
+    }
+    
+    #[Override]
+    public function getTemplateName(): string
+    {
+        return "profile";
     }
 }

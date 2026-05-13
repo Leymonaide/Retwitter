@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace Retwitter\Page\Profile;
 
 use Retwitter\ApiSource;
+use Retwitter\Page\Profile\Nitter\ProfilePageLayoutNitter;
 use Retwitter\Page\Profile\TwitterWeb\ProfilePageLayoutTwitterWeb;
 use Retwitter\RequestEngine\RequestManager;
 
@@ -37,6 +38,7 @@ final class ProfilePageLayoutFactory
         return match ($apiSource)
         {
             ApiSource::TwitterWeb => new ProfilePageLayoutTwitterWeb($requestManager),
+            ApiSource::Nitter => new ProfilePageLayoutNitter($requestManager),
         };
     }
 }
